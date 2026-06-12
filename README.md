@@ -10,6 +10,8 @@ TFHEpp C++ reference headers.
 - `variants/hoge-streaming`: HOGE streaming 64-bit INTT plus an NTT wrapper.
 - `variants/hoge-nttid`: HOGE full-vector NTT/INTT identity pipeline.
 - `third_party/TFHEpp`: TFHEpp submodule used as the C++ reference.
+- `docs/ntt-module-specs.md`: top-level module specifications for generating
+  replacement Verilog that passes the included tests.
 
 The copied YATA and HOGE RTL is AGPL-3.0 licensed. See `NOTICE.md` and
 `licenses/`.
