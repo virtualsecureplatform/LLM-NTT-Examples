@@ -23,6 +23,103 @@ is expected at `third_party/TFHEpp`.
 - Wide packed ports use little-endian coefficient packing: coefficient or lane
   0 occupies the least significant bits of the packed port.
 
+## Why These Prime Forms Are NTT Friendly
+
+An NTT performs FFT-like butterfly operations over a finite field. For a prime
+modulus `P`, the nonzero field elements form a multiplicative group of size
+`P - 1`. A root of unity of order `M` exists when `M` divides `P - 1`.
+
+The extracted designs use twisted, negacyclic NTTs for polynomial arithmetic
+modulo `x^N + 1`. This normally requires a primitive `2N`-th root `psi` such
+that:
+
+```text
+psi^(2N) = 1
+psi^N = -1 mod P
+omega = psi^2 is an N-th root of unity
+```
+
+Therefore, an NTT-friendly prime for these modules should satisfy:
+
+```text
+2N divides P - 1
+```
+
+Both extracted designs choose primes with a large power-of-two factor in
+`P - 1`. This makes the required power-of-two roots of unity available and also
+supports the staged radix structure used by the RTL.
+
+### YATA RAINTT Prime
+
+YATA uses:
+
+```text
+P = (5^4 << 16) + 1
+  = 625 * 2^16 + 1
+  = 40960001
+P - 1 = 5^4 * 2^16
+```
+
+This is good for the YATA `N = 512` twisted NTT because:
+
+- The transform needs `2N = 1024 = 2^10` to divide `P - 1`.
+- `P - 1` contains `2^16`, so it has more than enough power-of-two order for
+  the full transform and its internal stages.
+- The extra `5^4` factor matches the compressed RAINTT parameterization
+  (`K = 625`) used by the YATA design.
+- `P` fits in 27 bits. Centered signed residues fit in the 27-bit datapath, and
+  products of two residues fit comfortably in 64-bit intermediates.
+- The form `K * 2^16 + 1` makes the modulus directly tied to shift-based
+  scaling and root generation: powers of two are cheap in hardware, while the
+  small odd factor keeps the prime compact.
+
+For LLM-generated Verilog, the important invariant is not just the numeric value
+of `P`, but the divisibility:
+
+```text
+2 * 512 = 1024 divides 40960001 - 1
+```
+
+### HOGE 64-Bit Prime
+
+HOGE uses:
+
+```text
+P = 0xffffffff00000001
+  = 2^64 - 2^32 + 1
+P - 1 = 2^32 * (2^32 - 1)
+      = 2^32 * 3 * 5 * 17 * 257 * 65537
+```
+
+This is good for the HOGE `N = 1024` twisted NTT because:
+
+- The transform needs `2N = 2048 = 2^11` to divide `P - 1`.
+- `P - 1` contains `2^32`, so it supports power-of-two roots far larger than
+  the current 1024-coefficient transforms.
+- `P` is close to the 64-bit word size, so each field element fits in one
+  unsigned 64-bit word while still leaving an NTT-friendly root structure.
+- Modular reduction can exploit:
+
+```text
+2^64 = 2^32 - 1 mod P
+```
+
+  A 128-bit product can be reduced by folding high limbs with shifts, adds, and
+  subtracts instead of a general division.
+- The large field is convenient for the HOGE path, where 32-bit torus inputs are
+  expanded into 64-bit NTT-domain residues.
+
+For LLM-generated Verilog, the important invariant is:
+
+```text
+2 * 1024 = 2048 divides 0xffffffff00000001 - 1
+```
+
+The C++ tests compare against TFHEpp, so generated arithmetic RTL should use the
+same roots and twist tables as TFHEpp for these primes. If the implementation is
+simulation-oriented, it may compute the same observable transform by any method,
+but the modular field and stream ordering must remain exactly as specified.
+
 ## YataRainttTop
 
 ### Source And Test
