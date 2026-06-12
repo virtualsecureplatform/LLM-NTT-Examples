@@ -1,0 +1,14 @@
+build/
+*.sif
+*.v
+*.fir
+*.json
+*.anno.json
+simx.fst
+test_run_dir/
+target/
+project/target/
+project/project/
+variants/*/chisel/target/
+variants/*/chisel/project/target/
+variants/*/chisel/project/project/
