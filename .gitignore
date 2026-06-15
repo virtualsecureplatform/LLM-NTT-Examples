@@ -5,6 +5,8 @@ build/
 *.json
 *.anno.json
 !tasks/*.json
+!tasks/planned/
+!tasks/planned/*.json
 !baselines/extracted-rtl/*.json
 simx.fst
 test_run_dir/

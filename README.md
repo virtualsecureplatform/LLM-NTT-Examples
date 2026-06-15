@@ -83,12 +83,16 @@ scripts/evaluate_candidate.sh \
 
 ## Test Targets
 
-- `yata_raintt_reference_test`: drives streamed YATA `INTT` as a valid-output
-  smoke test and compares streamed YATA `NTT` against `raintt::TwistNTT` with
-  `USE_COMPRESS`. The standalone YATA `NTT` emits eight cycles in transposed
-  lane order: output lane `l` at cycle `c` corresponds to coefficient
-  `l * 8 + c`.
+- `yata_raintt_reference_test`: compares streamed YATA `INTT` and `NTT`
+  against `raintt::TwistINTT`/`raintt::TwistNTT` with `USE_COMPRESS`. INTT
+  input lane `l` at cycle `c` carries coefficient `l * 8 + c`; NTT output lane
+  `l` at cycle `c` corresponds to coefficient `l * 8 + c`.
 - `hoge_streaming_reference_test`: drives HOGE `INTTWrap` and compares against
   `cuHEpp::TwistINTT`.
 - `hoge_nttid_identity_test`: drives HOGE `NTTid` and checks that the combined
   INTT/NTT pipeline returns the original polynomial modulo `P`.
+
+The HOGE forward `NTTWrap` manifest, `hoge_streaming_ntt_1024_p64`, is a
+lint-only tier0 interface task. It should not be used as an arithmetic or
+latency benchmark until the planned ExternalProduct-style forward NTT oracle is
+implemented.

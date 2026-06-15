@@ -128,6 +128,11 @@ The current tests assume no input backpressure for `YataRainttTop` and
 `INTTWrap`. `NTTWrap` exposes `io_ready`, but the repository currently treats it
 as an interface/lint task until a reference test is added.
 
+Keep `hoge_streaming_ntt_1024_p64` in `tier0_interface` comparisons only. It is
+useful for checking module shape and packed-port compatibility, but it should
+not appear in arithmetic, latency, throughput, or resource Pareto rankings until
+an executable ExternalProduct-style forward NTT oracle is added.
+
 ## Task Difficulty Levels
 
 Suggested benchmark tiers:
@@ -142,6 +147,9 @@ Suggested benchmark tiers:
 The current evaluator directly supports `tier0_interface` and
 `tier1_correctness`. Resource scoring can be added by integrating Yosys, Vivado,
 or another synthesis report parser.
+
+Planned task skeletons under `tasks/planned/` document future benchmark
+boundaries. They are not current evaluator targets.
 
 ## Recommended Agent Loop
 

@@ -53,6 +53,10 @@ Useful comparisons:
 - Different butterfly-unit budgets under the same resource file.
 - Different target latency or throughput constraints.
 
+Use correctness-tested HOGE tasks for these comparisons. The extracted
+`hoge_streaming_ntt_1024_p64` task is lint-only and should remain an interface
+gate until an ExternalProduct-style forward NTT oracle is implemented.
+
 ## YATA Gap
 
 YATA has two properties that make it valuable for LLM-based RTL search even
@@ -77,3 +81,5 @@ Keep the boundary explicit:
 - `scripts/evaluate_candidate.sh` is the correctness and metrics oracle.
 - Candidate adapters are responsible for matching top-level ports and stream
   ordering.
+- Planned manifests under `tasks/planned/` describe future targets and are not
+  evaluator-ready tasks.

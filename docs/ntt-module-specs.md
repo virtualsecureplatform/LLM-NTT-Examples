@@ -184,13 +184,13 @@ During reset:
 
 ### INTT Observable Behavior
 
-The current C++ test verifies INTT handshaking only.
+The INTT path is checked against TFHEpp exactly.
 
 Input transaction:
 
 - The test drives `io_intt_validin = 1` for 8 consecutive clock cycles.
 - On input cycle `c` in `0..7` and lane `l` in `0..63`, the lane carries
-  polynomial coefficient index `c * 64 + l`.
+  polynomial coefficient index `l * 8 + c`.
 - After 8 input cycles, the test drives `io_intt_validin = 0`.
 
 Output transaction:
@@ -198,11 +198,10 @@ Output transaction:
 - `io_intt_validout` must assert within 2000 cycles after the input stream.
 - Once asserted for this transaction, `io_intt_validout` must stay high for
   exactly 8 consecutive output cycles.
-- The test captures 64 signed 27-bit lane values on each valid cycle but does
-  not compare them with the TFHEpp INTT reference.
+- On output cycle `c` in `0..7` and lane `l` in `0..63`, `io_intt_out_l`
+  must equal TFHEpp expected coefficient index `c * 64 + l`.
 
-Even though the current test only checks the handshake, the intended arithmetic
-reference is TFHEpp RAINTT inverse transform:
+The exact reference is:
 
 ```text
 table = TFHEpp::raintt::TableGen<9>()
@@ -391,21 +390,58 @@ Lane `l` is packed and unpacked as:
 lane_l = uint64(port[2 * l]) | (uint64(port[2 * l + 1]) << 32)
 ```
 
-### Intended Behavior
+### Interface/Lint Contract
 
-`NTTWrap` is the forward transform counterpart to `INTTWrap`.
+`NTTWrap` is an extracted internal forward-transform pipeline wrapper. The
+current repository intentionally treats it as a `tier0_interface` task.
 
-- It accepts 32 lanes of 64-bit residues modulo `P` for each input cycle.
-- It produces 32 lanes of 64-bit residues modulo `P` for each valid output
-  cycle.
-- `io_ready` should be high when an input cycle is accepted.
-- `io_validout` should delimit a 32-cycle output stream for one full
-  1024-coefficient polynomial.
-- The intended arithmetic is TFHEpp cuHEpp forward twist NTT over modulus `P`
-  with `Nbit = 10`.
+The executable contract is limited to:
 
-Because no current test checks this top module, the observable requirements for
-passing the existing suite are limited to successful Verilog elaboration.
+- module name `NTTWrap`
+- the ports and widths listed above
+- successful Verilog elaboration with Verilator
+- the packed-lane convention for `io_in` and `io_out`
+
+The current task does not check:
+
+- forward NTT arithmetic
+- coefficient ordering
+- latency or throughput
+- `io_validout` burst length
+- whether the standalone wrapper is equivalent to a TFHEpp API call
+
+This distinction matters for architecture search. A candidate that passes
+`hoge_streaming_ntt_1024_p64` has passed an interface/lint gate only; it should
+not be ranked against correctness-tested NTT or INTT tasks for arithmetic
+quality, latency, or resource efficiency.
+
+### Planned ExternalProduct-Style Forward NTT Oracle
+
+The original HOGE forward NTT correctness boundary is the final output check in
+the HOGE `ExternalProduct` C++ test, not the standalone `NTTWrap` module. That
+boundary emits 32-bit torus words after the final NTT/output path and compares
+two result components against TFHEpp:
+
+```text
+TFHEpp::TwistNTT<P>(res[0], restrlwentt[0])
+TFHEpp::TwistNTT<P>(res[1], restrlwentt[1])
+```
+
+The output capture order from that boundary is:
+
+```text
+circres[k][j * 32 + i] = io_out[j]
+```
+
+where `k` is the component index, `i` is the output cycle in `0..31`, and `j`
+is the output lane in `0..31`.
+
+A future executable forward-NTT task should extract or wrap that
+ExternalProduct final-output boundary, drive the same 64-bit residue-domain
+inputs, capture the 32-bit torus output in the order above, and compare every
+coefficient against `TFHEpp::TwistNTT<P>`. The planned task skeleton is recorded
+in `tasks/planned/hoge_externalproduct_ntt_1024_p64.json`; it is not runnable by
+the current evaluator.
 
 ## Hoge NTTidPackedTop
 
@@ -502,6 +538,8 @@ Use this checklist before running the tests:
   and 65536-bit `io_out`.
 - Streaming valid outputs have the exact stream lengths expected by the tests:
   8 cycles for `YataRainttTop` INTT and NTT, 32 cycles for `INTTWrap`.
+- Yata INTT input ordering is `poly[lane * 8 + input_cycle]`.
+- Yata INTT output ordering is `expected[output_cycle * 64 + lane]`.
 - Yata NTT output ordering is `expected[lane * 8 + output_cycle]`.
 - Hoge streaming INTT input ordering is `poly[lane * 32 + input_cycle]`.
 - Hoge streaming INTT output ordering is `expected[output_cycle * 32 + lane]`.

@@ -105,6 +105,12 @@ PY
 task_id="$(json_get id)"
 mode="$(json_get evaluation.mode)"
 top_module="$(json_get top_module)"
+
+if [[ "${mode}" == "planned" ]]; then
+  echo "Task '${task_id}' is planned and is not supported by the evaluator yet." >&2
+  exit 2
+fi
+
 candidate_file="$(json_get verilog.candidate_file)"
 default_path="$(json_get verilog.default_path)"
 

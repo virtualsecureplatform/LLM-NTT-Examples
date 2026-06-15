@@ -2,7 +2,7 @@
   "id": "yata_raintt_512_p27",
   "name": "YATA compressed RAINTT 512-point NTT/INTT wrapper",
   "status": "correctness_scored",
-  "description": "Streamed 512-coefficient YATA RAINTT top. The current test checks INTT valid timing and exact NTT output against TFHEpp RAINTT.",
+  "description": "Streamed 512-coefficient YATA RAINTT top. The test checks exact INTT and NTT output against TFHEpp RAINTT.",
   "variant": "yata-raintt",
   "top_module": "YataRainttTop",
   "verilog": {
@@ -48,9 +48,11 @@
     "ntt": "raintt::TwistNTT<uint32_t, 9, true>"
   },
   "observable_contract": {
-    "intt": "8 input cycles, valid output within 2000 cycles, then exactly 8 valid output cycles. Current test records but does not compare INTT arithmetic.",
+    "intt": "8 input cycles with input index lane * 8 + input_cycle. Output must match TFHEpp INTT exactly with index output_cycle * 64 + lane.",
     "ntt": "8 input cycles of signed 27-bit values from TFHEpp INTT. Output must match TFHEpp NTT exactly with index lane * 8 + output_cycle.",
-    "input_order": "input_index = input_cycle * 64 + lane",
+    "intt_input_order": "input_index = lane * 8 + input_cycle",
+    "intt_output_order": "expected_index = output_cycle * 64 + lane",
+    "ntt_input_order": "input_index = input_cycle * 64 + lane",
     "ntt_output_order": "expected_index = lane * 8 + output_cycle"
   },
   "search_axes": [

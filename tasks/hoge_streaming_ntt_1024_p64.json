@@ -1,8 +1,9 @@
 {
   "id": "hoge_streaming_ntt_1024_p64",
-  "name": "HOGE streaming 1024-point NTT wrapper",
-  "status": "interface_lint",
-  "description": "Forward streaming NTT wrapper emitted by the HOGE streaming extraction. The current repository does not yet define a TFHEpp correctness test for this wrapper, so the benchmark treats it as an interface/lint task.",
+  "name": "HOGE streaming 1024-point NTT wrapper lint",
+  "status": "tier0_interface_lint",
+  "description": "Internal forward NTT pipeline wrapper emitted by the HOGE streaming extraction. Passing this task means the required Verilog interface elaborates; it does not prove arithmetic correctness, latency, or output ordering.",
+  "tier": "tier0_interface",
   "variant": "hoge-streaming",
   "top_module": "NTTWrap",
   "verilog": {
@@ -22,6 +23,7 @@
     "word_bits": 64,
     "lanes": 32,
     "stream_cycles": 32,
+    "stream_cycles_note": "Extraction-side nominal input burst; this lint-only task does not score output burst length.",
     "radix": 32,
     "prime_form": "2^64 - 2^32 + 1"
   },
@@ -35,12 +37,16 @@
     "packed_output": "io_out[2047:0]"
   },
   "reference": {
-    "intended_operation": "cuHEpp forward twist NTT over P, but no executable test is currently included"
+    "standalone_oracle": "none in this repository",
+    "intended_operation": "internal cuHEpp forward twist NTT path over P",
+    "original_correctness_boundary": "HOGE ExternalProduct final 32-bit torus output compared against TFHEpp::TwistNTT<P>",
+    "planned_task": "tasks/planned/hoge_externalproduct_ntt_1024_p64.json"
   },
   "observable_contract": {
     "lint": "Verilog must elaborate with module NTTWrap and the listed ports.",
     "packing": "lane l is port[2*l] | (port[2*l+1] << 32)",
-    "ready": "io_ready should be high when an input cycle is accepted"
+    "ready": "io_ready should be high when an input cycle is accepted",
+    "not_checked": "forward NTT arithmetic, valid burst length, latency, throughput, or coefficient ordering"
   },
   "search_axes": [
     "radix schedule",
@@ -50,10 +56,10 @@
     "pseudo-Mersenne reduction for 0xffffffff00000001"
   ],
   "score": {
-    "correctness": "lint/interface only in this repository",
-    "primary": "successful elaboration",
+    "correctness": "tier0 interface elaboration only; not an arithmetic correctness result",
+    "primary": "successful lint/elaboration with the required top-level ports",
     "secondary": [
-      "add a future executable reference test before comparing performance"
+      "add the planned ExternalProduct-style executable reference test before comparing performance"
     ]
   }
 }

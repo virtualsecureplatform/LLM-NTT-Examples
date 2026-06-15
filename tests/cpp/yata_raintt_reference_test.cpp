@@ -167,8 +167,9 @@ bool run_intt(VYataRainttTop &dut, const std::array<uint32_t, kN> &input,
               std::array<int32_t, kN> &output, int &wait_cycles)
 {
     for (int cycle = 0; cycle < kCycles; ++cycle) {
+        // INTT RTL indexes twist/input lanes as lane * numcycle + cycle.
         for (int lane = 0; lane < kLanes; ++lane)
-            intt_in(dut, lane) = input[cycle * kLanes + lane];
+            intt_in(dut, lane) = input[lane * kCycles + cycle];
         dut.io_intt_validin = 1;
         tick(dut);
     }
@@ -276,6 +277,14 @@ int main(int argc, char **argv)
         if (!run_intt(intt_dut, poly, hardware_fd, intt_wait_cycles)) return 1;
         intt_dut.final();
         max_intt_wait_cycles = std::max(max_intt_wait_cycles, intt_wait_cycles);
+        for (int i = 0; i < kN; ++i) {
+            const int32_t want = static_cast<int32_t>(fd[i]);
+            if (hardware_fd[i] != want) {
+                std::cerr << "INTT mismatch index=" << i << " got=" << hardware_fd[i]
+                          << " want=" << want << "\n";
+                return 1;
+            }
+        }
 
         std::array<raintt::DoubleSWord, kN> ntt_input = fd;
         std::array<uint32_t, kN> ntt_expected{};

@@ -54,6 +54,12 @@ correct = lint_passed
 
 A candidate with `correct = false` should receive score zero.
 
+For `lint_only` tasks, `correct = true` means interface elaboration only. It
+does not mean the NTT arithmetic, coefficient order, latency, throughput, or
+valid burst length has been checked. Do not mix lint-only tasks with
+correctness-tested tasks in one scalar ranking; report them as tier0 interface
+gates.
+
 ## Baseline Metrics
 
 The extracted RTL is the baseline. Agents should compare candidates against the
@@ -136,3 +142,5 @@ cycles and code-level structural metrics, and label it clearly.
 - Use the same simulator and compiler version when comparing latency metrics.
 - Separate simulation-only behavioral designs from synthesizable RTL.
 - Report any task where only lint/interface checking is available.
+- Do not treat planned manifests under `tasks/planned/` as executable
+  benchmark tasks until a Verilator harness and task manifest are promoted.
