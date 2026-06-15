@@ -1,0 +1,73 @@
+{
+  "id": "yata_raintt_512_p27",
+  "name": "YATA compressed RAINTT 512-point NTT/INTT wrapper",
+  "status": "correctness_scored",
+  "description": "Streamed 512-coefficient YATA RAINTT top. The current test checks INTT valid timing and exact NTT output against TFHEpp RAINTT.",
+  "variant": "yata-raintt",
+  "top_module": "YataRainttTop",
+  "verilog": {
+    "candidate_file": "YataRainttTop.v",
+    "default_path": "variants/yata-raintt/chisel/YataRainttTop.v"
+  },
+  "evaluation": {
+    "mode": "verilator_test",
+    "cmake_cache_var": "YATA_RAINTT_VERILOG",
+    "test_target": "yata_raintt_reference_test",
+    "watchdog_cycles": 2000
+  },
+  "parameters": {
+    "N": 512,
+    "Nbit": 9,
+    "modulus": 40960001,
+    "modulus_hex": "0x02710001",
+    "word_bits": 27,
+    "torus_bits": 32,
+    "lanes": 64,
+    "stream_cycles": 8,
+    "radix": 8,
+    "prime_form": "5^4 * 2^16 + 1"
+  },
+  "ports": {
+    "clock": "clock",
+    "reset": "reset",
+    "intt_valid_in": "io_intt_validin",
+    "intt_valid_out": "io_intt_validout",
+    "intt_input_lanes": "io_intt_in_0..io_intt_in_63",
+    "intt_output_lanes": "io_intt_out_0..io_intt_out_63",
+    "ntt_valid_in": "io_ntt_validin",
+    "ntt_valid_out": "io_ntt_validout",
+    "ntt_input_lanes": "io_ntt_in_0..io_ntt_in_63",
+    "ntt_output_lanes": "io_ntt_out_0..io_ntt_out_63"
+  },
+  "reference": {
+    "library": "TFHEpp",
+    "include": "raintt.hpp",
+    "table": "raintt::TableGen<9>()",
+    "twist": "raintt::TwistGen<9, 3>()",
+    "intt": "raintt::TwistINTT<uint32_t, 9, false>",
+    "ntt": "raintt::TwistNTT<uint32_t, 9, true>"
+  },
+  "observable_contract": {
+    "intt": "8 input cycles, valid output within 2000 cycles, then exactly 8 valid output cycles. Current test records but does not compare INTT arithmetic.",
+    "ntt": "8 input cycles of signed 27-bit values from TFHEpp INTT. Output must match TFHEpp NTT exactly with index lane * 8 + output_cycle.",
+    "input_order": "input_index = input_cycle * 64 + lane",
+    "ntt_output_order": "expected_index = lane * 8 + output_cycle"
+  },
+  "search_axes": [
+    "radix schedule",
+    "lane count",
+    "butterfly count",
+    "pipeline depth",
+    "twiddle storage",
+    "signed modular reduction",
+    "transpose buffer implementation"
+  ],
+  "score": {
+    "correctness": "required",
+    "primary": "minimize total valid latency cycles",
+    "secondary": [
+      "minimize LUT/FF/DSP/BRAM when synthesis is available",
+      "maximize transforms per cycle"
+    ]
+  }
+}

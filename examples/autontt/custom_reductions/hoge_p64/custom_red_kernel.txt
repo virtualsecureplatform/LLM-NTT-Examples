@@ -1,0 +1,39 @@
+// === BEGIN DEFS ===
+WORD hoge_p64_reduce_product(DWORD product, WORD q) {
+    #pragma HLS inline
+
+    const DWORD mask64 = (((DWORD)1 << (DWORD)64) - 1);
+
+    DWORD high = product >> (DWORD)64;
+    DWORD low = product & mask64;
+    DWORD folded = low + (high << (DWORD)32) - high;
+
+    high = folded >> (DWORD)64;
+    low = folded & mask64;
+    folded = low + (high << (DWORD)32) - high;
+
+    high = folded >> (DWORD)64;
+    low = folded & mask64;
+    folded = low + (high << (DWORD)32) - high;
+
+    const DWORD q_wide = (DWORD)q;
+    for (int i = 0; i < 4; i++) {
+        #pragma HLS unroll
+        if (folded >= q_wide) folded -= q_wide;
+    }
+
+    return (WORD)folded;
+}
+
+WORD hoge_p64_mul_reduce(WORD right, WORD tfVal, WORD q) {
+    #pragma HLS inline
+
+    DWORD product = (DWORD)right * (DWORD)tfVal;
+    #pragma HLS bind_op variable=product op=mul impl=dsp
+    return hoge_p64_reduce_product(product, q);
+}
+// === END DEFS ===
+
+// === BEGIN CALL ===
+WORD reducedProduct = hoge_p64_mul_reduce(right, tfVal, q);
+// === END CALL ===

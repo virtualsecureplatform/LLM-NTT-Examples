@@ -4,6 +4,8 @@ build/
 *.fir
 *.json
 *.anno.json
+!tasks/*.json
+!baselines/extracted-rtl/*.json
 simx.fst
 test_run_dir/
 target/

@@ -69,6 +69,9 @@ int main(int argc, char **argv)
         }
         dut.final();
     }
+    std::cout << "METRIC hoge_nttid_tests=3\n";
+    std::cout << "METRIC hoge_nttid_wait_cycles=" << kWaitCycles << "\n";
+    std::cout << "METRIC hoge_nttid_coefficients=" << kN << "\n";
     std::cout << "PASS hoge_nttid_identity_test\n";
     return 0;
 }

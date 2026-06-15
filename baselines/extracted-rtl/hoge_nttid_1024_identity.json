@@ -1,0 +1,35 @@
+{
+  "build_dir": "build/eval/hoge_nttid_1024_identity",
+  "build_passed": true,
+  "correct": true,
+  "lint_passed": false,
+  "logs": {
+    "build": "build/eval/hoge_nttid_1024_identity/build.log",
+    "configure": "build/eval/hoge_nttid_1024_identity/configure.log",
+    "lint": "build/eval/hoge_nttid_1024_identity/lint.log",
+    "test": "build/eval/hoge_nttid_1024_identity/test.log"
+  },
+  "metrics": {
+    "hoge_nttid_coefficients": 1024,
+    "hoge_nttid_tests": 3,
+    "hoge_nttid_wait_cycles": 33
+  },
+  "mode": "verilator_test",
+  "schema": "llm-ntt-evaluation-v1",
+  "seconds": {
+    "build": 7,
+    "test": 0
+  },
+  "status": {
+    "build": 0,
+    "configure": 0,
+    "lint": 0,
+    "test": 0
+  },
+  "task_file": "tasks/hoge_nttid_1024_identity.json",
+  "task_id": "hoge_nttid_1024_identity",
+  "test_passed": true,
+  "timestamp_utc": "2026-06-15T07:27:22+00:00",
+  "top_module": "NTTidPackedTop",
+  "verilog_file": "variants/hoge-nttid/chisel/NTTidPackedTop.v"
+}

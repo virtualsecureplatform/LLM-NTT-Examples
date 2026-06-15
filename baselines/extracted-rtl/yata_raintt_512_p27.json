@@ -1,0 +1,39 @@
+{
+  "build_dir": "build/eval/yata_raintt_512_p27",
+  "build_passed": true,
+  "correct": true,
+  "lint_passed": false,
+  "logs": {
+    "build": "build/eval/yata_raintt_512_p27/build.log",
+    "configure": "build/eval/yata_raintt_512_p27/configure.log",
+    "lint": "build/eval/yata_raintt_512_p27/lint.log",
+    "test": "build/eval/yata_raintt_512_p27/test.log"
+  },
+  "metrics": {
+    "yata_raintt_intt_input_cycles": 8,
+    "yata_raintt_intt_max_wait_cycles": 34,
+    "yata_raintt_intt_output_cycles": 8,
+    "yata_raintt_ntt_input_cycles": 8,
+    "yata_raintt_ntt_max_wait_cycles": 35,
+    "yata_raintt_ntt_output_cycles": 8,
+    "yata_raintt_tests": 4
+  },
+  "mode": "verilator_test",
+  "schema": "llm-ntt-evaluation-v1",
+  "seconds": {
+    "build": 7,
+    "test": 0
+  },
+  "status": {
+    "build": 0,
+    "configure": 0,
+    "lint": 0,
+    "test": 0
+  },
+  "task_file": "tasks/yata_raintt_512_p27.json",
+  "task_id": "yata_raintt_512_p27",
+  "test_passed": true,
+  "timestamp_utc": "2026-06-15T07:26:59+00:00",
+  "top_module": "YataRainttTop",
+  "verilog_file": "variants/yata-raintt/chisel/YataRainttTop.v"
+}

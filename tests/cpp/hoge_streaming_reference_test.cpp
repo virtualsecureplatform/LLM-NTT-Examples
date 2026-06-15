@@ -44,6 +44,7 @@ int main(int argc, char **argv)
 
     std::mt19937 rng(0x5354524dU);
     std::uniform_int_distribution<uint32_t> dist(0, UINT32_MAX);
+    int max_wait_cycles = 0;
 
     for (int test = 0; test < 3; ++test) {
         VINTTWrap dut;
@@ -71,6 +72,7 @@ int main(int argc, char **argv)
                 return 1;
             }
         }
+        if (watchdog > max_wait_cycles) max_wait_cycles = watchdog;
 
         for (int cycle = 0; cycle < kCycles; ++cycle) {
             if (!dut.io_validout) {
@@ -97,6 +99,11 @@ int main(int argc, char **argv)
         tick(dut);
         dut.final();
     }
+    std::cout << "METRIC hoge_streaming_intt_tests=3\n";
+    std::cout << "METRIC hoge_streaming_intt_input_cycles=" << kCycles << "\n";
+    std::cout << "METRIC hoge_streaming_intt_output_cycles=" << kCycles << "\n";
+    std::cout << "METRIC hoge_streaming_intt_max_wait_cycles=" << max_wait_cycles
+              << "\n";
     std::cout << "PASS hoge_streaming_reference_test\n";
     return 0;
 }

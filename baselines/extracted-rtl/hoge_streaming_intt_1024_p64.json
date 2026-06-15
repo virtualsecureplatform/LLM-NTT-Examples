@@ -1,0 +1,36 @@
+{
+  "build_dir": "build/eval/hoge_streaming_intt_1024_p64",
+  "build_passed": true,
+  "correct": true,
+  "lint_passed": false,
+  "logs": {
+    "build": "build/eval/hoge_streaming_intt_1024_p64/build.log",
+    "configure": "build/eval/hoge_streaming_intt_1024_p64/configure.log",
+    "lint": "build/eval/hoge_streaming_intt_1024_p64/lint.log",
+    "test": "build/eval/hoge_streaming_intt_1024_p64/test.log"
+  },
+  "metrics": {
+    "hoge_streaming_intt_input_cycles": 32,
+    "hoge_streaming_intt_max_wait_cycles": 65,
+    "hoge_streaming_intt_output_cycles": 32,
+    "hoge_streaming_intt_tests": 3
+  },
+  "mode": "verilator_test",
+  "schema": "llm-ntt-evaluation-v1",
+  "seconds": {
+    "build": 6,
+    "test": 0
+  },
+  "status": {
+    "build": 0,
+    "configure": 0,
+    "lint": 0,
+    "test": 0
+  },
+  "task_file": "tasks/hoge_streaming_intt_1024_p64.json",
+  "task_id": "hoge_streaming_intt_1024_p64",
+  "test_passed": true,
+  "timestamp_utc": "2026-06-15T07:27:10+00:00",
+  "top_module": "INTTWrap",
+  "verilog_file": "variants/hoge-streaming/chisel/INTTWrap.v"
+}

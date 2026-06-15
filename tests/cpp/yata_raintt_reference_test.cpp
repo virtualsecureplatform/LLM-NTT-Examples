@@ -1,6 +1,7 @@
 #include <verilated.h>
 #include <VYataRainttTop.h>
 
+#include <algorithm>
 #include <array>
 #include <cassert>
 #include <cstdlib>
@@ -163,7 +164,7 @@ void reset(VYataRainttTop &dut)
 }
 
 bool run_intt(VYataRainttTop &dut, const std::array<uint32_t, kN> &input,
-              std::array<int32_t, kN> &output)
+              std::array<int32_t, kN> &output, int &wait_cycles)
 {
     for (int cycle = 0; cycle < kCycles; ++cycle) {
         for (int lane = 0; lane < kLanes; ++lane)
@@ -181,6 +182,7 @@ bool run_intt(VYataRainttTop &dut, const std::array<uint32_t, kN> &input,
             return false;
         }
     }
+    wait_cycles = watchdog;
 
     for (int cycle = 0; cycle < kCycles; ++cycle) {
         if (!dut.io_intt_validout) {
@@ -198,7 +200,7 @@ bool run_intt(VYataRainttTop &dut, const std::array<uint32_t, kN> &input,
 }
 
 bool run_ntt(VYataRainttTop &dut, const std::array<int32_t, kN> &input,
-             const std::array<uint32_t, kN> &expected)
+             const std::array<uint32_t, kN> &expected, int &wait_cycles)
 {
     for (int cycle = 0; cycle < kCycles; ++cycle) {
         for (int lane = 0; lane < kLanes; ++lane) {
@@ -218,6 +220,7 @@ bool run_ntt(VYataRainttTop &dut, const std::array<int32_t, kN> &input,
             return false;
         }
     }
+    wait_cycles = watchdog;
 
     for (int cycle = 0; cycle < kCycles; ++cycle) {
         if (!dut.io_ntt_validout) {
@@ -250,6 +253,8 @@ int main(int argc, char **argv)
 
     std::mt19937 rng(0x4c4c4dU);
     std::uniform_int_distribution<uint32_t> dist(0, static_cast<uint32_t>(raintt::P) - 1);
+    int max_intt_wait_cycles = 0;
+    int max_ntt_wait_cycles = 0;
 
     for (int test = 0; test < 4; ++test) {
         std::array<uint32_t, kN> poly{};
@@ -267,8 +272,10 @@ int main(int argc, char **argv)
         std::array<int32_t, kN> hardware_fd{};
         VYataRainttTop intt_dut;
         reset(intt_dut);
-        if (!run_intt(intt_dut, poly, hardware_fd)) return 1;
+        int intt_wait_cycles = 0;
+        if (!run_intt(intt_dut, poly, hardware_fd, intt_wait_cycles)) return 1;
         intt_dut.final();
+        max_intt_wait_cycles = std::max(max_intt_wait_cycles, intt_wait_cycles);
 
         std::array<raintt::DoubleSWord, kN> ntt_input = fd;
         std::array<uint32_t, kN> ntt_expected{};
@@ -278,9 +285,19 @@ int main(int argc, char **argv)
         for (int i = 0; i < kN; ++i) reference_fd[i] = static_cast<int32_t>(fd[i]);
         VYataRainttTop ntt_dut;
         reset(ntt_dut);
-        if (!run_ntt(ntt_dut, reference_fd, ntt_expected)) return 1;
+        int ntt_wait_cycles = 0;
+        if (!run_ntt(ntt_dut, reference_fd, ntt_expected, ntt_wait_cycles)) return 1;
         ntt_dut.final();
+        max_ntt_wait_cycles = std::max(max_ntt_wait_cycles, ntt_wait_cycles);
     }
+    std::cout << "METRIC yata_raintt_tests=4\n";
+    std::cout << "METRIC yata_raintt_intt_input_cycles=" << kCycles << "\n";
+    std::cout << "METRIC yata_raintt_intt_output_cycles=" << kCycles << "\n";
+    std::cout << "METRIC yata_raintt_intt_max_wait_cycles=" << max_intt_wait_cycles
+              << "\n";
+    std::cout << "METRIC yata_raintt_ntt_input_cycles=" << kCycles << "\n";
+    std::cout << "METRIC yata_raintt_ntt_output_cycles=" << kCycles << "\n";
+    std::cout << "METRIC yata_raintt_ntt_max_wait_cycles=" << max_ntt_wait_cycles << "\n";
     std::cout << "PASS yata_raintt_reference_test\n";
     return 0;
 }

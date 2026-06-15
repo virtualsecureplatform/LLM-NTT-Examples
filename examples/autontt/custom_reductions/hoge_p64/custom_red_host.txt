@@ -1,0 +1,20 @@
+// === BEGIN MOD_GEN DEFS ===
+void set_hoge_p64_prime(std::vector<WORD>& modulusArray, VAR_TYPE_32 limbCount) {
+  WORD custom_prime =
+      (WORD)(((WORD_PLUS1)1 << 64) - ((WORD_PLUS1)1 << 32) + 1);
+
+  for (VAR_TYPE_32 i = 0; i < limbCount; i++) {
+    modulusArray[i] = custom_prime;
+  }
+}
+// === END MOD_GEN DEFS ===
+
+// === BEGIN REDUCTION DEFS ===
+// === END REDUCTION DEFS ===
+
+// === BEGIN MOD_GEN CALL ===
+set_hoge_p64_prime(workingModulus_arr, PARA_LIMBS);
+// === END MOD_GEN CALL ===
+
+// === BEGIN REDUCTION CALL ===
+// === END REDUCTION CALL ===

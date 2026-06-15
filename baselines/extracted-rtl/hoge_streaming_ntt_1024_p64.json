@@ -1,0 +1,31 @@
+{
+  "build_dir": "build/eval/hoge_streaming_ntt_1024_p64",
+  "build_passed": false,
+  "correct": true,
+  "lint_passed": true,
+  "logs": {
+    "build": "build/eval/hoge_streaming_ntt_1024_p64/build.log",
+    "configure": "build/eval/hoge_streaming_ntt_1024_p64/configure.log",
+    "lint": "build/eval/hoge_streaming_ntt_1024_p64/lint.log",
+    "test": "build/eval/hoge_streaming_ntt_1024_p64/test.log"
+  },
+  "metrics": {},
+  "mode": "lint_only",
+  "schema": "llm-ntt-evaluation-v1",
+  "seconds": {
+    "build": 0,
+    "test": 0
+  },
+  "status": {
+    "build": 0,
+    "configure": 0,
+    "lint": 0,
+    "test": 0
+  },
+  "task_file": "tasks/hoge_streaming_ntt_1024_p64.json",
+  "task_id": "hoge_streaming_ntt_1024_p64",
+  "test_passed": false,
+  "timestamp_utc": "2026-06-15T07:27:30+00:00",
+  "top_module": "NTTWrap",
+  "verilog_file": "variants/hoge-streaming/chisel/NTTWrap.v"
+}

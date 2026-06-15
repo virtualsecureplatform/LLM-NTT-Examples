@@ -12,6 +12,11 @@ TFHEpp C++ reference headers.
 - `third_party/TFHEpp`: TFHEpp submodule used as the C++ reference.
 - `docs/ntt-module-specs.md`: top-level module specifications for generating
   replacement Verilog that passes the included tests.
+- `tasks/`: machine-readable benchmark task manifests for architecture search.
+- `docs/architecture-search-space.md` and `docs/scoring.md`: search knobs and
+  evaluation rules.
+- `examples/autontt/`: AutoNTT-oriented mapping notes and custom reduction
+  examples.
 
 The copied YATA and HOGE RTL is AGPL-3.0 licensed. See `NOTICE.md` and
 `licenses/`.
@@ -60,6 +65,20 @@ Build and test after Verilog generation:
 cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
 cmake --build build
 ctest --test-dir build --output-on-failure
+```
+
+Evaluate a single benchmark task, using the extracted RTL as the baseline:
+
+```bash
+scripts/evaluate_candidate.sh --task hoge_streaming_intt_1024_p64
+```
+
+Evaluate candidate Verilog in a directory:
+
+```bash
+scripts/evaluate_candidate.sh \
+  --task hoge_streaming_intt_1024_p64 \
+  --verilog-dir candidate/hoge-intt
 ```
 
 ## Test Targets

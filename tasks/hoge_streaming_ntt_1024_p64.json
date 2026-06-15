@@ -1,0 +1,59 @@
+{
+  "id": "hoge_streaming_ntt_1024_p64",
+  "name": "HOGE streaming 1024-point NTT wrapper",
+  "status": "interface_lint",
+  "description": "Forward streaming NTT wrapper emitted by the HOGE streaming extraction. The current repository does not yet define a TFHEpp correctness test for this wrapper, so the benchmark treats it as an interface/lint task.",
+  "variant": "hoge-streaming",
+  "top_module": "NTTWrap",
+  "verilog": {
+    "candidate_file": "NTTWrap.v",
+    "default_path": "variants/hoge-streaming/chisel/NTTWrap.v"
+  },
+  "evaluation": {
+    "mode": "lint_only",
+    "lint_tool": "verilator",
+    "top_module": "NTTWrap"
+  },
+  "parameters": {
+    "N": 1024,
+    "Nbit": 10,
+    "modulus": "18446744069414584321",
+    "modulus_hex": "0xffffffff00000001",
+    "word_bits": 64,
+    "lanes": 32,
+    "stream_cycles": 32,
+    "radix": 32,
+    "prime_form": "2^64 - 2^32 + 1"
+  },
+  "ports": {
+    "clock": "clock",
+    "reset": "reset",
+    "enable": "io_enable",
+    "ready": "io_ready",
+    "valid_out": "io_validout",
+    "packed_input": "io_in[2047:0]",
+    "packed_output": "io_out[2047:0]"
+  },
+  "reference": {
+    "intended_operation": "cuHEpp forward twist NTT over P, but no executable test is currently included"
+  },
+  "observable_contract": {
+    "lint": "Verilog must elaborate with module NTTWrap and the listed ports.",
+    "packing": "lane l is port[2*l] | (port[2*l+1] << 32)",
+    "ready": "io_ready should be high when an input cycle is accepted"
+  },
+  "search_axes": [
+    "radix schedule",
+    "butterfly count",
+    "ready/valid control",
+    "twiddle storage",
+    "pseudo-Mersenne reduction for 0xffffffff00000001"
+  ],
+  "score": {
+    "correctness": "lint/interface only in this repository",
+    "primary": "successful elaboration",
+    "secondary": [
+      "add a future executable reference test before comparing performance"
+    ]
+  }
+}

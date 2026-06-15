@@ -1,0 +1,60 @@
+{
+  "id": "hoge_nttid_1024_identity",
+  "name": "HOGE 1024-point NTT/INTT identity pipeline",
+  "status": "correctness_scored",
+  "description": "Full-vector packed identity task that checks the composed INTT and NTT pipeline modulo the HOGE 64-bit prime.",
+  "variant": "hoge-nttid",
+  "top_module": "NTTidPackedTop",
+  "verilog": {
+    "candidate_file": "NTTidPackedTop.v",
+    "default_path": "variants/hoge-nttid/chisel/NTTidPackedTop.v"
+  },
+  "evaluation": {
+    "mode": "verilator_test",
+    "cmake_cache_var": "HOGE_NTTID_VERILOG",
+    "test_target": "hoge_nttid_identity_test",
+    "sample_after_cycles": 33
+  },
+  "parameters": {
+    "N": 1024,
+    "Nbit": 10,
+    "modulus": "18446744069414584321",
+    "modulus_hex": "0xffffffff00000001",
+    "word_bits": 64,
+    "packed_input_bits": 65536,
+    "packed_output_bits": 65536,
+    "radix": 32,
+    "prime_form": "2^64 - 2^32 + 1"
+  },
+  "ports": {
+    "clock": "clock",
+    "reset": "reset",
+    "packed_input": "io_in[65535:0]",
+    "packed_output": "io_out[65535:0]"
+  },
+  "reference": {
+    "operation": "identity modulo P after the internal inverse and forward transform composition"
+  },
+  "observable_contract": {
+    "input": "all 1024 coefficients are static on the packed input after reset",
+    "sample_time": "the test samples output after 33 post-reset clock cycles",
+    "output": "for every i, io_out[i] mod P must equal io_in[i] mod P",
+    "packing": "coefficient i is port[2*i] | (port[2*i+1] << 32)"
+  },
+  "search_axes": [
+    "full-vector combinational vs staged pipeline",
+    "radix schedule",
+    "butterfly count",
+    "pipeline depth",
+    "shared INTT/NTT hardware",
+    "register placement"
+  ],
+  "score": {
+    "correctness": "required",
+    "primary": "minimize cycles to stable identity output",
+    "secondary": [
+      "minimize packed-vector datapath resources",
+      "maximize fmax when synthesis is available"
+    ]
+  }
+}
