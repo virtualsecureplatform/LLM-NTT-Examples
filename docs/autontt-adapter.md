@@ -52,10 +52,13 @@ Useful comparisons:
 - Barrett vs Montgomery vs WLM vs HOGE pseudo-Mersenne custom reduction.
 - Different butterfly-unit budgets under the same resource file.
 - Different target latency or throughput constraints.
+- Verilator latency metrics vs optional `--with-yosys` structural cell counts
+  before running a vendor FPGA flow.
 
 Use correctness-tested HOGE tasks for these comparisons. The extracted
 `hoge_streaming_ntt_1024_p64` task is lint-only and should remain an interface
-gate until an ExternalProduct-style forward NTT oracle is implemented.
+gate; use `hoge_externalproduct_ntt_1024_p64` for HOGE forward NTT arithmetic
+and latency comparisons.
 
 ## YATA Gap
 

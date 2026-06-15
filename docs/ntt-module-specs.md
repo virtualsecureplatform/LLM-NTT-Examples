@@ -415,7 +415,7 @@ This distinction matters for architecture search. A candidate that passes
 not be ranked against correctness-tested NTT or INTT tasks for arithmetic
 quality, latency, or resource efficiency.
 
-### Planned ExternalProduct-Style Forward NTT Oracle
+### ExternalProduct-Style Forward NTT Oracle
 
 The original HOGE forward NTT correctness boundary is the final output check in
 the HOGE `ExternalProduct` C++ test, not the standalone `NTTWrap` module. That
@@ -436,12 +436,120 @@ circres[k][j * 32 + i] = io_out[j]
 where `k` is the component index, `i` is the output cycle in `0..31`, and `j`
 is the output lane in `0..31`.
 
-A future executable forward-NTT task should extract or wrap that
-ExternalProduct final-output boundary, drive the same 64-bit residue-domain
-inputs, capture the 32-bit torus output in the order above, and compare every
-coefficient against `TFHEpp::TwistNTT<P>`. The planned task skeleton is recorded
-in `tasks/planned/hoge_externalproduct_ntt_1024_p64.json`; it is not runnable by
-the current evaluator.
+The executable forward-NTT task wraps that ExternalProduct final-output
+boundary, drives the same 64-bit residue-domain TRGSWNTT stream, captures the
+32-bit torus output in the order above, and compares every coefficient against
+current TFHEpp. That oracle is available as
+`hoge_externalproduct_ntt_1024_p64`.
+
+## Hoge ExternalProductWrap Forward NTT Oracle
+
+### Source And Test
+
+- RTL source: `variants/hoge-externalproduct/chisel/src/main/scala`
+- Generated Verilog:
+  `variants/hoge-externalproduct/chisel/ExternalProductWrap.v`
+- C++ test: `tests/cpp/hoge_externalproduct_ntt_reference_test.cpp`
+- CMake test name: `hoge_externalproduct_ntt_reference_test`
+
+### Parameters
+
+| Name | Value | Meaning |
+| --- | ---: | --- |
+| `Nbit` | 10 | log2 polynomial size |
+| `N` | 1024 | polynomial coefficients |
+| `Qbit` | 32 | input/output torus word width |
+| `P` | `0xffffffff00000001` | internal 64-bit NTT modulus |
+| `Bgbit` | 6 | decomposition base log2 |
+| `l` | 3 | decomposition digits per input component |
+| `cyclebit` | 5 | log2 stream cycles |
+| `numcycle` | 32 | stream cycles per row/component |
+| `radixbit` | 5 | log2 lanes per cycle |
+| `radix` | 32 | lanes per cycle |
+| `fiber` | 32 | coefficients per TRGSW component cycle |
+| `trgsw_rows` | 6 | `2 * l` rows for `lvl1param` |
+
+### Top-Level Interface
+
+The generated Verilog module must be named `ExternalProductWrap`.
+
+| Port | Direction | Width | Description |
+| --- | --- | ---: | --- |
+| `clock` | input | 1 | clock |
+| `reset` | input | 1 | active-high reset |
+| `io_in` | input | 1024 | packed 32-lane, 32-bit TRLWE component input |
+| `io_validin` | input | 1 | valid for `io_in` |
+| `io_out` | output | 1024 | packed 32-lane, 32-bit torus output |
+| `io_validout` | output | 1 | valid for `io_out` |
+| `io_trgswin` | input | 4096 | packed TRGSWNTT row stream, two 32-lane 64-bit components |
+| `io_trgswinvalid` | input | 1 | valid for `io_trgswin` |
+| `io_trgswinready` | output | 1 | acceptance indicator for `io_trgswin` |
+| `io_fin` | output | 1 | transaction finish pulse from the wrapper |
+| `io_inttvalidout` | output | 1 | debug INTT valid |
+| `io_inttout` | output | 2048 | debug 32-lane, 64-bit INTT output |
+| `io_accout` | output | 4096 | debug accumulator output |
+
+For 32-bit packed ports, lane `l` is Verilator word `port[l]`. For 64-bit
+packed ports, lane `l` is:
+
+```text
+lane_l = uint64(port[2 * l]) | (uint64(port[2 * l + 1]) << 32)
+```
+
+### Reference Computation
+
+The test uses the current TFHEpp submodule:
+
+```text
+expected = TFHEpp::ExternalProduct<TFHEpp::lvl1param>(input, trgswntt)
+```
+
+For the `TRGSWNTT` overload, TFHEpp accumulates in the NTT domain and applies
+`TFHEpp::TwistNTT<P>` to each output component at the final boundary.
+
+### Input Transaction
+
+The test keeps one `ExternalProductWrap` instance alive across all test vectors,
+matching the original HOGE testbench protocol.
+
+For each test vector:
+
+- Component `0` is driven for 32 consecutive cycles with `io_validin = 1`.
+- The test then drives `io_validin = 0` for 32 idle cycles.
+- Component `1` is driven for 32 consecutive cycles with `io_validin = 1`.
+- On input component `k`, cycle `c`, and lane `l`, `io_in[l]` carries
+  `input[k][l * 32 + c]`.
+
+### TRGSWNTT Stream
+
+The test drives deterministic `TRGSWNTT<TFHEpp::lvl1param>` rows concurrently
+with the input transaction. `io_trgswinvalid` remains high until all six rows
+are accepted. The stream advances only on cycles where `io_trgswinready` is
+high.
+
+For row `r`, accepted stream cycle `c`, component `k`, and lane `l`, the packed
+64-bit lane carries:
+
+```text
+trgswntt[r][k][c * 32 + l].value
+```
+
+packed at TRGSW lane index `k * 32 + l`.
+
+### Output Transaction
+
+- `io_validout` must assert within 5000 cycles after the input stream begins.
+- The test captures two output components.
+- For output component `k`, output cycle `c`, and lane `l`, `io_out[l]` must
+  equal `expected[k][l * 32 + c]`.
+- The total captured output length is 64 valid cycles.
+
+### Test Vectors
+
+The current C++ test runs two transactions:
+
+- component-indexed ramp data
+- one deterministic random `uint32_t` TRLWE vector
 
 ## Hoge NTTidPackedTop
 
@@ -534,6 +642,8 @@ Use this checklist before running the tests:
   `io_out`.
 - `NTTWrap.v` defines module `NTTWrap` with 2048-bit `io_in` and 2048-bit
   `io_out`.
+- `ExternalProductWrap.v` defines module `ExternalProductWrap` with 1024-bit
+  `io_in`, 1024-bit `io_out`, and 4096-bit `io_trgswin`.
 - `NTTidPackedTop.v` defines module `NTTidPackedTop` with 65536-bit `io_in`
   and 65536-bit `io_out`.
 - Streaming valid outputs have the exact stream lengths expected by the tests:
@@ -543,6 +653,8 @@ Use this checklist before running the tests:
 - Yata NTT output ordering is `expected[lane * 8 + output_cycle]`.
 - Hoge streaming INTT input ordering is `poly[lane * 32 + input_cycle]`.
 - Hoge streaming INTT output ordering is `expected[output_cycle * 32 + lane]`.
+- Hoge ExternalProduct forward NTT output ordering is
+  `expected[component][lane * 32 + output_cycle]`.
 - Hoge NTTid output is congruent to input modulo `0xffffffff00000001` after
   33 post-reset wait cycles.
 

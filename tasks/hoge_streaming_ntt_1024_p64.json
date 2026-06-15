@@ -40,7 +40,7 @@
     "standalone_oracle": "none in this repository",
     "intended_operation": "internal cuHEpp forward twist NTT path over P",
     "original_correctness_boundary": "HOGE ExternalProduct final 32-bit torus output compared against TFHEpp::TwistNTT<P>",
-    "planned_task": "tasks/planned/hoge_externalproduct_ntt_1024_p64.json"
+    "forward_ntt_oracle_task": "tasks/hoge_externalproduct_ntt_1024_p64.json"
   },
   "observable_contract": {
     "lint": "Verilog must elaborate with module NTTWrap and the listed ports.",
@@ -59,7 +59,7 @@
     "correctness": "tier0 interface elaboration only; not an arithmetic correctness result",
     "primary": "successful lint/elaboration with the required top-level ports",
     "secondary": [
-      "add the planned ExternalProduct-style executable reference test before comparing performance"
+      "use hoge_externalproduct_ntt_1024_p64 for executable forward NTT arithmetic and performance comparisons"
     ]
   }
 }

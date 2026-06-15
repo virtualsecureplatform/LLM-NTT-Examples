@@ -74,9 +74,11 @@ Useful baseline values:
 - Verilator runtime
 - synthesis resource use, if available
 
-The evaluator currently records functional metrics and wall-clock build/test
-time. Synthesis resource metrics are left as an extension point because Vivado
-or another synthesis tool may not be available in the Apptainer image.
+The evaluator records functional metrics and wall-clock build/test time. With
+`--with-yosys`, it also runs a flattened Yosys structural estimate and adds
+`yosys_*` metrics such as cell counts, wire bits, memory bits, and per-cell-type
+counts. These are technology-independent RTL estimates, not post-place-and-route
+FPGA resources.
 
 ## Suggested Scalar Score
 
@@ -133,6 +135,11 @@ score. Keep all correct candidates and report nondominated points across:
 
 If synthesis is unavailable, report a Verilator-only frontier using latency
 cycles and code-level structural metrics, and label it clearly.
+
+If `--with-yosys` is available, report a Yosys structural frontier separately
+from vendor synthesis results. Yosys cell counts are useful for relative
+screening, but they are not substitutes for LUT/FF/DSP/BRAM/fmax reports from a
+target FPGA flow.
 
 ## Fairness Rules
 

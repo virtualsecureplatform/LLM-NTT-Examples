@@ -130,8 +130,9 @@ as an interface/lint task until a reference test is added.
 
 Keep `hoge_streaming_ntt_1024_p64` in `tier0_interface` comparisons only. It is
 useful for checking module shape and packed-port compatibility, but it should
-not appear in arithmetic, latency, throughput, or resource Pareto rankings until
-an executable ExternalProduct-style forward NTT oracle is added.
+not appear in arithmetic, latency, throughput, or resource Pareto rankings. Use
+`hoge_externalproduct_ntt_1024_p64` for the HOGE forward NTT arithmetic
+boundary.
 
 ## Task Difficulty Levels
 
@@ -145,8 +146,10 @@ Suggested benchmark tiers:
   resources.
 
 The current evaluator directly supports `tier0_interface` and
-`tier1_correctness`. Resource scoring can be added by integrating Yosys, Vivado,
-or another synthesis report parser.
+`tier1_correctness`. With `--with-yosys`, it also records a flattened structural
+cell-count estimate that can seed `tier3_resource` screening. Vendor synthesis
+reports are still needed for FPGA-specific LUT, FF, DSP, BRAM, URAM, and fmax
+ranking.
 
 Planned task skeletons under `tasks/planned/` document future benchmark
 boundaries. They are not current evaluator targets.
@@ -158,7 +161,8 @@ boundaries. They are not current evaluator targets.
 3. Run `scripts/evaluate_candidate.sh --task <task> --verilog-dir <dir>`.
 4. Parse `results.json`.
 5. If correctness fails, inspect the generated logs and fix the contract issue.
-6. If correctness passes, optimize latency, throughput, or resources.
+6. If correctness passes, optionally rerun with `--with-yosys` and optimize
+   latency, throughput, or resources.
 7. Keep every candidate result for Pareto analysis.
 
 The agent should treat correctness as a hard gate. A faster design that fails

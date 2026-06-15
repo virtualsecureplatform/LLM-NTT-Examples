@@ -15,6 +15,8 @@ Options:
   --verilog-file FILE Candidate Verilog file. Overrides --verilog-dir.
   --build-dir DIR     CMake build directory. Defaults to build/eval/<task-id>.
   --results FILE      Results JSON path. Defaults to <build-dir>/results.json.
+  --with-yosys        Run an optional flattened Yosys resource estimate and
+                      merge structural counts into the result metrics.
   --no-clean          Reuse the build directory instead of deleting it first.
   -h, --help          Show this help.
 EOF
@@ -26,6 +28,7 @@ verilog_file=""
 build_dir=""
 results_file=""
 clean_build=1
+with_yosys=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -48,6 +51,10 @@ while [[ $# -gt 0 ]]; do
     --results)
       results_file="${2:-}"
       shift 2
+      ;;
+    --with-yosys)
+      with_yosys=1
+      shift
       ;;
     --no-clean)
       clean_build=0
@@ -144,6 +151,8 @@ configure_log="${build_dir}/configure.log"
 build_log="${build_dir}/build.log"
 test_log="${build_dir}/test.log"
 lint_log="${build_dir}/lint.log"
+yosys_log="${build_dir}/yosys.log"
+yosys_json="${build_dir}/yosys-stats.json"
 
 run_logged() {
   local log_file="$1"
@@ -164,6 +173,9 @@ test_status=0
 lint_status=0
 build_seconds=0
 test_seconds=0
+yosys_passed=false
+yosys_status=0
+yosys_seconds=0
 
 if [[ "${mode}" == "verilator_test" ]]; then
   cmake_var="$(json_get evaluation.cmake_cache_var)"
@@ -214,13 +226,55 @@ else
   exit 2
 fi
 
+if [[ "${with_yosys}" -eq 1 ]]; then
+  start_time="$(date +%s)"
+  yosys_script="${build_dir}/yosys.ys"
+  {
+    printf 'read_verilog -sv "%s"\n' "${verilog_file}"
+    printf 'hierarchy -top %s\n' "${top_module}"
+    printf 'proc\nopt\nmemory\nopt\nflatten\nopt\nstat -json\n'
+  } >"${yosys_script}"
+
+  if command -v yosys >/dev/null 2>&1 &&
+     run_logged "${yosys_log}" yosys -Q -s "${yosys_script}"; then
+    if python3 - "${yosys_log}" "${yosys_json}" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8", errors="replace") as f:
+    text = f.read()
+
+start = text.find("{\n")
+end = text.rfind("\n}")
+if start < 0 or end < 0:
+    raise SystemExit("Yosys JSON block not found")
+
+stats = json.loads(text[start : end + 2])
+with open(sys.argv[2], "w", encoding="utf-8") as f:
+    json.dump(stats, f, indent=2, sort_keys=True)
+    f.write("\n")
+PY
+    then
+      yosys_status=0
+      yosys_passed=true
+    else
+      yosys_status=$?
+    fi
+  else
+    yosys_status=$?
+  fi
+  yosys_seconds=$(( $(date +%s) - start_time ))
+fi
+
 python3 - "$results_file" "$task_file" "$task_id" "$mode" "$top_module" \
   "$verilog_file" "$build_dir" "$configure_status" "$build_status" \
   "$test_status" "$lint_status" "$build_passed" "$test_passed" \
   "$lint_passed" "$build_seconds" "$test_seconds" "$configure_log" \
-  "$build_log" "$test_log" "$lint_log" <<'PY'
+  "$build_log" "$test_log" "$lint_log" "$with_yosys" "$yosys_status" \
+  "$yosys_passed" "$yosys_seconds" "$yosys_log" "$yosys_json" <<'PY'
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 
@@ -245,10 +299,16 @@ from datetime import datetime, timezone
     build_log,
     test_log,
     lint_log,
+    with_yosys,
+    yosys_status,
+    yosys_passed,
+    yosys_seconds,
+    yosys_log,
+    yosys_json,
 ) = sys.argv[1:]
 
 def as_bool(value):
-    return value == "true"
+    return value in ("true", "1")
 
 def read_text(path):
     if not os.path.exists(path):
@@ -277,6 +337,33 @@ for line in test_output.splitlines():
     key, value = payload.split("=", 1)
     metrics[key.strip()] = parse_metric_value(value.strip())
 
+def sanitize_metric_suffix(value):
+    value = value.lstrip("$").lstrip("\\")
+    value = re.sub(r"[^0-9A-Za-z]+", "_", value).strip("_")
+    return value.lower() or "unknown"
+
+if as_bool(with_yosys) and as_bool(yosys_passed) and os.path.exists(yosys_json):
+    with open(yosys_json, "r", encoding="utf-8") as f:
+        yosys_stats = json.load(f)
+    module_key = "\\" + top_module
+    stats = yosys_stats.get("modules", {}).get(module_key, yosys_stats.get("design", {}))
+    for key in (
+        "num_wires",
+        "num_wire_bits",
+        "num_pub_wires",
+        "num_pub_wire_bits",
+        "num_ports",
+        "num_port_bits",
+        "num_memories",
+        "num_memory_bits",
+        "num_processes",
+        "num_cells",
+    ):
+        if key in stats:
+            metrics[f"yosys_{key}"] = stats[key]
+    for cell_type, count in stats.get("num_cells_by_type", {}).items():
+        metrics[f"yosys_cell_{sanitize_metric_suffix(cell_type)}"] = count
+
 correct = False
 if mode == "verilator_test":
     correct = as_bool(build_passed) and as_bool(test_passed)
@@ -296,15 +383,18 @@ result = {
     "build_passed": as_bool(build_passed),
     "test_passed": as_bool(test_passed),
     "lint_passed": as_bool(lint_passed),
+    "synthesis_passed": as_bool(yosys_passed) if as_bool(with_yosys) else False,
     "status": {
         "configure": int(configure_status),
         "build": int(build_status),
         "test": int(test_status),
         "lint": int(lint_status),
+        "yosys": int(yosys_status),
     },
     "seconds": {
         "build": int(build_seconds),
         "test": int(test_seconds),
+        "yosys": int(yosys_seconds),
     },
     "metrics": metrics,
     "logs": {
@@ -312,6 +402,8 @@ result = {
         "build": os.path.relpath(build_log, os.getcwd()),
         "test": os.path.relpath(test_log, os.getcwd()),
         "lint": os.path.relpath(lint_log, os.getcwd()),
+        "yosys": os.path.relpath(yosys_log, os.getcwd()),
+        "yosys_json": os.path.relpath(yosys_json, os.getcwd()),
     },
 }
 

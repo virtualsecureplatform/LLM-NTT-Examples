@@ -1,0 +1,42 @@
+{
+  "build_dir": "build/eval/hoge_externalproduct_ntt_1024_p64",
+  "build_passed": true,
+  "correct": true,
+  "lint_passed": false,
+  "logs": {
+    "build": "build/eval/hoge_externalproduct_ntt_1024_p64/build.log",
+    "configure": "build/eval/hoge_externalproduct_ntt_1024_p64/configure.log",
+    "lint": "build/eval/hoge_externalproduct_ntt_1024_p64/lint.log",
+    "test": "build/eval/hoge_externalproduct_ntt_1024_p64/test.log",
+    "yosys": "build/eval/hoge_externalproduct_ntt_1024_p64/yosys.log",
+    "yosys_json": "build/eval/hoge_externalproduct_ntt_1024_p64/yosys-stats.json"
+  },
+  "metrics": {
+    "hoge_externalproduct_ntt_input_cycles": 96,
+    "hoge_externalproduct_ntt_max_wait_cycles": 320,
+    "hoge_externalproduct_ntt_output_cycles": 64,
+    "hoge_externalproduct_ntt_tests": 2,
+    "hoge_externalproduct_ntt_trgsw_rows": 6
+  },
+  "mode": "verilator_test",
+  "schema": "llm-ntt-evaluation-v1",
+  "seconds": {
+    "build": 9,
+    "test": 0,
+    "yosys": 0
+  },
+  "status": {
+    "build": 0,
+    "configure": 0,
+    "lint": 0,
+    "test": 0,
+    "yosys": 0
+  },
+  "synthesis_passed": false,
+  "task_file": "tasks/hoge_externalproduct_ntt_1024_p64.json",
+  "task_id": "hoge_externalproduct_ntt_1024_p64",
+  "test_passed": true,
+  "timestamp_utc": "2026-06-15T12:12:27+00:00",
+  "top_module": "ExternalProductWrap",
+  "verilog_file": "variants/hoge-externalproduct/chisel/ExternalProductWrap.v"
+}

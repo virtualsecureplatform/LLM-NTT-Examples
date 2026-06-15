@@ -8,6 +8,8 @@ TFHEpp C++ reference headers.
 
 - `variants/yata-raintt`: YATA compressed 27-bit RAINTT `NTT` and `INTT`.
 - `variants/hoge-streaming`: HOGE streaming 64-bit INTT plus an NTT wrapper.
+- `variants/hoge-externalproduct`: HOGE ExternalProduct pipeline used as the
+  executable forward NTT oracle.
 - `variants/hoge-nttid`: HOGE full-vector NTT/INTT identity pipeline.
 - `third_party/TFHEpp`: TFHEpp submodule used as the C++ reference.
 - `docs/ntt-module-specs.md`: top-level module specifications for generating
@@ -81,6 +83,14 @@ scripts/evaluate_candidate.sh \
   --verilog-dir candidate/hoge-intt
 ```
 
+Add an optional flattened Yosys structural estimate:
+
+```bash
+scripts/evaluate_candidate.sh \
+  --task hoge_externalproduct_ntt_1024_p64 \
+  --with-yosys
+```
+
 ## Test Targets
 
 - `yata_raintt_reference_test`: compares streamed YATA `INTT` and `NTT`
@@ -89,10 +99,12 @@ scripts/evaluate_candidate.sh \
   `l` at cycle `c` corresponds to coefficient `l * 8 + c`.
 - `hoge_streaming_reference_test`: drives HOGE `INTTWrap` and compares against
   `cuHEpp::TwistINTT`.
+- `hoge_externalproduct_ntt_reference_test`: drives HOGE `ExternalProductWrap`
+  and compares the final 32-bit torus output against TFHEpp
+  `ExternalProduct<lvl1param>`, whose final boundary is `TwistNTT`.
 - `hoge_nttid_identity_test`: drives HOGE `NTTid` and checks that the combined
   INTT/NTT pipeline returns the original polynomial modulo `P`.
 
 The HOGE forward `NTTWrap` manifest, `hoge_streaming_ntt_1024_p64`, is a
-lint-only tier0 interface task. It should not be used as an arithmetic or
-latency benchmark until the planned ExternalProduct-style forward NTT oracle is
-implemented.
+lint-only tier0 interface task. Use `hoge_externalproduct_ntt_1024_p64` for
+HOGE forward NTT arithmetic and latency comparisons.

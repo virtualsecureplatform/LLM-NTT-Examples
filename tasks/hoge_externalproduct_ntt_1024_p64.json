@@ -1,0 +1,81 @@
+{
+  "id": "hoge_externalproduct_ntt_1024_p64",
+  "name": "HOGE ExternalProduct 1024-point forward NTT oracle",
+  "status": "correctness_scored",
+  "description": "Executable HOGE forward NTT correctness task using the original ExternalProduct final-output boundary. The test drives two TRLWE components, streams deterministic TRGSWNTT rows, and compares the final 32-bit torus output against current TFHEpp.",
+  "variant": "hoge-externalproduct",
+  "top_module": "ExternalProductWrap",
+  "verilog": {
+    "candidate_file": "ExternalProductWrap.v",
+    "default_path": "variants/hoge-externalproduct/chisel/ExternalProductWrap.v"
+  },
+  "evaluation": {
+    "mode": "verilator_test",
+    "cmake_cache_var": "HOGE_EXTERNALPRODUCT_VERILOG",
+    "test_target": "hoge_externalproduct_ntt_reference_test",
+    "watchdog_cycles": 5000
+  },
+  "parameters": {
+    "N": 1024,
+    "Nbit": 10,
+    "modulus": "18446744069414584321",
+    "modulus_hex": "0xffffffff00000001",
+    "word_bits_internal": 64,
+    "word_bits_input": 32,
+    "word_bits_output": 32,
+    "lanes": 32,
+    "input_components": 2,
+    "trgsw_rows": 6,
+    "input_cycles": 96,
+    "output_cycles": 64,
+    "radix": 32,
+    "prime_form": "2^64 - 2^32 + 1"
+  },
+  "ports": {
+    "clock": "clock",
+    "reset": "reset",
+    "valid_in": "io_validin",
+    "valid_out": "io_validout",
+    "packed_input": "io_in[1023:0]",
+    "packed_output": "io_out[1023:0]",
+    "trgsw_input": "io_trgswin[4095:0]",
+    "trgsw_valid": "io_trgswinvalid",
+    "trgsw_ready": "io_trgswinready",
+    "finish": "io_fin",
+    "debug_intt_valid": "io_inttvalidout",
+    "debug_intt_output": "io_inttout[2047:0]",
+    "debug_acc_output": "io_accout[4095:0]"
+  },
+  "reference": {
+    "library": "TFHEpp",
+    "include": "tfhe++.hpp",
+    "operation": "TFHEpp::ExternalProduct<TFHEpp::lvl1param>(expected, input, trgswntt)",
+    "final_boundary": "TFHEpp::TwistNTT<P> inside the TRGSWNTT ExternalProduct path",
+    "source_boundary": "HOGE chisel/ExternalProduct/src/test/cpp/cpptest.cpp final output check"
+  },
+  "observable_contract": {
+    "input_order": "for component k, input cycle c, and lane l: io_in[l] carries input[k][l * 32 + c]",
+    "component_gap": "the baseline protocol inserts 32 idle cycles between the two input components",
+    "trgsw_order": "for TRGSW row r, stream cycle c, component k, and lane l: io_trgswin[2 * (k * 32 + l)] packs trgswntt[r][k][c * 32 + l].value",
+    "output_order": "for component k, output cycle c, and lane l: io_out[l] must equal expected[k][l * 32 + c]",
+    "packing": "32-bit lanes use one Verilator word; 64-bit TRGSW/debug lanes use low word then high word"
+  },
+  "search_axes": [
+    "ExternalProduct pipeline partitioning",
+    "decomposition scheduling",
+    "INTT/MULandACC/NTT overlap",
+    "TRGSW stream buffering",
+    "radix schedule",
+    "pseudo-Mersenne reduction for 0xffffffff00000001",
+    "final NTT latency and throughput"
+  ],
+  "score": {
+    "correctness": "required",
+    "primary": "minimize cycles from final input component to first valid output",
+    "secondary": [
+      "minimize total transaction cycles",
+      "minimize resource estimates",
+      "maximize sustained ExternalProduct throughput"
+    ]
+  }
+}
