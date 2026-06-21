@@ -86,3 +86,24 @@ Keep the boundary explicit:
   ordering.
 - Planned manifests under `tasks/planned/` describe future targets and are not
   evaluator-ready tasks.
+
+## LLM RTL Generator
+
+This repository also includes an AutoNTT-style LLM candidate generator:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --endpoint http://<openai-compatible-endpoint>/v1 \
+  --attempts 1
+```
+
+The generator does not import AutoNTT's HLS backend. Instead, it uses the same
+architecture knobs as prompt variables: iterative/dataflow/hybrid family,
+parallelism, radix, buffering, twiddle strategy, and modular multiplication
+choice. It then writes candidate Verilog into `build/llm-runs/` and can call
+`scripts/evaluate_candidate.sh` for the selected task.
+
+Use `--plan-only` to inspect the generated search points. Use
+`--strategy behavioral_reference` to produce simulation-first candidates that
+should be reported separately from hardware-quality RTL.

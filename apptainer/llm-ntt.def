@@ -17,6 +17,7 @@ From: ubuntu:24.04
         gnupg \
         lld \
         ninja-build \
+        python3 \
         verilator \
         yosys
 

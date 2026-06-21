@@ -16,3 +16,4 @@ cmake -S "${repo_root}" -B "${build_dir}" -G Ninja \
   -DCMAKE_C_COMPILER="${CC:-clang}"
 cmake --build "${build_dir}"
 ctest --test-dir "${build_dir}" --output-on-failure
+PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s "${repo_root}/tests/python"

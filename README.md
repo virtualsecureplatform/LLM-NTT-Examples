@@ -18,14 +18,14 @@ TFHEpp C++ reference headers.
 - `docs/architecture-search-space.md` and `docs/scoring.md`: search knobs and
   evaluation rules.
 - `examples/autontt/`: AutoNTT-oriented mapping notes and custom reduction
-  examples.
+  examples, including an LLM-based RTL candidate generator.
 
 The copied YATA and HOGE RTL is AGPL-3.0 licensed. See `NOTICE.md` and
 `licenses/`.
 
 ## Native Run
 
-Install `sbt`, `cmake`, `ninja`, `clang++`, and `verilator`, then run:
+Install `python3`, `sbt`, `cmake`, `ninja`, `clang++`, and `verilator`, then run:
 
 ```bash
 git submodule update --init --recursive
@@ -90,6 +90,20 @@ scripts/evaluate_candidate.sh \
   --task hoge_externalproduct_ntt_1024_p64 \
   --with-yosys
 ```
+
+Generate an AutoNTT-style LLM RTL candidate using an OpenAI-compatible endpoint:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --endpoint http://<openai-compatible-endpoint>/v1 \
+  --attempts 1
+```
+
+The generator writes prompts, responses, candidate Verilog, and evaluator
+results under `build/llm-runs/`. Use `--plan-only` to inspect the AutoNTT-style
+search points without calling the LLM, or `--dry-run` to write the prompt only.
+The endpoint can also be supplied with `LLM_NTT_LLM_ENDPOINT`.
 
 ## Test Targets
 
