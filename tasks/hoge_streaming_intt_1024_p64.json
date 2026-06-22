@@ -3,11 +3,11 @@
   "name": "HOGE streaming 1024-point INTT",
   "status": "correctness_scored",
   "description": "Streaming 32-lane HOGE INTT wrapper over the 64-bit TFHEpp/cuHEpp modulus.",
-  "variant": "hoge-streaming",
+  "variant": "hoge",
   "top_module": "INTTWrap",
   "verilog": {
     "candidate_file": "INTTWrap.v",
-    "default_path": "variants/hoge-streaming/chisel/INTTWrap.v"
+    "default_path": "variants/hoge/chisel/INTTWrap.v"
   },
   "evaluation": {
     "mode": "verilator_test",

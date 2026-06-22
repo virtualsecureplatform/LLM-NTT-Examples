@@ -3,11 +3,11 @@
   "name": "HOGE ExternalProduct 1024-point forward NTT oracle",
   "status": "correctness_scored",
   "description": "Executable HOGE forward NTT correctness task using the original ExternalProduct final-output boundary. The test drives two TRLWE components, streams deterministic TRGSWNTT rows, and compares the final 32-bit torus output against current TFHEpp.",
-  "variant": "hoge-externalproduct",
+  "variant": "hoge",
   "top_module": "ExternalProductWrap",
   "verilog": {
     "candidate_file": "ExternalProductWrap.v",
-    "default_path": "variants/hoge-externalproduct/chisel/ExternalProductWrap.v"
+    "default_path": "variants/hoge/chisel/ExternalProductWrap.v"
   },
   "evaluation": {
     "mode": "verilator_test",

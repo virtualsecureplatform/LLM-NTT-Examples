@@ -17,9 +17,13 @@ constexpr int kN = 1 << kNbit;
 constexpr int kLanes = 64;
 constexpr int kCycles = kN / kLanes;
 constexpr int kWordBits = 27;
+constexpr int kTests = 8;
 constexpr uint32_t kSignedMask = (1U << kWordBits) - 1;
 
 static_assert(kCycles == 8);
+static_assert(raintt::wordbits == kWordBits,
+              "YATA RAINTT must be compiled with clang++ and USE_COMPRESS so "
+              "the TFHEpp reference uses 27-bit words.");
 
 void tick(VYataRainttTop &dut)
 {
@@ -257,7 +261,7 @@ int main(int argc, char **argv)
     int max_intt_wait_cycles = 0;
     int max_ntt_wait_cycles = 0;
 
-    for (int test = 0; test < 4; ++test) {
+    for (int test = 0; test < kTests; ++test) {
         std::array<uint32_t, kN> poly{};
         for (int i = 0; i < kN; ++i) {
             if (test == 0)
@@ -299,7 +303,7 @@ int main(int argc, char **argv)
         ntt_dut.final();
         max_ntt_wait_cycles = std::max(max_ntt_wait_cycles, ntt_wait_cycles);
     }
-    std::cout << "METRIC yata_raintt_tests=4\n";
+    std::cout << "METRIC yata_raintt_tests=" << kTests << "\n";
     std::cout << "METRIC yata_raintt_intt_input_cycles=" << kCycles << "\n";
     std::cout << "METRIC yata_raintt_intt_output_cycles=" << kCycles << "\n";
     std::cout << "METRIC yata_raintt_intt_max_wait_cycles=" << max_intt_wait_cycles

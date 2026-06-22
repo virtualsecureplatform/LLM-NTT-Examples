@@ -38,5 +38,5 @@
   "test_passed": true,
   "timestamp_utc": "2026-06-15T12:12:27+00:00",
   "top_module": "ExternalProductWrap",
-  "verilog_file": "variants/hoge-externalproduct/chisel/ExternalProductWrap.v"
+  "verilog_file": "variants/hoge/chisel/ExternalProductWrap.v"
 }

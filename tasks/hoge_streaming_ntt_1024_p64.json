@@ -4,11 +4,11 @@
   "status": "tier0_interface_lint",
   "description": "Internal forward NTT pipeline wrapper emitted by the HOGE streaming extraction. Passing this task means the required Verilog interface elaborates; it does not prove arithmetic correctness, latency, or output ordering.",
   "tier": "tier0_interface",
-  "variant": "hoge-streaming",
+  "variant": "hoge",
   "top_module": "NTTWrap",
   "verilog": {
     "candidate_file": "NTTWrap.v",
-    "default_path": "variants/hoge-streaming/chisel/NTTWrap.v"
+    "default_path": "variants/hoge/chisel/NTTWrap.v"
   },
   "evaluation": {
     "mode": "lint_only",

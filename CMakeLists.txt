@@ -24,13 +24,13 @@ set(YATA_RAINTT_VERILOG
     ${PROJECT_SOURCE_DIR}/variants/yata-raintt/chisel/YataRainttTop.v
     CACHE FILEPATH "Verilog source for the YataRainttTop test")
 set(HOGE_STREAMING_INTT_VERILOG
-    ${PROJECT_SOURCE_DIR}/variants/hoge-streaming/chisel/INTTWrap.v
+    ${PROJECT_SOURCE_DIR}/variants/hoge/chisel/INTTWrap.v
     CACHE FILEPATH "Verilog source for the INTTWrap test")
 set(HOGE_NTTID_VERILOG
-    ${PROJECT_SOURCE_DIR}/variants/hoge-nttid/chisel/NTTidPackedTop.v
+    ${PROJECT_SOURCE_DIR}/variants/hoge/chisel/NTTidPackedTop.v
     CACHE FILEPATH "Verilog source for the NTTidPackedTop test")
 set(HOGE_EXTERNALPRODUCT_VERILOG
-    ${PROJECT_SOURCE_DIR}/variants/hoge-externalproduct/chisel/ExternalProductWrap.v
+    ${PROJECT_SOURCE_DIR}/variants/hoge/chisel/ExternalProductWrap.v
     CACHE FILEPATH "Verilog source for the ExternalProductWrap test")
 
 function(add_ntt_verilator_test target source top_verilog)

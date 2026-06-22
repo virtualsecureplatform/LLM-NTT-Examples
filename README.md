@@ -7,10 +7,9 @@ TFHEpp C++ reference headers.
 ## Contents
 
 - `variants/yata-raintt`: YATA compressed 27-bit RAINTT `NTT` and `INTT`.
-- `variants/hoge-streaming`: HOGE streaming 64-bit INTT plus an NTT wrapper.
-- `variants/hoge-externalproduct`: HOGE ExternalProduct pipeline used as the
-  executable forward NTT oracle.
-- `variants/hoge-nttid`: HOGE full-vector NTT/INTT identity pipeline.
+- `variants/hoge`: merged HOGE Chisel sources for the streaming INTT/NTT
+  wrappers, ExternalProduct forward-NTT oracle, and full-vector NTT/INTT
+  identity pipeline.
 - `third_party/TFHEpp`: TFHEpp submodule used as the C++ reference.
 - `docs/ntt-module-specs.md`: top-level module specifications for generating
   replacement Verilog that passes the included tests.
@@ -95,15 +94,131 @@ Generate an AutoNTT-style LLM RTL candidate using an OpenAI-compatible endpoint:
 
 ```bash
 scripts/autontt_llm_generate.py \
-  --task hoge_streaming_intt_1024_p64 \
-  --endpoint http://<openai-compatible-endpoint>/v1 \
+  --task hoge_nttid_1024_identity \
+  --endpoint lab \
+  --strategy behavioral_reference \
   --attempts 1
 ```
 
 The generator writes prompts, responses, candidate Verilog, and evaluator
 results under `build/llm-runs/`. Use `--plan-only` to inspect the AutoNTT-style
 search points without calling the LLM, or `--dry-run` to write the prompt only.
-The endpoint can also be supplied with `LLM_NTT_LLM_ENDPOINT`.
+`--endpoint lab` reads the private endpoint from `LLM_NTT_LAB_ENDPOINT`; the
+endpoint can also be supplied directly with `LLM_NTT_LLM_ENDPOINT`.
+The `hoge_nttid_1024_identity` command is only a plumbing smoke test because an
+identity implementation can satisfy its observable contract. For real functional
+NTT/INTT generation, use a task such as `hoge_streaming_intt_1024_p64`; the
+generator rejects trivial pass-through shortcuts for non-identity arithmetic
+tasks unless `--allow-shortcuts` is explicitly supplied.
+
+To create a known-good AutoNTT-style run artifact from the extracted RTL, use
+the reference candidate source:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --candidate-source reference \
+  --strategy hardware \
+  --arch-type I \
+  --modmul-type C
+```
+
+This does not count as LLM-generated arithmetic RTL. It copies the task's
+golden Verilog into the same run/evaluation layout so functional baselines and
+future LLM candidates can be compared with the same prepared tests.
+
+For generated non-reference RTL baselines, use the built-in behavioral
+generators:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --candidate-source behavioral \
+  --strategy hardware \
+  --arch-type I \
+  --modmul-type C
+```
+
+The HOGE INTT path emits a compact `INTTWrap.v` that implements the same
+`cuHEpp::TwistINTT<uint32_t,10>` observable contract and runs through the same
+prepared evaluator. Treat these outputs as functional behavioral RTL, not as
+optimized AutoNTT/Vitis-quality architectures.
+
+To keep the endpoint in the generation loop without requiring it to emit a
+large arithmetic Verilog file verbatim, use the endpoint-guided behavioral
+source:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --endpoint lab \
+  --candidate-source llm_behavioral \
+  --strategy hardware \
+  --arch-type I \
+  --modmul-type C
+```
+
+This mode asks the endpoint for a small JSON selection of a supported
+functional generator, validates that selection, emits the corresponding RTL
+locally, and evaluates it through the same prepared tests. The private endpoint
+is still supplied only through `LLM_NTT_LAB_ENDPOINT`.
+
+Behavioral generation currently supports:
+
+- `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic.
+- `hoge_nttid_1024_identity`: correctness-scored identity smoke path.
+- `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate.
+- `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
+  ExternalProduct forward-NTT arithmetic.
+- `yata_raintt_512_p27`: correctness-scored YATA RAINTT INTT/NTT arithmetic.
+
+Run every built-in behavioral candidate through the prepared evaluator:
+
+```bash
+scripts/evaluate_behavioral_candidates.sh
+```
+
+Run every endpoint-guided behavioral candidate through the prepared evaluator:
+
+```bash
+scripts/evaluate_behavioral_candidates.sh \
+  --candidate-source llm_behavioral \
+  --endpoint lab
+```
+
+Add `--with-vitis` to run the optional host Vivado/Vitis synthesis step after
+functional evaluation.
+
+Add an optional host Vivado/Vitis RTL synthesis estimate:
+
+```bash
+scripts/evaluate_candidate.sh \
+  --task hoge_externalproduct_ntt_1024_p64 \
+  --with-vitis
+```
+
+The Vitis path synthesizes the task's Verilog top out-of-context with Vivado,
+using the AutoNTT-style default target of `xcu280-fsvh2892-2L-e` and a `4.0 ns`
+clock. Override these with `--vitis-part`, `--vitis-clock-period`,
+`--vitis-clock-port`, `--vitis-jobs`, `--vivado-bin`, or `--xilinx-settings`.
+When `/home/opt/xilinx/Vitis/2023.2/settings64.sh` exists, it is sourced by
+default before host synthesis.
+
+When only Vitis/Vivado is installed on the host and the other build tools should
+come from Apptainer, use the split runner:
+
+```bash
+scripts/evaluate_with_apptainer_and_vitis.sh \
+  --task hoge_externalproduct_ntt_1024_p64 \
+  --with-yosys \
+  --sif llm-ntt.sif
+```
+
+Refresh all extracted-RTL reference JSON files with host Vitis synthesis:
+
+```bash
+scripts/evaluate_baselines_with_vitis.sh --sif llm-ntt.sif
+```
 
 ## Test Targets
 

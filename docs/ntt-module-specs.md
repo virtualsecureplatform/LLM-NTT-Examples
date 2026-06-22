@@ -260,9 +260,9 @@ The current C++ test runs four polynomials:
 
 ### Source And Test
 
-- RTL source: `variants/hoge-streaming/chisel/src/main/scala`
+- RTL source: `variants/hoge/chisel/src/main/scala`
 - Generated Verilog used by the test:
-  `variants/hoge-streaming/chisel/INTTWrap.v`
+  `variants/hoge/chisel/INTTWrap.v`
 - C++ test: `tests/cpp/hoge_streaming_reference_test.cpp`
 - CMake test name: `hoge_streaming_reference_test`
 
@@ -359,9 +359,9 @@ The current C++ test runs three polynomials:
 
 ### Source And Test Coverage
 
-- RTL source: `variants/hoge-streaming/chisel/src/main/scala`
+- RTL source: `variants/hoge/chisel/src/main/scala`
 - Generated Verilog:
-  `variants/hoge-streaming/chisel/NTTWrap.v`
+  `variants/hoge/chisel/NTTWrap.v`
 - There is no current C++ Verilator test for this top module. It is generated
   by the extraction flow and should elaborate successfully.
 
@@ -446,9 +446,9 @@ current TFHEpp. That oracle is available as
 
 ### Source And Test
 
-- RTL source: `variants/hoge-externalproduct/chisel/src/main/scala`
+- RTL source: `variants/hoge/chisel/src/main/scala`
 - Generated Verilog:
-  `variants/hoge-externalproduct/chisel/ExternalProductWrap.v`
+  `variants/hoge/chisel/ExternalProductWrap.v`
 - C++ test: `tests/cpp/hoge_externalproduct_ntt_reference_test.cpp`
 - CMake test name: `hoge_externalproduct_ntt_reference_test`
 
@@ -555,9 +555,9 @@ The current C++ test runs two transactions:
 
 ### Source And Test
 
-- RTL source: `variants/hoge-nttid/chisel/src/main/scala`
+- RTL source: `variants/hoge/chisel/src/main/scala`
 - Generated Verilog used by the test:
-  `variants/hoge-nttid/chisel/NTTidPackedTop.v`
+  `variants/hoge/chisel/NTTidPackedTop.v`
 - C++ test: `tests/cpp/hoge_nttid_identity_test.cpp`
 - CMake test name: `hoge_nttid_identity_test`
 

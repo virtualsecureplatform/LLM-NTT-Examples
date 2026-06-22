@@ -89,11 +89,16 @@ def build_messages(
 
     system = (
         "You generate Verilog/SystemVerilog RTL for LLM-NTT benchmark tasks. "
-        "Return exactly one complete Verilog source file. Do not include prose "
-        "outside the code block. Preserve the required top module name, port "
+        "Return exactly one complete Verilog source file. Do not include prose, "
+        "analysis, reasoning, design notes, or explanations outside the code "
+        "block. Preserve the required top module name, port "
         "names, port widths, reset polarity, valid timing, stream order, packed "
         "lane order, modulus, and transform behavior. Do not use DPI, external "
-        "include files, delays, file I/O, randomization, or testbench code."
+        "include files, delays, file I/O, randomization, or testbench code. "
+        "For non-identity tasks, implement the requested NTT/INTT arithmetic; "
+        "do not return pass-through, constant-output, or test-vector-only RTL. "
+        "Return complete compilable RTL, not pseudocode, ellipses, or omitted "
+        "sections."
     )
 
     user = f"""
@@ -102,10 +107,19 @@ Generate a candidate Verilog file for this LLM-NTT task.
 Hard requirements:
 - The file must define module `{top_module}`.
 - The module declaration must match the task contract exactly.
+- The module declaration must list every port explicitly. Do not abbreviate
+  repeated lanes with `..`, `...`, ranges in names, comments, prose, or omitted
+  ports.
 - The candidate will be evaluated by `scripts/evaluate_candidate.sh`.
 - Correctness is a hard gate; latency and resource metrics only matter after
   the Verilator/C++ reference test passes.
+- For real arithmetic tasks, a trivial pass-through or constant-output module is
+  not acceptable even if it has the right ports. Implement the observable NTT,
+  INTT, or ExternalProduct behavior described by the manifest and tests.
+- The file must be complete compilable Verilog. Do not use comments such as
+  "rest of code", ellipses, TODO placeholders, or omitted sections.
 - Output one fenced code block tagged `verilog`.
+- Output no text before or after the fenced Verilog code block.
 
 Task manifest path:
 {task_file}
@@ -130,6 +144,8 @@ Prime-specific implementation notes:
 - For HOGE p64, `P = 0xffffffff00000001 = 2^64 - 2^32 + 1`, so
   `2^64 == 2^32 - 1 (mod P)`. A custom reducer can repeatedly fold the high
   half of a product with this relation instead of using division.
+- For Verilog buffers in HOGE tasks, avoid the identifier `buf`; it is a
+  Verilog primitive keyword in common tools. Use names such as `coeff_mem`.
 - For YATA p27, `P = 40960001 = 5^4 * 2^16 + 1`; the arithmetic is signed
   27-bit compressed RAINTT arithmetic, so normalize back into the task's
   signed modular representation before exposing outputs.
@@ -181,5 +197,62 @@ def extract_verilog(text: str) -> str:
 
 
 def require_module(verilog: str, top_module: str) -> None:
-    if not re.search(rf"(?m)^\s*module\s+{re.escape(top_module)}\b", verilog):
+    match = re.search(rf"(?m)^\s*module\s+{re.escape(top_module)}\b", verilog)
+    if not match:
         raise ValueError(f"generated source does not define module {top_module}")
+    if not re.search(r"\bendmodule\b", verilog[match.end() :]):
+        raise ValueError(f"generated source does not close module {top_module}")
+
+
+def _allows_passthrough(task: dict[str, Any]) -> bool:
+    task_id = str(task.get("id", "")).lower()
+    if "identity" in task_id:
+        return True
+    reference = task.get("reference", {})
+    operation = str(reference.get("operation", "")).lower()
+    return "identity" in operation
+
+
+def _is_lint_only(task: dict[str, Any]) -> bool:
+    return str(task.get("evaluation", {}).get("mode", "")) == "lint_only"
+
+
+def validate_candidate(
+    verilog: str,
+    task: dict[str, Any],
+    allow_shortcuts: bool = False,
+) -> None:
+    lowered = verilog.lower()
+    placeholder_patterns = [
+        r"\.\.\.",
+        r"rest of (?:the )?code",
+        r"remaining code",
+        r"omitted",
+        r"todo",
+        r"not shown",
+    ]
+    for pattern in placeholder_patterns:
+        if re.search(pattern, lowered):
+            raise ValueError(
+                "generated source contains placeholder text instead of complete RTL"
+            )
+    top_module = str(task["top_module"])
+    require_module(verilog, top_module)
+    if allow_shortcuts or _allows_passthrough(task) or _is_lint_only(task):
+        return
+
+    compact = re.sub(r"\s+", "", verilog).lower()
+    if "assignio_out=io_in;" in compact:
+        raise ValueError(
+            "generated source is a direct io_out=io_in pass-through for a "
+            "non-identity arithmetic task"
+        )
+
+    nonblank_lines = [line for line in verilog.splitlines() if line.strip()]
+    params = task.get("parameters", {})
+    problem_size = int(params.get("N", 0) or 0)
+    if problem_size >= 512 and len(nonblank_lines) < 32:
+        raise ValueError(
+            "generated source is too small for a nontrivial arithmetic task; "
+            "use --allow-shortcuts only for explicit smoke testing"
+        )

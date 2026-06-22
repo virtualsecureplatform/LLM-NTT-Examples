@@ -3,11 +3,11 @@
   "name": "HOGE 1024-point NTT/INTT identity pipeline",
   "status": "correctness_scored",
   "description": "Full-vector packed identity task that checks the composed INTT and NTT pipeline modulo the HOGE 64-bit prime.",
-  "variant": "hoge-nttid",
+  "variant": "hoge",
   "top_module": "NTTidPackedTop",
   "verilog": {
     "candidate_file": "NTTidPackedTop.v",
-    "default_path": "variants/hoge-nttid/chisel/NTTidPackedTop.v"
+    "default_path": "variants/hoge/chisel/NTTidPackedTop.v"
   },
   "evaluation": {
     "mode": "verilator_test",

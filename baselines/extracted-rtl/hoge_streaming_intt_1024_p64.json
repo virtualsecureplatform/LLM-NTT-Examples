@@ -7,30 +7,64 @@
     "build": "build/eval/hoge_streaming_intt_1024_p64/build.log",
     "configure": "build/eval/hoge_streaming_intt_1024_p64/configure.log",
     "lint": "build/eval/hoge_streaming_intt_1024_p64/lint.log",
-    "test": "build/eval/hoge_streaming_intt_1024_p64/test.log"
+    "test": "build/eval/hoge_streaming_intt_1024_p64/test.log",
+    "vitis": "build/eval/hoge_streaming_intt_1024_p64/vitis-synth.log",
+    "vitis_json": "build/eval/hoge_streaming_intt_1024_p64/vitis-synth-metrics.json",
+    "yosys": "build/eval/hoge_streaming_intt_1024_p64/yosys.log",
+    "yosys_json": "build/eval/hoge_streaming_intt_1024_p64/yosys-stats.json"
   },
   "metrics": {
     "hoge_streaming_intt_input_cycles": 32,
     "hoge_streaming_intt_max_wait_cycles": 65,
     "hoge_streaming_intt_output_cycles": 32,
-    "hoge_streaming_intt_tests": 3
+    "hoge_streaming_intt_tests": 3,
+    "yosys_cell_add": 758,
+    "yosys_cell_and": 33,
+    "yosys_cell_dff": 4581,
+    "yosys_cell_eq": 32,
+    "yosys_cell_ge": 292,
+    "yosys_cell_gt": 98,
+    "yosys_cell_logic_not": 99,
+    "yosys_cell_lt": 70,
+    "yosys_cell_mul": 32,
+    "yosys_cell_mux": 2762,
+    "yosys_cell_ne": 32,
+    "yosys_cell_not": 33,
+    "yosys_cell_or": 191,
+    "yosys_cell_reduce_or": 5,
+    "yosys_cell_sdff": 192,
+    "yosys_cell_sub": 684,
+    "yosys_num_cells": 9894,
+    "yosys_num_memories": 0,
+    "yosys_num_memory_bits": 0,
+    "yosys_num_processes": 0,
+    "yosys_num_pub_wire_bits": 1789052,
+    "yosys_num_pub_wires": 25885,
+    "yosys_num_wire_bits": 1912524,
+    "yosys_num_wires": 28599
   },
   "mode": "verilator_test",
   "schema": "llm-ntt-evaluation-v1",
   "seconds": {
-    "build": 6,
-    "test": 0
+    "build": 31,
+    "test": 0,
+    "vitis": 0,
+    "yosys": 134
   },
   "status": {
     "build": 0,
     "configure": 0,
     "lint": 0,
-    "test": 0
+    "test": 0,
+    "vitis": 0,
+    "yosys": 0
   },
+  "synthesis_passed": true,
   "task_file": "tasks/hoge_streaming_intt_1024_p64.json",
   "task_id": "hoge_streaming_intt_1024_p64",
   "test_passed": true,
-  "timestamp_utc": "2026-06-15T07:27:10+00:00",
+  "timestamp_utc": "2026-06-16T02:25:14+00:00",
   "top_module": "INTTWrap",
-  "verilog_file": "variants/hoge-streaming/chisel/INTTWrap.v"
+  "verilog_file": "variants/hoge/chisel/INTTWrap.v",
+  "vitis_synthesis_passed": false
 }

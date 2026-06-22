@@ -10,6 +10,4 @@ run_sbt() {
 }
 
 run_sbt "yata-raintt"
-run_sbt "hoge-streaming"
-run_sbt "hoge-nttid"
-run_sbt "hoge-externalproduct"
+run_sbt "hoge"

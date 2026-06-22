@@ -80,6 +80,27 @@ The evaluator records functional metrics and wall-clock build/test time. With
 counts. These are technology-independent RTL estimates, not post-place-and-route
 FPGA resources.
 
+With `--with-vitis`, the evaluator runs host Vivado/Vitis out-of-context RTL
+synthesis for the task top and adds `vitis_*` metrics. Common normalized keys
+include `vitis_lut`, `vitis_ff`, `vitis_dsp`, `vitis_bram_tile`, `vitis_uram`,
+`vitis_timing_wns_ns`, and `vitis_fmax_mhz`; raw utilization rows are also kept
+as `vitis_util_*` keys. The default target matches the AutoNTT examples: U280
+part `xcu280-fsvh2892-2L-e` at `4.0 ns`. This selects the FPGA synthesis
+target, not the candidate NTT architecture.
+
+The LLM runner's `--goal hardware` mode is stricter than the default
+correctness goal. It first applies a fast hardware-shape screen that rejects
+simulation-style full-polynomial transform tasks, then requires
+`vitis_synthesis_passed = true` and populated `vitis_*` resource metrics before
+an attempt is considered successful. A candidate that passes Verilator but times
+out or fails Vivado/Vitis remains a failed hardware attempt and is fed back to
+the next generation attempt.
+
+By default the hardware goal also enables Yosys as a technology-independent
+structural estimate. `--no-yosys` may be used to skip that optional estimate
+when Yosys flattening is the bottleneck; the hardware success criterion remains
+Vivado/Vitis synthesis with populated `vitis_*` metrics.
+
 ## Suggested Scalar Score
 
 For automated ranking, use a scalar score only after correctness passes.
@@ -140,6 +161,11 @@ If `--with-yosys` is available, report a Yosys structural frontier separately
 from vendor synthesis results. Yosys cell counts are useful for relative
 screening, but they are not substitutes for LUT/FF/DSP/BRAM/fmax reports from a
 target FPGA flow.
+
+If `--with-vitis` is available, report that frontier separately from Yosys and
+label the FPGA part and clock period. The checked-in scripts synthesize RTL
+out-of-context, so these numbers are reference post-synthesis estimates rather
+than routed accelerator-link results.
 
 ## Fairness Rules
 

@@ -27,5 +27,5 @@
   "test_passed": false,
   "timestamp_utc": "2026-06-15T07:27:30+00:00",
   "top_module": "NTTWrap",
-  "verilog_file": "variants/hoge-streaming/chisel/NTTWrap.v"
+  "verilog_file": "variants/hoge/chisel/NTTWrap.v"
 }

@@ -93,8 +93,9 @@ This repository also includes an AutoNTT-style LLM candidate generator:
 
 ```bash
 scripts/autontt_llm_generate.py \
-  --task hoge_streaming_intt_1024_p64 \
-  --endpoint http://<openai-compatible-endpoint>/v1 \
+  --task hoge_nttid_1024_identity \
+  --endpoint lab \
+  --strategy behavioral_reference \
   --attempts 1
 ```
 
@@ -104,6 +105,120 @@ parallelism, radix, buffering, twiddle strategy, and modular multiplication
 choice. It then writes candidate Verilog into `build/llm-runs/` and can call
 `scripts/evaluate_candidate.sh` for the selected task.
 
+`--endpoint lab` reads the private OpenAI-compatible endpoint from
+`LLM_NTT_LAB_ENDPOINT`; pass a full endpoint URL or set `LLM_NTT_LLM_ENDPOINT`
+when using a different server.
+The identity task is a correctness-scored smoke test for the full endpoint,
+Verilog extraction, and prepared-evaluator loop, but it is not evidence of
+functional NTT generation because a direct identity implementation can pass.
+Use `hoge_streaming_intt_1024_p64` or `hoge_externalproduct_ntt_1024_p64` for
+real arithmetic-generation runs.
+
 Use `--plan-only` to inspect the generated search points. Use
 `--strategy behavioral_reference` to produce simulation-first candidates that
 should be reported separately from hardware-quality RTL.
+
+Use `--candidate-source reference` to copy the task's extracted golden RTL into
+the same AutoNTT-style run directory and evaluate it as a functional baseline:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --candidate-source reference \
+  --strategy hardware \
+  --arch-type I \
+  --modmul-type C
+```
+
+Reference-seeded runs are useful for generating known-good results and checking
+the evaluator path. They should remain distinct from endpoint-generated RTL
+results when comparing AutoNTT-style search points.
+
+Use `--candidate-source chisel_reference` when the reference RTL should be
+generated from the checked-in Chisel source rather than copied from an existing
+Verilog artifact:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_nttid_1024_identity \
+  --candidate-source chisel_reference \
+  --goal hardware \
+  --no-yosys \
+  --vitis-timeout 300
+```
+
+The runner copies the task's `variants/<variant>/chisel` project to `/tmp`, runs
+`sbt run`, and evaluates the emitted top-level Verilog. If host `sbt` is not
+available, it uses the configured Apptainer image. This path is useful for
+synthesizable reference baselines and for proving the hardware evaluator path,
+but it is still a reference-source run, not novel LLM-written RTL.
+
+Use `--candidate-source llm_chisel_reference` for an endpoint-backed version of
+the same flow. The endpoint returns only a validated JSON selection of the
+bounded Chisel reference generator; the harness emits RTL locally after that
+selection.
+
+For supported tasks, `--candidate-source behavioral` emits deterministic
+generated RTL rather than copying the Chisel reference. The HOGE INTT path
+implements the generated `cuHEpp::TwistINTT<uint32_t,10>` observable contract:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --candidate-source behavioral \
+  --strategy hardware \
+  --arch-type I \
+  --modmul-type C
+```
+
+This mode is useful when a real arithmetic RTL candidate is needed without
+copying the Chisel reference. It is functional behavioral RTL for the prepared
+tests, not an optimized Vitis/HLS architecture.
+
+Current support:
+
+- `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic.
+- `hoge_nttid_1024_identity`: correctness-scored identity smoke path.
+- `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate.
+- `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
+  ExternalProduct forward-NTT arithmetic.
+- `yata_raintt_512_p27`: correctness-scored YATA RAINTT INTT/NTT arithmetic.
+
+Use `scripts/evaluate_behavioral_candidates.sh` to regenerate and evaluate all
+current built-in behavioral candidates with the prepared tests. Add
+`--with-vitis` to run the optional host Vivado/Vitis synthesis step after
+functional evaluation.
+
+## Hardware Goal Loop
+
+Use the runner's hardware goal when the output must be synthesizable RTL rather
+than a simulation-oriented behavioral model:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task yata_raintt_512_p27 \
+  --endpoint lab \
+  --goal hardware \
+  --attempts 4 \
+  --arch-type IDH \
+  --modmul-type AUTO \
+  --vitis-timeout 3600
+```
+
+`--goal hardware` automatically enables Yosys and host Vivado/Vitis synthesis.
+It also adds synthesis-specific prompt constraints and writes
+`hardware_screen.json` for each attempt. The screen rejects candidates that look
+like full-polynomial procedural transform models, which can pass Verilator but
+expand into impractical flat arithmetic in Vivado. Final hardware success still
+requires `vitis_synthesis_passed = true` and populated `vitis_*` utilization
+metrics in `results.json`.
+
+Add `--no-yosys` when the vendor synthesis result is the immediate goal and
+Yosys flattening is slower than the Vitis smoke. This does not relax the
+hardware success gate; it only skips the optional structural estimate.
+
+If Vivado/Vitis times out or fails, the next attempt receives structured
+feedback from the result JSON, Vitis log tail, and extracted DSP-pressure
+signals. The intended repair direction is to move toward an AutoNTT-style
+iterative, dataflow, or hybrid datapath with bounded butterfly units, pipelined
+modular multiplication, and explicit coefficient/twiddle storage.

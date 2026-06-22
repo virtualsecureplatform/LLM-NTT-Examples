@@ -31,5 +31,5 @@
   "test_passed": true,
   "timestamp_utc": "2026-06-15T07:27:22+00:00",
   "top_module": "NTTidPackedTop",
-  "verilog_file": "variants/hoge-nttid/chisel/NTTidPackedTop.v"
+  "verilog_file": "variants/hoge/chisel/NTTidPackedTop.v"
 }

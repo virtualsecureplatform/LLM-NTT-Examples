@@ -17,6 +17,25 @@ Options:
   --results FILE      Results JSON path. Defaults to <build-dir>/results.json.
   --with-yosys        Run an optional flattened Yosys resource estimate and
                       merge structural counts into the result metrics.
+  --with-vitis        Run optional host Vivado/Vitis RTL synthesis and merge
+                      FPGA resource/timing metrics into the result metrics.
+  --vitis-part PART   FPGA part for --with-vitis. Defaults to VITIS_PART or
+                      the AutoNTT U280 part xcu280-fsvh2892-2L-e.
+  --vitis-clock-period NS
+                      Clock period in ns for --with-vitis. Defaults to
+                      VITIS_CLOCK_PERIOD or 4.0.
+  --vitis-clock-port PORT
+                      Clock port for --with-vitis. Defaults to the task
+                      manifest's ports.clock, VITIS_CLOCK_PORT, or clock.
+  --vitis-jobs N      Vivado worker thread hint. Defaults to VITIS_JOBS or 8.
+  --vitis-timeout S   Optional Vivado/Vitis timeout in seconds. Defaults to
+                      VITIS_TIMEOUT or 0, meaning no timeout.
+  --vivado-bin PATH   Vivado executable for --with-vitis. Defaults to
+                      VIVADO_BIN or vivado.
+  --xilinx-settings FILE
+                      Source a Xilinx settings script before host synthesis.
+                      Defaults to XILINX_SETTINGS, or the 2023.2 Vitis settings
+                      script under /home/opt/xilinx when present.
   --no-clean          Reuse the build directory instead of deleting it first.
   -h, --help          Show this help.
 EOF
@@ -29,6 +48,17 @@ build_dir=""
 results_file=""
 clean_build=1
 with_yosys=0
+with_vitis=0
+vitis_part="${VITIS_PART:-xcu280-fsvh2892-2L-e}"
+vitis_clock_period="${VITIS_CLOCK_PERIOD:-4.0}"
+vitis_clock_port="${VITIS_CLOCK_PORT:-}"
+vitis_jobs="${VITIS_JOBS:-8}"
+vitis_timeout="${VITIS_TIMEOUT:-0}"
+vivado_bin="${VIVADO_BIN:-vivado}"
+xilinx_settings="${XILINX_SETTINGS:-}"
+if [[ -z "${xilinx_settings}" && -f /home/opt/xilinx/Vitis/2023.2/settings64.sh ]]; then
+  xilinx_settings="/home/opt/xilinx/Vitis/2023.2/settings64.sh"
+fi
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -55,6 +85,38 @@ while [[ $# -gt 0 ]]; do
     --with-yosys)
       with_yosys=1
       shift
+      ;;
+    --with-vitis)
+      with_vitis=1
+      shift
+      ;;
+    --vitis-part)
+      vitis_part="${2:-}"
+      shift 2
+      ;;
+    --vitis-clock-period)
+      vitis_clock_period="${2:-}"
+      shift 2
+      ;;
+    --vitis-clock-port)
+      vitis_clock_port="${2:-}"
+      shift 2
+      ;;
+    --vitis-jobs)
+      vitis_jobs="${2:-}"
+      shift 2
+      ;;
+    --vitis-timeout)
+      vitis_timeout="${2:-}"
+      shift 2
+      ;;
+    --vivado-bin)
+      vivado_bin="${2:-}"
+      shift 2
+      ;;
+    --xilinx-settings)
+      xilinx_settings="${2:-}"
+      shift 2
       ;;
     --no-clean)
       clean_build=0
@@ -112,6 +174,18 @@ PY
 task_id="$(json_get id)"
 mode="$(json_get evaluation.mode)"
 top_module="$(json_get top_module)"
+if [[ -z "${vitis_clock_port}" ]]; then
+  vitis_clock_port="$(python3 - "$task_file" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+print(data.get("ports", {}).get("clock", "clock"))
+PY
+)"
+fi
 
 if [[ "${mode}" == "planned" ]]; then
   echo "Task '${task_id}' is planned and is not supported by the evaluator yet." >&2
@@ -153,6 +227,9 @@ test_log="${build_dir}/test.log"
 lint_log="${build_dir}/lint.log"
 yosys_log="${build_dir}/yosys.log"
 yosys_json="${build_dir}/yosys-stats.json"
+vitis_log="${build_dir}/vitis-synth.log"
+vitis_json="${build_dir}/vitis-synth-metrics.json"
+vitis_build_dir="${build_dir}/vitis-synth"
 
 run_logged() {
   local log_file="$1"
@@ -176,6 +253,9 @@ test_seconds=0
 yosys_passed=false
 yosys_status=0
 yosys_seconds=0
+vitis_passed=false
+vitis_status=0
+vitis_seconds=0
 
 if [[ "${mode}" == "verilator_test" ]]; then
   cmake_var="$(json_get evaluation.cmake_cache_var)"
@@ -266,12 +346,37 @@ PY
   yosys_seconds=$(( $(date +%s) - start_time ))
 fi
 
+if [[ "${with_vitis}" -eq 1 ]]; then
+  start_time="$(date +%s)"
+  if run_logged "${vitis_log}" \
+      "${repo_root}/scripts/vitis_synth_rtl.sh" \
+        --top "${top_module}" \
+        --verilog-file "${verilog_file}" \
+        --build-dir "${vitis_build_dir}" \
+        --metrics-json "${vitis_json}" \
+        --part "${vitis_part}" \
+        --clock-port "${vitis_clock_port}" \
+        --clock-period "${vitis_clock_period}" \
+        --jobs "${vitis_jobs}" \
+        --timeout "${vitis_timeout}" \
+        --vivado-bin "${vivado_bin}" \
+        --xilinx-settings "${xilinx_settings}"; then
+    vitis_status=0
+    vitis_passed=true
+  else
+    vitis_status=$?
+  fi
+  vitis_seconds=$(( $(date +%s) - start_time ))
+fi
+
 python3 - "$results_file" "$task_file" "$task_id" "$mode" "$top_module" \
   "$verilog_file" "$build_dir" "$configure_status" "$build_status" \
   "$test_status" "$lint_status" "$build_passed" "$test_passed" \
   "$lint_passed" "$build_seconds" "$test_seconds" "$configure_log" \
   "$build_log" "$test_log" "$lint_log" "$with_yosys" "$yosys_status" \
-  "$yosys_passed" "$yosys_seconds" "$yosys_log" "$yosys_json" <<'PY'
+  "$yosys_passed" "$yosys_seconds" "$yosys_log" "$yosys_json" \
+  "$with_vitis" "$vitis_status" "$vitis_passed" "$vitis_seconds" \
+  "$vitis_log" "$vitis_json" <<'PY'
 import json
 import os
 import re
@@ -305,6 +410,12 @@ from datetime import datetime, timezone
     yosys_seconds,
     yosys_log,
     yosys_json,
+    with_vitis,
+    vitis_status,
+    vitis_passed,
+    vitis_seconds,
+    vitis_log,
+    vitis_json,
 ) = sys.argv[1:]
 
 def as_bool(value):
@@ -364,11 +475,22 @@ if as_bool(with_yosys) and as_bool(yosys_passed) and os.path.exists(yosys_json):
     for cell_type, count in stats.get("num_cells_by_type", {}).items():
         metrics[f"yosys_cell_{sanitize_metric_suffix(cell_type)}"] = count
 
+if as_bool(with_vitis) and os.path.exists(vitis_json):
+    with open(vitis_json, "r", encoding="utf-8") as f:
+        vitis_stats = json.load(f)
+    for key, value in vitis_stats.get("metrics", {}).items():
+        metrics[key] = value
+
 correct = False
 if mode == "verilator_test":
     correct = as_bool(build_passed) and as_bool(test_passed)
 elif mode == "lint_only":
     correct = as_bool(lint_passed)
+
+synthesis_passed = (
+    (as_bool(with_yosys) and as_bool(yosys_passed)) or
+    (as_bool(with_vitis) and as_bool(vitis_passed))
+)
 
 result = {
     "schema": "llm-ntt-evaluation-v1",
@@ -383,18 +505,21 @@ result = {
     "build_passed": as_bool(build_passed),
     "test_passed": as_bool(test_passed),
     "lint_passed": as_bool(lint_passed),
-    "synthesis_passed": as_bool(yosys_passed) if as_bool(with_yosys) else False,
+    "synthesis_passed": synthesis_passed,
+    "vitis_synthesis_passed": as_bool(vitis_passed) if as_bool(with_vitis) else False,
     "status": {
         "configure": int(configure_status),
         "build": int(build_status),
         "test": int(test_status),
         "lint": int(lint_status),
         "yosys": int(yosys_status),
+        "vitis": int(vitis_status),
     },
     "seconds": {
         "build": int(build_seconds),
         "test": int(test_seconds),
         "yosys": int(yosys_seconds),
+        "vitis": int(vitis_seconds),
     },
     "metrics": metrics,
     "logs": {
@@ -404,6 +529,8 @@ result = {
         "lint": os.path.relpath(lint_log, os.getcwd()),
         "yosys": os.path.relpath(yosys_log, os.getcwd()),
         "yosys_json": os.path.relpath(yosys_json, os.getcwd()),
+        "vitis": os.path.relpath(vitis_log, os.getcwd()),
+        "vitis_json": os.path.relpath(vitis_json, os.getcwd()),
     },
 }
 

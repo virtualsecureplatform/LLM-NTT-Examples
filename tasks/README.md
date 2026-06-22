@@ -25,6 +25,20 @@ For a technology-independent structural estimate, add `--with-yosys`. The
 result JSON then includes `synthesis_passed`, `status.yosys`, `seconds.yosys`,
 and `yosys_*` metrics from a flattened Yosys `stat -json` pass.
 
+For FPGA-specific synthesis estimates, add `--with-vitis`. The evaluator runs
+host Vivado/Vitis RTL synthesis for the task top and adds
+`vitis_synthesis_passed`, `status.vitis`, `seconds.vitis`, and `vitis_*`
+metrics such as LUT, FF, DSP, BRAM, URAM, timing slack, and estimated fmax. The
+default target is the AutoNTT-style U280 part `xcu280-fsvh2892-2L-e` with a
+`4.0 ns` clock.
+
+If Verilator, CMake, Yosys, and SBT should come from the Apptainer image while
+Vitis remains on the host, use:
+
+```bash
+scripts/evaluate_with_apptainer_and_vitis.sh --task <task> --with-yosys --sif llm-ntt.sif
+```
+
 ## Runnable Tasks
 
 | Task id | Evaluator mode | Status | Use for ranking |
