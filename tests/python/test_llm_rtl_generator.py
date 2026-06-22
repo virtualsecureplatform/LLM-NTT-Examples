@@ -223,7 +223,10 @@ class LlmRtlGeneratorTests(unittest.TestCase):
 
         validate_candidate(verilog, task)
         self.assertIn("module INTTWrap(", verilog)
-        self.assertIn("task compute_transform", verilog)
+        self.assertIn("Generated structural HOGE streaming INTT candidate", verilog)
+        self.assertIn("module INTT(", verilog)
+        self.assertIn("module INTorusMUL(", verilog)
+        self.assertNotIn("task compute_transform", verilog)
 
     def test_hoge_identity_behavioral_generator_validates(self):
         task = {
@@ -236,7 +239,10 @@ class LlmRtlGeneratorTests(unittest.TestCase):
         verilog = generate_hoge_nttid_behavioral()
 
         validate_candidate(verilog, task)
-        self.assertIn("assign io_out = io_in;", verilog)
+        self.assertIn("module NTTidPackedTop(", verilog)
+        self.assertIn("Generated structural HOGE NTTid identity candidate", verilog)
+        self.assertIn("module NTT(", verilog)
+        self.assertIn("module INTT(", verilog)
 
     def test_hoge_ntt_interface_behavioral_generator_validates(self):
         task = {
@@ -248,7 +254,10 @@ class LlmRtlGeneratorTests(unittest.TestCase):
         verilog = generate_hoge_streaming_ntt_interface_behavioral()
 
         validate_candidate(verilog, task)
-        self.assertIn("assign io_ready = 1'b1;", verilog)
+        self.assertIn("module NTTWrap(", verilog)
+        self.assertIn("Generated structural HOGE streaming NTT interface candidate", verilog)
+        self.assertIn("module NTT(", verilog)
+        self.assertIn("io_ready", verilog)
 
     def test_hoge_externalproduct_behavioral_generator_validates(self):
         task = {
@@ -261,8 +270,10 @@ class LlmRtlGeneratorTests(unittest.TestCase):
 
         validate_candidate(verilog, task)
         self.assertIn("module ExternalProductWrap(", verilog)
-        self.assertIn("task automatic compute_externalproduct", verilog)
-        self.assertIn("assign io_trgswinready", verilog)
+        self.assertIn("Generated structural HOGE ExternalProduct candidate", verilog)
+        self.assertIn("module Decomposition(", verilog)
+        self.assertIn("module NTT(", verilog)
+        self.assertNotIn("task automatic compute_externalproduct", verilog)
 
     def test_yata_behavioral_generator_validates(self):
         task = {

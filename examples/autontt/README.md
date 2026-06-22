@@ -126,11 +126,12 @@ Generate and evaluate a built-in behavioral RTL candidate:
 ```
 
 This path emits generated RTL rather than using `--candidate-source reference`.
-For `yata_raintt_512_p27`, the built-in behavioral generator is seeded from the
-checked-in staged Chisel pipeline so the normal behavioral path can also produce
-Vitis-synthesizable YATA RTL. Other behavioral generators are functional
-baselines for the prepared Verilator tests unless their task-specific hardware
-result has been verified.
+The built-in HOGE and YATA behavioral generators are deterministic structural
+seeds from the checked-in staged Chisel pipeline RTL. They are kept separate
+from `--candidate-source reference` so the generated-candidate path still
+exercises validation, hardware screening, and optional Vitis synthesis. Treat
+these as reproducible synthesizable seeds, not as novel endpoint-designed
+architectures.
 
 Generate and evaluate an endpoint-guided functional RTL candidate:
 
@@ -153,11 +154,15 @@ keeping the run endpoint-driven and auditable through `response.raw.json`,
 
 Supported behavioral tasks:
 
-- `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic.
-- `hoge_nttid_1024_identity`: correctness-scored identity smoke path.
-- `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate.
+- `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic;
+  emits the staged structural `INTTWrap` pipeline RTL.
+- `hoge_nttid_1024_identity`: correctness-scored identity composition;
+  emits the staged structural `NTTidPackedTop` RTL.
+- `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate;
+  emits the staged structural `NTTWrap` pipeline RTL.
 - `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
-  ExternalProduct forward-NTT arithmetic.
+  ExternalProduct forward-NTT arithmetic; emits the staged structural
+  `ExternalProductWrap` RTL.
 - `yata_raintt_512_p27`: correctness-scored YATA RAINTT INTT/NTT arithmetic;
   emits the staged structural pipeline RTL for hardware evaluation.
 
@@ -279,23 +284,87 @@ target are `correct = true`, `vitis_synthesis_passed = true`, INTT/NTT wait
 cycles `34`/`35`, `vitis_lut = 168758`, `vitis_ff = 180141`, and
 `vitis_dsp = 2296`.
 
-For a faster endpoint and Vitis smoke test that exercises the same hardware goal
-plumbing on a tiny identity RTL:
+To reproduce the HOGE structural behavioral hardware checks, first run the
+functional pass for all built-in generators:
+
+```bash
+../../scripts/evaluate_behavioral_candidates.sh --sif auto
+```
+
+Then run Vitis for each hardware target:
+
+```bash
+../../scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 2400 \
+  --output-root build/behavioral-hoge-structural-hardware \
+  --sif auto
+
+../../scripts/autontt_llm_generate.py \
+  --task hoge_externalproduct_ntt_1024_p64 \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 2400 \
+  --output-root build/behavioral-hoge-structural-hardware \
+  --sif auto
+
+../../scripts/autontt_llm_generate.py \
+  --task hoge_streaming_ntt_1024_p64 \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 1800 \
+  --output-root build/behavioral-hoge-structural-hardware \
+  --sif auto
+
+../../scripts/autontt_llm_generate.py \
+  --task hoge_nttid_1024_identity \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 2400 \
+  --output-root build/behavioral-hoge-structural-hardware \
+  --sif auto
+```
+
+Measured U280 metrics for these structural seeds:
+
+| Task | Correct | Vitis | Latency metric | LUT | FF | DSP | BRAM | URAM | WNS ns | fmax MHz |
+| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `hoge_streaming_intt_1024_p64` | true | true | total 129 cycles, wait 65 | 140242 | 239475 | 512 | 0 | 0 | 1.518 | 402.901 |
+| `hoge_externalproduct_ntt_1024_p64` | true | true | total 480 cycles, wait 320 | 325773 | 522113 | 2048 | 71.5 | 0 | 1.781 | 450.653 |
+| `hoge_streaming_ntt_1024_p64` | lint-only | true | interface gate only | 90300 | 194109 | 512 | 0 | 0 | 1.519 | 403.063 |
+| `hoge_nttid_1024_identity` | true | false | wait 33, Vitis timed out at 2400 s | unavailable | unavailable | unavailable | unavailable | unavailable | unavailable | unavailable |
+
+The HOGE generated RTL bodies are identical to the checked-in Chisel reference
+RTL after removing the generated header comments, so their AutoNTT resource and
+latency ratios against that reference are `1.0` for completed hardware runs.
+The identity composition is functional, but it is not part of the Vitis
+resource-ranked set until a run completes with populated utilization and timing
+reports.
+
+For an endpoint-backed functional smoke test that exercises the same bounded
+behavioral-selection path:
 
 ```bash
 ../../scripts/autontt_llm_generate.py \
   --task hoge_nttid_1024_identity \
   --endpoint lab \
   --candidate-source llm_behavioral \
-  --goal hardware \
+  --goal correctness \
   --no-yosys \
   --attempts 1 \
-  --vitis-timeout 300 \
   --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}' \
-  --output-root build/repro-identity-hardware
+  --output-root build/repro-identity-correctness
 ```
 
-This smoke should finish quickly with `correct = true`,
-`vitis_synthesis_passed = true`, and `hardware = true` in the runner output.
 Because the task is an identity composition, use it only to validate the
-endpoint/evaluator/Vitis loop, not as evidence of generated NTT arithmetic.
+endpoint/evaluator loop, not as evidence of generated NTT arithmetic.

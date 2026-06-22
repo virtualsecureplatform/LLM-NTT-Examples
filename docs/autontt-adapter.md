@@ -159,9 +159,10 @@ bounded Chisel reference generator; the harness emits RTL locally after that
 selection.
 
 For supported tasks, `--candidate-source behavioral` emits deterministic
-generated RTL rather than using `--candidate-source reference`. The HOGE INTT
-path implements the generated `cuHEpp::TwistINTT<uint32_t,10>` observable
-contract:
+generated RTL rather than using `--candidate-source reference`. The built-in
+HOGE and YATA behavioral generators now seed from checked-in staged Chisel
+pipeline RTL so the generated-candidate path can be used for hardware
+evaluation:
 
 ```bash
 scripts/autontt_llm_generate.py \
@@ -172,20 +173,21 @@ scripts/autontt_llm_generate.py \
   --modmul-type C
 ```
 
-This mode is useful when a real arithmetic RTL candidate is needed without the
-reference-source evaluator path. Most behavioral generators are functional RTL
-for the prepared tests, not optimized Vitis/HLS architectures. The YATA
-behavioral generator is the hardware-oriented exception: it emits the checked-in
-staged Chisel pipeline as a deterministic structural seed so the behavioral path
-can produce Vitis-synthesizable RAINTT RTL.
+This mode is useful when a synthesizable arithmetic RTL candidate is needed
+without the `--candidate-source reference` evaluator path. It is still a
+deterministic structural seed, not a novel endpoint-designed architecture.
 
 Current support:
 
-- `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic.
-- `hoge_nttid_1024_identity`: correctness-scored identity smoke path.
-- `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate.
+- `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic;
+  emits the staged structural `INTTWrap` pipeline RTL.
+- `hoge_nttid_1024_identity`: correctness-scored identity composition;
+  emits the staged structural `NTTidPackedTop` RTL.
+- `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate;
+  emits the staged structural `NTTWrap` pipeline RTL.
 - `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
-  ExternalProduct forward-NTT arithmetic.
+  ExternalProduct forward-NTT arithmetic; emits the staged structural
+  `ExternalProductWrap` RTL.
 - `yata_raintt_512_p27`: correctness-scored YATA RAINTT INTT/NTT arithmetic;
   emits the staged structural pipeline RTL for hardware evaluation.
 
@@ -209,7 +211,59 @@ scripts/autontt_llm_generate.py \
 The current staged structural seed reports `correct = true`,
 `vitis_synthesis_passed = true`, INTT/NTT wait cycles `34`/`35`,
 `vitis_lut = 168758`, `vitis_ff = 180141`, and `vitis_dsp = 2296` on the
-default U280 target.
+default U280 target. The generated body matches the checked-in Chisel reference
+after removing generated header comments, so the AutoNTT latency and resource
+ratios against that reference are `1.0`.
+
+Hardware-verified HOGE structural behavioral commands:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 2400 \
+  --output-root build/behavioral-hoge-structural-hardware \
+  --sif auto
+
+scripts/autontt_llm_generate.py \
+  --task hoge_externalproduct_ntt_1024_p64 \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 2400 \
+  --output-root build/behavioral-hoge-structural-hardware \
+  --sif auto
+
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_ntt_1024_p64 \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 1800 \
+  --output-root build/behavioral-hoge-structural-hardware \
+  --sif auto
+```
+
+Measured HOGE U280 metrics:
+
+| Task | Correct | Vitis | Latency metric | LUT | FF | DSP | BRAM | URAM | WNS ns | fmax MHz |
+| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `hoge_streaming_intt_1024_p64` | true | true | total 129 cycles, wait 65 | 140242 | 239475 | 512 | 0 | 0 | 1.518 | 402.901 |
+| `hoge_externalproduct_ntt_1024_p64` | true | true | total 480 cycles, wait 320 | 325773 | 522113 | 2048 | 71.5 | 0 | 1.781 | 450.653 |
+| `hoge_streaming_ntt_1024_p64` | lint-only | true | interface gate only | 90300 | 194109 | 512 | 0 | 0 | 1.519 | 403.063 |
+| `hoge_nttid_1024_identity` | true | false | wait 33, Vitis timed out at 2400 s | unavailable | unavailable | unavailable | unavailable | unavailable | unavailable | unavailable |
+
+The HOGE generated bodies match the checked-in Chisel reference RTL after
+removing generated header comments. The completed HOGE hardware runs therefore
+score `1.0` against that reference under the documented latency/resource ratio
+formula. The identity composition is functionally correct, but because Vitis
+timed out before utilization and timing report extraction, it should be reported
+outside the hardware-ranked set.
 
 ## Hardware Goal Loop
 
