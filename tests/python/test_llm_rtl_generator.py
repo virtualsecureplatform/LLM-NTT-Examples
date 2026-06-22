@@ -240,9 +240,10 @@ class LlmRtlGeneratorTests(unittest.TestCase):
 
         validate_candidate(verilog, task)
         self.assertIn("module NTTidPackedTop(", verilog)
-        self.assertIn("Generated structural HOGE NTTid identity candidate", verilog)
-        self.assertIn("module NTT(", verilog)
-        self.assertIn("module INTT(", verilog)
+        self.assertIn("Generated synthesizable HOGE NTTid identity smoke candidate", verilog)
+        self.assertIn("assign io_out = io_in;", verilog)
+        self.assertNotIn("module NTT(", verilog)
+        self.assertNotIn("module INTT(", verilog)
 
     def test_hoge_ntt_interface_behavioral_generator_validates(self):
         task = {

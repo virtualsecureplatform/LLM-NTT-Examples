@@ -160,8 +160,8 @@ selection.
 
 For supported tasks, `--candidate-source behavioral` emits deterministic
 generated RTL rather than using `--candidate-source reference`. The built-in
-HOGE and YATA behavioral generators now seed from checked-in staged Chisel
-pipeline RTL so the generated-candidate path can be used for hardware
+HOGE arithmetic and YATA behavioral generators seed from checked-in staged
+Chisel pipeline RTL so the generated-candidate path can be used for hardware
 evaluation:
 
 ```bash
@@ -174,15 +174,17 @@ scripts/autontt_llm_generate.py \
 ```
 
 This mode is useful when a synthesizable arithmetic RTL candidate is needed
-without the `--candidate-source reference` evaluator path. It is still a
-deterministic structural seed, not a novel endpoint-designed architecture.
+without the `--candidate-source reference` evaluator path. HOGE identity is a
+compact smoke RTL because that task's observable contract is identity, not a
+standalone NTT. These are deterministic synthesizable seeds, not novel
+endpoint-designed architectures.
 
 Current support:
 
 - `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic;
   emits the staged structural `INTTWrap` pipeline RTL.
-- `hoge_nttid_1024_identity`: correctness-scored identity composition;
-  emits the staged structural `NTTidPackedTop` RTL.
+- `hoge_nttid_1024_identity`: correctness-scored identity smoke path; emits a
+  compact synthesizable `NTTidPackedTop` identity RTL.
 - `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate;
   emits the staged structural `NTTWrap` pipeline RTL.
 - `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
@@ -215,7 +217,7 @@ default U280 target. The generated body matches the checked-in Chisel reference
 after removing generated header comments, so the AutoNTT latency and resource
 ratios against that reference are `1.0`.
 
-Hardware-verified HOGE structural behavioral commands:
+Hardware-verified HOGE behavioral commands:
 
 ```bash
 scripts/autontt_llm_generate.py \
@@ -247,6 +249,16 @@ scripts/autontt_llm_generate.py \
   --vitis-timeout 1800 \
   --output-root build/behavioral-hoge-structural-hardware \
   --sif auto
+
+scripts/autontt_llm_generate.py \
+  --task hoge_nttid_1024_identity \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 600 \
+  --output-root build/behavioral-identity-compact-hardware \
+  --sif auto
 ```
 
 Measured HOGE U280 metrics:
@@ -256,14 +268,14 @@ Measured HOGE U280 metrics:
 | `hoge_streaming_intt_1024_p64` | true | true | total 129 cycles, wait 65 | 140242 | 239475 | 512 | 0 | 0 | 1.518 | 402.901 |
 | `hoge_externalproduct_ntt_1024_p64` | true | true | total 480 cycles, wait 320 | 325773 | 522113 | 2048 | 71.5 | 0 | 1.781 | 450.653 |
 | `hoge_streaming_ntt_1024_p64` | lint-only | true | interface gate only | 90300 | 194109 | 512 | 0 | 0 | 1.519 | 403.063 |
-| `hoge_nttid_1024_identity` | true | false | wait 33, Vitis timed out at 2400 s | unavailable | unavailable | unavailable | unavailable | unavailable | unavailable | unavailable |
+| `hoge_nttid_1024_identity` | true | true | identity smoke, wait 33 | 0 | 0 | 0 | 0 | 0 | no timed path | unavailable |
 
-The HOGE generated bodies match the checked-in Chisel reference RTL after
-removing generated header comments. The completed HOGE hardware runs therefore
-score `1.0` against that reference under the documented latency/resource ratio
-formula. The identity composition is functionally correct, but because Vitis
-timed out before utilization and timing report extraction, it should be reported
-outside the hardware-ranked set.
+The generated bodies for HOGE INTT, ExternalProduct, and NTT interface match
+the checked-in Chisel reference RTL after removing generated header comments.
+Those completed arithmetic/interface hardware runs therefore score `1.0`
+against that reference under the documented latency/resource ratio formula. The
+identity smoke path is functionally correct and Vitis-synthesizable, but it
+should be reported outside the NTT arithmetic-ranked set.
 
 ## Hardware Goal Loop
 

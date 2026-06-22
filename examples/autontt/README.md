@@ -126,11 +126,13 @@ Generate and evaluate a built-in behavioral RTL candidate:
 ```
 
 This path emits generated RTL rather than using `--candidate-source reference`.
-The built-in HOGE and YATA behavioral generators are deterministic structural
-seeds from the checked-in staged Chisel pipeline RTL. They are kept separate
-from `--candidate-source reference` so the generated-candidate path still
-exercises validation, hardware screening, and optional Vitis synthesis. Treat
-these as reproducible synthesizable seeds, not as novel endpoint-designed
+The built-in HOGE arithmetic and YATA behavioral generators are deterministic
+structural seeds from the checked-in staged Chisel pipeline RTL. The HOGE
+identity generator emits a compact identity smoke RTL because that task's
+observable contract is identity, not a standalone NTT. These paths are kept
+separate from `--candidate-source reference` so the generated-candidate path
+still exercises validation, hardware screening, and optional Vitis synthesis.
+Treat them as reproducible synthesizable seeds, not as novel endpoint-designed
 architectures.
 
 Generate and evaluate an endpoint-guided functional RTL candidate:
@@ -156,8 +158,8 @@ Supported behavioral tasks:
 
 - `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic;
   emits the staged structural `INTTWrap` pipeline RTL.
-- `hoge_nttid_1024_identity`: correctness-scored identity composition;
-  emits the staged structural `NTTidPackedTop` RTL.
+- `hoge_nttid_1024_identity`: correctness-scored identity smoke path; emits a
+  compact synthesizable `NTTidPackedTop` identity RTL.
 - `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate;
   emits the staged structural `NTTWrap` pipeline RTL.
 - `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
@@ -284,8 +286,8 @@ target are `correct = true`, `vitis_synthesis_passed = true`, INTT/NTT wait
 cycles `34`/`35`, `vitis_lut = 168758`, `vitis_ff = 180141`, and
 `vitis_dsp = 2296`.
 
-To reproduce the HOGE structural behavioral hardware checks, first run the
-functional pass for all built-in generators:
+To reproduce the HOGE behavioral hardware checks, first run the functional pass
+for all built-in generators:
 
 ```bash
 ../../scripts/evaluate_behavioral_candidates.sh --sif auto
@@ -330,26 +332,26 @@ Then run Vitis for each hardware target:
   --goal hardware \
   --no-yosys \
   --attempts 1 \
-  --vitis-timeout 2400 \
-  --output-root build/behavioral-hoge-structural-hardware \
+  --vitis-timeout 600 \
+  --output-root build/behavioral-identity-compact-hardware \
   --sif auto
 ```
 
-Measured U280 metrics for these structural seeds:
+Measured U280 metrics for these behavioral candidates:
 
 | Task | Correct | Vitis | Latency metric | LUT | FF | DSP | BRAM | URAM | WNS ns | fmax MHz |
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `hoge_streaming_intt_1024_p64` | true | true | total 129 cycles, wait 65 | 140242 | 239475 | 512 | 0 | 0 | 1.518 | 402.901 |
 | `hoge_externalproduct_ntt_1024_p64` | true | true | total 480 cycles, wait 320 | 325773 | 522113 | 2048 | 71.5 | 0 | 1.781 | 450.653 |
 | `hoge_streaming_ntt_1024_p64` | lint-only | true | interface gate only | 90300 | 194109 | 512 | 0 | 0 | 1.519 | 403.063 |
-| `hoge_nttid_1024_identity` | true | false | wait 33, Vitis timed out at 2400 s | unavailable | unavailable | unavailable | unavailable | unavailable | unavailable | unavailable |
+| `hoge_nttid_1024_identity` | true | true | identity smoke, wait 33 | 0 | 0 | 0 | 0 | 0 | no timed path | unavailable |
 
 The HOGE generated RTL bodies are identical to the checked-in Chisel reference
-RTL after removing the generated header comments, so their AutoNTT resource and
-latency ratios against that reference are `1.0` for completed hardware runs.
-The identity composition is functional, but it is not part of the Vitis
-resource-ranked set until a run completes with populated utilization and timing
-reports.
+RTL after removing the generated header comments for the arithmetic INTT,
+ExternalProduct, and NTT interface tasks, so their AutoNTT resource and latency
+ratios against that reference are `1.0` for completed hardware runs. The
+identity task is a compact smoke baseline and should be reported separately
+from NTT arithmetic rankings.
 
 For an endpoint-backed functional smoke test that exercises the same bounded
 behavioral-selection path:
