@@ -327,7 +327,48 @@ bundle path reaches Vitis on the fast identity smoke boundary:
 ```
 
 For the arithmetic INTT hardware proof through the endpoint-backed bounded
-generator path:
+bundle generator path:
+
+```bash
+../../scripts/evaluate_hoge_bundle.py \
+  --candidate-source llm_behavioral \
+  --endpoint lab \
+  --task hoge_streaming_intt_1024_p64 \
+  --with-vitis \
+  --vitis-timeout 1800 \
+  --sif auto \
+  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}' \
+  --output-root build/lab-hoge-bundle-intt-hardware
+```
+
+To compare that generated RTL against a freshly synthesized reference with the
+AutoNTT latency/resource formula, first produce the reference result with the
+same task, part, and clock:
+
+```bash
+export LLM_NTT_SIF="/path/to/llm-ntt.sif"
+
+../../scripts/evaluate_with_apptainer_and_vitis.sh \
+  --task hoge_streaming_intt_1024_p64 \
+  --build-dir build/autontt-compare/hoge-intt-reference \
+  --results build/autontt-compare/hoge-intt-reference/results.json \
+  --sif "${LLM_NTT_SIF}" \
+  --vitis-timeout 1800
+```
+
+Then compare the two `results.json` files:
+
+```bash
+run_dir="$(ls -td build/lab-hoge-bundle-intt-hardware/* | head -n1)"
+
+../../scripts/compare_autontt_metrics.py \
+  --reference build/autontt-compare/hoge-intt-reference/results.json \
+  --candidate "${run_dir}/eval/hoge_streaming_intt_1024_p64/results.json" \
+  --output build/autontt-compare/hoge-intt-comparison.json
+```
+
+The older per-task generator command remains useful when debugging one top
+without the HOGE bundle wrapper:
 
 ```bash
 ../../scripts/autontt_llm_generate.py \

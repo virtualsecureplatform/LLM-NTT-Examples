@@ -321,6 +321,43 @@ against that reference under the documented latency/resource ratio formula. The
 identity smoke path is functionally correct and Vitis-synthesizable, but it
 should be reported outside the NTT arithmetic-ranked set.
 
+To compare a generated HOGE bundle result against a freshly synthesized
+reference result, evaluate both sides with the same task, part, and clock, then
+run the metric comparator:
+
+```bash
+export LLM_NTT_SIF="/path/to/llm-ntt.sif"
+
+scripts/evaluate_with_apptainer_and_vitis.sh \
+  --task hoge_streaming_intt_1024_p64 \
+  --build-dir build/autontt-compare/hoge-intt-reference \
+  --results build/autontt-compare/hoge-intt-reference/results.json \
+  --sif "${LLM_NTT_SIF}" \
+  --vitis-timeout 1800
+
+scripts/evaluate_hoge_bundle.py \
+  --candidate-source llm_behavioral \
+  --endpoint lab \
+  --task hoge_streaming_intt_1024_p64 \
+  --with-vitis \
+  --vitis-timeout 1800 \
+  --sif auto \
+  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}' \
+  --output-root build/lab-hoge-bundle-intt-hardware
+
+run_dir="$(ls -td build/lab-hoge-bundle-intt-hardware/* | head -n1)"
+
+scripts/compare_autontt_metrics.py \
+  --reference build/autontt-compare/hoge-intt-reference/results.json \
+  --candidate "${run_dir}/eval/hoge_streaming_intt_1024_p64/results.json" \
+  --output build/autontt-compare/hoge-intt-comparison.json
+```
+
+`scripts/compare_autontt_metrics.py` writes a comparison JSON with the
+AutoNTT-style latency score, resource ratios, weighted resource penalty,
+resource-aware score, and timing deltas. Missing synthesis metrics stay
+unavailable rather than being silently filled from stale baseline files.
+
 ## Hardware Goal Loop
 
 Use the runner's hardware goal when the output must be synthesizable RTL rather

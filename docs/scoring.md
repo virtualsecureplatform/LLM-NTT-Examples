@@ -140,6 +140,23 @@ where every ratio is candidate divided by baseline. The weights are only a
 starting point; for FPGA NTT designs, DSP and memory pressure often deserve more
 weight than FF count.
 
+Use `scripts/compare_autontt_metrics.py` to compute these ratios from two
+standard evaluator result files:
+
+```bash
+scripts/compare_autontt_metrics.py \
+  --reference build/autontt-compare/hoge-intt-reference/results.json \
+  --candidate build/lab-hoge-bundle-intt-hardware/<timestamp>/eval/hoge_streaming_intt_1024_p64/results.json \
+  --output build/autontt-compare/hoge-intt-comparison.json
+```
+
+The comparison JSON records correctness gates, per-prefix latency totals,
+`baseline_total_cycles / candidate_total_cycles` latency scores, Vitis
+resource ratios, timing ratios, the weighted resource penalty, and the
+resource-aware score when both sides have the required metrics. If either side
+lacks Vitis metrics, the resource score is reported as unavailable instead of
+being inferred from stale baselines.
+
 ## Pareto Reporting
 
 For architecture research, a Pareto frontier is more informative than one scalar
