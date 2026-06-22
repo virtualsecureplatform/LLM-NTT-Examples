@@ -5,6 +5,14 @@ from __future__ import annotations
 from pathlib import Path
 
 
+HOGE_BEHAVIORAL_BUNDLE_TASKS = (
+    "hoge_streaming_intt_1024_p64",
+    "hoge_externalproduct_ntt_1024_p64",
+    "hoge_nttid_1024_identity",
+    "hoge_streaming_ntt_1024_p64",
+)
+
+
 def _repo_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
@@ -80,3 +88,32 @@ def generate_hoge_streaming_ntt_interface_behavioral() -> str:
     """
 
     return _load_hoge_structural_seed("NTTWrap", "streaming NTT interface")
+
+
+def generate_hoge_behavioral_bundle() -> dict[str, str]:
+    """Return one HOGE candidate bundle keyed by task candidate filename.
+
+    The HOGE benchmark has several observable boundaries around the same source
+    family. Keeping them in one generated directory makes it clear that the
+    evaluator is testing one candidate bundle through multiple task oracles
+    rather than comparing unrelated generated NTT implementations.
+    """
+
+    return {
+        "INTTWrap.v": generate_hoge_streaming_intt_behavioral(),
+        "ExternalProductWrap.v": generate_hoge_externalproduct_behavioral(),
+        "NTTidPackedTop.v": generate_hoge_nttid_behavioral(),
+        "NTTWrap.v": generate_hoge_streaming_ntt_interface_behavioral(),
+    }
+
+
+def write_hoge_behavioral_bundle(output_dir: Path) -> dict[str, Path]:
+    """Write the HOGE behavioral bundle into ``output_dir``."""
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    written: dict[str, Path] = {}
+    for filename, rtl in generate_hoge_behavioral_bundle().items():
+        path = output_dir / filename
+        path.write_text(rtl, encoding="utf-8")
+        written[filename] = path
+    return written

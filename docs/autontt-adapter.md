@@ -198,6 +198,23 @@ current built-in behavioral candidates with the prepared tests. Add
 `--with-vitis` to run the optional host Vivado/Vitis synthesis step after
 functional evaluation.
 
+For HOGE, use the bundle runner when the intent is to test one generated RTL
+candidate across all HOGE task boundaries instead of generating separate-looking
+candidate directories per task:
+
+```bash
+scripts/evaluate_hoge_bundle.py \
+  --candidate-source llm_behavioral \
+  --endpoint lab \
+  --sif auto \
+  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}'
+```
+
+The endpoint selects the bounded `hoge_behavioral_bundle` generator once. The
+harness then writes one candidate directory containing `INTTWrap.v`,
+`ExternalProductWrap.v`, `NTTWrap.v`, and `NTTidPackedTop.v`; every selected
+HOGE task oracle reads from that same directory via `--verilog-dir`.
+
 For the hardware-verified YATA behavioral path:
 
 ```bash
@@ -218,6 +235,33 @@ after removing generated header comments, so the AutoNTT latency and resource
 ratios against that reference are `1.0`.
 
 Hardware-verified HOGE behavioral commands:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task hoge_streaming_intt_1024_p64 \
+  --endpoint lab \
+  --candidate-source llm_behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 1800 \
+  --output-root build/lab-llm-behavioral-intt-hardware \
+  --sif auto \
+  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}'
+
+scripts/evaluate_hoge_bundle.py \
+  --candidate-source llm_behavioral \
+  --endpoint lab \
+  --task hoge_nttid_1024_identity \
+  --with-vitis \
+  --vitis-timeout 600 \
+  --output-root build/lab-hoge-bundle-identity-hardware \
+  --sif auto \
+  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}'
+```
+
+The lower-level non-endpoint reproduction commands remain useful for checking
+individual tops:
 
 ```bash
 scripts/autontt_llm_generate.py \

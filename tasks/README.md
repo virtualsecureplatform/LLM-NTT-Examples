@@ -46,12 +46,17 @@ scripts/evaluate_with_apptainer_and_vitis.sh --task <task> --with-yosys --sif ll
 | `yata_raintt_512_p27` | `verilator_test` | exact TFHEpp RAINTT correctness | yes |
 | `hoge_streaming_intt_1024_p64` | `verilator_test` | exact TFHEpp cuHEpp INTT correctness | yes |
 | `hoge_externalproduct_ntt_1024_p64` | `verilator_test` | exact TFHEpp ExternalProduct forward NTT boundary | yes |
-| `hoge_nttid_1024_identity` | `verilator_test` | packed INTT/NTT identity correctness | yes |
+| `hoge_nttid_1024_identity` | `verilator_test` | packed INTT/NTT identity smoke | smoke only |
 | `hoge_streaming_ntt_1024_p64` | `lint_only` | tier0 interface/elaboration only | no arithmetic or latency ranking |
 
 `correct = true` for a `lint_only` task only means that Verilator accepted the
 required module and ports. It does not establish transform arithmetic,
 coefficient order, valid burst length, or latency.
+
+For HOGE, `scripts/evaluate_hoge_bundle.py` can generate one candidate
+directory and run these HOGE task manifests against that same directory. Use the
+INTT and ExternalProduct tasks for arithmetic ranking; keep the identity and
+standalone NTT wrapper tasks as smoke/interface gates.
 
 ## Planned Tasks
 

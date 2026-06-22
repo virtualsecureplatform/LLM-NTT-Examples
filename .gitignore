@@ -1,4 +1,5 @@
 build/
+.Xil/
 __pycache__/
 *.pyc
 *.sif

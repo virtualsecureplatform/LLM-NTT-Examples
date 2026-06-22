@@ -154,6 +154,23 @@ asking the model to stream a large arithmetic Verilog file directly while still
 keeping the run endpoint-driven and auditable through `response.raw.json`,
 `response.md`, and `candidate_source.json`.
 
+For HOGE, prefer the bundle runner when comparing one generated RTL candidate
+across the available HOGE task boundaries:
+
+```bash
+../../scripts/evaluate_hoge_bundle.py \
+  --candidate-source llm_behavioral \
+  --endpoint lab \
+  --sif auto \
+  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}'
+```
+
+The bundle runner asks the endpoint once to select `hoge_behavioral_bundle`,
+writes one candidate directory containing `INTTWrap.v`,
+`ExternalProductWrap.v`, `NTTWrap.v`, and `NTTidPackedTop.v`, then evaluates
+the selected HOGE task manifests against that same directory. This keeps the
+repository structure from looking like several unrelated HOGE NTT candidates.
+
 Supported behavioral tasks:
 
 - `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic;
@@ -286,55 +303,44 @@ target are `correct = true`, `vitis_synthesis_passed = true`, INTT/NTT wait
 cycles `34`/`35`, `vitis_lut = 168758`, `vitis_ff = 180141`, and
 `vitis_dsp = 2296`.
 
-To reproduce the HOGE behavioral hardware checks, first run the functional pass
-for all built-in generators:
+To reproduce the HOGE behavioral checks as one generated candidate bundle, run:
 
 ```bash
-../../scripts/evaluate_behavioral_candidates.sh --sif auto
+../../scripts/evaluate_hoge_bundle.py \
+  --sif auto \
+  --output-root build/hoge-bundle-functional-smoke
 ```
 
-Then run Vitis for each hardware target:
+To have the endpoint select that bundle generator and prove the endpoint-backed
+bundle path reaches Vitis on the fast identity smoke boundary:
+
+```bash
+../../scripts/evaluate_hoge_bundle.py \
+  --candidate-source llm_behavioral \
+  --endpoint lab \
+  --task hoge_nttid_1024_identity \
+  --with-vitis \
+  --vitis-timeout 600 \
+  --sif auto \
+  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}' \
+  --output-root build/lab-hoge-bundle-identity-hardware
+```
+
+For the arithmetic INTT hardware proof through the endpoint-backed bounded
+generator path:
 
 ```bash
 ../../scripts/autontt_llm_generate.py \
   --task hoge_streaming_intt_1024_p64 \
-  --candidate-source behavioral \
-  --goal hardware \
-  --no-yosys \
-  --attempts 1 \
-  --vitis-timeout 2400 \
-  --output-root build/behavioral-hoge-structural-hardware \
-  --sif auto
-
-../../scripts/autontt_llm_generate.py \
-  --task hoge_externalproduct_ntt_1024_p64 \
-  --candidate-source behavioral \
-  --goal hardware \
-  --no-yosys \
-  --attempts 1 \
-  --vitis-timeout 2400 \
-  --output-root build/behavioral-hoge-structural-hardware \
-  --sif auto
-
-../../scripts/autontt_llm_generate.py \
-  --task hoge_streaming_ntt_1024_p64 \
-  --candidate-source behavioral \
+  --endpoint lab \
+  --candidate-source llm_behavioral \
   --goal hardware \
   --no-yosys \
   --attempts 1 \
   --vitis-timeout 1800 \
-  --output-root build/behavioral-hoge-structural-hardware \
-  --sif auto
-
-../../scripts/autontt_llm_generate.py \
-  --task hoge_nttid_1024_identity \
-  --candidate-source behavioral \
-  --goal hardware \
-  --no-yosys \
-  --attempts 1 \
-  --vitis-timeout 600 \
-  --output-root build/behavioral-identity-compact-hardware \
-  --sif auto
+  --sif auto \
+  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}' \
+  --output-root build/lab-llm-behavioral-intt-hardware
 ```
 
 Measured U280 metrics for these behavioral candidates:

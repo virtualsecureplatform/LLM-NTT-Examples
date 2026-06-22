@@ -5,10 +5,13 @@ from unittest.mock import patch
 
 from examples.autontt.llm_rtl_generator.autontt_space import generate_search_points
 from examples.autontt.llm_rtl_generator.behavioral_hoge import (
+    HOGE_BEHAVIORAL_BUNDLE_TASKS,
+    generate_hoge_behavioral_bundle,
     generate_hoge_externalproduct_behavioral,
     generate_hoge_nttid_behavioral,
     generate_hoge_streaming_intt_behavioral,
     generate_hoge_streaming_ntt_interface_behavioral,
+    write_hoge_behavioral_bundle,
 )
 from examples.autontt.llm_rtl_generator.behavioral_yata import (
     generate_yata_raintt_behavioral,
@@ -259,6 +262,36 @@ class LlmRtlGeneratorTests(unittest.TestCase):
         self.assertIn("Generated structural HOGE streaming NTT interface candidate", verilog)
         self.assertIn("module NTT(", verilog)
         self.assertIn("io_ready", verilog)
+
+    def test_hoge_behavioral_bundle_contains_all_task_tops(self):
+        bundle = generate_hoge_behavioral_bundle()
+
+        self.assertEqual(
+            set(bundle),
+            {"INTTWrap.v", "ExternalProductWrap.v", "NTTidPackedTop.v", "NTTWrap.v"},
+        )
+        self.assertEqual(
+            set(HOGE_BEHAVIORAL_BUNDLE_TASKS),
+            {
+                "hoge_streaming_intt_1024_p64",
+                "hoge_externalproduct_ntt_1024_p64",
+                "hoge_nttid_1024_identity",
+                "hoge_streaming_ntt_1024_p64",
+            },
+        )
+        self.assertIn("module INTTWrap(", bundle["INTTWrap.v"])
+        self.assertIn("module ExternalProductWrap(", bundle["ExternalProductWrap.v"])
+        self.assertIn("module NTTidPackedTop(", bundle["NTTidPackedTop.v"])
+        self.assertIn("module NTTWrap(", bundle["NTTWrap.v"])
+
+    def test_write_hoge_behavioral_bundle(self):
+        with TemporaryDirectory() as tmp:
+            written = write_hoge_behavioral_bundle(Path(tmp))
+
+            self.assertEqual(set(written), set(generate_hoge_behavioral_bundle()))
+            for path in written.values():
+                self.assertTrue(path.exists())
+                self.assertIn("module ", path.read_text(encoding="utf-8"))
 
     def test_hoge_externalproduct_behavioral_generator_validates(self):
         task = {
