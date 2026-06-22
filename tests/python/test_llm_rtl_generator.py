@@ -275,9 +275,12 @@ class LlmRtlGeneratorTests(unittest.TestCase):
 
         validate_candidate(verilog, task)
         self.assertIn("module YataRainttTop(", verilog)
-        self.assertIn("task compute_intt", verilog)
-        self.assertIn("task compute_ntt", verilog)
-        self.assertIn("64'sd7036874245", verilog)
+        self.assertIn("Generated structural YATA RAINTT candidate", verilog)
+        self.assertIn("module INTT(", verilog)
+        self.assertIn("module NTT(", verilog)
+        self.assertIn("module INTorusMULSREDC(", verilog)
+        self.assertNotIn("task compute_intt", verilog)
+        self.assertNotIn("task compute_ntt", verilog)
 
     def test_hardware_screen_rejects_full_transform_task_loops(self):
         task = {
@@ -286,7 +289,22 @@ class LlmRtlGeneratorTests(unittest.TestCase):
             "evaluation": {"mode": "verilator_test"},
             "parameters": {"N": 512, "lanes": 64},
         }
-        verilog = generate_yata_raintt_behavioral()
+        verilog = (
+            "module YataRainttTop(input clock, input reset, output valid);\n"
+            "  reg signed [63:0] work_mem [0:511];\n"
+            "  task compute_intt;\n"
+            "    integer i;\n"
+            "    begin\n"
+            "      for (i = 0; i < 512; i = i + 1) begin\n"
+            "        work_mem[i] = work_mem[i] * 64'sd3;\n"
+            "      end\n"
+            "    end\n"
+            "  endtask\n"
+            "  always @(posedge clock) begin\n"
+            "    compute_intt;\n"
+            "  end\n"
+            "endmodule\n"
+        )
 
         analysis = analyze_rtl_for_hardware(
             verilog,

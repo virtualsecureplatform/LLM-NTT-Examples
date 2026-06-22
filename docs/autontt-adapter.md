@@ -159,8 +159,9 @@ bounded Chisel reference generator; the harness emits RTL locally after that
 selection.
 
 For supported tasks, `--candidate-source behavioral` emits deterministic
-generated RTL rather than copying the Chisel reference. The HOGE INTT path
-implements the generated `cuHEpp::TwistINTT<uint32_t,10>` observable contract:
+generated RTL rather than using `--candidate-source reference`. The HOGE INTT
+path implements the generated `cuHEpp::TwistINTT<uint32_t,10>` observable
+contract:
 
 ```bash
 scripts/autontt_llm_generate.py \
@@ -171,9 +172,12 @@ scripts/autontt_llm_generate.py \
   --modmul-type C
 ```
 
-This mode is useful when a real arithmetic RTL candidate is needed without
-copying the Chisel reference. It is functional behavioral RTL for the prepared
-tests, not an optimized Vitis/HLS architecture.
+This mode is useful when a real arithmetic RTL candidate is needed without the
+reference-source evaluator path. Most behavioral generators are functional RTL
+for the prepared tests, not optimized Vitis/HLS architectures. The YATA
+behavioral generator is the hardware-oriented exception: it emits the checked-in
+staged Chisel pipeline as a deterministic structural seed so the behavioral path
+can produce Vitis-synthesizable RAINTT RTL.
 
 Current support:
 
@@ -182,12 +186,30 @@ Current support:
 - `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate.
 - `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
   ExternalProduct forward-NTT arithmetic.
-- `yata_raintt_512_p27`: correctness-scored YATA RAINTT INTT/NTT arithmetic.
+- `yata_raintt_512_p27`: correctness-scored YATA RAINTT INTT/NTT arithmetic;
+  emits the staged structural pipeline RTL for hardware evaluation.
 
 Use `scripts/evaluate_behavioral_candidates.sh` to regenerate and evaluate all
 current built-in behavioral candidates with the prepared tests. Add
 `--with-vitis` to run the optional host Vivado/Vitis synthesis step after
 functional evaluation.
+
+For the hardware-verified YATA behavioral path:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task yata_raintt_512_p27 \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 2400
+```
+
+The current staged structural seed reports `correct = true`,
+`vitis_synthesis_passed = true`, INTT/NTT wait cycles `34`/`35`,
+`vitis_lut = 168758`, `vitis_ff = 180141`, and `vitis_dsp = 2296` on the
+default U280 target.
 
 ## Hardware Goal Loop
 

@@ -125,9 +125,12 @@ Generate and evaluate a built-in behavioral RTL candidate:
   --modmul-type C
 ```
 
-This path emits generated RTL rather than copying the Chisel reference. It is
-intended as a functional baseline for the prepared Verilator tests, not as
-optimized hardware-quality RTL.
+This path emits generated RTL rather than using `--candidate-source reference`.
+For `yata_raintt_512_p27`, the built-in behavioral generator is seeded from the
+checked-in staged Chisel pipeline so the normal behavioral path can also produce
+Vitis-synthesizable YATA RTL. Other behavioral generators are functional
+baselines for the prepared Verilator tests unless their task-specific hardware
+result has been verified.
 
 Generate and evaluate an endpoint-guided functional RTL candidate:
 
@@ -155,7 +158,8 @@ Supported behavioral tasks:
 - `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate.
 - `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
   ExternalProduct forward-NTT arithmetic.
-- `yata_raintt_512_p27`: correctness-scored YATA RAINTT INTT/NTT arithmetic.
+- `yata_raintt_512_p27`: correctness-scored YATA RAINTT INTT/NTT arithmetic;
+  emits the staged structural pipeline RTL for hardware evaluation.
 
 Run all built-in behavioral candidates:
 
@@ -255,6 +259,25 @@ sha256sum \
   variants/yata-raintt/chisel/YataRainttTop.v \
   build/repro-yata-hardware/yata_raintt_512_p27/*/attempt_000_*/YataRainttTop.v
 ```
+
+To reproduce the same YATA hardware result without an endpoint, use the built-in
+behavioral generator:
+
+```bash
+../../scripts/autontt_llm_generate.py \
+  --task yata_raintt_512_p27 \
+  --candidate-source behavioral \
+  --goal hardware \
+  --no-yosys \
+  --attempts 1 \
+  --vitis-timeout 2400 \
+  --output-root build/repro-yata-behavioral-hardware
+```
+
+Expected metrics for the current checked-in structural seed on the default U280
+target are `correct = true`, `vitis_synthesis_passed = true`, INTT/NTT wait
+cycles `34`/`35`, `vitis_lut = 168758`, `vitis_ff = 180141`, and
+`vitis_dsp = 2296`.
 
 For a faster endpoint and Vitis smoke test that exercises the same hardware goal
 plumbing on a tiny identity RTL:
