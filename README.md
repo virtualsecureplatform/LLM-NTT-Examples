@@ -306,6 +306,24 @@ extracted RTL reference using the AutoNTT metric script, run:
 scripts/run_yata_hls_synth_compare.py --sif auto
 ```
 
+For smaller HLS bring-up targets, generate and compare the 32-point HOGE path,
+the single-block 8-point YATA path, and the 8-lane by 8-cycle YATA path:
+
+```bash
+scripts/run_small_variant_hls_synth_compare.py --variants all --sif auto
+```
+
+The small-variant driver writes reference and generated HLS tops, checks both
+against TFHEpp-derived references, synthesizes INTT/NTT/combined tops with
+Vitis HLS, and compares the resulting `results.json` files with the same
+AutoNTT metric script. A verified U280 run produced:
+
+| Variant | INTT cycles | NTT cycles | LUT | FF | DSP | BRAM | fmax MHz |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `hoge32` | 4294 | 4292 | 69693 | 31644 | 40 | 12 | 342.466 |
+| `yata8` | 81 | 96 | 17303 | 11938 | 70 | 8 | 342.466 |
+| `yata8x8` | 5250 | 9168 | 65492 | 38962 | 156 | 8 | 305.157 |
+
 Behavioral generation currently supports:
 
 - `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic.

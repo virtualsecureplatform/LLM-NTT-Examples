@@ -219,6 +219,38 @@ NTT, and combined HLS tops with Vitis HLS, writes an evaluator-style
 path are Vitis HLS `csynth` estimates, not post-route RTL implementation
 metrics.
 
+## Small Variant HLS
+
+Small HLS bring-up targets are available for the requested reduced-size
+problems:
+
+- `hoge32`: 32 coefficients over the HOGE p64 torus.
+- `yata8`: one radix-8 YATA RAINTT block.
+- `yata8x8`: 64 YATA coefficients, modeled as 8 lanes by 8 cycles.
+
+Run all three through functional checks, Vitis HLS synthesis, and AutoNTT-style
+reference/generated metric comparison:
+
+```bash
+scripts/run_small_variant_hls_synth_compare.py --variants all --sif auto
+```
+
+The driver emits `reference_*_hls` and `generated_*_hls` tops for INTT, NTT,
+and combined transforms under
+`build/small-variant-hls-synth-compare/<timestamp>/`. The generated functional
+test covers ramp, alternating edge-value, and deterministic pseudo-random
+inputs. For tiny `Nbit == radixbit` cases it uses the exposed TFHEpp radix
+butterfly plus twist helpers, because TFHEpp's generic NTT wrapper assumes a
+larger next stage.
+
+Measured U280 Vitis HLS estimates from a verified run:
+
+| Variant | INTT total cycles | NTT total cycles | LUT | FF | DSP | BRAM | fmax MHz |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `hoge32` | 4294 | 4292 | 69693 | 31644 | 40 | 12 | 342.466 |
+| `yata8` | 81 | 96 | 17303 | 11938 | 70 | 8 | 342.466 |
+| `yata8x8` | 5250 | 9168 | 65492 | 38962 | 156 | 8 | 305.157 |
+
 Longer-term direct AutoNTT extensions would still be:
 
 - Add an AutoNTT small-N mode for `N = 512`.

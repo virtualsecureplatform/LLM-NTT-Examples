@@ -112,6 +112,17 @@ That driver generates a YATA RAINTT HLS source, checks it against TFHEpp,
 synthesizes INTT/NTT/combined Vitis HLS tops, and compares the resulting
 evaluator-style `results.json` against the YATA RTL reference.
 
+For reduced-size HLS bring-up, run:
+
+```bash
+../../scripts/run_small_variant_hls_synth_compare.py --variants all --sif auto
+```
+
+This covers `hoge32`, `yata8`, and `yata8x8`, emits reference/generated HLS
+tops, checks them against TFHEpp-derived references, synthesizes them with
+Vitis HLS, and compares the generated estimates against the reference estimates
+with the AutoNTT metric script.
+
 ## LLM RTL Generator
 
 `llm_rtl_generator/` contains a pure-Python generator that maps each task
