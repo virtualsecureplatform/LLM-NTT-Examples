@@ -123,6 +123,14 @@ tops, checks them against TFHEpp-derived references, synthesizes them with
 Vitis HLS, and compares the generated estimates against the reference estimates
 with the AutoNTT metric script.
 
+For the fresh-clone reproducibility wrapper that builds or reuses the SIF,
+runs the small and full-YATA HLS flows, verifies Vitis HLS RTL emission, and
+writes a top-level AutoNTT metric report, run from the repository root:
+
+```bash
+scripts/reproduce_hls_autontt_metrics.py
+```
+
 ## LLM RTL Generator
 
 `llm_rtl_generator/` contains a pure-Python generator that maps each task

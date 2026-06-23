@@ -221,6 +221,17 @@ metrics.
 
 ## Small Variant HLS
 
+For a fresh-clone end-to-end reproduction of the SIF build, HLS generation,
+Vitis HLS RTL emission, functional checks, generated RTL directory checks, and
+AutoNTT metric reporting, use:
+
+```bash
+scripts/reproduce_hls_autontt_metrics.py
+```
+
+This runs the small-variant flow below plus the full YATA HLS comparison unless
+`--targets small` or `--targets full-yata` narrows the scope.
+
 Small HLS bring-up targets are available for the requested reduced-size
 problems:
 

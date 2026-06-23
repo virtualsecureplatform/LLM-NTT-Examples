@@ -34,6 +34,36 @@ scripts/run_all.sh
 The script generates Verilog with `sbt run`, configures CMake with Clang, builds
 the Verilator harnesses, and runs CTest.
 
+## Fresh-Clone HLS Reproduction
+
+From a fresh clone, initialize submodules, build or reuse the SIF, generate HLS
+RTL with Vitis HLS, run the HLS functional checks, verify the emitted RTL
+directories, and write an AutoNTT-metric report with:
+
+```bash
+git clone --recurse-submodules https://github.com/virtualsecureplatform/LLM-NTT-Examples.git
+cd LLM-NTT-Examples
+scripts/reproduce_hls_autontt_metrics.py
+```
+
+The wrapper uses `LLM_NTT_SIF` when set, then an existing
+`llm-ntt-rootless.sif`, then `llm-ntt.sif`; if no image exists, it builds
+`llm-ntt.sif` from `apptainer/llm-ntt.def`. Vitis remains host-side, so
+`/home/opt/xilinx/Vitis/2023.2/settings64.sh` must be visible by default.
+Override these paths as needed:
+
+```bash
+scripts/reproduce_hls_autontt_metrics.py \
+  --sif auto \
+  --xilinx-root /home/opt/xilinx \
+  --vitis-settings Vitis/2023.2/settings64.sh
+```
+
+If the host cannot use unprivileged Apptainer builds, add
+`--sudo-sif-build`. To reuse an already-built image during development, add
+`--skip-sif-build`. Results are written under
+`build/reproduce-hls-autontt/<timestamp>/summary.json` and `report.md`.
+
 ## Apptainer Run
 
 Build the container:
