@@ -203,7 +203,23 @@ though it is not a direct AutoNTT fit:
 - `N = 512`, smaller than AutoNTT's documented range.
 - signed 27-bit compressed RAINTT arithmetic with `P = 5^4 * 2^16 + 1`.
 
-Possible extensions:
+The checked-in workaround is a repository-local HLS generator and synthesis
+driver:
+
+```bash
+scripts/run_yata_hls_synth_compare.py --sif auto
+```
+
+It emits YATA RAINTT HLS into `build/yata-hls-synth-compare/<timestamp>/`,
+checks INTT/NTT functional equivalence against TFHEpp, synthesizes the INTT,
+NTT, and combined HLS tops with Vitis HLS, writes an evaluator-style
+`results.json`, and compares it against
+`baselines/extracted-rtl/yata_raintt_512_p27.json` with
+`scripts/compare_autontt_metrics.py`. The resource and timing values in this
+path are Vitis HLS `csynth` estimates, not post-route RTL implementation
+metrics.
+
+Longer-term direct AutoNTT extensions would still be:
 
 - Add an AutoNTT small-N mode for `N = 512`.
 - Add a custom signed reduction model compatible with YATA's RAINTT arithmetic.

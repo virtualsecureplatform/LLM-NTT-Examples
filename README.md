@@ -297,6 +297,15 @@ prepared tests; passing this repository's task manifests from that path still
 requires HLS-to-RTL synthesis plus an interface/order adapter for task tops such
 as `INTTWrap` and `ExternalProductWrap`.
 
+YATA is not a direct AutoNTT backend input because the extracted task is
+`N = 512`. To generate an LLM-style YATA HLS candidate, test it against TFHEpp,
+synthesize it with Vitis HLS, and compare its HLS estimates against the
+extracted RTL reference using the AutoNTT metric script, run:
+
+```bash
+scripts/run_yata_hls_synth_compare.py --sif auto
+```
+
 Behavioral generation currently supports:
 
 - `hoge_streaming_intt_1024_p64`: correctness-scored HOGE INTT arithmetic.

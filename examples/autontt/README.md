@@ -100,7 +100,17 @@ HLS-to-RTL synthesis and the LLM-NTT task-top adapter are still needed before
 this path can pass the prepared Verilog tests.
 
 YATA is documented in `custom_reductions/yata_p27/`, but it is not a direct
-AutoNTT input because this extracted task uses `N = 512`.
+AutoNTT input because this extracted task uses `N = 512`. To still answer
+whether an LLM-style YATA HLS candidate is synthesizable and how it compares
+with the extracted RTL under the AutoNTT metric formula, run:
+
+```bash
+../../scripts/run_yata_hls_synth_compare.py --sif auto
+```
+
+That driver generates a YATA RAINTT HLS source, checks it against TFHEpp,
+synthesizes INTT/NTT/combined Vitis HLS tops, and compares the resulting
+evaluator-style `results.json` against the YATA RTL reference.
 
 ## LLM RTL Generator
 
