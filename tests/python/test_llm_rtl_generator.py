@@ -27,8 +27,10 @@ from examples.autontt.llm_rtl_generator.prompting import (
     validate_candidate,
 )
 from examples.autontt.llm_rtl_generator.runner import (
+    KUNASHIRI_ENDPOINT_ENV,
     LAB_ENDPOINT_ENV,
     build_chisel_generator_selection_messages,
+    build_llm_extra_body,
     build_generator_selection_messages,
     copy_reference_candidate,
     normalize_endpoint,
@@ -93,6 +95,18 @@ class LlmRtlGeneratorTests(unittest.TestCase):
             normalize_endpoint("https://example.test/v1"),
             "https://example.test/v1",
         )
+        self.assertEqual(
+            normalize_endpoint("kunashiri"),
+            "http://kunashiri:8080/v1",
+        )
+        self.assertEqual(
+            normalize_endpoint("http://kunashiri"),
+            "http://kunashiri:8080/v1",
+        )
+        self.assertEqual(
+            normalize_endpoint("http://kunashiri:9000"),
+            "http://kunashiri:9000/v1",
+        )
 
     def test_lab_endpoint_is_environment_backed(self):
         with patch.dict("os.environ", {LAB_ENDPOINT_ENV: ""}, clear=False):
@@ -102,6 +116,37 @@ class LlmRtlGeneratorTests(unittest.TestCase):
             "os.environ", {LAB_ENDPOINT_ENV: "http://example.test:9000"}, clear=False
         ):
             self.assertEqual(normalize_endpoint("lab"), "http://example.test:9000/v1")
+
+    def test_kunashiri_endpoint_can_be_overridden(self):
+        with patch.dict(
+            "os.environ",
+            {KUNASHIRI_ENDPOINT_ENV: "http://example.test:18080/openai/v1"},
+            clear=False,
+        ):
+            self.assertEqual(
+                normalize_endpoint("kunashiri"),
+                "http://example.test:18080/openai/v1",
+            )
+
+    def test_build_llm_extra_body_can_disable_thinking(self):
+        self.assertEqual(
+            build_llm_extra_body(None, disable_thinking=True),
+            {"chat_template_kwargs": {"enable_thinking": False}},
+        )
+        self.assertEqual(
+            build_llm_extra_body(
+                '{"temperature_override":0,'
+                '"chat_template_kwargs":{"foo":"bar","enable_thinking":true}}',
+                disable_thinking=True,
+            ),
+            {
+                "temperature_override": 0,
+                "chat_template_kwargs": {
+                    "foo": "bar",
+                    "enable_thinking": False,
+                },
+            },
+        )
 
     def test_redact_endpoint_urls(self):
         text = "http://private.example/v1/models request failed"

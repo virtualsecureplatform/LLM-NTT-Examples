@@ -21,6 +21,84 @@ AutoNTT output still needs a wrapper before it can be evaluated by
 `scripts/evaluate_candidate.sh`, because AutoNTT emits TAPA/Vitis HLS kernels
 rather than the exact Verilog top modules used by the task manifests.
 
+The Apptainer image installs non-Xilinx AutoNTT HLS dependencies: `gflags`,
+`glog`, OpenCL headers/libraries, the Python TAPA frontend, Boost,
+nlohmann-json, tinyxml2, and yaml-cpp. Vitis stays outside the image, while the
+runtime-enabled SIF can build and install RapidStream TAPA C++ runtime
+(`tapa.h`, `libtapa`, `libfrt`) under `/opt/rapidstream-tapa`.
+Build and check the rootless runtime image with:
+
+```bash
+cd ../..
+scripts/build_llm_ntt_sif.sh \
+  --with-tapa-runtime \
+  --tapa-build-jobs 4 \
+  --output llm-ntt-rootless.sif
+apptainer exec --no-home --pwd /work \
+  --bind "$(pwd):/work" \
+  --bind /home/opt/xilinx:/home/opt/xilinx \
+  llm-ntt-rootless.sif \
+  scripts/check_autontt_hls_deps.sh
+```
+
+If fakeroot is unavailable, use `scripts/build_llm_ntt_sif.sh --sudo`; the
+wrapper stages the SIF under `SIF_TMPDIR`, `TMPDIR`, or `/tmp`, then moves it
+back to the requested output path as the caller.
+Use `--bind-xilinx` only when a build-time TAPA/Pasta install step needs the
+host Xilinx tree.
+For a sudo-built SIF with the full RapidStream TAPA runtime, use:
+
+```bash
+scripts/build_llm_ntt_sif.sh --sudo --with-tapa-runtime --tapa-build-jobs 2
+```
+
+From the repository root, run the generated-HLS SIF comparison harness after
+the runtime-enabled SIF and host Vitis tree are visible:
+
+```bash
+scripts/run_autontt_hls_sif_compare.sh --sif llm-ntt-rootless.sif
+```
+
+The compare harness runs the dependency check, `make csim_compile`, and
+RapidStream `tapa compile`. Its default platform is
+`xilinx_u200_gen3x16_xdma_2_202110_1`; pass `--platform` for another installed
+platform.
+
+From the repository root, the same adjacent AutoNTT backend can be exercised
+through the artifact-capturing HLS harness:
+
+```bash
+scripts/run_autontt_hls_harness.py --modmul-type B
+```
+
+This Barrett run is a positive AutoNTT HLS code-generation control and writes a
+summary plus copied HLS sources under `build/autontt-hls-runs/<timestamp>/`.
+For the HOGE pseudo-Mersenne custom reduction files in this directory, run:
+
+```bash
+scripts/run_autontt_hls_harness.py --modmul-type C
+```
+
+By default this uses `--custom-bu-mode estimate` with explicit estimated
+butterfly-unit attributes `pipeline_depth,dsp,lut,ff = 15,32,2345,1481`, so
+AutoNTT can finish DSE and emit final HOGE custom HLS source without a local
+TAPA/Autobridge measurement flow. Treat those BU attributes as code-generation
+estimates, not measured hardware metrics. To run AutoNTT's original measured
+custom-BU probe on a host with the full dependencies, use:
+
+```bash
+scripts/run_autontt_hls_harness.py \
+  --modmul-type C \
+  --custom-bu-mode probe \
+  --allow-failure
+```
+
+On this host the probe reaches `temp_design`, then its custom-reduction
+C-simulation compile fails until the generated link line can see `tapa.h`,
+`libtapa`, `libfrt`, `glog`, `gflags`, OpenCL, and Vitis HLS headers.
+HLS-to-RTL synthesis and the LLM-NTT task-top adapter are still needed before
+this path can pass the prepared Verilog tests.
+
 YATA is documented in `custom_reductions/yata_p27/`, but it is not a direct
 AutoNTT input because this extracted task uses `N = 512`.
 
@@ -140,7 +218,8 @@ Generate and evaluate an endpoint-guided functional RTL candidate:
 ```bash
 ../../scripts/autontt_llm_generate.py \
   --task hoge_streaming_intt_1024_p64 \
-  --endpoint lab \
+  --endpoint kunashiri \
+  --disable-thinking \
   --candidate-source llm_behavioral \
   --strategy hardware \
   --arch-type I \
@@ -154,15 +233,28 @@ asking the model to stream a large arithmetic Verilog file directly while still
 keeping the run endpoint-driven and auditable through `response.raw.json`,
 `response.md`, and `candidate_source.json`.
 
+For the local `kunashiri` llama.cpp endpoint, run the complete endpoint-backed
+functional harness from the repository root:
+
+```bash
+scripts/run_autontt_kunashiri_harness.sh
+```
+
+The script defaults to `--endpoint kunashiri`, `--disable-thinking`,
+`--candidate-source llm_behavioral`, Apptainer evaluation, and
+`build/autontt-kunashiri-harness/` for run artifacts. The aggregate result is
+written to `build/autontt-kunashiri-harness/summary.json`. Use
+`--task <task-id>` to limit the run to one task while iterating.
+
 For HOGE, prefer the bundle runner when comparing one generated RTL candidate
 across the available HOGE task boundaries:
 
 ```bash
 ../../scripts/evaluate_hoge_bundle.py \
   --candidate-source llm_behavioral \
-  --endpoint lab \
-  --sif auto \
-  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}'
+  --endpoint kunashiri \
+  --disable-thinking \
+  --sif auto
 ```
 
 The bundle runner asks the endpoint once to select `hoge_behavioral_bundle`,
@@ -243,6 +335,11 @@ spending time in Vivado.
 
 `--endpoint lab` reads the private endpoint from `LLM_NTT_LAB_ENDPOINT`. The
 endpoint can also be supplied directly with `LLM_NTT_LLM_ENDPOINT`.
+In this workspace, `--endpoint kunashiri` resolves to the llama.cpp
+OpenAI-compatible server at `http://kunashiri:8080/v1`. Use
+`--disable-thinking` with Qwen-style llama.cpp models so bounded JSON selection
+prompts return the requested JSON in `content` rather than a long
+`reasoning_content` prelude.
 
 ## Reproducible Hardware Procedure
 
@@ -254,14 +351,14 @@ export LLM_NTT_LAB_ENDPOINT="http://<private-openai-compatible-host>:<port>/v1"
 
 ../../scripts/autontt_llm_generate.py \
   --task yata_raintt_512_p27 \
-  --endpoint lab \
+  --endpoint kunashiri \
   --candidate-source llm_chisel_reference \
   --goal hardware \
   --no-yosys \
   --attempts 1 \
   --vitis-timeout 1800 \
   --chisel-timeout 900 \
-  --extra-body-json '{"chat_template_kwargs":{"enable_thinking":false}}' \
+  --disable-thinking \
   --output-root build/repro-yata-hardware
 ```
 

@@ -1,5 +1,21 @@
 Bootstrap: docker
-From: ubuntu:24.04
+From: ubuntu:22.04
+
+%arguments
+    WITH_TAPA_RUNTIME=0
+    TAPA_REPO=https://github.com/rapidstream-org/rapidstream-tapa.git
+    TAPA_REF=main
+    TAPA_BAZEL_VERSION=8.4.2
+    TAPA_BUILD_JOBS=2
+    TAPA_INSTALL_DIR=/opt/rapidstream-tapa
+    LIBTINFO5_DEB_URL=https://archive.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
+    XILINX_TOOL_PATH=/home/opt/xilinx
+    XILINX_TOOL_VERSION=2023.2
+    XILINX_TOOL_LEGACY_PATH=/home/opt/xilinx
+    XILINX_TOOL_LEGACY_VERSION=2023.2
+
+%setup
+    mkdir -p "${APPTAINER_ROOTFS}/home/opt/xilinx" "${APPTAINER_ROOTFS}/opt/xilinx"
 
 %post
     export DEBIAN_FRONTEND=noninteractive
@@ -7,6 +23,7 @@ From: ubuntu:24.04
     apt-get update
     apt-get install -y \
         apt-transport-https \
+        binutils \
         build-essential \
         ca-certificates \
         clang \
@@ -15,11 +32,47 @@ From: ubuntu:24.04
         default-jdk \
         git \
         gnupg \
+        libboost-atomic-dev \
+        libboost-chrono-dev \
+        libboost-context-dev \
+        libboost-coroutine-dev \
+        libboost-date-time-dev \
+        libboost-fiber-dev \
+        libboost-stacktrace-dev \
+        libboost-system-dev \
+        libboost-thread-dev \
+        libgflags-dev \
+        libgoogle-glog-dev \
+        libtinfo6 \
+        libtinyxml2-dev \
+        libyaml-cpp-dev \
+        locales \
         lld \
+        nlohmann-json3-dev \
         ninja-build \
+        ocl-icd-opencl-dev \
+        opencl-headers \
+        patch \
+        pkg-config \
+        rsync \
         python3 \
+        python3-dev \
+        python3-pip \
+        python3-setuptools \
+        python3-venv \
+        python3-wheel \
+        unzip \
+        uuid-dev \
         verilator \
+        xz-utils \
+        zip \
         yosys
+
+    sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+    locale-gen en_US.UTF-8
+    update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
 
     echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" > /etc/apt/sources.list.d/sbt.list
     echo "deb https://repo.scala-sbt.org/scalasbt/debian /" > /etc/apt/sources.list.d/sbt_old.list
@@ -28,14 +81,96 @@ From: ubuntu:24.04
     apt-get update
     apt-get install -y sbt
 
-    mkdir -p /tmp/run /tmp/home /tmp/sbt /tmp/coursier
-    chmod 1777 /tmp/run /tmp/home /tmp/sbt /tmp/coursier
+    PIP_BREAK_SYSTEM_PACKAGES=
+    if python3 -m pip install --help | grep -q -- '--break-system-packages'; then
+        PIP_BREAK_SYSTEM_PACKAGES=--break-system-packages
+    fi
+    python3 -m pip install --no-cache-dir ${PIP_BREAK_SYSTEM_PACKAGES} \
+        'setuptools<81' \
+        tapa==0.0.20240825.1
+
+    if ! ldconfig -p | grep -q 'libtinfo.so.5'; then
+        curl -fsSL "{{ LIBTINFO5_DEB_URL }}" -o /tmp/libtinfo5.deb
+        apt-get install -y /tmp/libtinfo5.deb
+        rm -f /tmp/libtinfo5.deb
+    fi
+
+    if [ "{{ WITH_TAPA_RUNTIME }}" = "1" ]; then
+        TAPA_REPO="{{ TAPA_REPO }}"
+        TAPA_REF="{{ TAPA_REF }}"
+        TAPA_BAZEL_VERSION="{{ TAPA_BAZEL_VERSION }}"
+        TAPA_BUILD_JOBS="{{ TAPA_BUILD_JOBS }}"
+        TAPA_INSTALL_DIR="{{ TAPA_INSTALL_DIR }}"
+        TAPA_SRC_DIR=/build/rapidstream-tapa-src
+        XILINX_TOOL_PATH="{{ XILINX_TOOL_PATH }}"
+        XILINX_TOOL_VERSION="{{ XILINX_TOOL_VERSION }}"
+        XILINX_TOOL_LEGACY_PATH="{{ XILINX_TOOL_LEGACY_PATH }}"
+        XILINX_TOOL_LEGACY_VERSION="{{ XILINX_TOOL_LEGACY_VERSION }}"
+
+        if [ ! -d "${XILINX_TOOL_PATH}" ]; then
+            echo "Xilinx tool path is not visible during build: ${XILINX_TOOL_PATH}" >&2
+            echo "Rebuild with scripts/build_llm_ntt_sif.sh --with-tapa-runtime --bind-xilinx" >&2
+            exit 1
+        fi
+        if ! [ "${TAPA_BUILD_JOBS}" -ge 1 ] 2>/dev/null; then
+            echo "TAPA_BUILD_JOBS must be a positive integer: ${TAPA_BUILD_JOBS}" >&2
+            exit 1
+        fi
+
+        curl -fsSL \
+            https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 \
+            -o /usr/local/bin/bazel
+        chmod 0755 /usr/local/bin/bazel
+
+        rm -rf "${TAPA_SRC_DIR}" /root/.cache/bazel
+        mkdir -p "$(dirname "${TAPA_SRC_DIR}")"
+        git clone --depth 1 --branch "${TAPA_REF}" "${TAPA_REPO}" "${TAPA_SRC_DIR}"
+        cd "${TAPA_SRC_DIR}"
+
+        python3 - <<PY
+from pathlib import Path
+
+values = {
+    "XILINX_TOOL_PATH": "${XILINX_TOOL_PATH}",
+    "XILINX_TOOL_VERSION": "${XILINX_TOOL_VERSION}",
+    "XILINX_TOOL_LEGACY_PATH": "${XILINX_TOOL_LEGACY_PATH}",
+    "XILINX_TOOL_LEGACY_VERSION": "${XILINX_TOOL_LEGACY_VERSION}",
+}
+path = Path("VARS.bzl")
+lines = path.read_text(encoding="utf-8").splitlines()
+out = []
+for line in lines:
+    replaced = False
+    for key, value in values.items():
+        if line.startswith(f"{key} = "):
+            out.append(f'{key} = "{value}"')
+            replaced = True
+            break
+    if not replaced:
+        out.append(line)
+path.write_text("\n".join(out) + "\n", encoding="utf-8")
+PY
+
+        USE_BAZEL_VERSION="${TAPA_BAZEL_VERSION}" bazel build --config=release --jobs="${TAPA_BUILD_JOBS}" //:tapa-pkg-tar
+        gzip -c ./bazel-bin/tapa-pkg-tar.tar > ./bazel-bin/tapa-pkg-tar.tar.gz
+        VERBOSE=no QUIET=no \
+            RAPIDSTREAM_LOCAL_PACKAGE=./bazel-bin/tapa-pkg-tar.tar.gz \
+            RAPIDSTREAM_INSTALL_DIR="${TAPA_INSTALL_DIR}" \
+            ./install.sh --no-modify-path
+        cd /
+        chmod -R u+rwX "${TAPA_SRC_DIR}" /root/.cache/bazel 2>/dev/null || true
+        rm -rf "${TAPA_SRC_DIR}" /root/.cache/bazel
+    fi
+
+    mkdir -p /tmp/run /tmp/home /tmp/sbt /tmp/coursier || true
+    chmod 1777 /tmp/run /tmp/home /tmp/sbt /tmp/coursier 2>/dev/null || true
     apt-get clean
     rm -rf /var/lib/apt/lists/*
 
 %environment
     export HOME=/tmp/home
-    export LC_ALL=C
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
     export XDG_RUNTIME_DIR=/tmp/run
     export TMPDIR=/tmp
     export COURSIER_CACHE=/tmp/coursier
@@ -43,12 +178,26 @@ From: ubuntu:24.04
     export SBT_OPTS="-Dsbt.boot.directory=/tmp/sbt/boot -Dsbt.global.base=/tmp/sbt/global -Dsbt.ivy.home=/tmp/sbt/ivy"
     export CC=clang
     export CXX=clang++
+    export TAPA_HOME=/opt/rapidstream-tapa
+    export RAPIDSTREAM_INSTALL_DIR=/opt/rapidstream-tapa
+    export PATH=/opt/rapidstream-tapa/usr/bin:/opt/rapidstream-tapa/bin:$PATH
+    export CPLUS_INCLUDE_PATH=/opt/rapidstream-tapa/usr/include:/opt/rapidstream-tapa/include:$CPLUS_INCLUDE_PATH
+    export LIBRARY_PATH=/opt/rapidstream-tapa/usr/lib:/opt/rapidstream-tapa/usr/lib64:/opt/rapidstream-tapa/lib:/opt/rapidstream-tapa/lib64:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=/opt/rapidstream-tapa/usr/lib:/opt/rapidstream-tapa/usr/lib64:/opt/rapidstream-tapa/lib:/opt/rapidstream-tapa/lib64:$LD_LIBRARY_PATH
 
 %runscript
     export HOME=/tmp/home
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
     export COURSIER_CACHE=/tmp/coursier
     export SBT_BOOT=/tmp/sbt/boot
     export SBT_OPTS="-Dsbt.boot.directory=/tmp/sbt/boot -Dsbt.global.base=/tmp/sbt/global -Dsbt.ivy.home=/tmp/sbt/ivy"
+    export TAPA_HOME=/opt/rapidstream-tapa
+    export RAPIDSTREAM_INSTALL_DIR=/opt/rapidstream-tapa
+    export PATH=/opt/rapidstream-tapa/usr/bin:/opt/rapidstream-tapa/bin:$PATH
+    export CPLUS_INCLUDE_PATH=/opt/rapidstream-tapa/usr/include:/opt/rapidstream-tapa/include:$CPLUS_INCLUDE_PATH
+    export LIBRARY_PATH=/opt/rapidstream-tapa/usr/lib:/opt/rapidstream-tapa/usr/lib64:/opt/rapidstream-tapa/lib:/opt/rapidstream-tapa/lib64:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=/opt/rapidstream-tapa/usr/lib:/opt/rapidstream-tapa/usr/lib64:/opt/rapidstream-tapa/lib:/opt/rapidstream-tapa/lib64:$LD_LIBRARY_PATH
     mkdir -p "$HOME" "$COURSIER_CACHE" /tmp/sbt/boot /tmp/sbt/global /tmp/sbt/ivy
     cd /work
     exec bash scripts/run_all.sh
@@ -59,5 +208,10 @@ From: ubuntu:24.04
 
 %help
     Build and test the extracted NTT RTL variants.
+    The image includes non-Xilinx AutoNTT HLS dependencies such as gflags,
+    glog, Boost, json/yaml/tinyxml2, OpenCL headers/libraries, and the Python
+    TAPA frontend. Build with WITH_TAPA_RUNTIME=1 and bind Vitis to install the
+    full RapidStream TAPA runtime into /opt/rapidstream-tapa.
     Example:
       apptainer run --no-home --pwd /work --bind $(pwd):/work llm-ntt.sif
+      apptainer exec --no-home --pwd /work --bind $(pwd):/work llm-ntt.sif scripts/check_autontt_hls_deps.sh --image-only

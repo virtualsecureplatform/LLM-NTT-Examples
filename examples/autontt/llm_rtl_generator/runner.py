@@ -37,6 +37,9 @@ DEFAULT_ENDPOINT_ENV = "LLM_NTT_LLM_ENDPOINT"
 DEFAULT_MODEL_ENV = "LLM_NTT_LLM_MODEL"
 DEFAULT_SIF_ENV = "LLM_NTT_SIF"
 LAB_ENDPOINT_ENV = "LLM_NTT_LAB_ENDPOINT"
+KUNASHIRI_ENDPOINT_ENV = "LLM_NTT_KUNASHIRI_ENDPOINT"
+KUNASHIRI_DEFAULT_ENDPOINT = "http://kunashiri:8080/v1"
+KUNASHIRI_HOSTS = {"kunashiri", "kunashiri.sato.lab"}
 CHISEL_REFERENCE_GENERATOR = "chisel_reference"
 
 
@@ -104,16 +107,24 @@ def normalize_endpoint(endpoint: str | None) -> str | None:
                 f"--endpoint lab requires {LAB_ENDPOINT_ENV} to contain the "
                 "OpenAI-compatible /v1 endpoint"
             )
+    elif endpoint.lower() == "kunashiri":
+        endpoint = os.environ.get(
+            KUNASHIRI_ENDPOINT_ENV,
+            KUNASHIRI_DEFAULT_ENDPOINT,
+        ).strip() or KUNASHIRI_DEFAULT_ENDPOINT
     if "://" not in endpoint:
         endpoint = f"http://{endpoint}"
     parsed = urlparse(endpoint)
+    netloc = parsed.netloc
+    if parsed.hostname in KUNASHIRI_HOSTS and parsed.port is None:
+        netloc = f"{parsed.hostname}:8080"
     path = parsed.path.rstrip("/")
     if not path:
         path = "/v1"
     return urlunparse(
         (
             parsed.scheme,
-            parsed.netloc,
+            netloc,
             path,
             parsed.params,
             parsed.query,
@@ -275,6 +286,26 @@ def parse_extra_body(value: str | None) -> dict[str, Any]:
     if not isinstance(parsed, dict):
         raise ValueError("--extra-body-json must decode to a JSON object")
     return parsed
+
+
+def build_llm_extra_body(
+    extra_body_json: str | None,
+    disable_thinking: bool = False,
+) -> dict[str, Any]:
+    extra_body = parse_extra_body(extra_body_json)
+    if not disable_thinking:
+        return extra_body
+    merged = dict(extra_body)
+    chat_template_kwargs = merged.get("chat_template_kwargs", {})
+    if chat_template_kwargs is None:
+        chat_template_kwargs = {}
+    if not isinstance(chat_template_kwargs, dict):
+        raise ValueError("chat_template_kwargs in --extra-body-json must be an object")
+    merged["chat_template_kwargs"] = {
+        **chat_template_kwargs,
+        "enable_thinking": False,
+    }
+    return merged
 
 
 def redact_endpoint_urls(text: str) -> str:
@@ -754,6 +785,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
             "for example '{\"chat_template_kwargs\":{\"enable_thinking\":false}}'."
         ),
     )
+    parser.add_argument(
+        "--disable-thinking",
+        action="store_true",
+        default=os.environ.get("LLM_NTT_DISABLE_THINKING", "").lower()
+        in ("1", "true", "yes", "on"),
+        help=(
+            "Merge chat_template_kwargs.enable_thinking=false into OpenAI-compatible "
+            "chat requests. This is useful for llama.cpp/Qwen endpoints that "
+            "otherwise return reasoning_content before the requested JSON."
+        ),
+    )
     parser.add_argument("--list-models", action="store_true")
     parser.add_argument("--plan-only", action="store_true")
     parser.add_argument("--dry-run", action="store_true", help="Write prompts but do not call the LLM.")
@@ -929,7 +971,10 @@ def main(argv: list[str] | None = None) -> int:
             model=args.model,
             api_key=api_key,
             timeout=args.timeout,
-            extra_body=parse_extra_body(args.extra_body_json),
+            extra_body=build_llm_extra_body(
+                args.extra_body_json,
+                disable_thinking=args.disable_thinking,
+            ),
         )
 
     if args.list_models:

@@ -28,7 +28,7 @@ from examples.autontt.llm_rtl_generator.runner import (  # noqa: E402
     chat_with_timeout,
     default_sif,
     normalize_endpoint,
-    parse_extra_body,
+    build_llm_extra_body,
     redact_endpoint_urls,
     resolve_task,
     run_evaluator,
@@ -146,6 +146,16 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--temperature", type=float, default=0.2)
     parser.add_argument("--max-tokens", type=int, default=2048)
     parser.add_argument("--extra-body-json")
+    parser.add_argument(
+        "--disable-thinking",
+        action="store_true",
+        default=os.environ.get("LLM_NTT_DISABLE_THINKING", "").lower()
+        in ("1", "true", "yes", "on"),
+        help=(
+            "Merge chat_template_kwargs.enable_thinking=false into chat requests "
+            "for llama.cpp/Qwen endpoints."
+        ),
+    )
     parser.add_argument("--output-root", default="build/hoge-bundle-runs")
     parser.add_argument(
         "--task",
@@ -207,7 +217,10 @@ def main(argv: list[str] | None = None) -> int:
             model=args.model,
             api_key=os.environ.get(args.api_key_env) if args.api_key_env else None,
             timeout=args.timeout,
-            extra_body=parse_extra_body(args.extra_body_json),
+            extra_body=build_llm_extra_body(
+                args.extra_body_json,
+                disable_thinking=args.disable_thinking,
+            ),
         )
         messages = build_bundle_selection_messages(tasks)
         write_json(run_root / "request.messages.json", messages)

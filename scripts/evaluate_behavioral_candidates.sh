@@ -20,8 +20,13 @@ Options:
                        "lab" with LLM_NTT_LAB_ENDPOINT set.
   --timeout SECONDS    Chat wall-clock timeout for endpoint-backed sources.
   --max-tokens N       Completion token limit for endpoint-backed sources.
+  --output-root ROOT   Output root passed to autontt_llm_generate.py.
+  --summary-file FILE  Optional aggregate JSON summary path. If omitted and
+                       --output-root is set, writes ROOT/summary.json.
   --extra-body-json JSON
                        Extra JSON body merged into endpoint chat requests.
+  --disable-thinking   Pass chat_template_kwargs.enable_thinking=false to
+                       llama.cpp/Qwen-style endpoint requests.
   --sif FILE           Apptainer image passed to autontt_llm_generate.py.
                        Defaults to the runner's auto-detection. Use "none" for
                        host evaluation.
@@ -35,6 +40,7 @@ Options:
   --vitis-clock-port PORT
                        Clock port for --with-vitis.
   --vitis-jobs N       Vivado worker thread hint for --with-vitis.
+  --vitis-timeout SEC  Timeout passed to each Vivado/Vitis synthesis run.
   --vivado-bin PATH    Vivado executable for --with-vitis.
   --xilinx-settings FILE
                        Xilinx settings script for --with-vitis.
@@ -48,7 +54,10 @@ candidate_source="behavioral"
 endpoint=""
 timeout=""
 max_tokens=""
+output_root=""
+summary_file=""
 extra_body_json=""
+disable_thinking=0
 sif=""
 apptainer_bin=""
 with_yosys=0
@@ -57,6 +66,7 @@ vitis_part=""
 vitis_clock_period=""
 vitis_clock_port=""
 vitis_jobs=""
+vitis_timeout=""
 vivado_bin=""
 xilinx_settings=""
 tasks=()
@@ -79,9 +89,21 @@ while [[ $# -gt 0 ]]; do
       max_tokens="${2:-}"
       shift 2
       ;;
+    --output-root)
+      output_root="${2:-}"
+      shift 2
+      ;;
+    --summary-file)
+      summary_file="${2:-}"
+      shift 2
+      ;;
     --extra-body-json)
       extra_body_json="${2:-}"
       shift 2
+      ;;
+    --disable-thinking)
+      disable_thinking=1
+      shift
       ;;
     --sif)
       sif="${2:-}"
@@ -113,6 +135,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --vitis-jobs)
       vitis_jobs="${2:-}"
+      shift 2
+      ;;
+    --vitis-timeout)
+      vitis_timeout="${2:-}"
       shift 2
       ;;
     --vivado-bin)
@@ -158,6 +184,10 @@ if [[ "${#tasks[@]}" -eq 0 ]]; then
   )
 fi
 
+if [[ -z "${summary_file}" && -n "${output_root}" ]]; then
+  summary_file="${output_root%/}/summary.json"
+fi
+
 run_dirs=()
 for task in "${tasks[@]}"; do
   arch_type="I"
@@ -184,8 +214,14 @@ for task in "${tasks[@]}"; do
   if [[ -n "${max_tokens}" ]]; then
     cmd+=(--max-tokens "${max_tokens}")
   fi
+  if [[ -n "${output_root}" ]]; then
+    cmd+=(--output-root "${output_root}")
+  fi
   if [[ -n "${extra_body_json}" ]]; then
     cmd+=(--extra-body-json "${extra_body_json}")
+  fi
+  if [[ "${disable_thinking}" -eq 1 ]]; then
+    cmd+=(--disable-thinking)
   fi
   if [[ "${with_yosys}" -eq 1 ]]; then
     cmd+=(--with-yosys)
@@ -211,6 +247,9 @@ for task in "${tasks[@]}"; do
   if [[ -n "${vitis_jobs}" ]]; then
     cmd+=(--vitis-jobs "${vitis_jobs}")
   fi
+  if [[ -n "${vitis_timeout}" ]]; then
+    cmd+=(--vitis-timeout "${vitis_timeout}")
+  fi
   if [[ -n "${vivado_bin}" ]]; then
     cmd+=(--vivado-bin "${vivado_bin}")
   fi
@@ -227,15 +266,30 @@ for task in "${tasks[@]}"; do
   fi
 done
 
-python3 - "${run_dirs[@]}" <<'PY'
+python3 - "${repo_root}" "${summary_file}" "${with_vitis}" "${tasks[@]}" -- "${run_dirs[@]}" <<'PY'
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
+repo_root = Path(sys.argv[1])
+summary_arg = sys.argv[2]
+require_vitis = sys.argv[3] == "1"
+separator = sys.argv.index("--")
+task_ids = sys.argv[4:separator]
+run_dir_args = sys.argv[separator + 1 :]
+
 ok = True
-for run_dir_arg in sys.argv[1:]:
+results = []
+if not run_dir_args:
+    ok = False
+
+for run_dir_arg in run_dir_args:
     run_dir = Path(run_dir_arg)
     result_files = sorted(run_dir.glob("attempt_*/results.json"))
+    if not result_files:
+        print(f"{run_dir}: no results.json files found")
+        ok = False
     for result_file in result_files:
         result = json.loads(result_file.read_text(encoding="utf-8"))
         task_id = result.get("task_id")
@@ -245,12 +299,48 @@ for run_dir_arg in sys.argv[1:]:
         lint = result.get("lint_passed")
         vitis = result.get("vitis_synthesis_passed")
         mode = result.get("mode")
+        task_ok = bool(correct)
+        if require_vitis:
+            task_ok = task_ok and bool(vitis)
         print(
             f"{task_id}: mode={mode} correct={correct} "
             f"build={build} test={test} lint={lint} vitis={vitis}"
         )
-        if not correct:
+        if not task_ok:
             ok = False
+        results.append(
+            {
+                "task_id": task_id,
+                "mode": mode,
+                "correct": correct,
+                "build_passed": build,
+                "test_passed": test,
+                "lint_passed": lint,
+                "vitis_synthesis_passed": vitis,
+                "ok": task_ok,
+                "run_dir": str(run_dir),
+                "results_json": str(result_file),
+                "candidate_source": result.get("candidate_source"),
+                "metrics": result.get("metrics", {}),
+            }
+        )
+
+summary = {
+    "schema": "llm-ntt-behavioral-batch-summary-v1",
+    "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    "ok": ok,
+    "require_vitis": require_vitis,
+    "tasks": task_ids,
+    "results": results,
+}
+
+if summary_arg:
+    summary_path = Path(summary_arg)
+    if not summary_path.is_absolute():
+        summary_path = repo_root / summary_path
+    summary_path.parent.mkdir(parents=True, exist_ok=True)
+    summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    print(f"summary: {summary_path}")
 
 if not ok:
     raise SystemExit(1)
