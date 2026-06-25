@@ -6,11 +6,11 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 usage() {
   cat <<'EOF'
 Usage:
-  scripts/vitis_synth_rtl.sh --top TOP --verilog-file FILE [options]
+  scripts/vitis_synth_rtl.sh --top TOP --verilog-file FILE [--verilog-file FILE ...] [options]
 
 Options:
   --top TOP              Top Verilog module to synthesize.
-  --verilog-file FILE    Verilog source file containing TOP and dependencies.
+  --verilog-file FILE    Verilog source file. Repeat for multi-file RTL.
   --build-dir DIR        Output directory. Defaults to build/vitis-synth/<top>.
   --metrics-json FILE    Parsed metrics JSON path. Defaults to
                          <build-dir>/vitis-synth-metrics.json.
@@ -34,7 +34,7 @@ EOF
 }
 
 top_module=""
-verilog_file=""
+verilog_files=()
 build_dir=""
 metrics_json=""
 part="${VITIS_PART:-xcu280-fsvh2892-2L-e}"
@@ -56,7 +56,7 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --verilog-file)
-      verilog_file="${2:-}"
+      verilog_files+=("${2:-}")
       shift 2
       ;;
     --build-dir)
@@ -111,7 +111,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ -z "${top_module}" || -z "${verilog_file}" ]]; then
+if [[ -z "${top_module}" || "${#verilog_files[@]}" -eq 0 ]]; then
   echo "Missing required --top or --verilog-file" >&2
   usage >&2
   exit 2
@@ -122,10 +122,13 @@ if ! [[ "${timeout_seconds}" =~ ^[0-9]+$ ]]; then
   exit 2
 fi
 
-if [[ ! -f "${verilog_file}" ]]; then
-  echo "Verilog file not found: ${verilog_file}" >&2
-  exit 2
-fi
+for i in "${!verilog_files[@]}"; do
+  if [[ ! -f "${verilog_files[$i]}" ]]; then
+    echo "Verilog file not found: ${verilog_files[$i]}" >&2
+    exit 2
+  fi
+  verilog_files[$i]="$(readlink -f "${verilog_files[$i]}")"
+done
 
 if [[ -n "${xilinx_settings}" ]]; then
   if [[ ! -f "${xilinx_settings}" ]]; then
@@ -137,8 +140,6 @@ if [[ -n "${xilinx_settings}" ]]; then
   source "${xilinx_settings}"
   set -u
 fi
-
-verilog_file="$(readlink -f "${verilog_file}")"
 
 if [[ -z "${build_dir}" ]]; then
   build_dir="${repo_root}/build/vitis-synth/${top_module}"
@@ -153,6 +154,7 @@ fi
 mkdir -p "${build_dir}" "$(dirname "${metrics_json}")"
 
 tcl_script="${build_dir}/synth.tcl"
+source_list="${build_dir}/sources.txt"
 xdc_file="${build_dir}/clock.xdc"
 utilization_rpt="${build_dir}/utilization_synth.rpt"
 timing_rpt="${build_dir}/timing_summary_synth.rpt"
@@ -187,7 +189,7 @@ if ! command -v "${vivado_bin}" >/dev/null 2>&1; then
 fi
 
 {
-  printf 'set verilog_file [lindex $argv 0]\n'
+  printf 'set source_list_file [lindex $argv 0]\n'
   printf 'set top_module [lindex $argv 1]\n'
   printf 'set part_name [lindex $argv 2]\n'
   printf 'set clock_port [lindex $argv 3]\n'
@@ -205,7 +207,12 @@ fi
   printf 'create_project llm_ntt_vitis_synth [file join $out_dir vivado_project] -part $part_name -force\n'
   printf 'set_property target_language Verilog [current_project]\n'
   printf 'set_property source_mgmt_mode None [current_project]\n'
-  printf 'read_verilog -sv $verilog_file\n'
+  printf 'set source_fp [open $source_list_file r]\n'
+  printf 'set verilog_files [split [string trim [read $source_fp]] "\\n"]\n'
+  printf 'close $source_fp\n'
+  printf 'foreach verilog_file $verilog_files {\n'
+  printf '  read_verilog -sv $verilog_file\n'
+  printf '}\n'
   printf 'set xdc_fp [open $xdc_file w]\n'
   printf 'puts $xdc_fp [format {create_clock -name %%s -period %%s [get_ports {%%s}]} $clock_port $clock_period $clock_port]\n'
   printf 'close $xdc_fp\n'
@@ -245,9 +252,11 @@ fi
   printf 'close_project\n'
 } >"${tcl_script}"
 
+printf '%s\n' "${verilog_files[@]}" >"${source_list}"
+
 vivado_cmd=(
   "${vivado_bin}" -mode batch -nojournal -nolog -source "${tcl_script}" -tclargs
-  "${verilog_file}" "${top_module}" "${part}" "${clock_port}" "${clock_period}"
+  "${source_list}" "${top_module}" "${part}" "${clock_port}" "${clock_period}"
   "${jobs}" "${build_dir}" "${xdc_file}" "${utilization_rpt}" "${timing_rpt}"
   "${timing_props}" "${checkpoint_file}"
 )
@@ -275,7 +284,7 @@ elif [[ "${vivado_status}" -ne 0 && -s "${utilization_rpt}" ]]; then
   completion_warning="Vivado exited with status ${vivado_status} after synthesis utilization was generated; timing or checkpoint output is incomplete"
 fi
 
-python3 - "$metrics_json" "$script_status" "$vivado_status" "$completion_warning" "$top_module" "$verilog_file" \
+python3 - "$metrics_json" "$script_status" "$vivado_status" "$completion_warning" "$top_module" "$source_list" \
   "$part" "$clock_port" "$clock_period" "$build_dir" "$utilization_rpt" \
   "$timing_rpt" "$timing_props" "$checkpoint_file" "$timeout_seconds" <<'PY'
 import json
@@ -290,7 +299,7 @@ from datetime import datetime, timezone
     vivado_status,
     completion_warning,
     top_module,
-    verilog_file,
+    source_list,
     part,
     clock_port,
     clock_period,
@@ -328,6 +337,11 @@ def rel(path):
         return os.path.relpath(path, os.getcwd())
     except ValueError:
         return path
+
+verilog_files = []
+if os.path.exists(source_list):
+    with open(source_list, "r", encoding="utf-8", errors="replace") as f:
+        verilog_files = [line.strip() for line in f if line.strip()]
 
 metrics = {}
 rows = {}
@@ -405,7 +419,8 @@ result = {
     "status": int(script_status),
     "vivado_exit_status": int(vivado_status),
     "top_module": top_module,
-    "verilog_file": rel(verilog_file),
+    "verilog_file": rel(verilog_files[0]) if verilog_files else "",
+    "verilog_files": [rel(path) for path in verilog_files],
     "part": part,
     "clock_port": clock_port,
     "clock_period_ns": clock_period_value if clock_period_value is not None else clock_period,

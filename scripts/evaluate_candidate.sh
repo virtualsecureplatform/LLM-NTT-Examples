@@ -194,6 +194,22 @@ fi
 
 candidate_file="$(json_get verilog.candidate_file)"
 default_path="$(json_get verilog.default_path)"
+mapfile -t extra_source_files < <(python3 - "$task_file" "$repo_root" <<'PY'
+import json
+import os
+import sys
+
+task_file, repo_root = sys.argv[1:]
+with open(task_file, "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+for path in data.get("verilog", {}).get("extra_sources", []):
+    if os.path.isabs(path):
+        print(path)
+    else:
+        print(os.path.join(repo_root, path))
+PY
+)
 
 if [[ -z "${verilog_file}" ]]; then
   if [[ -n "${verilog_dir}" ]]; then
@@ -207,6 +223,12 @@ if [[ ! -f "${verilog_file}" ]]; then
   echo "Verilog file not found: ${verilog_file}" >&2
   exit 2
 fi
+for extra_source in "${extra_source_files[@]}"; do
+  if [[ ! -f "${extra_source}" ]]; then
+    echo "Extra Verilog source not found: ${extra_source}" >&2
+    exit 2
+  fi
+done
 
 if [[ -z "${build_dir}" ]]; then
   build_dir="${repo_root}/build/eval/${task_id}"
@@ -311,6 +333,9 @@ if [[ "${with_yosys}" -eq 1 ]]; then
   yosys_script="${build_dir}/yosys.ys"
   {
     printf 'read_verilog -sv "%s"\n' "${verilog_file}"
+    for extra_source in "${extra_source_files[@]}"; do
+      printf 'read_verilog -sv "%s"\n' "${extra_source}"
+    done
     printf 'hierarchy -top %s\n' "${top_module}"
     printf 'proc\nopt\nmemory\nopt\nflatten\nopt\nstat\n'
   } >"${yosys_script}"
@@ -403,10 +428,14 @@ fi
 
 if [[ "${with_vitis}" -eq 1 ]]; then
   start_time="$(date +%s)"
+  vitis_verilog_args=(--verilog-file "${verilog_file}")
+  for extra_source in "${extra_source_files[@]}"; do
+    vitis_verilog_args+=(--verilog-file "${extra_source}")
+  done
   if run_logged "${vitis_log}" \
       "${repo_root}/scripts/vitis_synth_rtl.sh" \
         --top "${top_module}" \
-        --verilog-file "${verilog_file}" \
+        "${vitis_verilog_args[@]}" \
         --build-dir "${vitis_build_dir}" \
         --metrics-json "${vitis_json}" \
         --part "${vitis_part}" \

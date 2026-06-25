@@ -17,6 +17,8 @@ scripts/evaluate_candidate.sh --task hoge_nttid_1024_identity \
   --results baselines/extracted-rtl/hoge_nttid_1024_identity.json
 scripts/evaluate_candidate.sh --task hoge_streaming_ntt_1024_p64 \
   --results baselines/extracted-rtl/hoge_streaming_ntt_1024_p64.json
+scripts/evaluate_candidate.sh --task kyber_ntt_256_p12_pe1 \
+  --results baselines/extracted-rtl/kyber_ntt_256_p12_pe1.json
 ```
 
 Add `--with-yosys` to any command when a flattened structural resource estimate
@@ -59,3 +61,10 @@ AutoNTT-style default `xcu280-fsvh2892-2L-e` part and `4.0 ns` clock. When
 `--skip-reference-synth`, it compares generated HLS results against these
 checked-in RTL reference metrics instead of comparing generated results with
 themselves.
+
+## Kyber PE1 Reference
+
+`kyber_ntt_256_p12_pe1.json` records the Verilator baseline for the
+CRYSTALS-Kyber PE1 FNTT/INTT reference copied from `kyber-polmul-hw`. The task
+manifest lists the PE1 auxiliary RTL files so optional Yosys/Vivado synthesis
+receives the same multi-file design as the Verilator harness.

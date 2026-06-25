@@ -1,8 +1,8 @@
 # LLM-NTT Examples
 
 This repository packages extracted Number Theoretic Transform RTL variants from
-YATA and HOGE, plus harnesses for functional checking, HLS generation, and
-AutoNTT-style metric comparison.
+YATA, HOGE, and CRYSTALS-Kyber, plus harnesses for functional checking, HLS
+generation, and AutoNTT-style metric comparison.
 
 ## Contents
 
@@ -11,6 +11,8 @@ AutoNTT-style metric comparison.
   ExternalProduct forward-NTT, and the full-vector identity pipeline.
 - `variants/small-ntt/rtl`: generated small HOGE/YATA RTL references used by
   the reduced AutoNTT comparison tasks.
+- `variants/kyber-polmul-hw`: CRYSTALS-Kyber PE1 FNTT/INTT RTL and vectors
+  copied from `kyber-polmul-hw`.
 - `third_party/TFHEpp`: TFHEpp submodule used as the C++ reference.
 - `tasks/`: benchmark task manifests.
 - `scripts/`: native, Apptainer, HLS, and metric comparison entry points.
@@ -59,6 +61,7 @@ Evaluate one RTL task:
 
 ```bash
 scripts/evaluate_candidate.sh --task hoge_streaming_intt_1024_p64
+scripts/evaluate_candidate.sh --task kyber_ntt_256_p12_pe1
 ```
 
 Regenerate the small RTL references:
@@ -113,6 +116,8 @@ scripts/run_yata_hls_synth_compare.py --sif auto
   TFHEpp/cuHEpp.
 - `small_yata8_reference_test` and `small_yata8x8_reference_test`: generated
   YATA RAINTT RTL against TFHEpp `raintt`.
+- `kyber_pe1_reference_test`: CRYSTALS-Kyber PE1 FNTT/INTT against the
+  original `kyber-polmul-hw` PE1 vectors.
 
 The HOGE forward `NTTWrap` manifest, `hoge_streaming_ntt_1024_p64`, is a
 lint-only tier0 interface task. Use `hoge_externalproduct_ntt_1024_p64` for

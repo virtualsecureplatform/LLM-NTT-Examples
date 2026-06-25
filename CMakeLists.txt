@@ -41,6 +41,28 @@ set(SMALL_YATA8_VERILOG
 set(SMALL_YATA8X8_VERILOG
     ${PROJECT_SOURCE_DIR}/variants/small-ntt/rtl/SmallYata8x8RainttP27Rtl.sv
     CACHE FILEPATH "Verilog source for the SmallYata8x8RainttP27Rtl test")
+set(KYBER_PE1_VERILOG
+    ${PROJECT_SOURCE_DIR}/variants/kyber-polmul-hw/pe1/KyberHPM1PE.v
+    CACHE FILEPATH "Verilog source for the KyberHPM1PE test")
+set(KYBER_PE1_RTL_DIR ${PROJECT_SOURCE_DIR}/variants/kyber-polmul-hw/pe1)
+set(KYBER_PE1_RTL_SOURCES
+    ${KYBER_PE1_RTL_DIR}/addressgenerator.v
+    ${KYBER_PE1_RTL_DIR}/butterfly.v
+    ${KYBER_PE1_RTL_DIR}/modadd.v
+    ${KYBER_PE1_RTL_DIR}/modsub.v
+    ${KYBER_PE1_RTL_DIR}/modmul.v
+    ${KYBER_PE1_RTL_DIR}/modred.v
+    ${KYBER_PE1_RTL_DIR}/intmul.v
+    ${KYBER_PE1_RTL_DIR}/BRAM.v
+    ${KYBER_PE1_RTL_DIR}/BROM.v
+    ${KYBER_PE1_RTL_DIR}/shiftreg.v
+    ${KYBER_PE1_RTL_DIR}/div2.v
+    ${KYBER_PE1_RTL_DIR}/dt0.v
+    ${KYBER_PE1_RTL_DIR}/dt1.v
+    ${KYBER_PE1_RTL_DIR}/dt2.v
+    ${KYBER_PE1_RTL_DIR}/dt3.v
+    ${KYBER_PE1_RTL_DIR}/FA.v
+    ${KYBER_PE1_RTL_DIR}/HA.v)
 
 function(add_ntt_verilator_test target source top_verilog)
   add_executable(${target} ${source})
@@ -109,3 +131,12 @@ target_compile_definitions(small_yata8x8_reference_test PRIVATE
     SMALL_YATA_TOP_HEADER=<VSmallYata8x8RainttP27Rtl.h>
     SMALL_YATA_TOP_TYPE=VSmallYata8x8RainttP27Rtl
     SMALL_YATA_METRIC_PREFIX="small_yata8x8_raintt_p27")
+
+add_ntt_verilator_test(
+  kyber_pe1_reference_test
+  ${PROJECT_SOURCE_DIR}/tests/cpp/kyber_pe1_reference_test.cpp
+  ${KYBER_PE1_VERILOG}
+  ${KYBER_PE1_RTL_SOURCES}
+)
+target_compile_definitions(kyber_pe1_reference_test PRIVATE
+    KYBER_PE1_DATA_DIR="${PROJECT_SOURCE_DIR}/variants/kyber-polmul-hw/pe1/test_pe1")
