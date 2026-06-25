@@ -50,6 +50,20 @@ class SmallVariantHlsSynthCompareTests(unittest.TestCase):
             self.assertIn(f"extern \"C\" void {name}_reference_hls", source)
             self.assertIn(f"extern \"C\" void {name}_generated_hls", source)
 
+    def test_checked_in_reference_baselines_exist(self):
+        for variant in small_hls.VARIANTS.values():
+            baseline = small_hls.load_reference_baseline(
+                variant, small_hls.DEFAULT_REFERENCE_BASELINE_DIR
+            )
+            self.assertIsNotNone(baseline)
+            assert baseline is not None
+            data, path = baseline
+            self.assertEqual(path.name, f"{variant.task_id}.json")
+            self.assertEqual(data["task_id"], variant.task_id)
+            self.assertTrue(data["correct"])
+            if "vitis_lut" in data.get("metrics", {}):
+                self.assertTrue(data["vitis_synthesis_passed"])
+
     def test_build_results_maps_latency_and_resources(self):
         variant = small_hls.VARIANTS["yata8x8"]
         reports = {

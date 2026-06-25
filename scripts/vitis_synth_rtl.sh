@@ -270,6 +270,9 @@ if [[ "${vivado_status}" -ne 0 &&
       -s "${checkpoint_file}" ]]; then
   script_status=0
   completion_warning="Vivado exited with status ${vivado_status} after generating synthesis reports and checkpoint"
+elif [[ "${vivado_status}" -ne 0 && -s "${utilization_rpt}" ]]; then
+  script_status=0
+  completion_warning="Vivado exited with status ${vivado_status} after synthesis utilization was generated; timing or checkpoint output is incomplete"
 fi
 
 python3 - "$metrics_json" "$script_status" "$vivado_status" "$completion_warning" "$top_module" "$verilog_file" \

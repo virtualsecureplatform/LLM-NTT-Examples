@@ -32,6 +32,15 @@ set(HOGE_NTTID_VERILOG
 set(HOGE_EXTERNALPRODUCT_VERILOG
     ${PROJECT_SOURCE_DIR}/variants/hoge/chisel/ExternalProductWrap.v
     CACHE FILEPATH "Verilog source for the ExternalProductWrap test")
+set(SMALL_HOGE32_VERILOG
+    ${PROJECT_SOURCE_DIR}/variants/small-ntt/rtl/SmallHoge32P64Rtl.sv
+    CACHE FILEPATH "Verilog source for the SmallHoge32P64Rtl test")
+set(SMALL_YATA8_VERILOG
+    ${PROJECT_SOURCE_DIR}/variants/small-ntt/rtl/SmallYata8RainttP27Rtl.sv
+    CACHE FILEPATH "Verilog source for the SmallYata8RainttP27Rtl test")
+set(SMALL_YATA8X8_VERILOG
+    ${PROJECT_SOURCE_DIR}/variants/small-ntt/rtl/SmallYata8x8RainttP27Rtl.sv
+    CACHE FILEPATH "Verilog source for the SmallYata8x8RainttP27Rtl test")
 
 function(add_ntt_verilator_test target source top_verilog)
   add_executable(${target} ${source})
@@ -39,7 +48,7 @@ function(add_ntt_verilator_test target source top_verilog)
       ${TFHEPP_INCLUDE_DIR}
       ${TFHEPP_THIRDPARTY_INCLUDE_DIRS})
   target_compile_options(${target} PRIVATE -Wall -Wextra -Wno-sign-compare)
-  verilate(${target} SOURCES ${top_verilog} ${ARGN})
+  verilate(${target} VERILATOR_ARGS -Wno-fatal SOURCES ${top_verilog} ${ARGN})
   add_test(NAME ${target} COMMAND ${target})
 endfunction()
 
@@ -68,3 +77,35 @@ add_ntt_verilator_test(
   ${HOGE_EXTERNALPRODUCT_VERILOG}
   THREADS 2
 )
+
+add_ntt_verilator_test(
+  small_hoge32_reference_test
+  ${PROJECT_SOURCE_DIR}/tests/cpp/small_hoge32_reference_test.cpp
+  ${SMALL_HOGE32_VERILOG}
+)
+
+add_ntt_verilator_test(
+  small_yata8_reference_test
+  ${PROJECT_SOURCE_DIR}/tests/cpp/small_yata_reference_test.cpp
+  ${SMALL_YATA8_VERILOG}
+)
+target_compile_definitions(small_yata8_reference_test PRIVATE
+    USE_COMPRESS
+    SMALL_YATA_NBIT=3
+    SMALL_YATA_CYCLES=1
+    SMALL_YATA_TOP_HEADER=<VSmallYata8RainttP27Rtl.h>
+    SMALL_YATA_TOP_TYPE=VSmallYata8RainttP27Rtl
+    SMALL_YATA_METRIC_PREFIX="small_yata8_raintt_p27")
+
+add_ntt_verilator_test(
+  small_yata8x8_reference_test
+  ${PROJECT_SOURCE_DIR}/tests/cpp/small_yata_reference_test.cpp
+  ${SMALL_YATA8X8_VERILOG}
+)
+target_compile_definitions(small_yata8x8_reference_test PRIVATE
+    USE_COMPRESS
+    SMALL_YATA_NBIT=6
+    SMALL_YATA_CYCLES=8
+    SMALL_YATA_TOP_HEADER=<VSmallYata8x8RainttP27Rtl.h>
+    SMALL_YATA_TOP_TYPE=VSmallYata8x8RainttP27Rtl
+    SMALL_YATA_METRIC_PREFIX="small_yata8x8_raintt_p27")

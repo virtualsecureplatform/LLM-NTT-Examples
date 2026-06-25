@@ -22,14 +22,40 @@ scripts/evaluate_candidate.sh --task hoge_streaming_ntt_1024_p64 \
 Add `--with-yosys` to any command when a flattened structural resource estimate
 is needed.
 
-For host Vivado/Vitis synthesis reference results, build or provide the
-Apptainer image and run:
+## Small RTL References
+
+The `small_*` JSON files provide fixed reference metrics for the reduced HLS
+bring-up targets, using real RTL references checked in under
+`variants/small-ntt/rtl`:
+
+- `small_hoge32_p64`
+- `small_yata8_raintt_p27`
+- `small_yata8x8_raintt_p27`
+
+The small YATA RTL references intentionally mirror the larger RAINTT reduction
+style: they use the generated `yata_sredc`/`yata_mul_sredc` datapath and no
+Verilog modulo operators.
+
+Regenerate the RTL with:
 
 ```bash
-scripts/evaluate_baselines_with_vitis.sh --sif llm-ntt.sif
+scripts/generate_small_ntt_rtl.py
 ```
 
-This regenerates the Chisel-emitted golden RTL inside Apptainer, runs
-correctness/Yosys there, then synthesizes each top with host Vivado using the
-AutoNTT-style default `xcu280-fsvh2892-2L-e` part and `4.0 ns` clock. Use
-`--vitis-part` and `--vitis-clock-period` to change the reference target.
+Regenerate the baseline metrics with:
+
+```bash
+scripts/evaluate_candidate.sh --task small_hoge32_p64 \
+  --results baselines/extracted-rtl/small_hoge32_p64.json
+scripts/evaluate_candidate.sh --task small_yata8_raintt_p27 \
+  --results baselines/extracted-rtl/small_yata8_raintt_p27.json
+scripts/evaluate_candidate.sh --task small_yata8x8_raintt_p27 \
+  --results baselines/extracted-rtl/small_yata8x8_raintt_p27.json
+```
+
+Add `--with-vitis` to record Vivado/Vitis resource and timing metrics using the
+AutoNTT-style default `xcu280-fsvh2892-2L-e` part and `4.0 ns` clock. When
+`scripts/run_small_variant_hls_synth_compare.py` is run with
+`--skip-reference-synth`, it compares generated HLS results against these
+checked-in RTL reference metrics instead of comparing generated results with
+themselves.

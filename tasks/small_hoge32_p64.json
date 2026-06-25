@@ -1,0 +1,62 @@
+{
+  "id": "small_hoge32_p64",
+  "name": "Small HOGE 32-point INTT/NTT RTL",
+  "status": "correctness_scored",
+  "description": "Small 32-coefficient HOGE p64 RTL reference top with INTT and NTT ports.",
+  "variant": "small-ntt",
+  "top_module": "SmallHoge32P64Rtl",
+  "verilog": {
+    "candidate_file": "SmallHoge32P64Rtl.sv",
+    "default_path": "variants/small-ntt/rtl/SmallHoge32P64Rtl.sv"
+  },
+  "evaluation": {
+    "mode": "verilator_test",
+    "cmake_cache_var": "SMALL_HOGE32_VERILOG",
+    "test_target": "small_hoge32_reference_test",
+    "watchdog_cycles": 200
+  },
+  "parameters": {
+    "N": 32,
+    "Nbit": 5,
+    "modulus": "18446744069414584321",
+    "modulus_hex": "0xffffffff00000001",
+    "word_bits": 64,
+    "input_bits": 32,
+    "lanes": 32,
+    "stream_cycles": 1,
+    "radix": 32,
+    "prime_form": "2^64 - 2^32 + 1"
+  },
+  "ports": {
+    "clock": "clock",
+    "reset": "reset",
+    "intt_valid_in": "io_intt_validin",
+    "intt_valid_out": "io_intt_validout",
+    "intt_input_lanes": "io_intt_in_0..io_intt_in_31",
+    "intt_output_lanes": "io_intt_out_0..io_intt_out_31",
+    "ntt_valid_in": "io_ntt_validin",
+    "ntt_valid_out": "io_ntt_validout",
+    "ntt_input_lanes": "io_ntt_in_0..io_ntt_in_31",
+    "ntt_output_lanes": "io_ntt_out_0..io_ntt_out_31"
+  },
+  "reference": {
+    "library": "TFHEpp",
+    "include": "cuhe++.hpp",
+    "table": "cuHEpp::TableGen<5>()",
+    "twist": "cuHEpp::TwistGen<5>()",
+    "intt": "cuHEpp::TwistINTT<uint32_t, 5>",
+    "ntt": "cuHEpp::NTTradixButterfly<5> plus cuHEpp::TwistMulDirect<uint32_t, 5>"
+  },
+  "observable_contract": {
+    "intt": "One input cycle with lane i carrying coefficient i. One output cycle with lane i carrying TFHEpp INTT coefficient i.",
+    "ntt": "One input cycle with lane i carrying 64-bit NTT-domain coefficient i. One output cycle with lane i carrying TFHEpp NTT coefficient i."
+  },
+  "score": {
+    "correctness": "required",
+    "primary": "minimize total valid latency cycles",
+    "secondary": [
+      "minimize resource estimates",
+      "maximize fmax"
+    ]
+  }
+}

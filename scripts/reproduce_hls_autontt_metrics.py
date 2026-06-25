@@ -280,6 +280,42 @@ def build_sif(args: argparse.Namespace, run_root: Path) -> None:
     run_logged(cmd, log_path=run_root / "logs" / "build-sif.log", dry_run=args.dry_run)
 
 
+def common_hls_args(args: argparse.Namespace, output_root: Path, settings: Path) -> list[str]:
+    return [
+        "--output-root",
+        str(output_root),
+        "--sif",
+        str(args.sif),
+        "--xilinx-root",
+        str(args.xilinx_root),
+        "--vitis-settings",
+        str(settings),
+        "--vitis-timeout",
+        str(args.vitis_timeout),
+    ]
+
+
+def run_hls_flow(
+    *,
+    name: str,
+    script: str,
+    args: argparse.Namespace,
+    run_root: Path,
+    settings: Path,
+    extra_args: list[str] | None = None,
+) -> dict[str, Any] | None:
+    output_root = run_root / name
+    cmd = [script]
+    if extra_args:
+        cmd.extend(extra_args)
+    cmd.extend(common_hls_args(args, output_root, settings))
+
+    run_logged(cmd, log_path=run_root / "logs" / f"{name}.log", dry_run=args.dry_run)
+    if args.dry_run:
+        return None
+    return load_json(latest_subdir(output_root) / "summary.json")
+
+
 def run(args: argparse.Namespace) -> Path:
     run_name = args.run_name or time.strftime("%Y%m%d-%H%M%S")
     run_root = args.output_root / run_name
@@ -298,45 +334,27 @@ def run(args: argparse.Namespace) -> Path:
 
     summaries: list[dict[str, Any]] = []
 
-    if "small" in args.targets:
-        small_root = run_root / "small-variants"
-        cmd = [
-            "scripts/run_small_variant_hls_synth_compare.py",
-            "--variants",
-            "all",
-            "--output-root",
-            str(small_root),
-            "--sif",
-            str(args.sif),
-            "--xilinx-root",
-            str(args.xilinx_root),
-            "--vitis-settings",
-            str(settings),
-            "--vitis-timeout",
-            str(args.vitis_timeout),
-        ]
-        run_logged(cmd, log_path=run_root / "logs" / "small-variants.log", dry_run=args.dry_run)
-        if not args.dry_run:
-            summaries.append(load_json(latest_subdir(small_root) / "summary.json"))
-
-    if "full-yata" in args.targets:
-        yata_root = run_root / "full-yata"
-        cmd = [
-            "scripts/run_yata_hls_synth_compare.py",
-            "--output-root",
-            str(yata_root),
-            "--sif",
-            str(args.sif),
-            "--xilinx-root",
-            str(args.xilinx_root),
-            "--vitis-settings",
-            str(settings),
-            "--vitis-timeout",
-            str(args.vitis_timeout),
-        ]
-        run_logged(cmd, log_path=run_root / "logs" / "full-yata.log", dry_run=args.dry_run)
-        if not args.dry_run:
-            summaries.append(load_json(latest_subdir(yata_root) / "summary.json"))
+    flows = {
+        "small": {
+            "name": "small-variants",
+            "script": "scripts/run_small_variant_hls_synth_compare.py",
+            "extra_args": ["--variants", "all"],
+        },
+        "full-yata": {
+            "name": "full-yata",
+            "script": "scripts/run_yata_hls_synth_compare.py",
+            "extra_args": [],
+        },
+    }
+    for target in args.targets:
+        summary = run_hls_flow(
+            args=args,
+            run_root=run_root,
+            settings=settings,
+            **flows[target],
+        )
+        if summary:
+            summaries.append(summary)
 
     rtl_dirs: list[str] = []
     if not args.dry_run:

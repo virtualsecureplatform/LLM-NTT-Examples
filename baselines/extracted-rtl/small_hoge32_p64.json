@@ -1,0 +1,50 @@
+{
+  "build_dir": "build/eval/small_hoge32_p64_rtl_baseline",
+  "build_passed": true,
+  "correct": true,
+  "lint_passed": false,
+  "logs": {
+    "build": "build/eval/small_hoge32_p64_rtl_baseline/build.log",
+    "configure": "build/eval/small_hoge32_p64_rtl_baseline/configure.log",
+    "lint": "build/eval/small_hoge32_p64_rtl_baseline/lint.log",
+    "test": "build/eval/small_hoge32_p64_rtl_baseline/test.log",
+    "vitis": "build/eval/small_hoge32_p64_rtl_baseline/vitis-synth.log",
+    "vitis_json": "build/eval/small_hoge32_p64_rtl_baseline/vitis-synth-metrics.json",
+    "yosys": "build/eval/small_hoge32_p64_rtl_baseline/yosys.log",
+    "yosys_json": "build/eval/small_hoge32_p64_rtl_baseline/yosys-stats.json"
+  },
+  "metrics": {
+    "small_hoge32_p64_intt_input_cycles": 1,
+    "small_hoge32_p64_intt_max_wait_cycles": 1,
+    "small_hoge32_p64_intt_output_cycles": 1,
+    "small_hoge32_p64_ntt_input_cycles": 1,
+    "small_hoge32_p64_ntt_max_wait_cycles": 1,
+    "small_hoge32_p64_ntt_output_cycles": 1,
+    "small_hoge32_p64_tests": 3,
+    "vitis_clock_period_ns": 4
+  },
+  "mode": "verilator_test",
+  "schema": "llm-ntt-evaluation-v1",
+  "seconds": {
+    "build": 76,
+    "test": 12,
+    "vitis": 1802,
+    "yosys": 0
+  },
+  "status": {
+    "build": 0,
+    "configure": 0,
+    "lint": 0,
+    "test": 0,
+    "vitis": 124,
+    "yosys": 0
+  },
+  "synthesis_passed": false,
+  "task_file": "tasks/small_hoge32_p64.json",
+  "task_id": "small_hoge32_p64",
+  "test_passed": true,
+  "timestamp_utc": "2026-06-25T06:25:52+00:00",
+  "top_module": "SmallHoge32P64Rtl",
+  "verilog_file": "variants/small-ntt/rtl/SmallHoge32P64Rtl.sv",
+  "vitis_synthesis_passed": false
+}

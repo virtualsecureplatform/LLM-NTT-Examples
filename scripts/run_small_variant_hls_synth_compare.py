@@ -17,6 +17,7 @@ from typing import Any, NamedTuple
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT_ROOT = REPO_ROOT / "build" / "small-variant-hls-synth-compare"
+DEFAULT_REFERENCE_BASELINE_DIR = REPO_ROOT / "baselines" / "extracted-rtl"
 DEFAULT_PART = "xcu280-fsvh2892-2L-e"
 DEFAULT_CLOCK_PERIOD_NS = 4.0
 
@@ -1243,6 +1244,19 @@ def build_results(
     }
 
 
+def reference_baseline_path(variant: Variant, baseline_dir: Path) -> Path:
+    return baseline_dir / f"{variant.task_id}.json"
+
+
+def load_reference_baseline(variant: Variant, baseline_dir: Path) -> tuple[dict[str, Any], Path] | None:
+    path = reference_baseline_path(variant, baseline_dir)
+    if not path.exists():
+        return None
+    with path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    return data, path
+
+
 def write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -1258,6 +1272,7 @@ def run_variant(
     vitis_timeout: int,
     skip_functional: bool,
     synth_reference: bool,
+    reference_baseline_dir: Path,
 ) -> dict[str, Any]:
     run_dir = root / variant.name
     run_dir.mkdir(parents=True, exist_ok=False)
@@ -1316,12 +1331,22 @@ def run_variant(
         write_json(result_path, result)
         all_results[kind] = result
 
-    reference = all_results.get("reference", all_results["generated"])
+    baseline = None if synth_reference else load_reference_baseline(variant, reference_baseline_dir)
+    if not synth_reference and baseline is None:
+        raise FileNotFoundError(
+            f"small reference baseline not found: "
+            f"{reference_baseline_path(variant, reference_baseline_dir)}"
+        )
+    if baseline:
+        reference, reference_path = baseline
+    else:
+        reference = all_results.get("reference", all_results["generated"])
+        reference_path = run_dir / ("reference_results.json" if synth_reference else "generated_results.json")
     candidate = all_results["generated"]
     comparison = COMPARE.compare_results(
         reference,
         candidate,
-        str(run_dir / ("reference_results.json" if synth_reference else "generated_results.json")),
+        str(reference_path),
         str(run_dir / "generated_results.json"),
     )
     comparison_path = run_dir / "comparison.json"
@@ -1334,6 +1359,7 @@ def run_variant(
         "run_dir": relpath(run_dir),
         "functional_log": logs.get("functional"),
         "reference_results": relpath(run_dir / "reference_results.json") if synth_reference else None,
+        "reference_baseline": relpath(reference_path) if baseline else None,
         "generated_results": relpath(run_dir / "generated_results.json"),
         "comparison": relpath(comparison_path),
         "correct": True,
@@ -1371,9 +1397,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--vitis-timeout", type=int, default=1800)
     parser.add_argument("--skip-functional", action="store_true")
     parser.add_argument(
+        "--reference-baseline-dir",
+        default=str(DEFAULT_REFERENCE_BASELINE_DIR),
+        help="Directory containing small reference result JSONs used with --skip-reference-synth.",
+    )
+    parser.add_argument(
         "--skip-reference-synth",
         action="store_true",
-        help="Only synthesize generated tops and compare generated results with themselves.",
+        help=(
+            "Only synthesize generated tops and compare them with checked-in "
+            "small reference baselines when available."
+        ),
     )
     return parser
 
@@ -1387,6 +1421,7 @@ def run(args: argparse.Namespace) -> Path:
     sif = YATA_DRIVER.find_sif(args.sif)
     xilinx_root = Path(args.xilinx_root).expanduser().resolve()
     settings = YATA_DRIVER.vitis_settings_path(xilinx_root, args.vitis_settings)
+    reference_baseline_dir = Path(args.reference_baseline_dir).expanduser().resolve()
     summaries = []
     for variant in variants:
         summaries.append(
@@ -1401,6 +1436,7 @@ def run(args: argparse.Namespace) -> Path:
                 args.vitis_timeout,
                 args.skip_functional,
                 not args.skip_reference_synth,
+                reference_baseline_dir,
             )
         )
     write_json(

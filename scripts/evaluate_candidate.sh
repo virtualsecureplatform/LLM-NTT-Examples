@@ -312,25 +312,80 @@ if [[ "${with_yosys}" -eq 1 ]]; then
   {
     printf 'read_verilog -sv "%s"\n' "${verilog_file}"
     printf 'hierarchy -top %s\n' "${top_module}"
-    printf 'proc\nopt\nmemory\nopt\nflatten\nopt\nstat -json\n'
+    printf 'proc\nopt\nmemory\nopt\nflatten\nopt\nstat\n'
   } >"${yosys_script}"
 
   if command -v yosys >/dev/null 2>&1 &&
      run_logged "${yosys_log}" yosys -Q -s "${yosys_script}"; then
-    if python3 - "${yosys_log}" "${yosys_json}" <<'PY'
+    if python3 - "${yosys_log}" "${yosys_json}" "${top_module}" <<'PY'
 import json
+import re
 import sys
 
-with open(sys.argv[1], "r", encoding="utf-8", errors="replace") as f:
+log_path, json_path, top_module = sys.argv[1:]
+
+with open(log_path, "r", encoding="utf-8", errors="replace") as f:
     text = f.read()
 
 start = text.find("{\n")
 end = text.rfind("\n}")
-if start < 0 or end < 0:
-    raise SystemExit("Yosys JSON block not found")
+if start >= 0 and end >= 0:
+    stats = json.loads(text[start : end + 2])
+else:
+    module_name = "\\" + top_module
+    stats = {
+        "modules": {
+            module_name: {
+                "num_cells_by_type": {},
+            }
+        }
+    }
+    module_stats = stats["modules"][module_name]
+    key_map = {
+        "Number of wires": "num_wires",
+        "Number of wire bits": "num_wire_bits",
+        "Number of public wires": "num_pub_wires",
+        "Number of public wire bits": "num_pub_wire_bits",
+        "Number of ports": "num_ports",
+        "Number of port bits": "num_port_bits",
+        "Number of memories": "num_memories",
+        "Number of memory bits": "num_memory_bits",
+        "Number of processes": "num_processes",
+        "Number of cells": "num_cells",
+    }
+    in_top = False
+    in_cells = False
+    found_top = False
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+        if stripped == f"=== {top_module} ===" or stripped == f"=== \\{top_module} ===":
+            in_top = True
+            found_top = True
+            in_cells = False
+            continue
+        if in_top and stripped.startswith("===") and stripped.endswith("==="):
+            break
+        if not in_top:
+            continue
+        for label, key in key_map.items():
+            match = re.fullmatch(rf"{re.escape(label)}:\s+([0-9]+)", stripped)
+            if match:
+                module_stats[key] = int(match.group(1))
+                in_cells = key == "num_cells"
+                break
+        else:
+            if in_cells:
+                match = re.fullmatch(r"([^:\s][^:]*?)\s+([0-9]+)", stripped)
+                if match:
+                    module_stats["num_cells_by_type"][match.group(1)] = int(match.group(2))
+                elif stripped == "":
+                    in_cells = False
+    if not found_top:
+        raise SystemExit(f"Yosys stat block for top module {top_module!r} not found")
+    if "num_cells" not in module_stats:
+        raise SystemExit(f"Yosys cell count for top module {top_module!r} not found")
 
-stats = json.loads(text[start : end + 2])
-with open(sys.argv[2], "w", encoding="utf-8") as f:
+with open(json_path, "w", encoding="utf-8") as f:
     json.dump(stats, f, indent=2, sort_keys=True)
     f.write("\n")
 PY
