@@ -87,6 +87,7 @@ From: ubuntu:22.04
     fi
     python3 -m pip install --no-cache-dir ${PIP_BREAK_SYSTEM_PACKAGES} \
         'setuptools<81' \
+        'pytest>=7,<9' \
         tapa==0.0.20240825.1
 
     if ! ldconfig -p | grep -q 'libtinfo.so.5'; then
