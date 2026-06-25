@@ -1,8 +1,13 @@
 {
   "id": "small_hoge32_p64",
-  "name": "Small HOGE 32-point INTT/NTT RTL",
+  "name": "Small HOGE radix-32 INTT/NTT butterfly RTL",
   "status": "correctness_scored",
-  "description": "Small 32-coefficient HOGE p64 RTL reference top with INTT and NTT ports.",
+  "description": "HOGE p64 radix-32 butterfly reference top, matching one 32-lane half of the 1024-point HOGE NTT decomposition.",
+  "implementation_notes": [
+    "This is not a standalone dense 32-point transform.",
+    "The NTT side matches cuHEpp::NTTradixButterfly<5> before final twist/modswitch.",
+    "The INTT side matches cuHEpp::INTTradixButterfly<5> before outer twist/table multiplication."
+  ],
   "variant": "small-ntt",
   "top_module": "SmallHoge32P64Rtl",
   "verilog": {
@@ -21,7 +26,7 @@
     "modulus": "18446744069414584321",
     "modulus_hex": "0xffffffff00000001",
     "word_bits": 64,
-    "input_bits": 32,
+    "input_bits": 64,
     "lanes": 32,
     "stream_cycles": 1,
     "radix": 32,
@@ -42,14 +47,12 @@
   "reference": {
     "library": "TFHEpp",
     "include": "cuhe++.hpp",
-    "table": "cuHEpp::TableGen<5>()",
-    "twist": "cuHEpp::TwistGen<5>()",
-    "intt": "cuHEpp::TwistINTT<uint32_t, 5>",
-    "ntt": "cuHEpp::NTTradixButterfly<5> plus cuHEpp::TwistMulDirect<uint32_t, 5>"
+    "intt": "cuHEpp::INTTradixButterfly<5>",
+    "ntt": "cuHEpp::NTTradixButterfly<5>"
   },
   "observable_contract": {
-    "intt": "One input cycle with lane i carrying coefficient i. One output cycle with lane i carrying TFHEpp INTT coefficient i.",
-    "ntt": "One input cycle with lane i carrying 64-bit NTT-domain coefficient i. One output cycle with lane i carrying TFHEpp NTT coefficient i."
+    "intt": "One input cycle with lane i carrying a 64-bit HOGE torus word. One output cycle with lane i carrying cuHEpp::INTTradixButterfly<5> output i.",
+    "ntt": "One input cycle with lane i carrying a 64-bit HOGE torus word. One output cycle with lane i carrying cuHEpp::NTTradixButterfly<5> output i."
   },
   "score": {
     "correctness": "required",

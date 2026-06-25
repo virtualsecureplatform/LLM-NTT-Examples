@@ -703,10 +703,6 @@ def indent_lines(lines: list[str], spaces: int = 2) -> str:
 def generate_hoge_source(variant: Variant) -> str:
     n = variant.n
     prefix = variant.name
-    arrays = "\n".join(
-        format_cpp_array("uint64_t", name, values)
-        for name, values in generate_hoge_tables(variant.nbit).items()
-    )
     intt_lines = indent_lines(emit_hoge_intt_butterfly(0, n, variant.nbit), 2)
     ntt_lines = indent_lines(emit_hoge_ntt_butterfly(0, n, variant.nbit), 2)
     return (
@@ -732,23 +728,6 @@ def generate_hoge_source(variant: Variant) -> str:
             #pragma HLS inline
               uint64_t diff = left - right;
               return diff - (uint32_t)-(diff > left);
-            }}
-
-            static uint64_t hoge_mul(uint64_t left, uint64_t right) {{
-            #pragma HLS inline
-              __uint128_t product = (__uint128_t)left * right;
-              uint64_t lo = (uint64_t)product;
-              uint32_t w0 = (uint32_t)product;
-              product >>= 32;
-              uint32_t w1 = (uint32_t)product;
-              product >>= 32;
-              uint32_t w2 = (uint32_t)product;
-              product >>= 32;
-              uint32_t w3 = (uint32_t)product;
-              uint64_t res = (((uint64_t)w1 + w2) << 32) + w0 - w3 - w2;
-              res -= (uint32_t)-((res > lo) && (w2 == 0));
-              res += (uint32_t)-((res < lo) && (w2 != 0));
-              return hoge_normalize(res);
             }}
 
             static uint64_t hoge_lshift(uint64_t value, uint32_t shift) {{
@@ -835,16 +814,14 @@ def generate_hoge_source(variant: Variant) -> str:
             }}
             """
         )
-        + arrays
-        + "\n\n"
         + textwrap.dedent(
             f"""\
-            static void hoge_intt_core(const uint32_t intt_in[HOGE_N],
+            static void hoge_intt_core(const uint64_t intt_in[HOGE_N],
                                        uint64_t intt_out[HOGE_N]) {{
               uint64_t work[HOGE_N];
               for (int i = 0; i < HOGE_N; ++i) {{
             #pragma HLS loop_tripcount min={n} max={n}
-                work[i] = hoge_mul((uint64_t)intt_in[i], HOGE_INTT_TWIST[i]);
+                work[i] = intt_in[i];
               }}
 {intt_lines}
               for (int i = 0; i < HOGE_N; ++i) {{
@@ -854,7 +831,7 @@ def generate_hoge_source(variant: Variant) -> str:
             }}
 
             static void hoge_ntt_core(const uint64_t ntt_in[HOGE_N],
-                                      uint32_t ntt_out[HOGE_N]) {{
+                                      uint64_t ntt_out[HOGE_N]) {{
               uint64_t work[HOGE_N];
               for (int i = 0; i < HOGE_N; ++i) {{
             #pragma HLS loop_tripcount min={n} max={n}
@@ -863,12 +840,11 @@ def generate_hoge_source(variant: Variant) -> str:
 {ntt_lines}
               for (int i = 0; i < HOGE_N; ++i) {{
             #pragma HLS loop_tripcount min={n} max={n}
-                uint64_t twisted = hoge_mul(work[i], HOGE_NTT_TWIST[i]);
-                ntt_out[i] = (uint32_t)hoge_mul(twisted, HOGE_INVN[0]);
+                ntt_out[i] = work[i];
               }}
             }}
 
-            extern "C" void {prefix}_reference_intt_hls(const uint32_t intt_in[HOGE_N],
+            extern "C" void {prefix}_reference_intt_hls(const uint64_t intt_in[HOGE_N],
                                                          uint64_t intt_out[HOGE_N]) {{
             #pragma HLS interface m_axi port=intt_in offset=slave bundle=gmem0
             #pragma HLS interface m_axi port=intt_out offset=slave bundle=gmem1
@@ -878,7 +854,7 @@ def generate_hoge_source(variant: Variant) -> str:
               hoge_intt_core(intt_in, intt_out);
             }}
 
-            extern "C" void {prefix}_generated_intt_hls(const uint32_t intt_in[HOGE_N],
+            extern "C" void {prefix}_generated_intt_hls(const uint64_t intt_in[HOGE_N],
                                                          uint64_t intt_out[HOGE_N]) {{
             #pragma HLS interface m_axi port=intt_in offset=slave bundle=gmem0
             #pragma HLS interface m_axi port=intt_out offset=slave bundle=gmem1
@@ -889,7 +865,7 @@ def generate_hoge_source(variant: Variant) -> str:
             }}
 
             extern "C" void {prefix}_reference_ntt_hls(const uint64_t ntt_in[HOGE_N],
-                                                        uint32_t ntt_out[HOGE_N]) {{
+                                                        uint64_t ntt_out[HOGE_N]) {{
             #pragma HLS interface m_axi port=ntt_in offset=slave bundle=gmem0
             #pragma HLS interface m_axi port=ntt_out offset=slave bundle=gmem1
             #pragma HLS interface s_axilite port=ntt_in bundle=control
@@ -899,7 +875,7 @@ def generate_hoge_source(variant: Variant) -> str:
             }}
 
             extern "C" void {prefix}_generated_ntt_hls(const uint64_t ntt_in[HOGE_N],
-                                                        uint32_t ntt_out[HOGE_N]) {{
+                                                        uint64_t ntt_out[HOGE_N]) {{
             #pragma HLS interface m_axi port=ntt_in offset=slave bundle=gmem0
             #pragma HLS interface m_axi port=ntt_out offset=slave bundle=gmem1
             #pragma HLS interface s_axilite port=ntt_in bundle=control
@@ -908,10 +884,10 @@ def generate_hoge_source(variant: Variant) -> str:
               hoge_ntt_core(ntt_in, ntt_out);
             }}
 
-            extern "C" void {prefix}_reference_hls(const uint32_t intt_in[HOGE_N],
+            extern "C" void {prefix}_reference_hls(const uint64_t intt_in[HOGE_N],
                                                     uint64_t intt_out[HOGE_N],
                                                     const uint64_t ntt_in[HOGE_N],
-                                                    uint32_t ntt_out[HOGE_N]) {{
+                                                    uint64_t ntt_out[HOGE_N]) {{
             #pragma HLS interface m_axi port=intt_in offset=slave bundle=gmem0
             #pragma HLS interface m_axi port=intt_out offset=slave bundle=gmem1
             #pragma HLS interface m_axi port=ntt_in offset=slave bundle=gmem2
@@ -925,10 +901,10 @@ def generate_hoge_source(variant: Variant) -> str:
               hoge_ntt_core(ntt_in, ntt_out);
             }}
 
-            extern "C" void {prefix}_generated_hls(const uint32_t intt_in[HOGE_N],
+            extern "C" void {prefix}_generated_hls(const uint64_t intt_in[HOGE_N],
                                                     uint64_t intt_out[HOGE_N],
                                                     const uint64_t ntt_in[HOGE_N],
-                                                    uint32_t ntt_out[HOGE_N]) {{
+                                                    uint64_t ntt_out[HOGE_N]) {{
             #pragma HLS interface m_axi port=intt_in offset=slave bundle=gmem0
             #pragma HLS interface m_axi port=intt_out offset=slave bundle=gmem1
             #pragma HLS interface m_axi port=ntt_in offset=slave bundle=gmem2
@@ -1066,53 +1042,36 @@ def generate_functional_test(variant: Variant) -> str:
 
         #include "third_party/TFHEpp/include/cuhe++.hpp"
 
-        extern "C" void {prefix}_reference_intt_hls(const uint32_t intt_in[{n}],
+        extern "C" void {prefix}_reference_intt_hls(const uint64_t intt_in[{n}],
                                                      uint64_t intt_out[{n}]);
-        extern "C" void {prefix}_generated_intt_hls(const uint32_t intt_in[{n}],
+        extern "C" void {prefix}_generated_intt_hls(const uint64_t intt_in[{n}],
                                                      uint64_t intt_out[{n}]);
         extern "C" void {prefix}_reference_ntt_hls(const uint64_t ntt_in[{n}],
-                                                    uint32_t ntt_out[{n}]);
+                                                    uint64_t ntt_out[{n}]);
         extern "C" void {prefix}_generated_ntt_hls(const uint64_t ntt_in[{n}],
-                                                    uint32_t ntt_out[{n}]);
-
-        static void expected_hoge_ntt(
-            std::array<uint32_t, {n}> &out,
-            std::array<cuHEpp::INTorus, {n}> &in,
-            const std::array<cuHEpp::INTorus, {n}> &table,
-            const std::array<cuHEpp::INTorus, {n}> &twist) {{
-          if constexpr ({variant.nbit} == 5) {{
-            (void)table;
-            cuHEpp::NTTradixButterfly<5>(in.data(), {n});
-            cuHEpp::TwistMulDirect<uint32_t, {variant.nbit}>(out, in, twist);
-          }} else {{
-            cuHEpp::TwistNTT<uint32_t, {variant.nbit}>(out, in, table, twist);
-          }}
-        }}
+                                                    uint64_t ntt_out[{n}]);
 
         int main() {{
-          auto table = cuHEpp::TableGen<{variant.nbit}>();
-          auto twist = cuHEpp::TwistGen<{variant.nbit}>();
-
           for (int test = 0; test < 3; ++test) {{
-            std::array<uint32_t, {n}> poly{{}};
+            std::array<uint64_t, {n}> words{{}};
             for (int i = 0; i < {n}; ++i) {{
               if (test == 0) {{
-                poly[i] = static_cast<uint32_t>(i);
+                words[i] = static_cast<uint64_t>(i);
               }} else if (test == 1) {{
-                poly[i] = (i & 1) ? 0xffffffffu : 0u;
+                words[i] = (i & 1) ? cuHEpp::P - 1 : 0u;
               }} else {{
-                poly[i] = static_cast<uint32_t>(i * 2654435761u + 17u);
+                words[i] = (static_cast<uint64_t>(i) * 0x9e3779b97f4a7c15ULL + 17ULL);
               }}
             }}
 
             std::array<cuHEpp::INTorus, {n}> expected_intt{{}};
-            cuHEpp::TwistINTT<uint32_t, {variant.nbit}>(
-                expected_intt, poly, (*table)[1], (*twist)[1]);
+            for (int i = 0; i < {n}; ++i) expected_intt[i] = cuHEpp::INTorus(words[i]);
+            cuHEpp::INTTradixButterfly<{variant.nbit}>(expected_intt.data(), {n});
 
             uint64_t ref_intt[{n}]{{}};
             uint64_t gen_intt[{n}]{{}};
-            {prefix}_reference_intt_hls(poly.data(), ref_intt);
-            {prefix}_generated_intt_hls(poly.data(), gen_intt);
+            {prefix}_reference_intt_hls(words.data(), ref_intt);
+            {prefix}_generated_intt_hls(words.data(), gen_intt);
             for (int i = 0; i < {n}; ++i) {{
               uint64_t want = expected_intt[i].value;
               if (ref_intt[i] != want || gen_intt[i] != want) {{
@@ -1123,21 +1082,22 @@ def generate_functional_test(variant: Variant) -> str:
               }}
             }}
 
-            std::array<cuHEpp::INTorus, {n}> ntt_input = expected_intt;
-            std::array<uint32_t, {n}> expected_ntt{{}};
-            expected_hoge_ntt(expected_ntt, ntt_input, (*table)[0], (*twist)[0]);
+            std::array<cuHEpp::INTorus, {n}> expected_ntt{{}};
+            for (int i = 0; i < {n}; ++i) expected_ntt[i] = cuHEpp::INTorus(words[i]);
+            cuHEpp::NTTradixButterfly<{variant.nbit}>(expected_ntt.data(), {n});
 
             uint64_t ntt_in[{n}]{{}};
-            for (int i = 0; i < {n}; ++i) ntt_in[i] = expected_intt[i].value;
-            uint32_t ref_ntt[{n}]{{}};
-            uint32_t gen_ntt[{n}]{{}};
+            for (int i = 0; i < {n}; ++i) ntt_in[i] = words[i];
+            uint64_t ref_ntt[{n}]{{}};
+            uint64_t gen_ntt[{n}]{{}};
             {prefix}_reference_ntt_hls(ntt_in, ref_ntt);
             {prefix}_generated_ntt_hls(ntt_in, gen_ntt);
             for (int i = 0; i < {n}; ++i) {{
-              if (ref_ntt[i] != expected_ntt[i] || gen_ntt[i] != expected_ntt[i]) {{
+              uint64_t want = expected_ntt[i].value;
+              if (ref_ntt[i] != want || gen_ntt[i] != want) {{
                 std::cerr << "NTT mismatch test=" << test << " index=" << i
                           << " ref=" << ref_ntt[i] << " gen=" << gen_ntt[i]
-                          << " want=" << expected_ntt[i] << "\\n";
+                          << " want=" << want << "\\n";
                 return 1;
               }}
             }}

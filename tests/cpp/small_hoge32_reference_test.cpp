@@ -29,7 +29,7 @@ void tick(VSmallHoge32P64Rtl &dut)
     dut.eval();
 }
 
-IData &intt_in(VSmallHoge32P64Rtl &dut, int lane)
+QData &intt_in(VSmallHoge32P64Rtl &dut, int lane)
 {
     switch (lane) {
 #define CASE_PORT(n) case n: return dut.io_intt_in_##n;
@@ -59,7 +59,7 @@ QData intt_out(const VSmallHoge32P64Rtl &dut, int lane)
     }
 }
 
-IData ntt_out(const VSmallHoge32P64Rtl &dut, int lane)
+QData ntt_out(const VSmallHoge32P64Rtl &dut, int lane)
 {
     switch (lane) {
 #define CASE_PORT(n) case n: return dut.io_ntt_out_##n;
@@ -83,7 +83,7 @@ void reset(VSmallHoge32P64Rtl &dut)
     dut.reset = 0;
 }
 
-bool run_intt(VSmallHoge32P64Rtl &dut, const std::array<uint32_t, kN> &input,
+bool run_intt(VSmallHoge32P64Rtl &dut, const std::array<uint64_t, kN> &input,
               std::array<uint64_t, kN> &output, int &wait_cycles)
 {
     for (int lane = 0; lane < kN; ++lane) intt_in(dut, lane) = input[lane];
@@ -106,7 +106,7 @@ bool run_intt(VSmallHoge32P64Rtl &dut, const std::array<uint32_t, kN> &input,
 }
 
 bool run_ntt(VSmallHoge32P64Rtl &dut, const std::array<uint64_t, kN> &input,
-             std::array<uint32_t, kN> &output, int &wait_cycles)
+             std::array<uint64_t, kN> &output, int &wait_cycles)
 {
     for (int lane = 0; lane < kN; ++lane) ntt_in(dut, lane) = input[lane];
     dut.io_ntt_validin = 1;
@@ -131,31 +131,30 @@ bool run_ntt(VSmallHoge32P64Rtl &dut, const std::array<uint64_t, kN> &input,
 int main(int argc, char **argv)
 {
     Verilated::commandArgs(argc, argv);
-    auto table = cuHEpp::TableGen<kNbit>();
-    auto twist = cuHEpp::TwistGen<kNbit>();
     std::mt19937 rng(0x483332U);
     int max_intt_wait_cycles = 0;
     int max_ntt_wait_cycles = 0;
 
     for (int test = 0; test < kTests; ++test) {
-        std::array<uint32_t, kN> poly{};
+        std::array<uint64_t, kN> words{};
         for (int i = 0; i < kN; ++i) {
             if (test == 0)
-                poly[i] = static_cast<uint32_t>(i);
+                words[i] = static_cast<uint64_t>(i);
             else if (test == 1)
-                poly[i] = (i & 1) ? 0xffffffffu : 0u;
+                words[i] = (i & 1) ? cuHEpp::P - 1 : 0u;
             else
-                poly[i] = rng();
+                words[i] = (static_cast<uint64_t>(rng()) << 32) | rng();
         }
 
         std::array<cuHEpp::INTorus, kN> expected_intt{};
-        cuHEpp::TwistINTT<uint32_t, kNbit>(expected_intt, poly, (*table)[1], (*twist)[1]);
+        for (int i = 0; i < kN; ++i) expected_intt[i] = cuHEpp::INTorus(words[i]);
+        cuHEpp::INTTradixButterfly<kNbit>(expected_intt.data(), kN);
 
         VSmallHoge32P64Rtl intt_dut;
         reset(intt_dut);
         std::array<uint64_t, kN> got_intt{};
         int intt_wait_cycles = 0;
-        if (!run_intt(intt_dut, poly, got_intt, intt_wait_cycles)) return 1;
+        if (!run_intt(intt_dut, words, got_intt, intt_wait_cycles)) return 1;
         intt_dut.final();
         max_intt_wait_cycles = std::max(max_intt_wait_cycles, intt_wait_cycles);
         for (int i = 0; i < kN; ++i) {
@@ -167,25 +166,22 @@ int main(int argc, char **argv)
             }
         }
 
-        std::array<cuHEpp::INTorus, kN> ntt_input = expected_intt;
-        std::array<uint32_t, kN> expected_ntt{};
-        cuHEpp::NTTradixButterfly<kNbit>(ntt_input.data(), kN);
-        cuHEpp::TwistMulDirect<uint32_t, kNbit>(expected_ntt, ntt_input, (*twist)[0]);
+        std::array<cuHEpp::INTorus, kN> expected_ntt{};
+        for (int i = 0; i < kN; ++i) expected_ntt[i] = cuHEpp::INTorus(words[i]);
+        cuHEpp::NTTradixButterfly<kNbit>(expected_ntt.data(), kN);
 
-        std::array<uint64_t, kN> ntt_words{};
-        for (int i = 0; i < kN; ++i) ntt_words[i] = expected_intt[i].value;
         VSmallHoge32P64Rtl ntt_dut;
         reset(ntt_dut);
-        std::array<uint32_t, kN> got_ntt{};
+        std::array<uint64_t, kN> got_ntt{};
         int ntt_wait_cycles = 0;
-        if (!run_ntt(ntt_dut, ntt_words, got_ntt, ntt_wait_cycles)) return 1;
+        if (!run_ntt(ntt_dut, words, got_ntt, ntt_wait_cycles)) return 1;
         ntt_dut.final();
         max_ntt_wait_cycles = std::max(max_ntt_wait_cycles, ntt_wait_cycles);
         for (int i = 0; i < kN; ++i) {
-            if (got_ntt[i] != expected_ntt[i]) {
+            if (got_ntt[i] != expected_ntt[i].value) {
                 std::cerr << "small HOGE NTT mismatch index=" << i
                           << " got=" << got_ntt[i]
-                          << " want=" << expected_ntt[i] << "\n";
+                          << " want=" << expected_ntt[i].value << "\n";
                 return 1;
             }
         }

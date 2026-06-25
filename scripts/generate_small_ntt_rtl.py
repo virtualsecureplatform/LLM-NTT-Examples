@@ -89,61 +89,61 @@ def hoge_ntt_butterfly(work: list[int], offset: int, size: int, radixbit: int) -
     hoge_butterfly(work, offset, size)
 
 
-def hoge_intt_matrix(nbit: int) -> list[list[int]]:
-    n = 1 << nbit
-    tables = SMALL.generate_hoge_tables(nbit)
-    matrix: list[list[int]] = []
-    for column in range(n):
-        work = [0] * n
-        work[column] = tables["HOGE_INTT_TWIST"][column]
-        hoge_intt_butterfly(work, 0, n, nbit)
-        matrix.append(work)
-    return matrix
-
-
-def hoge_ntt_matrix(nbit: int) -> list[list[int]]:
-    n = 1 << nbit
-    tables = SMALL.generate_hoge_tables(nbit)
-    matrix: list[list[int]] = []
-    for column in range(n):
-        work = [0] * n
-        work[column] = 1
-        hoge_ntt_butterfly(work, 0, n, nbit)
-        out = [
-            SMALL.hoge_mul_mod(SMALL.hoge_mul_mod(work[i], tables["HOGE_NTT_TWIST"][i]), tables["HOGE_INVN"][0])
-            for i in range(n)
-        ]
-        matrix.append(out)
-    return matrix
-
-
-def emit_hoge_transform(kind: str, matrix: list[list[int]], in_width: int, out_width: int) -> str:
-    n = len(matrix)
+def emit_hoge_sv_butterfly(work: str, offset: int, size: int) -> list[str]:
     lines: list[str] = []
-    for row in range(n):
-        lines.append("      acc = 64'd0;")
-        for col in range(n):
-            const = matrix[col][row]
-            if const:
-                operand = f"{{32'd0, {kind}_in_buf[{col}]}}" if in_width == 32 else f"{kind}_in_buf[{col}]"
-                lines.append(f"      acc = hoge_add(acc, hoge_mul({operand}, 64'd{const}));")
-        mask = "" if out_width == 64 else "[31:0]"
-        lines.append(f"      {kind}_out_buf[{row}] <= acc{mask};")
-    return "\n".join(lines)
+    for index in range(size // 2):
+        a = offset + index
+        b = offset + index + size // 2
+        lines.append(f"      temp = {work}[{a}];")
+        lines.append(f"      {work}[{a}] = hoge_add({work}[{a}], {work}[{b}]);")
+        lines.append(f"      {work}[{b}] = hoge_sub(temp, {work}[{b}]);")
+    return lines
+
+
+def emit_hoge_sv_intt_radix(work: str, offset: int, size: int, radixbit: int) -> list[str]:
+    if radixbit == 0:
+        return []
+    lines = emit_hoge_sv_butterfly(work, offset, size)
+    block = size >> radixbit
+    for i in range(1, 1 << (radixbit - 1)):
+        shift = 3 * (i << (6 - radixbit))
+        for j in range(block):
+            index = offset + i * block + j + size // 2
+            lines.append(f"      {work}[{index}] = hoge_lshift({work}[{index}], {shift});")
+    lines.extend(emit_hoge_sv_intt_radix(work, offset, size // 2, radixbit - 1))
+    lines.extend(emit_hoge_sv_intt_radix(work, offset + size // 2, size // 2, radixbit - 1))
+    return lines
+
+
+def emit_hoge_sv_ntt_radix(work: str, offset: int, size: int, radixbit: int) -> list[str]:
+    if radixbit == 0:
+        return []
+    lines: list[str] = []
+    lines.extend(emit_hoge_sv_ntt_radix(work, offset + size // 2, size // 2, radixbit - 1))
+    lines.extend(emit_hoge_sv_ntt_radix(work, offset, size // 2, radixbit - 1))
+    block = size >> radixbit
+    if radixbit != 1:
+        for i in range(1, 1 << (radixbit - 1)):
+            shift = 3 * (64 - (i << (6 - radixbit)))
+            for j in range(block):
+                index = offset + i * block + j + size // 2
+                lines.append(f"      {work}[{index}] = hoge_lshift({work}[{index}], {shift});")
+    lines.extend(emit_hoge_sv_butterfly(work, offset, size))
+    return lines
 
 
 def generate_hoge32() -> str:
     n = 32
-    intt_matrix = hoge_intt_matrix(5)
-    ntt_matrix = hoge_ntt_matrix(5)
-    return banner("HOGE p64 arithmetic uses reduction for p = 2^64 - 2^32 + 1.") + textwrap.dedent(
+    intt_lines = "\n".join(emit_hoge_sv_intt_radix("work", 0, n, 5))
+    ntt_lines = "\n".join(emit_hoge_sv_ntt_radix("work", 0, n, 5))
+    return banner("HOGE32 is a radix-32 butterfly block from the 1024-point HOGE NTT decomposition.") + textwrap.dedent(
         f"""\
         module SmallHoge32P64Rtl(
           input clock,
           input reset,
           input io_intt_validin,
         """
-    ) + "\n".join(lane_ports("io_intt_in", "input", 32, n)) + "\n" + "\n".join(
+    ) + "\n".join(lane_ports("io_intt_in", "input", 64, n)) + "\n" + "\n".join(
         lane_ports("io_intt_out", "output reg", 64, n)
     ) + "\n" + textwrap.dedent(
         """\
@@ -151,20 +151,21 @@ def generate_hoge32() -> str:
           input io_ntt_validin,
         """
     ) + "\n".join(lane_ports("io_ntt_in", "input", 64, n)) + "\n" + "\n".join(
-        lane_ports("io_ntt_out", "output reg", 32, n)
+        lane_ports("io_ntt_out", "output reg", 64, n)
     ) + "\n" + textwrap.dedent(
         """\
           output reg io_ntt_validout
         );
           localparam [63:0] HOGE_P = 64'hffffffff00000001;
 
-          reg [31:0] intt_in_buf [0:31];
+          reg [63:0] intt_in_buf [0:31];
           reg [63:0] intt_out_buf [0:31];
           reg [63:0] ntt_in_buf [0:31];
-          reg [31:0] ntt_out_buf [0:31];
+          reg [63:0] ntt_out_buf [0:31];
           reg intt_pending;
           reg ntt_pending;
-          reg [63:0] acc;
+          reg [63:0] work [0:31];
+          reg [63:0] temp;
           integer i;
 
           function automatic [63:0] hoge_normalize(input [63:0] value);
@@ -181,27 +182,116 @@ def generate_hoge32() -> str:
             end
           endfunction
 
-          function automatic [63:0] hoge_mul(input [63:0] left, input [63:0] right);
-            reg [127:0] product;
-            reg [63:0] lo;
-            reg [31:0] w0;
-            reg [31:0] w1;
-            reg [31:0] w2;
-            reg [31:0] w3;
-            reg [63:0] res;
+          function automatic [63:0] hoge_sub(input [63:0] left, input [63:0] right);
+            reg [64:0] diff;
             begin
-              product = left * right;
-              lo = product[63:0];
-              w0 = product[31:0];
-              w1 = product[63:32];
-              w2 = product[95:64];
-              w3 = product[127:96];
-              res = (({32'd0, w1} + {32'd0, w2}) << 32) + {32'd0, w0} - {32'd0, w3} - {32'd0, w2};
-              if ((res > lo) && (w2 == 0)) res = res - 64'h00000000ffffffff;
-              if ((res < lo) && (w2 != 0)) res = res + 64'h00000000ffffffff;
-              hoge_mul = hoge_normalize(res);
+              diff = {1'b0, left} - {1'b0, right};
+              hoge_sub = diff[64] ? diff[63:0] - 64'h00000000ffffffff : diff[63:0];
             end
           endfunction
+
+          function automatic [63:0] hoge_low32(input [63:0] value);
+            begin
+              hoge_low32 = {32'd0, value[31:0]};
+            end
+          endfunction
+
+          function automatic [63:0] hoge_lshift(input [63:0] value, input integer shift);
+            reg [63:0] templ;
+            reg [63:0] tempul;
+            reg [63:0] tempuu;
+            reg [63:0] tempu;
+            reg [63:0] res;
+            begin
+              if (shift == 0) begin
+                hoge_lshift = value;
+              end else if (shift < 32) begin
+                templ = value << shift;
+                tempu = value >> (64 - shift);
+                res = templ + (tempu << 32) - tempu;
+                if (res < templ) res = res + 64'h00000000ffffffff;
+                hoge_lshift = hoge_normalize(res);
+              end else if (shift == 32) begin
+                templ = value << shift;
+                tempul = hoge_low32(value >> (64 - shift));
+                res = templ + (tempul << 32) - tempul;
+                if ((res > templ) && (tempul == 0)) res = res - 64'h00000000ffffffff;
+                if ((res < templ) && (tempul != 0)) res = res + 64'h00000000ffffffff;
+                hoge_lshift = hoge_normalize(res);
+              end else if (shift < 64) begin
+                templ = hoge_low32(value << (shift - 32));
+                tempul = hoge_low32(value >> (64 - shift));
+                tempuu = value >> (96 - shift);
+                res = ((templ + tempul) << 32) - tempuu - tempul;
+                if ((res > (templ << 32)) && (tempul == 0)) res = res - 64'h00000000ffffffff;
+                if ((res < (templ << 32)) && (tempul != 0)) res = res + 64'h00000000ffffffff;
+                hoge_lshift = hoge_normalize(res);
+              end else if (shift == 64) begin
+                templ = hoge_low32(value);
+                templ = (templ << 32) - templ;
+                tempu = value >> (96 - shift);
+                res = templ - tempu;
+                if (res > templ) res = res - 64'h00000000ffffffff;
+                hoge_lshift = hoge_normalize(res);
+              end else if (shift < 96) begin
+                templ = hoge_low32(value << (shift - 64));
+                templ = (templ << 32) - templ;
+                tempu = value >> (96 - shift);
+                res = templ - tempu;
+                if (res > templ) res = res - 64'h00000000ffffffff;
+                hoge_lshift = hoge_normalize(res);
+              end else if (shift == 96) begin
+                hoge_lshift = hoge_sub(HOGE_P, value);
+              end else if (shift < 128) begin
+                templ = value << (shift - 96);
+                tempu = value >> (160 - shift);
+                res = templ + (tempu << 32) - tempu;
+                if (res < templ) res = res + 64'h00000000ffffffff;
+                hoge_lshift = hoge_sub(HOGE_P, hoge_normalize(res));
+              end else if (shift == 128) begin
+                templ = hoge_low32(value);
+                tempul = hoge_low32(value >> (160 - shift));
+                res = hoge_sub(tempul, templ << 32);
+                hoge_lshift = hoge_sub(res, tempul << 32);
+              end else if (shift < 160) begin
+                templ = hoge_low32(value << (shift - 128));
+                tempul = hoge_low32(value >> (160 - shift));
+                tempuu = value >> (192 - shift);
+                res = hoge_sub(tempul + tempuu, templ << 32);
+                hoge_lshift = hoge_sub(res, tempul << 32);
+              end else if (shift == 160) begin
+                templ = hoge_low32(value);
+                tempu = value >> (192 - shift);
+                hoge_lshift = hoge_sub(templ + tempu, templ << 32);
+              end else begin
+                templ = hoge_low32(value << (shift - 160));
+                tempu = value >> (192 - shift);
+                res = templ + tempu - (templ << 32);
+                if (res > tempu) res = res - 64'h00000000ffffffff;
+                hoge_lshift = hoge_normalize(res);
+              end
+            end
+          endfunction
+
+          task automatic compute_intt;
+            begin
+              for (i = 0; i < 32; i = i + 1) work[i] = intt_in_buf[i];
+        """
+    ) + intt_lines + textwrap.dedent(
+        """
+              for (i = 0; i < 32; i = i + 1) intt_out_buf[i] <= work[i];
+            end
+          endtask
+
+          task automatic compute_ntt;
+            begin
+              for (i = 0; i < 32; i = i + 1) work[i] = ntt_in_buf[i];
+        """
+    ) + ntt_lines + textwrap.dedent(
+        """
+              for (i = 0; i < 32; i = i + 1) ntt_out_buf[i] <= work[i];
+            end
+          endtask
 
           always @(posedge clock) begin
             if (reset) begin
@@ -210,10 +300,10 @@ def generate_hoge32() -> str:
               intt_pending <= 1'b0;
               ntt_pending <= 1'b0;
               for (i = 0; i < 32; i = i + 1) begin
-                intt_in_buf[i] <= 32'd0;
+                intt_in_buf[i] <= 64'd0;
                 intt_out_buf[i] <= 64'd0;
                 ntt_in_buf[i] <= 64'd0;
-                ntt_out_buf[i] <= 32'd0;
+                ntt_out_buf[i] <= 64'd0;
               end
             end else begin
               io_intt_validout <= intt_pending;
@@ -231,18 +321,16 @@ def generate_hoge32() -> str:
 
               if (io_intt_validin) begin
         """
-    ) + "\n".join(f"        intt_in_buf[{i}] = io_intt_in_{i};" for i in range(n)) + "\n" + emit_hoge_transform(
-        "intt", intt_matrix, 32, 64
-    ) + textwrap.dedent(
+    ) + "\n".join(f"        intt_in_buf[{i}] = io_intt_in_{i};" for i in range(n)) + textwrap.dedent(
         """
+                compute_intt();
               end
 
               if (io_ntt_validin) begin
         """
-    ) + "\n".join(f"        ntt_in_buf[{i}] = io_ntt_in_{i};" for i in range(n)) + "\n" + emit_hoge_transform(
-        "ntt", ntt_matrix, 64, 32
-    ) + textwrap.dedent(
+    ) + "\n".join(f"        ntt_in_buf[{i}] = io_ntt_in_{i};" for i in range(n)) + textwrap.dedent(
         """
+                compute_ntt();
               end
             end
           end

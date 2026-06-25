@@ -235,7 +235,7 @@ This runs the small-variant flow below plus the full YATA HLS comparison unless
 Small HLS bring-up targets are available for the requested reduced-size
 problems:
 
-- `hoge32`: 32 coefficients over the HOGE p64 torus.
+- `hoge32`: one radix-32 HOGE p64 butterfly block from the 1024-point NTT decomposition.
 - `yata8`: one radix-8 YATA RAINTT block.
 - `yata8x8`: 64 YATA coefficients, modeled as 8 lanes by 8 cycles.
 
@@ -247,20 +247,22 @@ scripts/run_small_variant_hls_synth_compare.py --variants all --sif auto
 ```
 
 The driver emits `reference_*_hls` and `generated_*_hls` tops for INTT, NTT,
-and combined transforms under
+and combined transforms or radix blocks under
 `build/small-variant-hls-synth-compare/<timestamp>/`. The generated functional
 test covers ramp, alternating edge-value, and deterministic pseudo-random
-inputs. For tiny `Nbit == radixbit` cases it uses the exposed TFHEpp radix
-butterfly plus twist helpers, because TFHEpp's generic NTT wrapper assumes a
-larger next stage.
+inputs. For `hoge32`, the oracle is the exposed TFHEpp radix butterfly itself,
+without final twist/modswitch, because this target is one radix stage of the
+full 1024-point decomposition.
 
 Measured U280 Vitis HLS estimates from a verified run:
 
 | Variant | INTT total cycles | NTT total cycles | LUT | FF | DSP | BRAM | fmax MHz |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `hoge32` | 4294 | 4292 | 69693 | 31644 | 40 | 12 | 342.466 |
 | `yata8` | 81 | 96 | 17303 | 11938 | 70 | 8 | 342.466 |
 | `yata8x8` | 5250 | 9168 | 65492 | 38962 | 156 | 8 | 305.157 |
+
+The previous `hoge32` HLS numbers were for an obsolete standalone 32-point
+transform. Regenerate them before comparing the current radix-32 block.
 
 Longer-term direct AutoNTT extensions would still be:
 

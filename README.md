@@ -109,7 +109,7 @@ scripts/run_yata_hls_synth_compare.py --sif auto
 - `hoge_externalproduct_ntt_reference_test`: HOGE `ExternalProductWrap`
   against TFHEpp `ExternalProduct<lvl1param>`.
 - `hoge_nttid_identity_test`: HOGE `NTTid` identity pipeline.
-- `small_hoge32_reference_test`: generated 32-point HOGE RTL against
+- `small_hoge32_reference_test`: generated HOGE radix-32 butterfly RTL against
   TFHEpp/cuHEpp.
 - `small_yata8_reference_test` and `small_yata8x8_reference_test`: generated
   YATA RAINTT RTL against TFHEpp `raintt`.

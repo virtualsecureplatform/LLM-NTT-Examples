@@ -131,6 +131,10 @@ Measured U280 Vitis HLS estimates from a verified run:
 
 | Variant | INTT total cycles | NTT total cycles | LUT | FF | DSP | BRAM | fmax MHz |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `hoge32` | 4294 | 4292 | 69693 | 31644 | 40 | 12 | 342.466 |
 | `yata8` | 81 | 96 | 17303 | 11938 | 70 | 8 | 342.466 |
 | `yata8x8` | 5250 | 9168 | 65492 | 38962 | 156 | 8 | 305.157 |
+
+The previous `hoge32` HLS numbers were for an obsolete standalone 32-point
+transform. The current `hoge32` target is the radix-32 HOGE butterfly block used
+inside the 1024-point decomposition; regenerate its HLS numbers before using it
+for comparisons.
