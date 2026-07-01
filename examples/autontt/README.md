@@ -73,6 +73,9 @@ scripts/run_autontt_hls_harness.py --modmul-type B
 
 This Barrett run is a positive AutoNTT HLS code-generation control and writes a
 summary plus copied HLS sources under `build/autontt-hls-runs/<timestamp>/`.
+The harness default architecture filter is `ID`, so AutoNTT tries DataFlow DSE
+alongside the iterative fallback. Pass `--arch-type D` for a DataFlow-only run
+or `--arch-type IDH` to include Hybrid too.
 For the HOGE pseudo-Mersenne custom reduction files in this directory, run:
 
 ```bash

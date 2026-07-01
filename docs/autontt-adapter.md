@@ -140,7 +140,10 @@ scripts/run_autontt_hls_harness.py --modmul-type B
 That Barrett configuration is a positive control for AutoNTT HLS code
 generation. It writes `build/autontt-hls-runs/<timestamp>/summary.json` and
 copies the generated `AutoNTT_*` design directory into the run artifacts. The
-script auto-selects the default U280 platform when present, otherwise it uses an
+default architecture filter is `ID`, so the harness asks AutoNTT to try
+DataFlow DSE while retaining the iterative fallback. Use `--arch-type D` to
+force DataFlow only, or `--arch-type IDH` to include Hybrid as well. The script
+auto-selects the default U280 platform when present, otherwise it uses an
 installed platform under `/opt/xilinx/platforms`.
 
 For the HOGE `p64` custom reduction files, run:
@@ -152,9 +155,9 @@ scripts/run_autontt_hls_harness.py --modmul-type C
 The custom path defaults to `--custom-bu-mode estimate`. In that mode the
 harness supplies explicit estimated butterfly-unit attributes
 `pipeline_depth,dsp,lut,ff = 15,32,2345,1481`, then invokes AutoNTT and captures
-the generated `AutoNTT_I__N_1024__q_64__red_CUSTOM_REDUCTION__BUs_64` HLS
-design. These values are only code-generation estimates; they are not measured
-synthesis results.
+the generated HLS design selected from the requested architecture filter, for
+example `AutoNTT_I__...` or `AutoNTT_D__...`. These values are only
+code-generation estimates; they are not measured synthesis results.
 
 To run AutoNTT's original custom-reduction BU measurement probe, use:
 

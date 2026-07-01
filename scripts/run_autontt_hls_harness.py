@@ -41,6 +41,8 @@ REDUCTION_NAMES = {
     "C": "CUSTOM_REDUCTION",
 }
 DEFAULT_CUSTOM_BU_ESTIMATE = "15,32,2345,1481"
+DEFAULT_ARCH_TYPE = "ID"
+VALID_ARCH_TYPES = ("I", "D", "H")
 
 
 def timestamp() -> str:
@@ -78,20 +80,49 @@ def tree_mtime(path: Path) -> float:
     return max((item.stat().st_mtime for item in path.rglob("*")), default=path.stat().st_mtime)
 
 
-def expected_design_prefix(args: argparse.Namespace) -> str:
+def validate_arch_type(value: str) -> str:
+    result = ""
+    for char in value.strip().upper():
+        if char.isspace() or char == ",":
+            continue
+        if char not in VALID_ARCH_TYPES:
+            raise argparse.ArgumentTypeError(
+                f"invalid architecture type {char!r}; expected I, D, H, or a combination"
+            )
+        if char not in result:
+            result += char
+    if not result:
+        raise argparse.ArgumentTypeError("architecture type cannot be empty")
+    return result
+
+
+def requested_arch_types(arch_type: str) -> list[str]:
+    return list(validate_arch_type(arch_type))
+
+
+def expected_design_prefix(args: argparse.Namespace, arch_type: str) -> str:
     reduction_name = REDUCTION_NAMES[args.modmul_type]
-    return f"AutoNTT_{args.arch_type}__N_{args.poly_size}__q_{args.mod_size}__red_{reduction_name}__"
+    return f"AutoNTT_{arch_type}__N_{args.poly_size}__q_{args.mod_size}__red_{reduction_name}__"
 
 
-def find_recent_design_dirs(tool_outputs: Path, prefix: str, since: float) -> list[Path]:
+def expected_design_prefixes(args: argparse.Namespace) -> list[str]:
+    return [expected_design_prefix(args, arch) for arch in requested_arch_types(args.arch_type)]
+
+
+def find_recent_design_dirs(tool_outputs: Path, prefixes: str | list[str], since: float) -> list[Path]:
     if not tool_outputs.exists():
         return []
     result: list[Path] = []
-    for path in sorted(tool_outputs.glob(f"{prefix}*")):
-        if not path.is_dir():
-            continue
-        if tree_mtime(path) >= since:
-            result.append(path)
+    if isinstance(prefixes, str):
+        prefixes = [prefixes]
+    seen: set[Path] = set()
+    for prefix in prefixes:
+        for path in sorted(tool_outputs.glob(f"{prefix}*")):
+            if not path.is_dir() or path in seen:
+                continue
+            if tree_mtime(path) >= since:
+                result.append(path)
+                seen.add(path)
     return result
 
 
@@ -207,7 +238,16 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-root", default="build/autontt-hls-runs")
     parser.add_argument("--poly-size", default="1024")
     parser.add_argument("--mod-size", default="64")
-    parser.add_argument("--arch-type", default="I")
+    parser.add_argument(
+        "--arch-type",
+        type=validate_arch_type,
+        default=DEFAULT_ARCH_TYPE,
+        help=(
+            "AutoNTT architecture filter. Defaults to ID so the HLS path tries "
+            "DataFlow while retaining the iterative fallback. Use D to force "
+            "DataFlow only, or IDH to match AutoNTT's full search."
+        ),
+    )
     parser.add_argument(
         "--modmul-type",
         choices=("B", "M", "WLM", "C", "N"),
@@ -255,6 +295,7 @@ def main(argv: list[str] | None = None) -> int:
     artifact_root = run_root / "artifacts"
     run_root.mkdir(parents=True, exist_ok=True)
     platform = args.platform or newest_platform()
+    design_prefixes = expected_design_prefixes(args)
 
     autontt_args = [
         "--poly_size",
@@ -300,6 +341,8 @@ def main(argv: list[str] | None = None) -> int:
         {
             "command": cmd,
             "autontt_args": autontt_args,
+            "requested_architectures": requested_arch_types(args.arch_type),
+            "expected_design_prefixes": design_prefixes,
             "cwd": str(autontt_root),
             "platform": platform,
             "output_root": str(run_root),
@@ -323,7 +366,7 @@ def main(argv: list[str] | None = None) -> int:
         (run_root / "autontt.stdout").write_text(proc.stdout, encoding="utf-8")
 
         if proc.returncode == 0:
-            for design_dir in find_recent_design_dirs(autontt_root / "tool_outputs", expected_design_prefix(args), start):
+            for design_dir in find_recent_design_dirs(autontt_root / "tool_outputs", design_prefixes, start):
                 copied_designs.append(copy_artifact_dir(design_dir, artifact_root))
 
         temp_design = autontt_root / "temp_design"
@@ -359,6 +402,8 @@ def main(argv: list[str] | None = None) -> int:
         "likely_blocker": likely_blocker,
         "command": cmd,
         "autontt_args": autontt_args,
+        "requested_architectures": requested_arch_types(args.arch_type),
+        "expected_design_prefixes": design_prefixes,
         "autontt_root": str(autontt_root),
         "run_root": str(run_root),
         "stdout": str(run_root / "autontt.stdout"),
