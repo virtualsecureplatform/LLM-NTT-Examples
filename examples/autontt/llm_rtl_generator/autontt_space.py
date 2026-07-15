@@ -33,6 +33,24 @@ MODMUL = {
     "C": "prime-specific custom reduction",
 }
 
+YATA_PIPELINE_PROFILES: dict[str, dict[str, int | str]] = {
+    "baseline": {
+        "description": "original YATA arithmetic latency",
+        "multiplier_pipeline_stages": 2,
+        "sredc_pipeline_stages": 1,
+    },
+    "f300": {
+        "description": "split the two signed-reduction multiply/correction halves",
+        "multiplier_pipeline_stages": 2,
+        "sredc_pipeline_stages": 2,
+    },
+    "deep": {
+        "description": "f300 reduction split with an extra multiplier delay stage",
+        "multiplier_pipeline_stages": 3,
+        "sredc_pipeline_stages": 2,
+    },
+}
+
 
 def _word_bits(task: dict[str, Any]) -> int:
     params = task.get("parameters", {})
@@ -61,6 +79,61 @@ def _default_modmul_types(task: dict[str, Any]) -> list[str]:
     if modulus_hex in ("0x02710001", "0x2710001") or n == 512:
         return ["C", "B", "N"]
     return ["B", "M", "N"]
+
+
+def _is_yata(task: dict[str, Any]) -> bool:
+    params = task.get("parameters", {})
+    modulus_hex = str(params.get("modulus_hex", "")).lower()
+    return modulus_hex in ("0x02710001", "0x2710001") or str(
+        task.get("id", "")
+    ).startswith("yata_")
+
+
+def _target_frequency_mhz(
+    task: dict[str, Any], value: float | None
+) -> float | None:
+    if value is not None:
+        if value <= 0:
+            raise ValueError("target frequency must be positive")
+        return float(value)
+    configured = task.get("design_space", {}).get("target_frequency_mhz")
+    if configured is None:
+        return None
+    configured = float(configured)
+    if configured <= 0:
+        raise ValueError("design_space.target_frequency_mhz must be positive")
+    return configured
+
+
+def _normalise_pipeline_profiles(
+    value: str | None,
+    task: dict[str, Any],
+    target_frequency_mhz: float | None,
+) -> list[tuple[str, dict[str, int | str] | None]]:
+    if not _is_yata(task):
+        if value and value.strip().upper() not in ("", "AUTO"):
+            raise ValueError("pipeline profiles are currently implemented for YATA only")
+        return [("task_default", None)]
+
+    if value is None or value.strip().upper() == "AUTO":
+        if target_frequency_mhz is not None and target_frequency_mhz >= 300.0:
+            names = ["f300", "deep", "baseline"]
+        else:
+            names = ["baseline", "f300", "deep"]
+    else:
+        names = []
+        for item in value.replace(",", " ").split():
+            name = item.strip().lower()
+            if name and name not in names:
+                names.append(name)
+
+    unknown = [name for name in names if name not in YATA_PIPELINE_PROFILES]
+    if unknown:
+        raise ValueError(
+            f"unknown YATA pipeline profile {unknown[0]!r}; expected one of "
+            f"{sorted(YATA_PIPELINE_PROFILES)} or AUTO"
+        )
+    return [(name, dict(YATA_PIPELINE_PROFILES[name])) for name in names]
 
 
 def _normalise_modmul_types(value: str | None, task: dict[str, Any]) -> list[str]:
@@ -130,8 +203,11 @@ def generate_search_points(
     arch_types: str = "IDH",
     modmul_types: str | None = None,
     strategy: str = "hardware",
+    pipeline_profiles: str | None = None,
+    target_frequency_mhz: float | None = None,
 ) -> list[dict[str, Any]]:
     params = task.get("parameters", {})
+    target_frequency_mhz = _target_frequency_mhz(task, target_frequency_mhz)
     if strategy == "behavioral_reference":
         return [
             {
@@ -151,12 +227,21 @@ def generate_search_points(
                 "twiddle_strategy": "small ROM or generated constants",
                 "buffer_strategy": "simple arrays/registers",
                 "autontt_command": None,
+                "target_frequency_mhz": target_frequency_mhz,
+                "target_clock_period_ns": (
+                    1000.0 / target_frequency_mhz
+                    if target_frequency_mhz is not None
+                    else None
+                ),
             }
         ]
 
     points: list[dict[str, Any]] = []
     lanes = _lanes(task)
     radix = int(params.get("radix", max(2, lanes)))
+    profiles = _normalise_pipeline_profiles(
+        pipeline_profiles, task, target_frequency_mhz
+    )
     for arch in _normalise_arch_types(arch_types):
         for modmul in _normalise_modmul_types(modmul_types, task):
             family = ARCHITECTURES[arch]["family"]
@@ -172,24 +257,40 @@ def generate_search_points(
                 butterfly_budget = max(1, lanes // 2)
                 buffer_strategy = "banked buffers around an unrolled stage group"
                 pipeline_depth = "moderate, with explicit valid-delay alignment"
-            points.append(
-                {
-                    "name": f"{family}_{modmul.lower()}_r{radix}_l{lanes}",
-                    "strategy": strategy,
-                    "architecture_code": arch,
-                    "architecture_family": family,
-                    "architecture_description": ARCHITECTURES[arch]["description"],
-                    "modmul_type": modmul,
-                    "modmul_description": MODMUL[modmul],
-                    "poly_size": int(params.get("N", 0)),
-                    "word_bits": _word_bits(task),
-                    "lanes": lanes,
-                    "radix": radix,
-                    "butterfly_budget": butterfly_budget,
-                    "pipeline_depth_hint": pipeline_depth,
-                    "twiddle_strategy": "ROM table first; recurrence only if simpler",
-                    "buffer_strategy": buffer_strategy,
-                    "autontt_command": _autontt_command(task, arch, modmul),
-                }
-            )
+            for pipeline_profile, pipeline_config in profiles:
+                name = f"{family}_{modmul.lower()}_r{radix}_l{lanes}"
+                if pipeline_config is not None:
+                    name += f"_{pipeline_profile}"
+                points.append(
+                    {
+                        "name": name,
+                        "strategy": strategy,
+                        "architecture_code": arch,
+                        "architecture_family": family,
+                        "architecture_description": ARCHITECTURES[arch][
+                            "description"
+                        ],
+                        "modmul_type": modmul,
+                        "modmul_description": MODMUL[modmul],
+                        "poly_size": int(params.get("N", 0)),
+                        "word_bits": _word_bits(task),
+                        "lanes": lanes,
+                        "radix": radix,
+                        "butterfly_budget": butterfly_budget,
+                        "pipeline_depth_hint": pipeline_depth,
+                        "pipeline_profile": pipeline_profile,
+                        "pipeline_config": pipeline_config,
+                        "twiddle_strategy": (
+                            "ROM table first; recurrence only if simpler"
+                        ),
+                        "buffer_strategy": buffer_strategy,
+                        "autontt_command": _autontt_command(task, arch, modmul),
+                        "target_frequency_mhz": target_frequency_mhz,
+                        "target_clock_period_ns": (
+                            1000.0 / target_frequency_mhz
+                            if target_frequency_mhz is not None
+                            else None
+                        ),
+                    }
+                )
     return points

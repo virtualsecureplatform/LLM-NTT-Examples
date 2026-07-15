@@ -1,5 +1,11 @@
 
-case class Config() {
+case class Config(
+    multiplierPipelineStages: Int = 2,
+    sredcPipelineStages: Int = 1
+) {
+    require(multiplierPipelineStages >= 1, "multiplier pipeline must be non-empty")
+    require(sredcPipelineStages >= 1, "SREDC pipeline must be non-empty")
+    require(sredcPipelineStages <= 2, "SREDC currently supports one or two stages")
     //Simulate Mode
     val velirate = true
 
@@ -50,9 +56,9 @@ case class Config() {
     val radix = 1 << radixbit
     val numcycle = 1 << cyclebit
 
-    val SREDCdelay = 1
+    val SREDCdelay = sredcPipelineStages
     val consttwiddelay = 1
-    val multiplierpipestage = 2
+    val multiplierpipestage = multiplierPipelineStages
     val muldelay = multiplierpipestage + SREDCdelay
     val adddelay = 1
     val radixdelay = 3*adddelay+2*consttwiddelay+SREDCdelay+1

@@ -41,6 +41,7 @@ KUNASHIRI_ENDPOINT_ENV = "LLM_NTT_KUNASHIRI_ENDPOINT"
 KUNASHIRI_DEFAULT_ENDPOINT = "http://kunashiri:8080/v1"
 KUNASHIRI_HOSTS = {"kunashiri", "kunashiri.sato.lab"}
 CHISEL_REFERENCE_GENERATOR = "chisel_reference"
+CHISEL_PIPELINE_GENERATOR = "chisel_pipeline"
 
 
 BEHAVIORAL_GENERATORS: dict[str, dict[str, Any]] = {
@@ -273,6 +274,39 @@ def build_feedback(
     if evaluator_stdout:
         parts.append("Evaluator stdout:\n" + evaluator_stdout[-4000:])
     return "\n\n".join(parts)
+
+
+def evaluate_hardware_goal(
+    result: dict[str, Any] | None,
+    target_frequency_mhz: float | None,
+) -> dict[str, Any]:
+    metrics = result.get("metrics", {}) if result else {}
+    fmax = metrics.get("vitis_fmax_mhz")
+    wns = metrics.get("vitis_timing_wns_ns")
+    timing_required = target_frequency_mhz is not None
+    timing_met = not timing_required
+    if timing_required:
+        timing_met = (
+            isinstance(fmax, (int, float))
+            and isinstance(wns, (int, float))
+            and float(fmax) >= float(target_frequency_mhz)
+            and float(wns) >= 0.0
+        )
+    checks = {
+        "correct": bool(result and result.get("correct")),
+        "vitis_synthesis_passed": bool(
+            result and result.get("vitis_synthesis_passed")
+        ),
+        "resource_metrics_present": metrics.get("vitis_lut") is not None,
+        "timing_met": timing_met,
+    }
+    return {
+        "passed": all(checks.values()),
+        "checks": checks,
+        "target_frequency_mhz": target_frequency_mhz,
+        "achieved_fmax_mhz": fmax,
+        "timing_wns_ns": wns,
+    }
 
 
 def write_json(path: Path, value: Any) -> None:
@@ -574,6 +608,7 @@ def write_chisel_reference_candidate(
     apptainer_bin: str | None = None,
     sif: Path | None = None,
     timeout_seconds: int = 900,
+    pipeline_config: dict[str, Any] | None = None,
 ) -> Path:
     variant = str(task.get("variant", "")).strip()
     if not variant:
@@ -617,7 +652,11 @@ def write_chisel_reference_candidate(
 
     log_path = attempt_dir / "chisel_generate.log"
     metadata = {
-        "source": "chisel_reference",
+        "source": (
+            CHISEL_PIPELINE_GENERATOR
+            if pipeline_config is not None
+            else CHISEL_REFERENCE_GENERATOR
+        ),
         "variant": variant,
         "source_project": str(source_path),
         "work_dir": str(work_path),
@@ -626,7 +665,33 @@ def write_chisel_reference_candidate(
         "command": cmd,
         "timeout_seconds": timeout_seconds,
         "log": str(log_path),
+        "pipeline_config": pipeline_config,
     }
+    generation_env = dict(os.environ)
+    if pipeline_config is not None:
+        required_pipeline_keys = {
+            "multiplier_pipeline_stages",
+            "sredc_pipeline_stages",
+        }
+        missing_pipeline_keys = required_pipeline_keys - pipeline_config.keys()
+        if missing_pipeline_keys:
+            raise ValueError(
+                "pipeline_config is missing "
+                + ", ".join(sorted(missing_pipeline_keys))
+            )
+        generation_env.update(
+            {
+                "YATA_MULTIPLIER_PIPELINE_STAGES": str(
+                    pipeline_config["multiplier_pipeline_stages"]
+                ),
+                "YATA_SREDC_PIPELINE_STAGES": str(
+                    pipeline_config["sredc_pipeline_stages"]
+                ),
+            }
+        )
+    else:
+        generation_env.pop("YATA_MULTIPLIER_PIPELINE_STAGES", None)
+        generation_env.pop("YATA_SREDC_PIPELINE_STAGES", None)
     try:
         proc = subprocess.run(
             cmd,
@@ -636,6 +701,7 @@ def write_chisel_reference_candidate(
             stderr=subprocess.STDOUT,
             check=False,
             timeout=timeout_seconds if timeout_seconds > 0 else None,
+            env=generation_env,
         )
     except subprocess.TimeoutExpired as exc:
         partial = exc.stdout or ""
@@ -759,6 +825,22 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="AutoNTT modmul filter: B, M, WLM, N, C, comma-separated, or AUTO.",
     )
     parser.add_argument(
+        "--pipeline-profiles",
+        default="AUTO",
+        help=(
+            "YATA pipeline profiles to explore: baseline, f300, deep, a "
+            "comma-separated list, or AUTO."
+        ),
+    )
+    parser.add_argument(
+        "--target-frequency-mhz",
+        type=float,
+        help=(
+            "Required hardware frequency. Defaults to the task design_space "
+            "target when present."
+        ),
+    )
+    parser.add_argument(
         "--strategy",
         choices=("hardware", "behavioral_reference"),
         default="hardware",
@@ -809,6 +891,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
             "llm_behavioral",
             "chisel_reference",
             "llm_chisel_reference",
+            "chisel_pipeline",
         ),
         default="llm",
         help=(
@@ -818,6 +901,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
             "llm_behavioral asks the LLM to select a supported bounded "
             "functional generator, then emits that RTL locally. "
             "chisel_reference regenerates the checked-in Chisel top in /tmp; "
+            "chisel_pipeline regenerates YATA using the selected pipeline profile; "
             "llm_chisel_reference has the endpoint select that bounded "
             "synthesizable generator before running it locally."
         ),
@@ -825,7 +909,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--sbt-bin",
         default=os.environ.get("SBT_BIN", "sbt"),
-        help="sbt executable used by --candidate-source chisel_reference.",
+        help=(
+            "sbt executable used by --candidate-source chisel_reference or "
+            "chisel_pipeline."
+        ),
     )
     parser.add_argument(
         "--chisel-timeout",
@@ -884,8 +971,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--vitis-clock-period",
-        default=os.environ.get("VITIS_CLOCK_PERIOD", "4.0"),
-        help="Clock period in ns for --with-vitis.",
+        default=os.environ.get("VITIS_CLOCK_PERIOD"),
+        help=(
+            "Clock period in ns for --with-vitis. Defaults to 1000 divided by "
+            "--target-frequency-mhz, or 4.0 when no frequency target is set."
+        ),
     )
     parser.add_argument(
         "--vitis-clock-port",
@@ -949,6 +1039,26 @@ def main(argv: list[str] | None = None) -> int:
         )
     repo_root = repo_root_from_here()
     task_file, task = resolve_task(repo_root, args.task)
+    task_target_frequency = task.get("design_space", {}).get(
+        "target_frequency_mhz"
+    )
+    target_frequency_mhz = (
+        args.target_frequency_mhz
+        if args.target_frequency_mhz is not None
+        else (
+            float(task_target_frequency)
+            if task_target_frequency is not None
+            else None
+        )
+    )
+    if target_frequency_mhz is not None and target_frequency_mhz <= 0:
+        raise ValueError("--target-frequency-mhz must be positive")
+    if args.vitis_clock_period is None:
+        args.vitis_clock_period = (
+            f"{1000.0 / target_frequency_mhz:.6f}"
+            if target_frequency_mhz is not None
+            else "4.0"
+        )
     sif: Path | None = None
     if args.sif.lower() != "none":
         if args.sif == "auto":
@@ -988,6 +1098,8 @@ def main(argv: list[str] | None = None) -> int:
         arch_types=args.arch_type,
         modmul_types=args.modmul_type,
         strategy=args.strategy,
+        pipeline_profiles=args.pipeline_profiles,
+        target_frequency_mhz=target_frequency_mhz,
     )
     if args.plan_only:
         print(json.dumps(search_points, indent=2, sort_keys=True))
@@ -1007,6 +1119,7 @@ def main(argv: list[str] | None = None) -> int:
     best_correct = False
     best_success = False
     valid_candidate = False
+    dse_attempts: list[dict[str, Any]] = []
     for attempt in range(args.attempts):
         point = search_points[(args.search_index + attempt) % len(search_points)]
         attempt_dir = run_root / f"attempt_{attempt:03d}_{point['name']}"
@@ -1128,6 +1241,51 @@ def main(argv: list[str] | None = None) -> int:
                 {
                     "source": "chisel_reference",
                     "generator": CHISEL_REFERENCE_GENERATOR,
+                    "search_point": point["name"],
+                },
+            )
+            verilog = candidate_path.read_text(encoding="utf-8", errors="replace")
+        elif args.candidate_source == "chisel_pipeline":
+            pipeline_config = point.get("pipeline_config")
+            if not isinstance(pipeline_config, dict):
+                raise ValueError(
+                    "chisel_pipeline requires a YATA search point with pipeline_config"
+                )
+            if point.get("architecture_code") != "D":
+                raise ValueError(
+                    "chisel_pipeline emits YATA's dataflow architecture; use --arch-type D"
+                )
+            if point.get("modmul_type") != "C":
+                raise ValueError(
+                    "chisel_pipeline implements YATA's custom reduction; use --modmul-type C"
+                )
+            try:
+                candidate_path = write_chisel_reference_candidate(
+                    repo_root=repo_root,
+                    task=task,
+                    attempt_dir=attempt_dir,
+                    candidate_file=candidate_file,
+                    sbt_bin=args.sbt_bin,
+                    apptainer_bin=args.apptainer_bin,
+                    sif=sif,
+                    timeout_seconds=args.chisel_timeout,
+                    pipeline_config=pipeline_config,
+                )
+            except (RuntimeError, FileNotFoundError, TimeoutError, ValueError) as exc:
+                message = str(exc)
+                (attempt_dir / "generation_error.txt").write_text(
+                    message + "\n", encoding="utf-8"
+                )
+                print(f"attempt {attempt}: Chisel pipeline generation failed: {message}")
+                feedback = f"Chisel pipeline generation failed:\n{message}"
+                continue
+            write_json(
+                attempt_dir / "candidate_source.json",
+                {
+                    "source": CHISEL_PIPELINE_GENERATOR,
+                    "generator": CHISEL_PIPELINE_GENERATOR,
+                    "pipeline_profile": point["pipeline_profile"],
+                    "pipeline_config": pipeline_config,
                     "search_point": point["name"],
                 },
             )
@@ -1380,15 +1538,39 @@ def main(argv: list[str] | None = None) -> int:
         )
         (attempt_dir / "evaluator.stdout").write_text(stdout, encoding="utf-8")
         correct = bool(result and result.get("correct"))
-        hardware_ok = bool(
-            result
-            and correct
-            and result.get("vitis_synthesis_passed")
-            and result.get("metrics", {}).get("vitis_lut") is not None
+        hardware_goal = evaluate_hardware_goal(
+            result,
+            target_frequency_mhz=target_frequency_mhz,
         )
+        write_json(attempt_dir / "hardware_goal.json", hardware_goal)
+        hardware_ok = bool(hardware_goal["passed"])
         attempt_success = hardware_ok if args.goal == "hardware" else correct
         best_correct = best_correct or correct
         best_success = best_success or attempt_success
+        dse_attempts.append(
+            {
+                "attempt": attempt,
+                "attempt_dir": os.path.relpath(attempt_dir, run_root),
+                "search_point": point,
+                "correct": correct,
+                "hardware_goal": hardware_goal,
+                "evaluator_status": status,
+                "results_file": os.path.relpath(results_file, run_root),
+                "metrics": result.get("metrics", {}) if result else {},
+            }
+        )
+        write_json(
+            run_root / "dse_summary.json",
+            {
+                "schema": "llm-ntt-pipeline-dse-v1",
+                "task_id": task_id,
+                "candidate_source": args.candidate_source,
+                "target_frequency_mhz": target_frequency_mhz,
+                "best_correct": best_correct,
+                "best_success": best_success,
+                "attempts": dse_attempts,
+            },
+        )
         print(
             f"attempt {attempt}: evaluator_status={status} "
             f"correct={str(correct).lower()} "

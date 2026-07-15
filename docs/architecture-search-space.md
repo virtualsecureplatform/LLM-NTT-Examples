@@ -128,6 +128,22 @@ The current tests assume no input backpressure for `YataRainttTop` and
 `INTTWrap`. `NTTWrap` exposes `io_ready`, but the repository currently treats it
 as an interface/lint task until a reference test is added.
 
+### Arithmetic Pipeline
+
+The YATA Chisel generator exposes `baseline`, `f300`, and `deep` profiles. The
+profiles tune multiplier delay and signed-reduction pipeline depth while all
+butterfly, buffer, twiddle-index, output, and valid delays are derived from the
+same configuration. This keeps the external 64-lane, eight-cycle stream
+contract fixed while allowing latency/fmax exploration. Use
+`--candidate-source chisel_pipeline --arch-type D --modmul-type C`; the fixed
+architecture and reduction flags prevent a generated profile from being
+mislabelled as an unsupported datapath.
+
+For a target at or above 300 MHz, `AUTO` explores `f300`, `deep`, then
+`baseline`. The `f300` point splits the original two-multiply SREDC critical
+path and increases measured INTT/NTT wait latency from 34/35 to 40/41 cycles;
+the input and output bursts remain eight cycles.
+
 Keep `hoge_streaming_ntt_1024_p64` in `tier0_interface` comparisons only. It is
 useful for checking module shape and packed-port compatibility, but it should
 not appear in arithmetic, latency, throughput, or resource Pareto rankings. Use

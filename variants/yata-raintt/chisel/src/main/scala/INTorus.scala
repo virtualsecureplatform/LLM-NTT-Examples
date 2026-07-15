@@ -28,8 +28,12 @@ class INTorusSREDC(implicit val conf:Config) extends Module{
         val Y = Output(SInt((conf.wordbits).W))
     })
     val a0 = io.A(conf.wordbits-1,0)
-    val a1 = RegNext(io.A(2*conf.wordbits-1,conf.wordbits).asSInt)
-    val m = (-((a0 * conf.K.S) << conf.shiftamount) + Cat(0.U(1.W),a0).asSInt)(conf.wordbits-1,0).asSInt
+    val a1 = ShiftRegister(
+        io.A(2*conf.wordbits-1,conf.wordbits).asSInt,
+        conf.SREDCdelay
+    )
+    val mCombinational = (-((a0 * conf.K.S) << conf.shiftamount) + Cat(0.U(1.W),a0).asSInt)(conf.wordbits-1,0).asSInt
+    val m = if (conf.SREDCdelay == 1) mCombinational else RegNext(mCombinational)
     val t1 = RegNext((((m * conf.K.S) << conf.shiftamount) + m)>>conf.wordbits)
     io.Y := a1-t1
 }

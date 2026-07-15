@@ -27,8 +27,16 @@ class YataRainttTop(implicit val conf: Config) extends Module {
 }
 
 object YataRainttTop extends App {
+  private def envInt(name: String, default: Int): Int =
+    sys.env.get(name).map(_.toInt).getOrElse(default)
+
+  private val conf = Config(
+    multiplierPipelineStages = envInt("YATA_MULTIPLIER_PIPELINE_STAGES", 2),
+    sredcPipelineStages = envInt("YATA_SREDC_PIPELINE_STAGES", 1)
+  )
+
   (new chisel3.stage.ChiselStage).emitVerilog(
-    new YataRainttTop()(Config()),
+    new YataRainttTop()(conf),
     Array(
       "--target-dir",
       ".",

@@ -207,6 +207,52 @@ and an Apptainer image is configured, generation runs `sbt` inside the image.
 Use this path for synthesizable reference baselines generated from source; keep
 it separate from novel LLM-written RTL results.
 
+For YATA, `--candidate-source chisel_pipeline` turns the Chisel arithmetic
+latencies into an AutoNTT-style design axis. This command generates the
+highest-priority profile for a 300 MHz target, checks it against TFHEpp, and
+requires nonnegative Vivado WNS at 3.333 ns:
+
+```bash
+../../scripts/autontt_llm_generate.py \
+  --task yata_raintt_512_p27 \
+  --candidate-source chisel_pipeline \
+  --strategy hardware \
+  --arch-type D \
+  --modmul-type C \
+  --pipeline-profiles AUTO \
+  --target-frequency-mhz 300 \
+  --goal hardware \
+  --no-yosys \
+  --attempts 3 \
+  --vitis-timeout 1800
+```
+
+`AUTO` orders the YATA profiles as `f300`, `deep`, then `baseline` for targets
+of at least 300 MHz. `f300` registers the midpoint of the custom signed
+reduction; `deep` also adds one multiplier delay stage. Each attempt records
+the selected values in `search_point.json`, `candidate_source.json`, and
+`chisel_generate.json`. The hardware goal writes `hardware_goal.json` and only
+passes when correctness, utilization reporting, synthesis, requested fmax, and
+WNS all pass. `dse_summary.json` collects the evaluated profiles and their full
+latency, resource, and timing metrics at the run root. Use an explicit list such as
+`--pipeline-profiles baseline,f300,deep` to control exploration order.
+
+The `f300` profile was checked with Vivado 2023.2 on the default U280 part:
+
+| Metric | Checked-in baseline | `f300` |
+| --- | ---: | ---: |
+| INTT/NTT wait cycles | 34 / 35 | 40 / 41 |
+| LUT | 168758 | 169580 |
+| FF | 180141 | 201388 |
+| DSP | 2296 | 2296 |
+| Achieved period | 4.643 ns | 2.651 ns |
+| Estimated fmax | 215.38 MHz | 377.17 MHz |
+| WNS at requested constraint | -0.643 ns at 4.0 ns | +0.682 ns at 3.333 ns |
+
+These are out-of-context post-synthesis estimates, not placed-and-routed board
+timing. The profile keeps the eight-cycle input/output bursts and trades six
+cycles of transform wait latency plus registers for timing margin.
+
 Endpoint-guided Chisel regeneration is also supported:
 
 ```bash
@@ -363,7 +409,9 @@ Runs are stored under `build/llm-runs/<task-id>/<timestamp>/`. Each attempt
 contains the prompt, raw LLM response, extracted Verilog, evaluator stdout, and
 `results.json` when evaluation ran. Hardware-goal attempts also include
 `hardware_screen.json`, which catches simulation-style full-transform RTL before
-spending time in Vivado.
+spending time in Vivado. Attempts also contain `hardware_goal.json`; when a
+target frequency is configured, successful synthesis with negative WNS is not
+accepted as a hardware-goal pass.
 
 `--endpoint lab` reads the private endpoint from `LLM_NTT_LAB_ENDPOINT`. The
 endpoint can also be supplied directly with `LLM_NTT_LLM_ENDPOINT`.

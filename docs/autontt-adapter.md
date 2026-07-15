@@ -355,6 +355,35 @@ available, it uses the configured Apptainer image. This path is useful for
 synthesizable reference baselines and for proving the hardware evaluator path,
 but it is still a reference-source run, not novel LLM-written RTL.
 
+YATA additionally supports source-level pipeline exploration:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task yata_raintt_512_p27 \
+  --candidate-source chisel_pipeline \
+  --arch-type D \
+  --modmul-type C \
+  --pipeline-profiles AUTO \
+  --target-frequency-mhz 300 \
+  --goal hardware \
+  --no-yosys \
+  --attempts 3 \
+  --vitis-timeout 1800
+```
+
+The generated search points carry exact multiplier and signed-reduction stage
+counts. At 300 MHz, `AUTO` tries the reduction-split `f300` profile first, then
+`deep`, then the original `baseline`. Correctness remains a hard gate, and the
+hardware goal also requires `vitis_fmax_mhz >= 300` and nonnegative
+`vitis_timing_wns_ns`. The run-level `dse_summary.json` retains every evaluated
+profile and its correctness, latency, utilization, and timing metrics.
+
+The verified U280 post-synthesis result for `f300` is 169580 LUT, 201388 FF,
+2296 DSP, 0 BRAM/URAM, 40/41 INTT/NTT wait cycles, `+0.682 ns` WNS at
+3.333 ns, and a 2.651 ns achieved period (`377.17 MHz` estimated fmax). The
+checked-in baseline is 34/35 cycles and `215.38 MHz`; both designs preserve
+eight-cycle input and output bursts.
+
 Use `--candidate-source llm_chisel_reference` for an endpoint-backed version of
 the same flow. The endpoint returns only a validated JSON selection of the
 bounded Chisel reference generator; the harness emits RTL locally after that
@@ -594,7 +623,9 @@ It also adds synthesis-specific prompt constraints and writes
 like full-polynomial procedural transform models, which can pass Verilator but
 expand into impractical flat arithmetic in Vivado. Final hardware success still
 requires `vitis_synthesis_passed = true` and populated `vitis_*` utilization
-metrics in `results.json`.
+metrics in `results.json`. When the task or command defines a target frequency,
+it also requires the reported fmax to meet that target with nonnegative WNS.
+The per-attempt decision and individual checks are in `hardware_goal.json`.
 
 Add `--no-yosys` when the vendor synthesis result is the immediate goal and
 Yosys flattening is slower than the Vitis smoke. This does not relax the

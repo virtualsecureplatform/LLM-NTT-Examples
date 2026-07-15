@@ -83,6 +83,21 @@ scripts/autontt_llm_generate.py \
   --modmul-type C
 ```
 
+Generate and timing-check the YATA 300 MHz pipeline profile:
+
+```bash
+scripts/autontt_llm_generate.py \
+  --task yata_raintt_512_p27 \
+  --candidate-source chisel_pipeline \
+  --arch-type D \
+  --modmul-type C \
+  --pipeline-profiles AUTO \
+  --target-frequency-mhz 300 \
+  --goal hardware \
+  --no-yosys \
+  --attempts 3
+```
+
 Run the small HLS comparison targets directly:
 
 ```bash

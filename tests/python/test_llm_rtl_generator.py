@@ -33,6 +33,7 @@ from examples.autontt.llm_rtl_generator.runner import (
     build_llm_extra_body,
     build_generator_selection_messages,
     copy_reference_candidate,
+    evaluate_hardware_goal,
     normalize_endpoint,
     parse_behavioral_generator_selection,
     parse_chisel_generator_selection,
@@ -67,6 +68,71 @@ class LlmRtlGeneratorTests(unittest.TestCase):
         points = generate_search_points(task, arch_types="I", modmul_types="AUTO")
         self.assertEqual(points[0]["modmul_type"], "C")
         self.assertIsNotNone(points[0]["autontt_command"])
+
+    def test_yata_search_points_prioritize_300mhz_pipeline(self):
+        task = {
+            "id": "yata_raintt_512_p27",
+            "parameters": {
+                "N": 512,
+                "word_bits": 27,
+                "lanes": 64,
+                "radix": 8,
+                "modulus_hex": "0x02710001",
+            },
+            "design_space": {"target_frequency_mhz": 300},
+        }
+
+        points = generate_search_points(
+            task,
+            arch_types="D",
+            modmul_types="C",
+            pipeline_profiles="AUTO",
+        )
+
+        self.assertEqual(
+            [point["pipeline_profile"] for point in points],
+            ["f300", "deep", "baseline"],
+        )
+        self.assertEqual(points[0]["pipeline_config"]["sredc_pipeline_stages"], 2)
+        self.assertAlmostEqual(points[0]["target_clock_period_ns"], 10 / 3)
+
+    def test_yata_search_points_accept_explicit_pipeline_order(self):
+        task = {
+            "id": "yata_raintt_512_p27",
+            "parameters": {"N": 512, "modulus_hex": "0x02710001"},
+        }
+
+        points = generate_search_points(
+            task,
+            arch_types="D",
+            modmul_types="C",
+            pipeline_profiles="baseline,f300",
+            target_frequency_mhz=300,
+        )
+
+        self.assertEqual(
+            [point["pipeline_profile"] for point in points],
+            ["baseline", "f300"],
+        )
+
+    def test_hardware_goal_requires_target_frequency_and_nonnegative_wns(self):
+        result = {
+            "correct": True,
+            "vitis_synthesis_passed": True,
+            "metrics": {
+                "vitis_lut": 100,
+                "vitis_fmax_mhz": 305.0,
+                "vitis_timing_wns_ns": 0.05,
+            },
+        }
+        self.assertTrue(evaluate_hardware_goal(result, 300.0)["passed"])
+
+        result["metrics"]["vitis_timing_wns_ns"] = -0.01
+        self.assertFalse(evaluate_hardware_goal(result, 300.0)["passed"])
+
+        result["metrics"]["vitis_timing_wns_ns"] = 0.05
+        result["metrics"]["vitis_fmax_mhz"] = 299.9
+        self.assertFalse(evaluate_hardware_goal(result, 300.0)["passed"])
 
     def test_extract_module_declaration(self):
         path = Path(__file__).with_suffix(".tmp.v")
@@ -607,6 +673,8 @@ class LlmRtlGeneratorTests(unittest.TestCase):
                 "#!/usr/bin/env bash\n"
                 "set -euo pipefail\n"
                 "test \"$1\" = run\n"
+                "test -z \"${YATA_MULTIPLIER_PIPELINE_STAGES:-}\"\n"
+                "test -z \"${YATA_SREDC_PIPELINE_STAGES:-}\"\n"
                 "cat > Top.v <<'EOF'\n"
                 "module Top(); endmodule\n"
                 "EOF\n",
@@ -621,13 +689,21 @@ class LlmRtlGeneratorTests(unittest.TestCase):
                 "top_module": "Top",
             }
 
-            candidate = write_chisel_reference_candidate(
-                repo_root=repo_root,
-                task=task,
-                attempt_dir=attempt_dir,
-                candidate_file="Top.v",
-                sbt_bin=str(fake_sbt),
-            )
+            with patch.dict(
+                "os.environ",
+                {
+                    "YATA_MULTIPLIER_PIPELINE_STAGES": "99",
+                    "YATA_SREDC_PIPELINE_STAGES": "99",
+                },
+                clear=False,
+            ):
+                candidate = write_chisel_reference_candidate(
+                    repo_root=repo_root,
+                    task=task,
+                    attempt_dir=attempt_dir,
+                    candidate_file="Top.v",
+                    sbt_bin=str(fake_sbt),
+                )
 
             self.assertEqual(candidate, attempt_dir / "Top.v")
             self.assertEqual(
@@ -638,6 +714,52 @@ class LlmRtlGeneratorTests(unittest.TestCase):
                 "returncode",
                 (attempt_dir / "chisel_generate.json").read_text(encoding="utf-8"),
             )
+
+    def test_write_chisel_pipeline_candidate_passes_latency_environment(self):
+        with TemporaryDirectory() as tmp:
+            repo_root = Path(tmp)
+            chisel_root = repo_root / "variants" / "yata-raintt" / "chisel"
+            (chisel_root / "project").mkdir(parents=True)
+            (chisel_root / "src" / "main" / "scala").mkdir(parents=True)
+            (chisel_root / "build.sbt").write_text(
+                "name := \"fake\"\n", encoding="utf-8"
+            )
+            fake_sbt = repo_root / "fake-sbt"
+            fake_sbt.write_text(
+                "#!/usr/bin/env bash\n"
+                "set -euo pipefail\n"
+                "test \"$YATA_MULTIPLIER_PIPELINE_STAGES\" = 2\n"
+                "test \"$YATA_SREDC_PIPELINE_STAGES\" = 2\n"
+                "printf 'module YataRainttTop(); endmodule\\n' > YataRainttTop.v\n",
+                encoding="utf-8",
+            )
+            fake_sbt.chmod(0o755)
+            attempt_dir = repo_root / "build" / "attempt"
+            attempt_dir.mkdir(parents=True)
+            task = {
+                "id": "yata_raintt_512_p27",
+                "variant": "yata-raintt",
+                "top_module": "YataRainttTop",
+            }
+
+            candidate = write_chisel_reference_candidate(
+                repo_root=repo_root,
+                task=task,
+                attempt_dir=attempt_dir,
+                candidate_file="YataRainttTop.v",
+                sbt_bin=str(fake_sbt),
+                pipeline_config={
+                    "multiplier_pipeline_stages": 2,
+                    "sredc_pipeline_stages": 2,
+                },
+            )
+
+            self.assertTrue(candidate.exists())
+            metadata = (attempt_dir / "chisel_generate.json").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn('"source": "chisel_pipeline"', metadata)
+            self.assertIn('"sredc_pipeline_stages": 2', metadata)
 
     def test_write_chisel_reference_candidate_can_use_apptainer(self):
         with TemporaryDirectory() as tmp:

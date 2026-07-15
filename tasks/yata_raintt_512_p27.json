@@ -15,6 +15,16 @@
     "test_target": "yata_raintt_reference_test",
     "watchdog_cycles": 2000
   },
+  "design_space": {
+    "recommended_target_frequency_mhz": 300.0,
+    "pipeline_profiles": [
+      "baseline",
+      "f300",
+      "deep"
+    ],
+    "fixed_architecture": "dataflow",
+    "fixed_modmul": "custom_signed_reduction"
+  },
   "parameters": {
     "N": 512,
     "Nbit": 9,
