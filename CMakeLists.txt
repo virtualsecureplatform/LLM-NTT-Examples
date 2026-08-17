@@ -65,12 +65,13 @@ set(KYBER_PE1_RTL_SOURCES
     ${KYBER_PE1_RTL_DIR}/HA.v)
 
 function(add_ntt_verilator_test target source top_verilog)
+  get_filename_component(top_module ${top_verilog} NAME_WE)
   add_executable(${target} ${source})
   target_include_directories(${target} PRIVATE
       ${TFHEPP_INCLUDE_DIR}
       ${TFHEPP_THIRDPARTY_INCLUDE_DIRS})
   target_compile_options(${target} PRIVATE -Wall -Wextra -Wno-sign-compare)
-  verilate(${target} VERILATOR_ARGS -Wno-fatal SOURCES ${top_verilog} ${ARGN})
+  verilate(${target} TOP_MODULE ${top_module} VERILATOR_ARGS -Wno-fatal SOURCES ${top_verilog} ${ARGN})
   add_test(NAME ${target} COMMAND ${target})
 endfunction()
 
