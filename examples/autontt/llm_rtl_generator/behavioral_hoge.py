@@ -82,9 +82,9 @@ endmodule
 def generate_hoge_streaming_ntt_interface_behavioral() -> str:
     """Return staged synthesizable RTL for the HOGE streaming NTT wrapper.
 
-    The repository task for this top is still lint-only because no standalone
-    forward-NTT oracle exists here. The emitted RTL is nevertheless the
-    checked-in staged Chisel pipeline rather than a pass-through shell.
+    The repository task has an executable standalone forward-residue oracle.
+    The emitted RTL is the checked-in staged Chisel pipeline rather than a
+    pass-through shell.
     """
 
     return _load_hoge_structural_seed("NTTWrap", "streaming NTT interface")

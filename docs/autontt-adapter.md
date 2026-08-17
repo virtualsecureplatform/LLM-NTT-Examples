@@ -193,10 +193,9 @@ Useful comparisons:
 - Verilator latency metrics vs optional `--with-yosys` structural cell counts
   before running a vendor FPGA flow.
 
-Use correctness-tested HOGE tasks for these comparisons. The extracted
-`hoge_streaming_ntt_1024_p64` task is lint-only and should remain an interface
-gate; use `hoge_externalproduct_ntt_1024_p64` for HOGE forward NTT arithmetic
-and latency comparisons.
+Both HOGE streaming directions are correctness-tested. Use
+`hoge_streaming_ntt_1024_p64` for the standalone exact-residue transform and
+`hoge_externalproduct_ntt_1024_p64` for the larger composed boundary.
 
 ## YATA Gap
 
@@ -416,7 +415,7 @@ Current support:
   emits the staged structural `INTTWrap` pipeline RTL.
 - `hoge_nttid_1024_identity`: correctness-scored identity smoke path; emits a
   compact synthesizable `NTTidPackedTop` identity RTL.
-- `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate;
+- `hoge_streaming_ntt_1024_p64`: standalone correctness-scored forward NTT;
   emits the staged structural `NTTWrap` pipeline RTL.
 - `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
   ExternalProduct forward-NTT arithmetic; emits the staged structural
@@ -554,7 +553,7 @@ Measured HOGE U280 metrics:
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `hoge_streaming_intt_1024_p64` | true | true | total 129 cycles, wait 65 | 140242 | 239475 | 512 | 0 | 0 | 1.518 | 402.901 |
 | `hoge_externalproduct_ntt_1024_p64` | true | true | total 480 cycles, wait 320 | 325773 | 522113 | 2048 | 71.5 | 0 | 1.781 | 450.653 |
-| `hoge_streaming_ntt_1024_p64` | lint-only | true | interface gate only | 90300 | 194109 | 512 | 0 | 0 | 1.519 | 403.063 |
+| `hoge_streaming_ntt_1024_p64` | correctness | true | exact forward residue | 90300 | 194109 | 512 | 0 | 0 | 1.519 | 403.063 |
 | `hoge_nttid_1024_identity` | true | true | identity smoke, wait 33 | 0 | 0 | 0 | 0 | 0 | no timed path | unavailable |
 
 The generated bodies for HOGE INTT, ExternalProduct, and NTT interface match

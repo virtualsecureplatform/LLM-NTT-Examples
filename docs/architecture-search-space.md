@@ -144,11 +144,10 @@ For a target at or above 300 MHz, `AUTO` explores `f300`, `deep`, then
 path and increases measured INTT/NTT wait latency from 34/35 to 40/41 cycles;
 the input and output bursts remain eight cycles.
 
-Keep `hoge_streaming_ntt_1024_p64` in `tier0_interface` comparisons only. It is
-useful for checking module shape and packed-port compatibility, but it should
-not appear in arithmetic, latency, throughput, or resource Pareto rankings. Use
-`hoge_externalproduct_ntt_1024_p64` for the HOGE forward NTT arithmetic
-boundary.
+`hoge_streaming_ntt_1024_p64` is correctness-scored against the exact cuHEpp
+forward residue transform and may participate in arithmetic and latency
+rankings. Use `hoge_externalproduct_ntt_1024_p64` when the larger composed
+ExternalProduct boundary is required.
 
 ## Task Difficulty Levels
 

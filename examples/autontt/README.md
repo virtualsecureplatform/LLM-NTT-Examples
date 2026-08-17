@@ -347,7 +347,7 @@ Supported behavioral tasks:
   emits the staged structural `INTTWrap` pipeline RTL.
 - `hoge_nttid_1024_identity`: correctness-scored identity smoke path; emits a
   compact synthesizable `NTTidPackedTop` identity RTL.
-- `hoge_streaming_ntt_1024_p64`: standalone NTT wrapper interface/lint gate;
+- `hoge_streaming_ntt_1024_p64`: correctness-scored standalone forward NTT;
   emits the staged structural `NTTWrap` pipeline RTL.
 - `hoge_externalproduct_ntt_1024_p64`: correctness-scored HOGE
   ExternalProduct forward-NTT arithmetic; emits the staged structural
@@ -567,7 +567,7 @@ Measured U280 metrics for these behavioral candidates:
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `hoge_streaming_intt_1024_p64` | true | true | total 129 cycles, wait 65 | 140242 | 239475 | 512 | 0 | 0 | 1.518 | 402.901 |
 | `hoge_externalproduct_ntt_1024_p64` | true | true | total 480 cycles, wait 320 | 325773 | 522113 | 2048 | 71.5 | 0 | 1.781 | 450.653 |
-| `hoge_streaming_ntt_1024_p64` | lint-only | true | interface gate only | 90300 | 194109 | 512 | 0 | 0 | 1.519 | 403.063 |
+| `hoge_streaming_ntt_1024_p64` | correctness | true | exact forward residue | 90300 | 194109 | 512 | 0 | 0 | 1.519 | 403.063 |
 | `hoge_nttid_1024_identity` | true | true | identity smoke, wait 33 | 0 | 0 | 0 | 0 | 0 | no timed path | unavailable |
 
 The HOGE generated RTL bodies are identical to the checked-in Chisel reference

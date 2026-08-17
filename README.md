@@ -134,6 +134,6 @@ scripts/run_yata_hls_synth_compare.py --sif auto
 - `kyber_pe1_reference_test`: CRYSTALS-Kyber PE1 FNTT/INTT against the
   original `kyber-polmul-hw` PE1 vectors.
 
-The HOGE forward `NTTWrap` manifest, `hoge_streaming_ntt_1024_p64`, is a
-lint-only tier0 interface task. Use `hoge_externalproduct_ntt_1024_p64` for
-HOGE forward NTT arithmetic and latency comparisons.
+The HOGE forward `NTTWrap` manifest, `hoge_streaming_ntt_1024_p64`, has a
+standalone exact-residue cuHEpp oracle. `hoge_externalproduct_ntt_1024_p64`
+remains the larger final-output composition boundary.

@@ -47,11 +47,10 @@ scripts/evaluate_with_apptainer_and_vitis.sh --task <task> --with-yosys --sif ll
 | `hoge_streaming_intt_1024_p64` | `verilator_test` | exact TFHEpp cuHEpp INTT correctness | yes |
 | `hoge_externalproduct_ntt_1024_p64` | `verilator_test` | exact TFHEpp ExternalProduct forward NTT boundary | yes |
 | `hoge_nttid_1024_identity` | `verilator_test` | packed INTT/NTT identity smoke | smoke only |
-| `hoge_streaming_ntt_1024_p64` | `lint_only` | tier0 interface/elaboration only | no arithmetic or latency ranking |
+| `hoge_streaming_ntt_1024_p64` | `verilator_test` | exact cuHEpp forward NTT residue correctness | yes |
 
-`correct = true` for a `lint_only` task only means that Verilator accepted the
-required module and ports. It does not establish transform arithmetic,
-coefficient order, valid burst length, or latency.
+The HOGE forward and inverse streaming wrappers both have executable arithmetic,
+coefficient-order, valid-burst, and latency contracts.
 
 For HOGE, `scripts/evaluate_hoge_bundle.py` can generate one candidate
 directory and run these HOGE task manifests against that same directory. Use the

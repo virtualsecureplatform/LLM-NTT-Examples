@@ -390,30 +390,22 @@ Lane `l` is packed and unpacked as:
 lane_l = uint64(port[2 * l]) | (uint64(port[2 * l + 1]) << 32)
 ```
 
-### Interface/Lint Contract
+### Executable Forward-NTT Contract
 
-`NTTWrap` is an extracted internal forward-transform pipeline wrapper. The
-current repository intentionally treats it as a `tier0_interface` task.
+`NTTWrap` is checked against `cuHEpp::NTT<10, 5>` followed by the forward twist
+and `InvPow2(10)` field multiplication.
 
-The executable contract is limited to:
+The executable contract covers:
 
 - module name `NTTWrap`
 - the ports and widths listed above
-- successful Verilog elaboration with Verilator
+- exact forward-transform arithmetic
+- 32 accepted input cycles and 32 consecutive output-valid cycles
+- input and output index `cycle * 32 + lane`
 - the packed-lane convention for `io_in` and `io_out`
 
-The current task does not check:
-
-- forward NTT arithmetic
-- coefficient ordering
-- latency or throughput
-- `io_validout` burst length
-- whether the standalone wrapper is equivalent to a TFHEpp API call
-
-This distinction matters for architecture search. A candidate that passes
-`hoge_streaming_ntt_1024_p64` has passed an interface/lint gate only; it should
-not be ranked against correctness-tested NTT or INTT tasks for arithmetic
-quality, latency, or resource efficiency.
+Candidates may therefore be ranked for correctness, latency, throughput, and
+resource estimates at this boundary.
 
 ### ExternalProduct-Style Forward NTT Oracle
 
