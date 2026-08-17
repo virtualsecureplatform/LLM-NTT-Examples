@@ -26,6 +26,9 @@ set(YATA_RAINTT_VERILOG
 set(HOGE_STREAMING_INTT_VERILOG
     ${PROJECT_SOURCE_DIR}/variants/hoge/chisel/INTTWrap.v
     CACHE FILEPATH "Verilog source for the INTTWrap test")
+set(HOGE_STREAMING_NTT_VERILOG
+    ${PROJECT_SOURCE_DIR}/variants/hoge/chisel/NTTWrap.v
+    CACHE FILEPATH "Verilog source for the NTTWrap test")
 set(HOGE_NTTID_VERILOG
     ${PROJECT_SOURCE_DIR}/variants/hoge/chisel/NTTidPackedTop.v
     CACHE FILEPATH "Verilog source for the NTTidPackedTop test")
@@ -86,6 +89,12 @@ add_ntt_verilator_test(
   hoge_streaming_reference_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/hoge_streaming_reference_test.cpp
   ${HOGE_STREAMING_INTT_VERILOG}
+)
+
+add_ntt_verilator_test(
+  hoge_streaming_ntt_reference_test
+  ${PROJECT_SOURCE_DIR}/tests/cpp/hoge_streaming_ntt_reference_test.cpp
+  ${HOGE_STREAMING_NTT_VERILOG}
 )
 
 add_ntt_verilator_test(

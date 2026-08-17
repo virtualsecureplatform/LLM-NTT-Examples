@@ -1,9 +1,9 @@
 {
   "id": "hoge_streaming_ntt_1024_p64",
   "name": "HOGE streaming 1024-point NTT wrapper lint",
-  "status": "tier0_interface_lint",
-  "description": "Internal forward NTT pipeline wrapper emitted by the HOGE streaming extraction. Passing this task means the required Verilog interface elaborates; it does not prove arithmetic correctness, latency, or output ordering.",
-  "tier": "tier0_interface",
+  "status": "correctness_scored",
+  "description": "Streaming 32-lane HOGE forward NTT over the 64-bit TFHEpp/cuHEpp modulus.",
+  "tier": "tier1_correctness",
   "variant": "hoge",
   "top_module": "NTTWrap",
   "verilog": {
@@ -11,9 +11,10 @@
     "default_path": "variants/hoge/chisel/NTTWrap.v"
   },
   "evaluation": {
-    "mode": "lint_only",
-    "lint_tool": "verilator",
-    "top_module": "NTTWrap"
+    "mode": "verilator_test",
+    "cmake_cache_var": "HOGE_STREAMING_NTT_VERILOG",
+    "test_target": "hoge_streaming_ntt_reference_test",
+    "watchdog_cycles": 4000
   },
   "parameters": {
     "N": 1024,
@@ -37,16 +38,17 @@
     "packed_output": "io_out[2047:0]"
   },
   "reference": {
-    "standalone_oracle": "none in this repository",
-    "intended_operation": "internal cuHEpp forward twist NTT path over P",
-    "original_correctness_boundary": "HOGE ExternalProduct final 32-bit torus output compared against TFHEpp::TwistNTT<P>",
-    "forward_ntt_oracle_task": "tasks/hoge_externalproduct_ntt_1024_p64.json"
+    "library": "TFHEpp",
+    "include": "cuhe++.hpp",
+    "operation": "cuHEpp::NTT<10, 5> followed by forward twist and InvPow2(10) field multiplication"
   },
   "observable_contract": {
-    "lint": "Verilog must elaborate with module NTTWrap and the listed ports.",
+    "transaction": "32 accepted input cycles, valid output within 4000 cycles, then exactly 32 valid output cycles.",
+    "input_order": "input lane l at cycle c carries coefficient c * 32 + l",
+    "output_order": "output lane l at cycle c carries coefficient c * 32 + l",
     "packing": "lane l is port[2*l] | (port[2*l+1] << 32)",
     "ready": "io_ready should be high when an input cycle is accepted",
-    "not_checked": "forward NTT arithmetic, valid burst length, latency, throughput, or coefficient ordering"
+    "ready": "io_ready must remain high for the 32 input cycles"
   },
   "search_axes": [
     "radix schedule",
@@ -56,10 +58,11 @@
     "pseudo-Mersenne reduction for 0xffffffff00000001"
   ],
   "score": {
-    "correctness": "tier0 interface elaboration only; not an arithmetic correctness result",
-    "primary": "successful lint/elaboration with the required top-level ports",
+    "correctness": "required",
+    "primary": "minimize cycles from final input to first valid output",
     "secondary": [
-      "use hoge_externalproduct_ntt_1024_p64 for executable forward NTT arithmetic and performance comparisons"
+      "minimize resource estimates",
+      "maximize sustained transforms per cycle"
     ]
   }
 }
