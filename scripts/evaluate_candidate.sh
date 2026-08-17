@@ -17,6 +17,10 @@ Options:
   --results FILE      Results JSON path. Defaults to <build-dir>/results.json.
   --with-yosys        Run an optional flattened Yosys resource estimate and
                       merge structural counts into the result metrics.
+  --yosys-candidate-only
+                      Read only the candidate top for Yosys. Use when the
+                      candidate is self-contained and manifest extras are
+                      legacy implementation dependencies.
   --with-vitis        Run optional host Vivado/Vitis RTL synthesis and merge
                       FPGA resource/timing metrics into the result metrics.
   --vitis-part PART   FPGA part for --with-vitis. Defaults to VITIS_PART or
@@ -48,6 +52,7 @@ build_dir=""
 results_file=""
 clean_build=1
 with_yosys=0
+yosys_candidate_only=0
 with_vitis=0
 vitis_part="${VITIS_PART:-xcu280-fsvh2892-2L-e}"
 vitis_clock_period="${VITIS_CLOCK_PERIOD:-4.0}"
@@ -84,6 +89,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --with-yosys)
       with_yosys=1
+      shift
+      ;;
+    --yosys-candidate-only)
+      yosys_candidate_only=1
       shift
       ;;
     --with-vitis)
@@ -333,9 +342,11 @@ if [[ "${with_yosys}" -eq 1 ]]; then
   yosys_script="${build_dir}/yosys.ys"
   {
     printf 'read_verilog -sv "%s"\n' "${verilog_file}"
-    for extra_source in "${extra_source_files[@]}"; do
-      printf 'read_verilog -sv "%s"\n' "${extra_source}"
-    done
+    if [[ "${yosys_candidate_only}" -eq 0 ]]; then
+      for extra_source in "${extra_source_files[@]}"; do
+        printf 'read_verilog -sv "%s"\n' "${extra_source}"
+      done
+    fi
     printf 'hierarchy -top %s\n' "${top_module}"
     printf 'proc\nopt\nmemory\nopt\nflatten\nopt\nstat\n'
   } >"${yosys_script}"
