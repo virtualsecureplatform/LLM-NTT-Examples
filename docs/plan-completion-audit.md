@@ -445,3 +445,12 @@ records all replaced networks. The full 1024-point forward oracle passes all
 three cases at the same 104 transaction cycles. Two focused regressions and
 13 architecture-search tests pass. Hardware measurement is queued in the
 isolated checkout; this branch remains separate while policy sources are frozen.
+
+## HOGE constant-factor ablation
+
+NGen experimental revision `d277ab4` replaces radix power-of-two multipliers
+with modular shifts. All 152 Scala tests and the full forward oracle pass;
+the additional overlapping-frame oracle verifies 240 frames and a 32-cycle
+saturated interval. Inverse correctness and matched synthesis are pending.
+See [HOGE constant shifts](hoge-constant-shifts.md). This targets the measured
+full-throughput cost without upgrading functional results into hardware wins.
