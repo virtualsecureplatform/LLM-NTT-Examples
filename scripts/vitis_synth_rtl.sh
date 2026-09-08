@@ -21,6 +21,11 @@ Options:
                          or clock.
   --clock-period NS      Clock period in ns. Defaults to VITIS_CLOCK_PERIOD or
                          4.0, matching AutoNTT examples.
+  --clock-source SITE    Optional OOC clock source site (HD.CLK_SRC).
+  --input-delay-min NS   Input arrival minimum relative to clock; default 0.
+  --input-delay-max NS   Input arrival maximum relative to clock; default 0.
+  --output-delay-min NS  External output hold requirement; default 0.
+  --output-delay-max NS  External output setup requirement; default 0.
   --jobs N               Vivado worker thread hint. Defaults to VITIS_JOBS or 8.
   --timeout S            Optional Vivado timeout in seconds. Defaults to
                          VITIS_TIMEOUT or 0, meaning no timeout.
@@ -34,6 +39,11 @@ Options:
 EOF
 }
 
+clock_source=""
+input_delay_min=0
+input_delay_max=0
+output_delay_min=0
+output_delay_max=0
 stage="synthesis"
 top_module=""
 verilog_files=()
@@ -85,6 +95,11 @@ while [[ $# -gt 0 ]]; do
       clock_period="${2:-}"
       shift 2
       ;;
+    --clock-source) clock_source="${2:-}"; shift 2 ;;
+    --input-delay-min) input_delay_min="${2:-}"; shift 2 ;;
+    --input-delay-max) input_delay_max="${2:-}"; shift 2 ;;
+    --output-delay-min) output_delay_min="${2:-}"; shift 2 ;;
+    --output-delay-max) output_delay_max="${2:-}"; shift 2 ;;
     --jobs)
       jobs="${2:-}"
       shift 2
@@ -215,6 +230,7 @@ fi
   printf 'set timing_rpt [lindex $argv 9]\n'
   printf 'set timing_props [lindex $argv 10]\n'
   printf 'set checkpoint_file [lindex $argv 11]\n'
+  printf 'lassign [lrange $argv 12 16] clock_source input_delay_min input_delay_max output_delay_min output_delay_max\n'
   printf '\n'
   printf 'file mkdir $out_dir\n'
   printf 'set_param general.maxThreads $jobs\n'
@@ -232,11 +248,14 @@ fi
   printf 'close $xdc_fp\n'
   printf 'read_xdc $xdc_file\n'
   printf 'synth_design -top $top_module -part $part_name -mode out_of_context -flatten_hierarchy rebuilt\n'
-  if [[ "$stage" == route ]]; then
+  printf 'if {$clock_source ne ""} {if {[llength [get_sites -quiet $clock_source]] != 1} {error "Invalid clock source site"}; set_property HD.CLK_SRC $clock_source [get_ports $clock_port]}\n'
     printf 'set data_inputs [get_ports -filter {DIRECTION == IN}]\n'
     printf 'set data_inputs [lsearch -all -inline -not -exact $data_inputs $clock_port]\n'
-    printf 'set_input_delay 0 -clock [get_clocks $clock_port] $data_inputs\n'
-    printf 'set_output_delay 0 -clock [get_clocks $clock_port] [all_outputs]\n'
+    printf 'set_input_delay -min $input_delay_min -clock [get_clocks $clock_port] $data_inputs\n'
+    printf 'set_input_delay -max $input_delay_max -clock [get_clocks $clock_port] $data_inputs\n'
+    printf 'set_output_delay -min $output_delay_min -clock [get_clocks $clock_port] [all_outputs]\n'
+    printf 'set_output_delay -max $output_delay_max -clock [get_clocks $clock_port] [all_outputs]\n'
+  if [[ "$stage" == route ]]; then
     printf 'opt_design\nplace_design\nphys_opt_design\nroute_design\n'
     printf 'report_route_status -file [file join $out_dir route_status.rpt]\n'
   fi
@@ -283,6 +302,7 @@ vivado_cmd=(
   "${source_list}" "${top_module}" "${part}" "${clock_port}" "${clock_period}"
   "${jobs}" "${build_dir}" "${xdc_file}" "${utilization_rpt}" "${timing_rpt}"
   "${timing_props}" "${checkpoint_file}"
+  "$clock_source" "$input_delay_min" "$input_delay_max" "$output_delay_min" "$output_delay_max"
 )
 
 set +e

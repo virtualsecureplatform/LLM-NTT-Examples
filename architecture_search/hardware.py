@@ -24,6 +24,15 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
              '--clock-period',str(period),'--clock-port',target.get('clock_port','clock'),
              '--build-dir',str(directory),'--metrics-json',str(output),'--vivado-bin',vivado,
              '--jobs','8','--timeout',str(max(1,int(timeout)))]
+    if target.get('clock_source'):command+=['--clock-source',target['clock_source']]
+    for prefix in ('input','output'):
+        delays=target.get('io_delays_ns',{})
+        low,high=delays.get(prefix+'_min',0),delays.get(prefix+'_max',0)
+        if not metric_number(low) or not metric_number(high) or low>high:raise ValueError('invalid I/O delay range')
+    for name in ('input_min','input_max','output_min','output_max'):
+        value=target.get('io_delays_ns',{}).get(name,0)
+        if not metric_number(value):raise ValueError('I/O delays must be finite numbers')
+        command+=['--'+name.replace('_','-delay-'),str(value)]
     for source in extra_sources or []:
         command+=['--verilog-file',str(source)]
     process=run(command,root,directory.parent/f'{stage}.log',timeout)

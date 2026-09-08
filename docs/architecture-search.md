@@ -123,8 +123,13 @@ functions, and a measured LLM-versus-random search advantage remain future work.
 
 Add `"stages": ["simulation", "synthesis", "route"]` to enable implementation.
 The default target is U280 `xcu280-fsvh2892-2L-e`, Vivado 2023.2, 4 ns. Routing
-uses out-of-context implementation and zero input/output delays at the registered
-generic boundary. This is an explicit core timing convention, not a board timing
+uses out-of-context implementation at the registered generic boundary. The legacy
+default is zero input/output delay. Targets can explicitly specify `clock_source`
+(an existing BUFG site for `HD.CLK_SRC`) and `io_delays_ns` with `input_min`,
+`input_max`, `output_min`, and `output_max`. These fields belong to the comparison
+contract and must match across candidates. `campaigns/u280-registered-smoke.json`
+exercises a declared synchronous interface (input arrival 0.2–1.0 ns, output
+requirement 0–1.0 ns) with `BUFGCE_X0Y0`; it is a diagnostic 6 ns case. This is an explicit core timing convention, not a board timing
 model. Both setup and hold must pass; a routed checkpoint alone is insufficient.
 Whole-device resource totals are retained when reports also contain per-SLR rows.
 Incomplete routing, failed tools, missing measurements, and failed correctness
@@ -137,10 +142,39 @@ python3 scripts/prepare_openntt_baseline.py --campaign campaigns/fhe16k54.json \
 ```
 
 The OpenNTT adapter copies generator inputs into an isolated tree and supplies
-exact q/root/inverse-root values. It records generated artifacts as **generation
-only**, ineligible for comparisons. OpenNTT's scalar host RAM interface must still
-be normalized and independently simulated. Its `io_band` describes internal PE
-bandwidth, not the generic benchmark's external stream.
+exact q/root/inverse-root values. It records minimal portability edits: naming
+inactive custom-module instances, typing the ROM filename as a string, and sizing
+the fixed modulus literal. Before/after hashes identify every edit; arithmetic
+and the selected FPGA datapath are unchanged.
+
+```bash
+python3 scripts/check_openntt_baseline.py --baseline-dir build/openntt-reference
+python3 scripts/check_openntt_baseline.py --baseline-dir build/openntt-reference --stream
+```
+
+The first command checks the physical host-memory interface against the independent
+oracle, including explicit bit-reversal and bank ordering. The second synthesizable
+adapter exposes the same registered ready/valid stream as generic NGen candidates.
+It includes two frame buffers, scalar host load/readout at one coefficient per
+cycle, ordering conversion, and elastic boundary registers in all measurements.
+Backpressure, reset during capture/computation, repeated frames, and output stability
+use the common streaming checker. Artifact and verification hashes guard against
+using changed sources or vectors as cached evidence.
+
+```bash
+python3 scripts/search_architectures.py --campaign campaigns/openntt-overlap256.json \
+  --output-dir build/ngen-overlap --mode run
+python3 scripts/compare_openntt_ngen.py --campaign campaigns/openntt-overlap256.json \
+  --ngen-report build/ngen-overlap/report.json \
+  --openntt-dirs build/openntt-256-32 build/openntt-memopt-256-32 \
+  --output-dir build/comparison
+```
+
+Prepare the referenced baseline directories first with the same campaign and
+`--memory-opt 0`/`1`, then run `--stream` verification. The comparison command
+requires equal workloads, targets, and normalized boundaries. Generation-only
+results cannot enter the frontier. OpenNTT's `io_band` remains internal PE
+bandwidth, not the external stream width. See [current comparison evidence](openntt-comparison.md).
 
 The local Proteus tree informed the architecture choices, but it is not yet an
 executable search adapter. Its hard-coded field/operation variants must be mapped
@@ -154,7 +188,7 @@ parts of the larger roadmap.
 - SGen: three focused Scala tests passed; both generators passed all five square
   stream sizes. The broad SGen suite was stopped after expanding into unrelated
   FFT generation; it is not reported as passing.
-- Search/oracle/reporting: 13 Python tests passed.
+- Search/oracle/reporting: 16 Python tests passed.
 - All eight stage-group/PE smoke candidates passed; 12 inverse candidates with
   64-bit primes passed, including registered boundaries and backpressure.
 - A 16K/54-bit forward candidate passed the independent RTL oracle.

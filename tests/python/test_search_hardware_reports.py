@@ -36,9 +36,11 @@ Path(a[6],'route_status.rpt').write_text('# of routable nets.... : 10 :\\n# of f
     def test_vivado_queue_respects_timeout(self):
         import fcntl
         from architecture_search.hardware import evaluate
-        lock_path=Path(tempfile.gettempdir())/f'ntt-search-vivado-{os.getuid()}.lock'
-        with lock_path.open('a') as lock, tempfile.TemporaryDirectory() as tmp:
-            fcntl.flock(lock,fcntl.LOCK_EX)
-            result=evaluate(Path(tmp)/'unused.sv','unused',{}, {},Path(tmp),'route',0.03)
-            self.assertFalse(result['passed'])
-            self.assertEqual(result['error'],'Vivado queue timeout')
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as tmp:
+            lock_path=Path(tmp)/f'ntt-search-vivado-{os.getuid()}.lock'
+            with lock_path.open('a') as lock, patch('architecture_search.hardware.tempfile.gettempdir',return_value=tmp):
+                fcntl.flock(lock,fcntl.LOCK_EX)
+                result=evaluate(Path(tmp)/'unused.sv','unused',{}, {},Path(tmp),'route',0.03)
+                self.assertFalse(result['passed'])
+                self.assertEqual(result['error'],'Vivado queue timeout')

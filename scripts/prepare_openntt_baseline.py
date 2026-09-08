@@ -23,12 +23,37 @@ if out.exists() and any(out.iterdir()):p.error('output directory must be empty')
 for part in ('tool','hardware'):
     shutil.copytree(source/part,out/part,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
 (out/'software/Testing').mkdir(parents=True,exist_ok=True)
+# Upstream custom-backend placeholders omit required instance names. These
+# inactive generate branches still have to parse in Verilator. Name them only;
+# do not change the selected FPGA implementation.
+compatibility_edits=[]
+for relative,module in [('hardware/memory/ram.sv','my_custom_ram'),('hardware/memory/rom.sv','my_custom_rom'),('hardware/intmul/intmul.sv','intmul_custom')]:
+    path=out/relative;text=path.read_text()
+    import re
+    updated=re.sub(r'\b'+module+r'\s*\(',module+' custom_instance(',text)
+    if updated!=text:
+        path.write_text(updated)
+        compatibility_edits.append({'path':relative,'change':'name inactive custom-backend instance','before_sha256':file_hash(source/relative),'after_sha256':file_hash(path)})
+
+path=out/'hardware/memory/rom.sv'
+before=file_hash(path)
+text=path.read_text();updated=text.replace('parameter ROM_CONTENT =','parameter string ROM_CONTENT =')
+if updated!=text:
+    path.write_text(updated)
+    compatibility_edits.append({'path':'hardware/memory/rom.sv','change':'type ROM filename as string for Verilator','before_sha256':before,'after_sha256':file_hash(path)})
 kind=('mintt_dif_rn' if w.get('direction')=='inverse' else 'mfntt_dit_nr') if w.get('negacyclic') else ('intt_dit_rn' if w.get('direction')=='inverse' else 'fntt_dit_nr')
 root=int(w['psi'] if w.get('negacyclic') else w['root']);q=int(w['q'])
 command=[sys.executable,'openntt.py','--c=1','--transf_type=NTT',f'--ntt_type={kind}',f"--n={w['n']}",'--q_fixed=1','--q_count=1',f'--q_list={q}',f'--tw_list={root}',f'--tw_inv_list={pow(root,-1,q)}',f'--io_band={2*a.pe}','--mem_depth=1','--coeff_arith=0',f'--memory_opt={a.memory_opt}']
 process=run(command,out/'tool',out/'generation.log',600)
+if process['returncode']==0:
+    package=out/'hardware/open_ntt_pkg.sv'
+    before=file_hash(package);text=package.read_text()
+    updated=text.replace(f'localparam Q_VALUE = {q};',f"localparam [LOGQ-1:0] Q_VALUE = {q.bit_length()}'d{q};")
+    if updated!=text:
+        package.write_text(updated)
+        compatibility_edits.append({'path':'hardware/open_ntt_pkg.sv','change':'size fixed modulus literal without changing its value','before_sha256':before,'after_sha256':file_hash(package)})
 artifacts={str(f.relative_to(out)):file_hash(f) for f in (out/'hardware').rglob('*') if f.is_file()}
 for f in (out/'tool/RomContent').glob('*'):
     if f.is_file():artifacts[str(f.relative_to(out))]=file_hash(f)
-write_json(out/'record.json',{'schema':'ntt-external-generation-v1','generator':'OpenNTT','source':source_identity(source),'workload':w,'configuration':{'pe':a.pe,'memory_opt':a.memory_opt,'ntt_type':kind},'process':process,'artifacts':artifacts,'correct':False,'evidence_stage':'generation','comparison_eligible':False,'boundary':'Scalar host RAM load/store; io_band is internal bandwidth. Independent RTL simulation and boundary normalization required before comparison.'})
+write_json(out/'record.json',{'schema':'ntt-external-generation-v1','generator':'OpenNTT','source':source_identity(source),'workload':w,'configuration':{'pe':a.pe,'memory_opt':a.memory_opt,'ntt_type':kind},'process':process,'compatibility_edits':compatibility_edits,'artifacts':artifacts,'correct':False,'evidence_stage':'generation','comparison_eligible':False,'boundary':'Scalar host RAM load/store; io_band is internal bandwidth. Independent RTL simulation and boundary normalization required before comparison.'})
 raise SystemExit(0 if process['returncode']==0 else 1)

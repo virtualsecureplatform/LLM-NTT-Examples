@@ -1,0 +1,46 @@
+{
+  "target": {
+    "part": "xcu280-fsvh2892-2L-e",
+    "tool_version": "2023.2",
+    "clock_period_ns": 6.0,
+    "clock_source": "BUFGCE_X0Y0",
+    "io_delays_ns": {
+      "input_min": 0.2,
+      "input_max": 1.0,
+      "output_min": 0.0,
+      "output_max": 1.0
+    }
+  },
+  "budget": {
+    "hours": 12,
+    "functional": 64,
+    "synthesis": 12,
+    "route": 4
+  },
+  "workload": {
+    "kind": "generic",
+    "n": 16,
+    "q": "4129",
+    "root": "3529",
+    "psi": "1142",
+    "direction": "forward",
+    "negacyclic": true,
+    "lanes": 4
+  },
+  "space": {
+    "pe": [
+      1
+    ],
+    "radix": [
+      2
+    ],
+    "reductions": [
+      "montgomery"
+    ]
+  },
+  "stages": [
+    "simulation",
+    "synthesis",
+    "route"
+  ]
+}
