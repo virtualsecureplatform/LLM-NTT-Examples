@@ -79,3 +79,16 @@ sources have identical measured cost here. The stride option adds 204 LUTs,
 it provides no advantage in this comparison. Full adapter logic is included.
 These results are retained in `build/yata8x8-permutation-comparison` and do not
 populate a passing hardware frontier.
+
+## Shared YATA output conversion
+
+The isolated NGen branch `share-yata-modswitch` (`8990a3e`) shares output
+modulus conversion across the eight emitted lanes instead of instantiating
+one converter for each of 64 stored coefficients. Full switch and indexed
+transform oracles pass. In `build/yata-shared-modswitch-validation`, switch
+synthesis reports 51489 LUTs, 9774 FFs, 88 DSPs, and no BRAM, compared with
+58565 LUTs, 9823 FFs, and 424 DSPs before sharing. Both use 86 transaction
+cycles. The DSP reduction is 79.2%, but WNS worsens from -5.483 to -5.805 ns;
+the new design still fails the 4 ns setup requirement. Sharing is a resource
+improvement, not a timing-closed performance result. The branch remains
+isolated from the generator used by the active policy trial.
