@@ -4,7 +4,7 @@ import importlib.util
 import itertools
 from pathlib import Path
 from .model import run
-from .permutation import compose
+from .permutation import compose,compose_linear
 from .boundary import registered_ready_valid
 
 
@@ -59,10 +59,10 @@ def candidates(workload: dict, ngen: Path, space: dict | None = None) -> list[di
     else:
         raise ValueError('workload kind must be preset or generic')
     permutations=space.get('permutations',['ngen'])
-    if any(p not in ('ngen','sgen') for p in permutations):
+    if any(p not in ('ngen','sgen','sgen-linear') for p in permutations):
         raise ValueError('unknown permutation generator')
-    result=[{**c,'generator':'ngen-sgen' if p=='sgen' else 'ngen'} for c in result for p in permutations
-            if p=='ngen' or (workload['kind']=='preset' and c['transpose']=='switch')]
+    result=[{**c,'generator':{'ngen':'ngen','sgen':'ngen-sgen','sgen-linear':'ngen-sgen-linear'}[p]} for c in result for p in permutations
+            if p=='ngen' or (workload['kind']=='preset' and c['transpose']=='switch' and (p!='sgen-linear' or workload['task']=='small_yata8x8_raintt_p27'))]
     if not result:
         raise ValueError('no legal configurations in the requested search space')
     return result
@@ -90,8 +90,8 @@ def generate(workload: dict, config: dict, ngen: Path, directory: Path, timeout:
     if process['returncode']==0 and workload['kind']=='generic':
         rtl.write_text(registered_ready_valid(rtl.read_text(),config['lanes'],int(workload['q']).bit_length()))
         process['boundary']={'kind':'registered-ready-valid','elastic_register_stages':2,'included_in_measurements':True}
-    if process['returncode']==0 and config['generator']=='ngen-sgen':
+    if process['returncode']==0 and config['generator'] in ('ngen-sgen','ngen-sgen-linear'):
         if sgen_executable is None:raise ValueError('SGen executable required')
-        component=compose(rtl,sgen_executable,directory,timeout-process['seconds'])
+        component=(compose_linear if config['generator']=='ngen-sgen-linear' else compose)(rtl,sgen_executable,directory,timeout-process['seconds'])
         process={**process,'sgen':component,'returncode':component['returncode']}
     return process,rtl

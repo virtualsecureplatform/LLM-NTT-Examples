@@ -107,3 +107,29 @@ This is one held-out architecture under the same workload, not an unseen-workloa
 test. In particular, the BRAM mismatch shows that a smooth replication fit does
 not capture every memory-banking discontinuity. The stronger model improves
 these resource estimates but does not justify discarding unmeasured candidates.
+
+## Completed six-point pool
+
+The corrected driver retry completed PE=4/groups=2 synthesis: LUT 20835, FF 5443,
+DSP 88, BRAM 16, WNS +0.599 ns. The completed six-point report at
+`build/policy-pool256-completed-six.json` records both source report hashes and
+checks exact configuration and RTL identity before replacing the failed attempt's
+missing measurements. The original failures are retained.
+
+`build/policy-replay256-six` repeats budget-three trials for seeds 1–5 with all
+six measured architectures. All five LLM calls succeeded. The feasible reference
+frontier still contains PE=1/groups=1,2.
+
+| Policy | Mean frontier recall | Mean feasible discoveries |
+| --- | ---: | ---: |
+| Enumeration | 1.00 | 2.0 |
+| Random | 0.40 | 0.8 |
+| Online nearest-neighbor cost | 0.60 | 1.2 |
+| LLM | 0.00 | 0.0 |
+
+This supersedes the conditional five-point result for this complete pool. The
+LLM selected no feasible candidate within three evaluations, so this experiment
+provides evidence against using its unassisted ranking as the default here.
+The saved traces permit exact replay; the zero-temperature repeated LLM calls
+are not independent random-seed trials. Structural-cost acquisition and live
+end-to-end/held-out workload trials remain separate work.

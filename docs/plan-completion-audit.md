@@ -157,3 +157,14 @@ transfer semantics. The focused Scala test and unchanged full preset evaluator
 now pass in `build/kyber-explicit-validation`. Together with the HOGE forward
 and inverse checks above, this supplies functional preset campaign evidence;
 extracted baseline and hardware measurements remain separate acceptance work.
+
+Fixed-width SGen stride component checks now pass eight single-/dual-RAM cases
+with per-design `next` lead timing and independent matrix ordering. The new
+bounded linear-permutation composition also passes the full YATA 8x8 transform
+oracle. A three-option full-design permutation synthesis comparison is running;
+see the permutation-validation document for contracts and remaining limitations.
+
+The six-point measured policy pool is complete. Its equal-budget replay finds
+both feasible designs with enumeration but none with LLM ranking at budget
+three. All results, including this negative LLM result, are retained in the
+policy-replay document; no default-policy superiority is inferred.

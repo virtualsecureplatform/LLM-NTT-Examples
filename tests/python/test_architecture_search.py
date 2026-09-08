@@ -88,6 +88,15 @@ class SearchExtensionTests(unittest.TestCase):
         self.assertEqual(len(configs),3)
         self.assertTrue(all(c['transpose']=='switch' for c in configs if c['generator']=='ngen-sgen'))
 
+    def test_linear_composition_is_bounded_to_verified_task_contract(self):
+        root=Path(__file__).resolve().parents[3]/'NGen'
+        space={'backends':['microcoded'],'profiles':['baseline'],'transposes':['switch'],'permutations':['sgen-linear']}
+        configs=candidates({'kind':'preset','task':'small_yata8x8_raintt_p27'},root,space)
+        self.assertEqual(len(configs),1)
+        self.assertEqual(configs[0]['generator'],'ngen-sgen-linear')
+        with self.assertRaisesRegex(ValueError,'no legal configurations'):
+            candidates({'kind':'preset','task':'hoge_streaming_ntt_1024_p64'},root,space)
+
     def test_cost_predictions_are_not_evidence(self):
         from architecture_search.cost import predict,calibrate
         self.assertFalse(predict([],{'pe':1},'lut')['available'])

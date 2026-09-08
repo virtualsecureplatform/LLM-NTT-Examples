@@ -129,7 +129,7 @@ def main(argv=None) -> int:
     if any(s in stages for s in ('synthesis','route')):
         target=campaign.get('target',{})
         identity['tools']['vivado']=tool_identity([target.get('vivado',f"/home/opt/xilinx/Vivado/{target.get('tool_version','2023.2')}/bin/vivado"),'-version'])
-    uses_sgen=any(c['generator']=='ngen-sgen' for c in configurations)
+    uses_sgen=any(c['generator'] in ('ngen-sgen','ngen-sgen-linear') for c in configurations)
     if uses_sgen:
         identity['sgen']=source_identity(args.sgen_root.resolve())
         identity['sgen_binary']=file_hash(args.sgen_root/'sgen.bat')
