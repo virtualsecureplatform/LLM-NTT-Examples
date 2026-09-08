@@ -30,3 +30,20 @@ Every new run still checks setup, hold, and complete routing. Constraints apply
 to all non-clock input ports and all output ports. No reset false path, hold
 waiver, or register-only timing gate is added. The same target object must match
 exactly when importing NGen, OpenNTT, and Proteus measurements.
+
+## Optional physical output buffers
+
+The unbuffered N=256 Montgomery fabric run completed routing with WNS +0.276 ns
+and WHS -0.052 ns (`build/ngen-mont7-fabric256`), so it remains excluded.
+The worst hold path is an output register to `out_valid`; the reported data
+path has no routing delay. The remaining failure is at the output boundary.
+
+`campaigns/threeway256-buffered-fabric.json` keeps every timing requirement
+above and enables `target.output_hold_buffers`. After synthesis,
+`scripts/insert_output_hold_buffers.tcl` inserts a preserved identity LUT on
+each output bit, giving implementation a physical data path. These LUTs count
+in utilization, add no cycles, and are recorded in `output_hold_buffers.txt`.
+The NGen experiment in `build/ngen-mont7-output-buffers256` passed synthesis;
+routed results were still pending when this change was documented. This is an
+optional physical implementation experiment, not a demonstrated timing fix.
+External comparisons must use the identical target, including this option.

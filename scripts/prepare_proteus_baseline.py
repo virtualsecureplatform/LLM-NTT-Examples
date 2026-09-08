@@ -15,6 +15,7 @@ p.add_argument('--campaign',type=Path,required=True)
 p.add_argument('--proteus-root',type=Path,default=Path(__file__).resolve().parents[2]/'proteus')
 p.add_argument('--output-dir',type=Path,required=True)
 p.add_argument('--architecture',choices=['sdf','mdc'],default='sdf')
+p.add_argument('--fix-mdc-inverse-rom',action='store_true',help='repair the extra inverse ROM output delay in merged MDC OP1; record the change')
 p.add_argument('--reduction',choices=['montgomery','sparse'],default='montgomery')
 a=p.parse_args();w=json.loads(a.campaign.read_text())['workload'];oracle.validate(w)
 n=int(w['n']);q=int(w['q']);width=q.bit_length();bits=n.bit_length()-1
@@ -24,6 +25,7 @@ if width<28:p.error('this adapter currently supports coefficient widths 28..64')
 source=a.proteus_root.resolve();out=a.output_dir.resolve()
 if out.exists() and any(out.iterdir()):p.error('output directory must be empty')
 neg=w.get('negacyclic',False)
+if a.fix_mdc_inverse_rom and (a.architecture!='mdc' or not neg):p.error('inverse ROM alignment repair currently applies only to merged MDC OP1')
 core=('sdf/nwc_op_1' if neg else 'sdf/op_1_2') if a.architecture=='sdf' else ('mdc/ntt_nwc_mdc_op_1' if neg else 'mdc/ntt_mdc_op_1_2')
 (out/'py').mkdir(parents=True)
 for path in (source/'toolchain/py').glob('*.py'):shutil.copyfile(path,out/'py'/path.name)
@@ -40,6 +42,18 @@ for path in (out/'hardware/common/wlmont').glob('*.sv'):
     if text!=updated:
         before=file_hash(path);path.write_text(updated)
         compatibility_edits.append({'path':str(path.relative_to(out)),'change':'namespace Montgomery-local CSA modules','before_sha256':before,'after_sha256':file_hash(path)})
+# Express the intended truncated left shift without out-of-range part selects.
+# Some Montgomery word configurations make LOG_OUT+SHIFT exceed LOGP.
+path=out/'hardware/common/wlmont/int_mult_add.sv';before=file_hash(path);text=path.read_text()
+begin=text.index('// output assignment');end=text.index('endmodule',begin)
+path.write_text(text[:begin]+'// Output is truncated to the declared port width.\nassign P = m_delay[LATENCY-1] << SHIFT;\n\n'+text[end:])
+compatibility_edits.append({'path':str(path.relative_to(out)),'change':'replace over-wide output part selects with an explicitly port-width-truncated left shift','before_sha256':before,'after_sha256':file_hash(path)})
+if a.fix_mdc_inverse_rom:
+    path=out/'hardware/core/tw_roms_wrapper.v';before=file_hash(path);text=path.read_text()
+    original='assign dout = data_out;'
+    if text.count(original)!=1:p.error('unexpected upstream MDC ROM wrapper')
+    path.write_text(text.replace(original,'assign dout = intt ? data_itw : data_out;'))
+    compatibility_edits.append({'path':str(path.relative_to(out)),'change':'MDC inverse arithmetic repair: align twiddle arrival with the registered subtraction by bypassing the extra inverse ROM output register','before_sha256':before,'after_sha256':file_hash(path)})
 # The upstream demo overwrites requested fields with hard-coded examples. Supply
 # exact validated parameters while preserving its twiddle-generation algorithms.
 adicity=((q-1)&-(q-1)).bit_length()-1
@@ -60,7 +74,7 @@ values={'LOGQ':width,'LOGN':bits,'TYPE_RED':int(a.reduction=='montgomery'),'IS_Q
 (out/'hardware/parameters.vh').write_text('// Exact workload configuration supplied by architecture_search.\n'+''.join(f'parameter {k} = {v};\n' for k,v in values.items()))
 if process['returncode']==0:shutil.copyfile(out/'py/hw/constant/tw_roms.v',out/'hardware/tw_roms.v')
 artifacts={str(f.relative_to(out)):file_hash(f) for f in (out/'hardware').rglob('*') if f.is_file()}
-write_json(out/'record.json',{'schema':'ntt-external-generation-v1','generator':'Proteus','workload':w,'configuration':{'architecture':a.architecture,'reduction':a.reduction,'op':1,'montgomery_word_bits':word,'montgomery_loops':loops},
+write_json(out/'record.json',{'schema':'ntt-external-generation-v1','generator':'Proteus','workload':w,'configuration':{'architecture':a.architecture,'reduction':a.reduction,'op':1,'montgomery_word_bits':word,'montgomery_loops':loops,'mdc_inverse_rom_repair':a.fix_mdc_inverse_rom},
 'source':{'revision':subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD']).decode().strip(),'input_hash':digest(inputs),'inputs':inputs},
 'compatibility_edits':compatibility_edits,'parameter_binding':parameters,'adapted_generator_hash':file_hash(generator),'parameters':values,'process':process,'artifacts':artifacts,'correct':None,'comparison_eligible':False})
 print(out/'record.json')

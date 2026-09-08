@@ -79,7 +79,7 @@ endmodule
 '''
 
 
-def evaluate(directory: Path,timeout: float=600) -> dict:
+def evaluate(directory: Path,timeout: float=600,simulator: str='verilator') -> dict:
     record=verified_record(directory);w=record['workload'];architecture=record['configuration']['architecture'];n=w['n']
     work=directory/'independent';work.mkdir(exist_ok=True)
     vectors=oracle.vectors(w);inverse=w.get('direction')=='inverse'
@@ -87,9 +87,10 @@ def evaluate(directory: Path,timeout: float=600) -> dict:
         (work/f'{name}.mem').write_text(''.join(f'{frame[memory_index(i,n,architecture,spectral)]:x}\n' for frame in corpus for i in range(n)))
     (work/'oracle_tb.sv').write_text(testbench(w,architecture,len(vectors),drain_cycles(record)))
     start=time.monotonic()
-    run(['verilator','--version'],work,work/'version.log',min(10,timeout))
-    build=run(['verilator','--binary','--timing','--top-module','oracle_tb','-Wno-fatal','-j','4','-I'+str(directory/'hardware'),*[str(p) for p in sources(directory)],'oracle_tb.sv'],work,work/'build.log',timeout)
-    simulation=run([str(work/'obj_dir/Voracle_tb')],work,work/'simulation.log',max(0,timeout-(time.monotonic()-start))) if build['returncode']==0 else {}
+    run(['verilator','--version'] if simulator=='verilator' else ['iverilog','-V'],work,work/'version.log',min(10,timeout))
+    command=['verilator','--binary','--timing','--top-module','oracle_tb','-Wno-fatal','-j','4'] if simulator=='verilator' else ['iverilog','-g2012','-s','oracle_tb','-o','simulation']
+    build=run([*command,'-I'+str(directory/'hardware'),*[str(p) for p in sources(directory)],'oracle_tb.sv'],work,work/'build.log',timeout)
+    simulation=run([str(work/'obj_dir/Voracle_tb')] if simulator=='verilator' else ['vvp',str(work/'simulation')],work,work/'simulation.log',max(0,timeout-(time.monotonic()-start))) if build['returncode']==0 else {}
     log=(work/'simulation.log').read_text() if (work/'simulation.log').exists() else ''
     result={'correct':simulation.get('returncode')==0 and 'PASS independent Proteus' in log,'build':build,'simulation':simulation,'metrics':parse_metrics(log),
             'simulator_version':(work/'version.log').read_text().strip(),'boundary':'Proteus memory-wrapper protocol, external frame memory not yet included','comparison_eligible':False,
@@ -158,7 +159,7 @@ endmodule
 '''
 
 
-def evaluate_stream(directory: Path,timeout: float=600) -> dict:
+def evaluate_stream(directory: Path,timeout: float=600,simulator: str='verilator') -> dict:
     from .evaluate import generic_testbench
     from .boundary import registered_ready_valid
     record=verified_record(directory);w=record['workload'];lanes=w.get('lanes',4)
@@ -170,10 +171,11 @@ def evaluate_stream(directory: Path,timeout: float=600) -> dict:
         (work/f'{name}.mem').write_text(''.join(f'{x:x}\n' for frame in corpus for x in frame))
     (work/'test.sv').write_text(generic_testbench(w,lanes,len(vectors),max(10000,w['n']*w['n'].bit_length()*64)))
     start=time.monotonic()
-    run(['verilator','--version'],work,work/'version.log',min(10,timeout))
+    run(['verilator','--version'] if simulator=='verilator' else ['iverilog','-V'],work,work/'version.log',min(10,timeout))
     rtl_sources=sources(directory)
-    build=run(['verilator','--binary','--timing','--top-module','test','-Wno-fatal','-j','4','-I'+str(directory/'hardware'),*[str(p) for p in rtl_sources],'SearchTop.sv','test.sv'],work,work/'build.log',timeout)
-    simulation=run([str(work/'obj_dir/Vtest')],work,work/'simulation.log',max(0,timeout-(time.monotonic()-start))) if build['returncode']==0 else {}
+    command=['verilator','--binary','--timing','--top-module','test','-Wno-fatal','-j','4'] if simulator=='verilator' else ['iverilog','-g2012','-s','test','-o','simulation']
+    build=run([*command,'-I'+str(directory/'hardware'),*[str(p) for p in rtl_sources],'SearchTop.sv','test.sv'],work,work/'build.log',timeout)
+    simulation=run([str(work/'obj_dir/Vtest')] if simulator=='verilator' else ['vvp',str(work/'simulation')],work,work/'simulation.log',max(0,timeout-(time.monotonic()-start))) if build['returncode']==0 else {}
     log=(work/'simulation.log').read_text() if (work/'simulation.log').exists() else ''
     result={'correct':simulation.get('returncode')==0 and 'PASS generic NTT' in log,'build':build,'simulation':simulation,'metrics':parse_metrics(log),'mode':'functional',
             'simulator_version':(work/'version.log').read_text().strip(),

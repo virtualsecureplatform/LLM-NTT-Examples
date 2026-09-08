@@ -107,3 +107,10 @@ An equal-budget [policy replay](policy-replay.md) now saves acquisition traces,
 frontier recovery, prediction errors, and live LLM requests/responses. The small
 smoke pool gives no policy advantage. A larger resource-constrained measured
 pool is running; end-to-end and held-out evaluation remain unfinished.
+
+The isolated Proteus MDC inverse now has an explicit, provenance-recorded
+[ROM alignment repair](proteus-inverse-repair.md). Modified 32-bit forward and
+inverse streams and a 64-bit inverse stream pass independent functional checks.
+The unbuffered fabric run still fails hold; the optional physical output-buffer
+experiment described in the timing contract has passed synthesis, with routing
+pending. Neither result establishes overall plan completion or a routed win.

@@ -21,6 +21,7 @@ Options:
                          or clock.
   --clock-period NS      Clock period in ns. Defaults to VITIS_CLOCK_PERIOD or
                          4.0, matching AutoNTT examples.
+  --output-hold-buffers  Insert identity LUTs on output bits for physical hold repair.
   --io-reference-pin PIN Fabric clock pin used as the I/O timing reference.
   --include-dir DIR      Additional Verilog header search directory; repeatable.
   --clock-source SITE    Optional OOC clock source site (HD.CLK_SRC).
@@ -41,6 +42,7 @@ Options:
 EOF
 }
 
+output_hold_buffers=0
 io_reference_pin=""
 include_dirs=()
 clock_source=""
@@ -99,6 +101,7 @@ while [[ $# -gt 0 ]]; do
       clock_period="${2:-}"
       shift 2
       ;;
+    --output-hold-buffers) output_hold_buffers=1; shift ;;
     --io-reference-pin) io_reference_pin="${2:-}"; shift 2 ;;
     --include-dir) include_dirs+=("${2:-}"); shift 2 ;;
     --clock-source) clock_source="${2:-}"; shift 2 ;;
@@ -262,6 +265,7 @@ fi
   printf 'close $xdc_fp\n'
   printf 'read_xdc $xdc_file\n'
   printf 'synth_design -top $top_module -part $part_name -mode out_of_context -flatten_hierarchy rebuilt\n'
+  printf 'if {[lindex $argv 19]} {source [lindex $argv 20]}\n'
   printf 'set io_reference_args {}\n'
   printf 'if {[lindex $argv 18] ne ""} {set reference [get_pins [lindex $argv 18]]; if {[llength $reference] != 1} {error "Expected exactly one I/O reference pin"}; set io_reference_args [list -reference_pin $reference]}\n'
   printf 'if {$clock_source ne ""} {if {[llength [get_sites -quiet $clock_source]] != 1} {error "Invalid clock source site"}; set_property HD.CLK_SRC $clock_source [get_ports $clock_port]}\n'
@@ -319,7 +323,7 @@ vivado_cmd=(
   "${source_list}" "${top_module}" "${part}" "${clock_port}" "${clock_period}"
   "${jobs}" "${build_dir}" "${xdc_file}" "${utilization_rpt}" "${timing_rpt}"
   "${timing_props}" "${checkpoint_file}"
-  "$clock_source" "$input_delay_min" "$input_delay_max" "$output_delay_min" "$output_delay_max" "${build_dir}/includes.txt" "$io_reference_pin"
+  "$clock_source" "$input_delay_min" "$input_delay_max" "$output_delay_min" "$output_delay_max" "${build_dir}/includes.txt" "$io_reference_pin" "$output_hold_buffers" "${repo_root}/scripts/insert_output_hold_buffers.tcl"
 )
 
 set +e

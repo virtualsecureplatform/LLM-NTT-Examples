@@ -24,6 +24,7 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
              '--clock-period',str(period),'--clock-port',target.get('clock_port','clock'),
              '--build-dir',str(directory),'--metrics-json',str(output),'--vivado-bin',vivado,
              '--jobs','8','--timeout',str(max(1,int(timeout)))]
+    if target.get('output_hold_buffers'):command+=['--output-hold-buffers']
     if target.get('io_reference_pin'):command+=['--io-reference-pin',target['io_reference_pin']]
     if target.get('clock_source'):command+=['--clock-source',target['clock_source']]
     for prefix in ('input','output'):
