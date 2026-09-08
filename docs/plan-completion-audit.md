@@ -457,3 +457,12 @@ the additional forward overlapping-frame oracle verifies 240 frames and a
 32-cycle saturated interval. Matched synthesis remains pending.
 See [HOGE constant shifts](hoge-constant-shifts.md). This targets the measured
 full-throughput cost without upgrading functional results into hardware wins.
+
+## Prepared combined generator integration
+
+NGen `plan-integration` at `f4032e9` combines the registered-issue and HOGE-shift
+branches and passes all 154 Scala tests. Fresh generation reproduces nine prior
+RTL hashes and timing declarations exactly, including all six policy-reference
+configurations and the qualified 16K route. See
+[prepared integration](ngen-plan-integration.md). Main integration remains pending
+until the frozen policy experiment and HOGE ablation finish.
