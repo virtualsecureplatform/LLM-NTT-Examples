@@ -125,16 +125,30 @@ def stream_wrapper(workload: dict,lanes: int,pe: int) -> str:
     n=workload['n'];bits=n.bit_length()-1;width=int(workload['q']).bit_length()
     inverse=workload.get('direction')=='inverse';depth=n//(2*pe)
     ports=',\n'.join(f'input [{width-1}:0] i{k},output [{width-1}:0] o{k}' for k in range(lanes))
-    capture=' '.join(f'input_buffer[count+{k}]<=i{k};' for k in range(lanes))
-    output='\n'.join(f'assign o{k}=output_buffer[count+{k}];' for k in range(lanes))
+    # One physical bank per stream lane: one write port and synchronous read.
+    buffers='\n'.join(f"(* ram_style=\"block\" *) reg [{width-1}:0] input_bank_{k}[0:N/LANES-1],output_bank_{k}[0:N/LANES-1]; reg [{width-1}:0] input_data_{k},output_data_{k};" for k in range(lanes))
+    output='\n'.join(f'assign o{k}=output_data_{k};' for k in range(lanes))
+    memory='\n'.join(f"""always @(posedge clock) begin
+ if(!reset && state==CAPTURE && in_valid)input_bank_{k}[count/LANES]<=i{k};
+ if(!reset && (state==LOAD_PREFETCH || state==LOAD))input_data_{k}<=input_bank_{k}[load_prefetch_index/LANES];
+ if(!reset && read_valid[3] && read_index[3]%LANES=={k})output_bank_{k}[read_index[3]/LANES]<=host_data;
+ if(!reset && (state==OUTPUT_PREFETCH || (state==OUTPUT && out_ready)))output_data_{k}<=output_bank_{k}[output_prefetch_index/LANES];
+end""" for k in range(lanes))
+    input_mux=' '.join(f'{k}:host_write_data=input_data_{k};' for k in range(lanes))
     write_address='nr_output(reverse_bits(count))' if inverse else 'nr_input(count)'
     read_address='nr_input(count)' if inverse else 'nr_output(reverse_bits(count))'
     return f'''module SearchTop(input clock,reset,in_valid,output in_ready,output out_valid,input out_ready,
 {ports});
 localparam N={n},LANES={lanes},W={width},DEPTH={depth},PE={pe};
-localparam CAPTURE=1,LOAD=2,DRAIN=3,COMPUTE=4,FINISH=5,READ=6,READ_DRAIN=7,OUTPUT=8;
+localparam CAPTURE=1,LOAD=2,DRAIN=3,COMPUTE=4,FINISH=5,READ=6,READ_DRAIN=7,OUTPUT=8,LOAD_PREFETCH=9,OUTPUT_PREFETCH=10;
 reg [3:0] state;
-reg [{width-1}:0] input_buffer[0:N-1],output_buffer[0:N-1];
+{buffers}
+reg [{width-1}:0] host_write_data;
+integer load_lane;
+wire [{bits-1}:0] load_prefetch_index=(state==LOAD && count<N-1)?count+1:0;
+wire [{bits-1}:0] output_prefetch_index=(state==OUTPUT && count<N-LANES)?count+LANES:0;
+always @(*)begin host_write_data=0;case(load_lane){input_mux}default:begin end endcase end
+{memory}
 integer count,delay_count,k;
 reg [3:0] read_valid;
 reg [{bits-1}:0] read_index[0:3];
@@ -156,20 +170,22 @@ function automatic [{bits-1}:0] nr_output(input [{bits-1}:0] value);
 endfunction
 OpenNTT core(.clk(clock),.rst(core_reset),.forward(1'b{0 if inverse else 1}),.opcode(2'd0),
 .q({width}'d{workload['q']}),.montgomery_factor({width}'d0),.rom_base_addr('0),.poly_base_a('0),.poly_base_b('0),
-.io_ram_wen(!reset && state==LOAD),.io_ram_waddr(write_address),.io_ram_wdata(input_buffer[count]),
+.io_ram_wen(!reset && state==LOAD),.io_ram_waddr(write_address),.io_ram_wdata(host_write_data),
 .io_ram_raddr(read_address),.io_ram_rdata(host_data),.done(done));
 always @(posedge clock) begin
  if(reset) begin state<=CAPTURE;count<=0;delay_count<=0;read_valid<=0;end
  else begin
   read_valid<={{read_valid[2:0],state==READ}};
+  if(state==LOAD_PREFETCH || state==LOAD)load_lane<=load_prefetch_index%LANES;
   read_index[0]<=count;
   for(k=1;k<4;k=k+1)read_index[k]<=read_index[k-1];
   if(read_valid[3]) begin
-   output_buffer[read_index[3]]<=host_data;
-   if(read_index[3]==N-1)begin state<=OUTPUT;count<=0;end
+   if(read_index[3]==N-1)begin state<=OUTPUT_PREFETCH;count<=0;end
   end
   case(state)
-   CAPTURE: if(in_valid)begin {capture} if(count==N-LANES)begin state<=LOAD;count<=0;end else count<=count+LANES;end
+   CAPTURE: if(in_valid)begin if(count==N-LANES)begin state<=LOAD_PREFETCH;count<=0;end else count<=count+LANES;end
+   LOAD_PREFETCH: state<=LOAD;
+   OUTPUT_PREFETCH: state<=OUTPUT;
    LOAD: if(count==N-1)begin state<=DRAIN;count<=0;delay_count<=0;end else count<=count+1;
    DRAIN: if(delay_count==7)state<=COMPUTE;else delay_count<=delay_count+1;
    COMPUTE: if(done)begin state<=FINISH;delay_count<=0;end

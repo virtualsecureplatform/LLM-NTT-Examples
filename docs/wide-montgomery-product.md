@@ -52,3 +52,11 @@ The original routed implementation completed with LUT 113238, FF 3909, DSP 52,
 BRAM 48, setup WNS -0.739 ns and hold slack +0.010 ns. Full implementation
 completed, but failed setup excludes it from the 250 MHz routed frontier. Its
 critical path still crosses the wide DSP product to `product_1_reg`.
+
+The block-only ablation is now complete: 8975 LUT, 2851 FF, 52 DSP, 376 BRAM,
+WNS -0.292 ns. With identical block control, the wide-product pipeline changes
+those values to 8201 LUT, 3301 FF, 66 DSP, 376 BRAM and WNS +0.955 ns. Thus the
+ROM change accounts for most LUT savings; the arithmetic change adds 14 DSPs,
+450 FFs and 30 frame cycles while improving estimated setup by 1.247 ns.
+The distinct source revisions and RTL artifacts remain in their respective
+candidate records; no combined-change result is substituted for the ablation.

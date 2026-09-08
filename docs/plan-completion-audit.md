@@ -333,3 +333,19 @@ checks and recorded build identity. All 120 Python tests pass. The previous
 standalone integration gap is closed. An isolated smoke run also exposed and
 fixed provenance recursion for uninitialized gitlinks; the corrected matrix
 smoke test passes.
+
+## Separated 16K ablation
+
+Block-only synthesis completes at 8975 LUT/2851 FF/52 DSP/376 BRAM, WNS -0.292 ns.
+The matched nine-stage product then improves WNS to +0.955 ns with 8201 LUT,
+3301 FF, 66 DSP and the same BRAM. This separates control-storage savings from
+arithmetic timing improvement. Routed confirmation remains active.
+
+## OpenNTT adapter repair
+
+A banked, synchronous normalized adapter replaces the unsupported multi-write
+flat memory pattern. Fresh N=256 forward/inverse and N=16384/q54 forward runs
+pass the full eight-frame stream oracle, with the expected two added prefetch
+cycles. All 120 Python tests pass. The fresh 16K routed measurement is queued
+in `build/openntt-banked16k54-route`; inference, resources and timing remain
+pending. See [OpenNTT banked adapter](openntt-banked-adapter.md).

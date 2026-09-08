@@ -53,3 +53,10 @@ The generated block-ROM RTL, rather than source text alone, is the tested
 artifact. The fresh block-only hardware candidate is `138ee4868aa5` (prefix)
 in `build/ngen-fhe16k54-block-control-rebuilt`; simulation passed and synthesis
 is queued under the common vendor lock.
+
+Block-only synthesis completed under the matched 16K/q54 contract: 8975 LUT,
+2851 FF, 52 DSP, 376 BRAM and WNS -0.292 ns. Compared with the original
+114739 LUT, 2807 FF, 52 DSP and 48 BRAM, the change removes 105764 LUTs while
+adding 328 BRAM tiles and 44 FFs. Arithmetic timing is unchanged and still fails
+setup, as expected from the measured multiplier critical path. These are
+synthesis results; the resource tradeoff is not a routed timing claim.
