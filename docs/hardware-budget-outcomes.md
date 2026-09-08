@@ -31,3 +31,11 @@ latency and execution versus timing failure; the seven summary tests also pass
 after adding aggregate timeout counts. The active repetitions continue with
 the original inputs and their failures retained. Final policy conclusions must
 explicitly report this contention rather than silently replacing observations.
+
+A separate inverse full-throughput candidate is queued with
+`campaigns/hoge-inverse-full-throughput-hardware.json` and NGen integration
+revision `f4032e9`, under `build/hoge-inverse-full-throughput-hardware`. This
+architecture already passes the independent inverse oracle at 73 transaction
+cycles and uses the same fixed task boundary as the extracted reference. Its
+hardware metrics remain pending. It is an additional architecture choice;
+the original 69-cycle stage-parallel timeout remains part of the comparison.
