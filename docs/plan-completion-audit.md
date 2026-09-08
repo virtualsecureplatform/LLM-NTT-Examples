@@ -267,3 +267,13 @@ The matched N=16384/q54 NGen simulation passed. Synthesis completed at 114739 LU
 setup failure, not a qualified 250 MHz result. Routing is still running; the
 matched OpenNTT route follows in the serialized campaign. No routed conclusion
 is available yet.
+
+## Large PE control-ROM implementation
+
+NGen `1382267` introduces synchronous prefetch for large static radix-2 control
+ROMs, targeting the 16K design's distributed control-table area. Both 16K/q54
+transform directions pass the full oracle with identical cycle metrics, and
+all 150 Scala tests pass. Synthesis is queued; no area or timing win is claimed.
+See [PE control-ROM prefetch](pe-control-rom-prefetch.md) for exact evidence and
+the matched campaign. The wide Montgomery multiplier remains a separate timing
+limitation, and the overall roadmap is still incomplete.
