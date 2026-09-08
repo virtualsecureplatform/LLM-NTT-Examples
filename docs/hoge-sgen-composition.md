@@ -36,3 +36,26 @@ Local successful logs are `/tmp/hoge-sgen-overlap-fixed.out` and
 The first CMake invocation placed the new target after the unknown-target guard
 and failed configuration. Moving the target before the guard fixes that build
 setup; the retained failed log is `/tmp/hoge-sgen-overlap.out`.
+
+## Combined generator/framework integration
+
+The framework branch now includes main through `504e8e1`. With the tested NGen
+integration branch `f4032e9` and clean assembled SGen `0f5a56d`, both composed
+HOGE directions pass their unchanged complete oracles:
+
+| Direction | Candidate | Local report | Transaction cycles |
+| --- | --- | --- | ---: |
+| Forward | `8df352c3666e` | `/tmp/llm-hoge-sgen/build/hoge-combined-integration/report.json` | 104 |
+| Inverse | `09d9fb9e1912` | `/tmp/llm-hoge-sgen/build/hoge-combined-inverse-integration/report.json` | 73 |
+
+The combined forward candidate also passes all 240 overlapping frames at a
+32-cycle saturated interval. `/tmp/llm-hoge-sgen/build/hoge-combined-overlap/result.json`
+retains the RTL, source-report, test-source and CMake hashes, commands and output.
+The integrated framework passes all 131 Python tests with no skips under the
+native-tool environment (`/tmp/framework-integration-tests.out`).
+
+Use `hoge-forward-sgen-validation.json` and `hoge-inverse-sgen-validation.json`
+with `--ngen-root` and `--sgen-root` selecting those assembled revisions to
+reproduce these functional campaigns. The older composed hardware measurement
+uses the pre-shift NGen revision; its eventual result must not be attributed to
+this combined shift-based candidate without a separate hardware measurement.
