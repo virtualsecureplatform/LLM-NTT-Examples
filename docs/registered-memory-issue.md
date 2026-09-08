@@ -45,3 +45,18 @@ with the banked OpenNTT adapter; both enter its routed frontier. Relative to
 OpenNTT, NGen has 33.1% higher route-qualified RTL-derived transform throughput
 and 25.9% lower latency, with fewer FF/DSP and higher LUT/BRAM use. This is not a
 board or universal-generator claim. Main-branch integration remains pending.
+
+The full registered-issue FHE matrix completes all 18 cases successfully. A
+follow-up metadata-only update on the experiment branch reports
+`registered_memory_issue_groups` and `block_control_rom_groups`, calculated from
+the actual partition schedules rather than the full-transform schedule. A
+1024-point, three-partition test has bundle counts 768/768/1024 and correctly
+reports one eligible group. Runtime-writable control does not claim block ROM.
+
+All 153 Scala tests pass. `build/issue-metadata-validation/results.json` records
+fresh generation whose 16K RTL SHA-256 exactly equals the routed artifact and
+whose latency/interval declarations are unchanged. The mixed-partition sidecar
+also agrees with the emitted block-ROM declarations. This metadata update does
+not introduce a new unmeasured hardware revision; the proven byte equality is
+retained explicitly. Main integration still waits for the fixed-input policy
+experiment.

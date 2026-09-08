@@ -406,3 +406,13 @@ A reproducible [evidence snapshot](evidence-snapshot.md) now consolidates the
 N=256, N=16K, Kyber and YATA comparison groups, with pending HOGE measurements
 listed explicitly. It rechecks RTL/artifact integrity and recomputes frontiers.
 All 127 Python tests pass. The snapshot is not full-plan completion evidence.
+
+## Effective issue metadata audit
+
+The registered-issue matrix completes 18/18 full FHE cases. The experiment branch
+now reports actual registered-issue and block-control group counts, including
+mixed-size stage partitions. All 153 Scala tests pass; a fresh 16K generation
+has exactly the routed RTL hash and unchanged timing declarations. Evidence is
+in `build/issue-metadata-validation/results.json`. This closes the metadata
+attribution gap without claiming a new hardware measurement. The policy
+reference pool completed all six syntheses and the live repetitions have begun.
