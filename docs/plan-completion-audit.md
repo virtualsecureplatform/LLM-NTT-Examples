@@ -302,3 +302,12 @@ pipeline; rebuilt 16K/q54 forward passes with the expected +30-cycle latency and
 initiation-interval tradeoff. Both fresh hardware candidates are queued. See
 [wide Montgomery product](wide-montgomery-product.md). The 18-case FHE matrix
 has started; partial passes do not establish complete matrix coverage.
+
+## Executable freshness prevention
+
+Assembly embeds source/build-input hashes and the ordinary search CLI verifies
+them before run/resume. A legacy binary is rejected before output creation; a
+fresh guarded N=256/q54 campaign passes. See [NGen build identity](ngen-build-identity.md).
+Integration into direct library/matrix entry points remains open while the
+frozen 18-case FHE run is active. The manifest does not retroactively verify
+historical measurements.
