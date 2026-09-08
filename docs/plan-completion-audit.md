@@ -123,3 +123,18 @@ Proteus forward routing runs are queued under the buffered fabric contract.
 The policy-pool driver failure and isolated retry are documented in the replay
 notes. Per-job driver snapshots prevent later workspace edits from changing a
 running measurement script.
+
+The HOGE forward campaign passed microcoded indexed/switch and full-throughput
+switch configurations. Stage-parallel indexed initially failed Verilator
+elaboration (`BLKLOOPINIT` on the 1024-element nonblocking update loop), before
+simulation. NGen now emits the identical register updates explicitly. Four
+focused Scala tests and the fresh complete forward stream campaign
+`build/hoge-stage-forward-explicit` pass. Inverse and Kyber campaigns are still
+being checked; the initial tool failure is retained in the original report.
+
+The structural resource model and one held-out architecture check are now
+recorded in the policy replay notes. They improve estimates but do not provide
+safe pruning bounds. OpenNTT's matched buffered fabric route completed with
+10120 LUTs, 11088 FFs, 32 DSPs, three BRAM tiles, WNS +0.429 ns and WHS -0.019 ns
+(`build/openntt256-buffered-fabric-route`). It remains excluded: the physical
+buffer experiment has not established matched routed closure.
