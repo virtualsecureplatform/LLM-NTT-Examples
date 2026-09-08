@@ -47,3 +47,33 @@ The replay validator now accepts the search runner's `hardware_failed` status
 when implementation actually completed and all required measurements exist.
 This allows real timing failures to consume budget without entering the
 frontier. Incomplete implementation and missing metrics remain rejected.
+
+## Five completed measurements
+
+`build/policy-pool256-completed-five.json` records the original report hash and
+the excluded PE=4/groups=2 driver failure. It contains PE=1/groups=1,2,4 and
+PE=4/groups=1,4. This conditional pool is not the complete six-point experiment.
+With limits LUT=10000, FF=6000, DSP=50, BRAM=8, only PE=1/groups=1,2 are feasible;
+both belong to the reference frontier.
+
+The saved replay `build/policy-replay256-five` uses budget three and seeds 1–5.
+All five live LLM calls succeeded; requests and responses are retained.
+
+| Policy | Mean frontier recall | Mean feasible discoveries |
+| --- | ---: | ---: |
+| Enumeration | 1.00 | 2.0 |
+| Random | 0.50 | 1.0 |
+| Online cost | 0.70 | 1.4 |
+| LLM | 1.00 | 2.0 |
+
+The LLM ties enumeration here. These small, overlapping finite-pool trials do
+not demonstrate generalization or an LLM advantage over enumeration. The LLM
+uses temperature zero and does not receive the random seed, so its repeated
+calls are not independent seeded exploration trials.
+
+`build/policy-pool256-five-cost.json` reports five-sample leave-one-out mean
+absolute errors: LUT 10526.20, FF 2314.50, DSP 47.29, and BRAM 8.57. This simple
+nearest-neighbor model is unsuitable for resource pruning on this sample.
+Zero WNS error reflects identical +0.599 ns estimates at all five points and
+provides no evidence of general timing prediction. Stronger structural models
+and held-out measurements remain necessary.
