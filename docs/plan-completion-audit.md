@@ -244,3 +244,12 @@ compact backend explicitly requires sequential full-frame load/compute/read
 phases. Both backends are exposed by the Kyber campaign; the broad command
 interface remains available through microcoded. Routed closure is still not
 established for this preset.
+
+The next wider matched hardware comparison uses
+`campaigns/fhe16k54-two-buffer-fabric.json`: N=16384/q54 forward, four external
+lanes, PE=2, and the same two-buffer fabric contract as the N=256 comparison.
+NGen's run is `build/ngen-fhe16k54-two-buffer-fabric`; the already verified
+OpenNTT stream is queued for implementation at
+`build/openntt-fhe16k54-two-buffer-fabric`. These launches do not establish
+resource fit or timing closure. The integrated Kyber work completes 149 Scala
+and 111 Python tests, including both normal search backends and RAM reset checks.
