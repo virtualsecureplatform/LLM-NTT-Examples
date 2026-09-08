@@ -28,6 +28,7 @@
     ]
   },
   "stages": [
-    "simulation"
+    "simulation",
+    "synthesis"
   ]
 }

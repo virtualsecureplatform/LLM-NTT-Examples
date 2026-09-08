@@ -109,3 +109,13 @@ class SearchExtensionTests(unittest.TestCase):
         w={'kind':'generic',**oracle.field(16,16),'lanes':4}
         configs=candidates(w,Path('.'),{'pe':[1],'radix':[2,4],'stage_groups':[2]})
         self.assertTrue(all(c['radix']==2 and c['boundary']=='registered-ready-valid' for c in configs))
+
+
+class KyberArchitectureTests(unittest.TestCase):
+    def test_compact_backend_declares_its_host_schedule(self):
+        root=Path(__file__).resolve().parents[3]/'NGen'
+        configs=candidates({'kind':'preset','task':'kyber_ntt_256_p12_pe1'},root,{'backends':['microcoded','compact'],'profiles':['baseline'],'transposes':['indexed']})
+        self.assertEqual({c['backend'] for c in configs},{'microcoded','compact'})
+        compact=next(c for c in configs if c['backend']=='compact')
+        self.assertEqual(compact['host_schedule'],'serialized-load-compute-read')
+        self.assertEqual(compact['storage'],'banked-pointer-swap')

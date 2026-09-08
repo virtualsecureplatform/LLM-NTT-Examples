@@ -28,8 +28,11 @@ def candidates(workload: dict, ngen: Path, space: dict | None = None) -> list[di
             task = workload['task']
             if backend not in ('microcoded', 'compact', 'stage-parallel', 'full-throughput') or profile not in ('baseline','f300') or transpose not in ('indexed','switch','distributed'):
                 raise ValueError('unknown preset search option')
-            if 'kyber' in task or task == 'small_hoge32_p64':
-                if backend != 'microcoded' or transpose != 'indexed':
+            if 'kyber' in task:
+                if backend not in ('microcoded','compact') or transpose!='indexed':
+                    continue
+            if task == 'small_hoge32_p64':
+                if backend!='microcoded' or transpose!='indexed':
                     continue
             if transpose == 'distributed' and task != 'hoge_streaming_ntt_1024_p64':
                 continue
@@ -39,7 +42,9 @@ def candidates(workload: dict, ngen: Path, space: dict | None = None) -> list[di
                     continue
             if backend == 'stage-parallel' and task.startswith('hoge_streaming') and transpose != 'indexed':
                 continue  # This combination selects another backend in NGen.
-            result.append(dict(generator='ngen', backend=backend, profile=profile, transpose=transpose))
+            configuration=dict(generator='ngen',backend=backend,profile=profile,transpose=transpose)
+            if 'kyber' in task and backend=='compact':configuration.update(storage='banked-pointer-swap',host_schedule='serialized-load-compute-read')
+            result.append(configuration)
     elif workload['kind'] == 'generic':
         n, lanes = int(workload['n']), int(workload.get('lanes', 4))
         if lanes < 1 or lanes & (lanes - 1) or n % lanes:

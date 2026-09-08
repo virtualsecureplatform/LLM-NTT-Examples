@@ -235,3 +235,12 @@ pre-pipeline/pipeline synthesis comparison. It passes the unchanged arithmetic
 oracle and a new reset-abort regression, but remains much larger than the
 extracted reference. Routed Kyber hold, storage architecture, and wider baseline
 and search-policy coverage remain open; these are not hidden by setup closure.
+
+[Compact Kyber storage](kyber-banked-storage.md) now passes the original oracle,
+reset recovery, a 16-operation bank-reuse check, and 4 ns synthesis. It uses
+628 LUTs, 223 FFs, two DSPs and one BRAM tile at the extracted reference's 1414
+transaction cycles, trading one extra DSP for fewer LUTs/FFs/BRAM. The opt-in
+compact backend explicitly requires sequential full-frame load/compute/read
+phases. Both backends are exposed by the Kyber campaign; the broad command
+interface remains available through microcoded. Routed closure is still not
+established for this preset.
