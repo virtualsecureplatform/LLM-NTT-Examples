@@ -21,7 +21,7 @@ and the live policy comparison must be reported before the final audit.
 | 3: measured benefits and visible tradeoffs | Matched N=16K registered-issue route and OpenNTT both qualify; NGen trades more LUT/BRAM for lower latency and fewer FF/DSP | Demonstrated for that workload; no universal dominance claim |
 | 4: calibrated models and resource/bandwidth pruning | Six-point N=128 integrity-checked calibration, leave-one-out and whole-architecture holdouts; bandwidth/issue and state-capacity bound tests | Demonstrated; structural group holdouts are unavailable, predictions remain advisory |
 | 4: correct candidates, matched baselines and routed results | Integrity-rechecked snapshot contains three qualified N=256 routes and two qualified N=16K routes; baseline adapters and modified Proteus are labeled | Demonstrated for those matched workloads |
-| 4: model error, search cost and policy comparison | Cost holdout reports and completed live pilot/replay retain negative LLM outcomes | Three equal-budget live repetitions still running; summarize time, queue time, consumed evaluations, failures and recovery |
+| 4: model error, search cost and policy comparison | Cost holdout reports and completed live pilot/replay retain negative LLM outcomes | All 36 original observations complete and summarized with contention caveats; equal-budget replication without competing jobs is running |
 | 4: final reproducible comparison report and limited claims | Published snapshot covers six completed groups; HOGE forward explicitly favors the reference on timing qualification | Inverse and composed HOGE measurements complete with negative outcomes retained; consolidate policy results and integrated revision identities |
 
 The live policy manifest was rechecked against all 23 executable inputs after
@@ -38,8 +38,8 @@ outside the approved routed-RTL milestone.
 
 1. Forward constant-shift synthesis is complete and consolidated with
    pre-shift NGen, SGen-composed and extracted HOGE forward records.
-2. Finish the current live-policy run without changing its executable inputs.
-   Its queue failures consume evaluation budget and must remain visible.
+2. The original live-policy run is complete. Its queue failure consumes
+   evaluation budget and remains visible in the published contention report.
 3. Repeat the same 36 fresh evaluations (four policies, seeds 2/3/4, three
    evaluations each, 12-hour total budget) without competing hardware campaigns.
    Reuse the complete reference pool only for scoring; do not reuse its

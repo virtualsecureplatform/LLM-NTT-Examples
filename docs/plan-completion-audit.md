@@ -513,3 +513,13 @@ as a measured resource tradeoff, with no qualified throughput claim.
 only the extracted reference qualifies at synthesis. All HOGE hardware jobs
 are now terminal, so no further competing HOGE campaign will be launched
 during the policy study or its clean replication.
+
+## Completed original policy study; clean replication active
+
+All 36 original observations are terminal. Mean frontier recall is 75% for
+enumeration, 58.3% for cost-guided selection, 50% for random selection and 25%
+for the LLM. The seed-2 random trial includes a consumed queue-timeout failure;
+its queue duration is unknown. See [the contention report](policy-contended-study.md).
+The supervisory sequence validated and summarized the full trial set, verified
+all 23 frozen inputs and an idle vendor queue, then started the fresh equal-budget
+replication. Main integration remains pending this final measurement study.
