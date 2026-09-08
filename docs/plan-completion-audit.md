@@ -416,3 +416,14 @@ has exactly the routed RTL hash and unchanged timing declarations. Evidence is
 in `build/issue-metadata-validation/results.json`. This closes the metadata
 attribution gap without claiming a new hardware measurement. The policy
 reference pool completed all six syntheses and the live repetitions have begun.
+
+## Complete-pool architecture holdouts
+
+All six current N=128 hardware measurements pass artifact integrity. Fresh
+leave-one-out and whole-PE/whole-stage-group holdouts are recorded in
+[cost-model holdouts](cost-model-holdouts.md). Structural LUT MAE is 1415.81 in
+leave-one-out but 4462.25 for withheld PE=4; group-held-out fits are correctly
+unavailable. This adds independent validation and keeps empirical predictions
+advisory rather than using error averages as pruning guarantees. All 129 Python
+tests pass, including no-leakage and unavailable-fit coverage. Live policies are
+unchanged and remain running.
