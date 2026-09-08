@@ -121,6 +121,7 @@ def main(argv=None) -> int:
         configurations=[selected]
     try:
         bounds={digest(c):constraints.analyze(workload,c,campaign['target'],campaign.get('bandwidth'),campaign.get('requirements')) for c in configurations}
+        storage_bounds={digest(c):constraints.storage_bound(workload,c,campaign['target'],campaign.get('resource_limits')) for c in configurations}
     except ValueError as error:parser.error(str(error))
     if args.policy=='random':
         random.Random(args.seed).shuffle(configurations)
@@ -142,7 +143,7 @@ def main(argv=None) -> int:
     stages=campaign.get('stages',['simulation'])
     if any(s not in ('simulation','synthesis','route') for s in stages):
         parser.error('unknown evaluation stage')
-    plan={'schema':'ntt-search-plan-v1','campaign':campaign,'policy':args.policy,'seed':args.seed,'configurations':configurations,'cost_model':fitted,'throughput_bounds':bounds}
+    plan={'schema':'ntt-search-plan-v1','campaign':campaign,'policy':args.policy,'seed':args.seed,'configurations':configurations,'cost_model':fitted,'throughput_bounds':bounds,'storage_bounds':storage_bounds}
     if args.mode=='plan':
         print(json.dumps(plan,indent=2));return 0
     if args.mode=='report':
@@ -209,8 +210,8 @@ def main(argv=None) -> int:
         work=directory/'candidates'/key; path=work/'record.json'
         if path.exists() and json.loads(path.read_text()).get('status') not in ('running',):
             continue
-        if bounds[digest(config)]['pruned']:
-            write_json(path,{'schema':'ntt-search-candidate-v1','id':key,'configuration':config,'status':'pruned','correct':False,'mode':'bound','evidence':{},'throughput_bound':bounds[digest(config)]})
+        if bounds[digest(config)]['pruned'] or storage_bounds[digest(config)]['pruned']:
+            write_json(path,{'schema':'ntt-search-candidate-v1','id':key,'configuration':config,'status':'pruned','correct':False,'mode':'bound','evidence':{},'throughput_bound':bounds[digest(config)],'storage_bound':storage_bounds[digest(config)]})
             continue
         if remaining()<=0 or state['functional']>=limits['functional']:
             break

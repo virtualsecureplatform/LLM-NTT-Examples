@@ -44,3 +44,35 @@ def analyze(workload, configuration, target, bandwidth=None, requirements=None):
     return {'schema':'ntt-optimistic-throughput-bound-v1','upper_transforms_per_second':upper,'required_transforms_per_second':minimum,
             'pruned':minimum is not None and upper is not None and upper<minimum,'terms':terms,
             'limitation':'Optimistic necessary condition only. Omits pipeline drain, memory stalls, twists, and timing closure; passing this bound does not prove feasibility.'}
+
+
+def storage_bound(workload, configuration, target, limits=None):
+    """Necessary state-capacity check for the closed, capture-before-output core.
+
+    Deliberately gives each RAM/DSP more storage than its real memory and
+    pipeline registers, and treats every LUT as writable RAM. Missing a
+    resource cap makes the capacity unbounded rather than implicitly zero.
+    """
+    keys=('lut','ff','dsp','bram','uram')
+    limits=limits or {}
+    result={'schema':'ntt-state-capacity-bound-v1','pruned':False,'available':False}
+    if workload.get('kind')!='generic' or configuration.get('generator')!='ngen' or configuration.get('backend')!='streamed' or configuration.get('boundary')!='registered-ready-valid':
+        return {**result,'reason':'requires the closed NGen capture-before-output streaming core'}
+    if not str(target.get('part','')).startswith('xcu280-'):
+        return {**result,'reason':'primitive capacity envelope is only validated for UltraScale+ U280'}
+    for key in keys:
+        if key in limits and (not metric_number(limits[key]) or limits[key]<0):
+            raise ValueError('resource caps must be finite and nonnegative')
+    if any(key not in limits for key in keys):
+        return {**result,'reason':'all LUT, FF, DSP, BRAM and URAM caps are required; missing means unbounded'}
+    # After N-1 accepted coefficients and before any output, an injective NTT
+    # must distinguish q^(N-1) prefixes. Flooring log2(q) is a safe lower bound.
+    required=(int(workload['n'])-1)*(int(workload['q']).bit_length()-1)
+    # These are generous upper envelopes, NOT resource estimates or usable
+    # memories: 64K for a 36K RAM, 512K for a 288K URAM, 4K for DSP registers.
+    bits={'lut':64,'ff':1,'dsp':4096,'bram':65536,'uram':524288}
+    capacity=sum(limits[key]*bits[key] for key in keys)
+    return {**result,'available':True,'required_state_bits_lower_bound':required,
+            'capacity_bits_upper_bound':capacity,'bits_per_resource_upper_envelope':bits,
+            'resource_caps':{key:limits[key] for key in keys},'pruned':required>capacity,
+            'limitation':'Necessary condition only for this closed OOC RTL architecture. All LUTs are assumed usable as RAM; padded RAM/DSP envelopes include internal pipeline state. Ignores extra frame buffers, control/twiddle storage, ports, placement and timing. Passing does not prove fit.'}

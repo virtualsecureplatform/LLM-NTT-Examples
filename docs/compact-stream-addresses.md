@@ -54,3 +54,10 @@ WHS +0.063 ns under the two-buffer target. Before compaction the same synthesis
 target used 5101 LUTs, 1735 FFs and 22 DSPs. The compact version trades 25 LUTs
 and 152 FFs for four DSPs; the full routed ablation is still running at
 `build/ngen-integrated-compact-route256`.
+
+The integrated compact design now passes routing in
+`build/ngen-integrated-compact-route256`: 4904 LUTs, 1950 FFs, 18 DSPs, four
+BRAM tiles, WNS +0.240 ns and WHS +0.006 ns, with unchanged 791-cycle latency
+and 852-cycle frame interval. Against the original same-target route, this
+trades 15 LUTs and 208 FFs for four DSPs. The updated three-generator artifact
+is `build/comparison-threeway256-compact-routed`; all three still qualify.

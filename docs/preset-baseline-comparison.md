@@ -66,3 +66,17 @@ selection and modular arithmetic to `work_reg[160][3]/D`, with 10.654 ns data
 delay and 39 logic levels. Reducing transaction cycles did not establish a
 4 ns hardware implementation. Matched extracted-reference synthesis is running;
 the failing NGen point remains outside the hardware frontier.
+
+The extracted Kyber reference completed synthesis: 777 LUTs, 353 FFs, one DSP,
+2.5 BRAM tiles and WNS +1.307 ns (`build/kyber-extracted-hardware-comparison`).
+Its synthesis hold estimate is -0.042 ns; only routed checks enforce full hold
+closure, so this is not a routed result. Its 1414 transaction cycles and much
+smaller area establish that NGen's work-array architecture still needs improvement.
+
+An isolated `ngen-kyber-pipeline` worktree now separates instruction fetch, work
+read, inverse preprocessing, product, Montgomery correction, multiply-add,
+reduction, and retirement. Forward and inverse share one datapath. Generation
+checks every scheduled address dependency against the pipeline distance. The
+full unchanged preset oracle passes at 1414 transaction cycles, including both
+banks/directions. Synthesis is running at `build/kyber-pipelined-hardware`;
+this branch has not replaced the measured main implementation yet.
