@@ -5,7 +5,7 @@ from architecture_search.replay import trial,validate_pool
 TARGET={'clock_period_ns':4.0}
 
 def record(i,lut,throughput,passed=True):
-    return {'id':str(i),'status':'complete','correct':True,'mode':'functional','rtl_hash':str(i),
+    return {'id':str(i),'status':'complete' if passed else 'hardware_failed','correct':True,'mode':'functional','rtl_hash':str(i),
             'configuration':{'generator':'ngen','pe':i+1,'radix':2,'lanes':4},
             'evidence':{'synthesis':{'implementation_passed':True,'passed':passed,'target':TARGET,
             'metrics':{'lut':lut,'ff':lut,'dsp':10,'bram':4,'uram':0,'latency_ns':1000,'transforms_per_second':throughput}}}}
@@ -13,6 +13,7 @@ def record(i,lut,throughput,passed=True):
 class Replay(unittest.TestCase):
     def test_failed_timing_consumes_budget_but_never_recovers_frontier(self):
         pool=[record(0,1,999,False),record(1,50,100),record(2,100,200)]
+        validate_pool({'candidates':pool},TARGET,'synthesis')
         result=trial(pool,TARGET,'synthesis',2,'enumerate',1)
         self.assertEqual(result['trace'][0]['feasible_discoveries'],0)
         self.assertEqual(result['final']['frontier_recall'],0.5)

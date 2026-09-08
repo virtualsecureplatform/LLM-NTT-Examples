@@ -33,6 +33,22 @@ Path(a[6],'route_status.rpt').write_text('# of routable nets.... : 10 :\\n# of f
             self.assertNotEqual(subprocess.run(command,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT).returncode,0)
             self.assertFalse(json.loads(output.read_text())['passed'])
 
+    def test_driver_is_snapshotted_before_vendor_execution(self):
+        from architecture_search.hardware import _evaluate
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as tmp:
+            directory=Path(tmp)/'synthesis'
+            def inspect(command, cwd, log, timeout):
+                script=Path(command[1])
+                self.assertNotEqual(script,ROOT/'scripts/vitis_synth_rtl.sh')
+                self.assertEqual(script.read_bytes(),(ROOT/'scripts/vitis_synth_rtl.sh').read_bytes())
+                self.assertEqual((script.parent/'insert_output_hold_buffers.tcl').read_bytes(),
+                                 (ROOT/'scripts/insert_output_hold_buffers.tcl').read_bytes())
+                return {'returncode':1}
+            with patch('architecture_search.hardware.run',side_effect=inspect):
+                result=_evaluate(Path(tmp)/'top.sv','top',{}, {},directory,'synthesis',10)
+            self.assertFalse(result['implementation_passed'])
+
     def test_vivado_queue_respects_timeout(self):
         import fcntl
         from architecture_search.hardware import evaluate

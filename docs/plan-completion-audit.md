@@ -114,3 +114,12 @@ inverse streams and a 64-bit inverse stream pass independent functional checks.
 The unbuffered fabric run still fails hold; the optional physical output-buffer
 experiment described in the timing contract has passed synthesis, with routing
 pending. Neither result establishes overall plan completion or a routed win.
+
+Functional-only campaigns are now checked in for HOGE 1024 forward/inverse and
+Kyber 256 (`campaigns/hoge-forward.json`, `hoge-inverse.json`, and `kyber.json`).
+Their initial validation runs are in progress under `build/preset-*-validation`;
+no pass is claimed until each report is inspected. Matched OpenNTT and modified
+Proteus forward routing runs are queued under the buffered fabric contract.
+The policy-pool driver failure and isolated retry are documented in the replay
+notes. Per-job driver snapshots prevent later workspace edits from changing a
+running measurement script.

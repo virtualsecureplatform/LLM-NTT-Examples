@@ -20,7 +20,7 @@ def validate_pool(report: dict,target: dict,stage: str) -> list[dict]:
         if key in seen:raise ValueError('duplicate configuration: do not mix architecture revisions in one replay')
         seen.add(key)
         e=r.get('evidence',{}).get(stage,{})
-        if r.get('status')!='complete' or r.get('mode')!='functional' or r.get('correct') is not True:
+        if r.get('status') not in ('complete','hardware_failed') or r.get('mode')!='functional' or r.get('correct') is not True:
             raise ValueError('pool must contain completed, independently correct candidates')
         if e.get('target')!=target or not e.get('implementation_passed'):
             raise ValueError('each candidate needs completed implementation under the same target')

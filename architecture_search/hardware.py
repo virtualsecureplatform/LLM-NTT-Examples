@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import fcntl
 import os
+import shutil
 import tempfile
 import time
 from pathlib import Path
@@ -19,7 +20,13 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
     output=directory/'metrics.json'
     version=target.get('tool_version','2023.2')
     vivado=target.get('vivado',f'/home/opt/xilinx/Vivado/{version}/bin/vivado')
-    command=['bash',str(root/'scripts/vitis_synth_rtl.sh'),'--stage',stage,'--top',top,
+    # Bash can read later portions after a long vendor call. Never run a mutable
+    # workspace script across that call; snapshot its helper alongside it.
+    driver=directory/'driver/scripts'
+    driver.mkdir(parents=True,exist_ok=True)
+    for name in ('vitis_synth_rtl.sh','insert_output_hold_buffers.tcl'):
+        shutil.copyfile(root/'scripts'/name,driver/name)
+    command=['bash',str(driver/'vitis_synth_rtl.sh'),'--stage',stage,'--top',top,
              '--verilog-file',str(rtl),'--part',target.get('part','xcu280-fsvh2892-2L-e'),
              '--clock-period',str(period),'--clock-port',target.get('clock_port','clock'),
              '--build-dir',str(directory),'--metrics-json',str(output),'--vivado-bin',vivado,

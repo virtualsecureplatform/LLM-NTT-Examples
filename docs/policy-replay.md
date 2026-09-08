@@ -34,3 +34,16 @@ stage groups, under the shared fabric contract. Its explicit LUT, FF, DSP, and
 BRAM limits make feasible-candidate discovery relevant. The new measurements
 must finish before reporting a larger policy comparison. Online end-to-end
 policy trials and held-out workload evaluation remain acceptance work.
+
+The six-candidate pool exposed a measurement-driver failure after Vivado had
+written its checkpoint: a workspace shell-script edit during the vendor call
+caused Bash to resume at the wrong location. New hardware jobs copy the driver
+and its Tcl helper into their result directory before execution. The failed
+PE=4/groups=2 attempt is retained; a fresh campaign in
+`build/policy-pool256-driver-retry` re-evaluates that configuration. Do not treat
+this tool failure as measured timing failure or fill its missing metrics.
+
+The replay validator now accepts the search runner's `hardware_failed` status
+when implementation actually completed and all required measurements exist.
+This allows real timing failures to consume budget without entering the
+frontier. Incomplete implementation and missing metrics remain rejected.

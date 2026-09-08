@@ -1,0 +1,34 @@
+{
+  "target": {
+    "part": "xcu280-fsvh2892-2L-e",
+    "tool_version": "2023.2",
+    "clock_period_ns": 4.0
+  },
+  "budget": {
+    "hours": 12,
+    "functional": 64,
+    "synthesis": 12,
+    "route": 4
+  },
+  "workload": {
+    "kind": "preset",
+    "task": "kyber_ntt_256_p12_pe1"
+  },
+  "space": {
+    "backends": [
+      "microcoded",
+      "stage-parallel",
+      "full-throughput"
+    ],
+    "profiles": [
+      "baseline"
+    ],
+    "transposes": [
+      "indexed",
+      "switch"
+    ]
+  },
+  "stages": [
+    "simulation"
+  ]
+}
