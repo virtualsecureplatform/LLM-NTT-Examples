@@ -199,3 +199,12 @@ both directions) is also running with PE=2, radix=2, Montgomery, one stage group
 Campaigns and reports are under `build/fhe-matrix-single-pe2-campaigns` and
 `build/fhe-matrix-single-pe2`. These launches do not establish passes or hardware
 fit; each result still requires inspection.
+
+Fresh [extracted preset comparisons](preset-baseline-comparison.md) now pass
+Kyber, YATA, and both HOGE directions against unchanged tests. They retain slower
+NGen points as well as faster cycle-count points without claiming achieved
+hardware speedups. The full-design three-option permutation synthesis comparison
+has finished; all three fail setup, and the stride adapter is more expensive
+on this small task. An isolated Kyber normalization improvement removes 256
+inverse cycles and passes the original oracle; integration and matched hardware
+measurement remain pending while live trial inputs are fixed.

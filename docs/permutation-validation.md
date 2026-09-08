@@ -64,3 +64,18 @@ metadata, not substituted for this measured adapter-inclusive transaction.
 SGen switches, and SGen stride RAMs under the same preset workload and target,
 including full-design synthesis. Its initial campaign is in progress at
 `build/yata8x8-permutation-comparison`; no resource advantage is claimed yet.
+
+The first full-design synthesis comparison finished:
+
+| Permutation | Transaction cycles | LUT | FF | DSP | BRAM | WNS at 4 ns |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| NGen switch | 86 | 58565 | 9823 | 424 | 0 | -5.483 ns |
+| SGen switch | 86 | 58565 | 9823 | 424 | 0 | -5.483 ns |
+| SGen stride RAM | 96 | 58769 | 11306 | 424 | 8 | -5.483 ns |
+
+All three pass functional tests but fail the synthesis setup gate. The switch
+sources have identical measured cost here. The stride option adds 204 LUTs,
+1483 FFs, eight BRAM tiles, and ten transaction cycles on this small workload;
+it provides no advantage in this comparison. Full adapter logic is included.
+These results are retained in `build/yata8x8-permutation-comparison` and do not
+populate a passing hardware frontier.
