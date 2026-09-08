@@ -45,7 +45,9 @@ def source_identity(root: Path) -> dict:
         if path.is_file():
             hashes[os.fsdecode(name)] = file_hash(path)
         elif path.is_dir():
-            hashes[os.fsdecode(name)] = source_identity(path)
+            # An uninitialized gitlink inherits the parent repository in git -C.
+            # Recursing then repeats its file list indefinitely.
+            hashes[os.fsdecode(name)] = source_identity(path) if (path/'.git').exists() else {'uninitialized_submodule':True}
         else:
             hashes[os.fsdecode(name)] = 'missing'
     return {'revision': git('rev-parse', 'HEAD').decode().strip(), 'source_hash': digest(hashes)}

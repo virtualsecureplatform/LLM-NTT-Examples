@@ -4,6 +4,7 @@ import importlib.util
 import itertools
 from pathlib import Path
 from .model import run
+from .build_identity import verify
 from .permutation import compose,compose_linear
 from .boundary import registered_ready_valid
 
@@ -74,6 +75,8 @@ def candidates(workload: dict, ngen: Path, space: dict | None = None) -> list[di
 
 
 def generate(workload: dict, config: dict, ngen: Path, directory: Path, timeout: float, executable: Path | None = None, sgen_executable: Path | None = None) -> tuple[dict, Path]:
+    build=verify(ngen,executable)
+    if not build['verified']:raise ValueError('NGen build verification failed; run sbt assembly: '+str(build))
     directory.mkdir(parents=True, exist_ok=True)
     if workload['kind'] == 'preset':
         base, filename = preset_tasks(ngen)[workload['task']]
@@ -92,6 +95,8 @@ def generate(workload: dict, config: dict, ngen: Path, directory: Path, timeout:
     rtl = directory / filename
     args += ['-profile', config['profile'], '-transpose', config['transpose'], '-o', str(rtl), terminal]
     process=run(['bash', str(executable or ngen/'ngen.bat'), *args], ngen, directory/'generation.log', timeout)
+    if verify(ngen,executable)!=build:raise ValueError('NGen build inputs or executable changed during generation')
+    process['ngen_build']=build
     if process['returncode']==0 and workload['kind']=='generic':
         rtl.write_text(registered_ready_valid(rtl.read_text(),config['lanes'],int(workload['q']).bit_length()))
         process['boundary']={'kind':'registered-ready-valid','elastic_register_stages':2,'included_in_measurements':True}

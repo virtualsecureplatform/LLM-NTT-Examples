@@ -90,6 +90,12 @@ def main(argv=None) -> int:
     parser.add_argument('--seed',type=int,default=1)
     parser.add_argument('--configuration-json',type=Path,help='evaluate exactly one configuration, which must belong to the declared legal space')
     args=parser.parse_args(argv)
+    build_identity=None
+    if args.mode in ('run','resume'):
+        from .build_identity import verify
+        build_identity=verify(args.ngen_root)
+        if not build_identity['verified']:
+            parser.error('NGen build verification failed: '+json.dumps(build_identity)+'; run sbt assembly')
     campaign=json.loads(args.campaign.read_text())
     campaign['target']={'part':'xcu280-fsvh2892-2L-e','tool_version':'2023.2','clock_period_ns':4.0,**campaign.get('target',{})}
     limits={'hours':12,'functional':64,'synthesis':12,'route':4,**campaign.get('budget',{})}
@@ -153,7 +159,7 @@ def main(argv=None) -> int:
         print(json.dumps(report(directory,campaign)['frontiers'],indent=2));return 0
     if not (ngen/'ngen.bat').is_file():
         parser.error('build NGen with sbt assembly before running a campaign')
-    identity={'search':source_identity(ROOT),'ngen':source_identity(ngen),'ngen_binary':file_hash(ngen/'ngen.bat'),
+    identity={'ngen_build':build_identity,'search':source_identity(ROOT),'ngen':source_identity(ngen),'ngen_binary':file_hash(ngen/'ngen.bat'),
               'tools':{'iverilog':tool_identity(['iverilog','-V']),'vvp':tool_identity(['vvp','-V']),
                        'verilator':tool_identity(['verilator','--version']),'cxx':tool_identity(['clang++','--version']),
                        'cmake':tool_identity(['cmake3' if shutil.which('cmake3') else 'cmake','--version'])}}

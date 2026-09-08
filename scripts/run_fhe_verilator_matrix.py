@@ -8,6 +8,7 @@ import shutil
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from architecture_search.adapters import candidates,generate
+from architecture_search.build_identity import verify
 from architecture_search.model import file_hash,run,source_identity,write_json
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -18,6 +19,8 @@ p.add_argument('--output-dir',type=Path,required=True)
 p.add_argument('--timeout',type=float,default=7200,help='seconds per generation and per complete oracle check')
 a=p.parse_args();out=a.output_dir.resolve();ngen=a.ngen_root.resolve()
 if not math.isfinite(a.timeout) or a.timeout<=0:p.error('timeout must be finite and positive')
+build=verify(ngen)
+if not build['verified']:p.error('NGen build verification failed; run sbt assembly: '+str(build))
 if out.exists() and any(out.iterdir()):p.error('output directory must be empty')
 campaigns=[]
 for path in sorted(a.campaign_dir.glob('*.json')):
@@ -30,7 +33,7 @@ if not campaigns:p.error('no campaigns')
 out.mkdir(parents=True,exist_ok=True);binary=out/'ngen.bat';shutil.copyfile(ngen/'ngen.bat',binary)
 guarded=[*sorted((ROOT/'architecture_search').glob('*.py')),ROOT/'scripts/check_generic_verilator.py',ROOT/'scripts/externalize_control_roms.py',Path(__file__).resolve()]
 identities={str(path):file_hash(path) for path in guarded}
-manifest={'schema':'ntt-fhe-verilator-matrix-v1','ngen_source':source_identity(ngen),'binary_sha256':file_hash(binary),'runner_files':identities,'campaigns':{str(path.resolve()):file_hash(path) for path,_,_ in campaigns},'scope':'Independent registered-stream oracle checks; no hardware performance or fit claim.'}
+manifest={'schema':'ntt-fhe-verilator-matrix-v1','ngen_build':build,'ngen_source':source_identity(ngen),'binary_sha256':file_hash(binary),'runner_files':identities,'campaigns':{str(path.resolve()):file_hash(path) for path,_,_ in campaigns},'scope':'Independent registered-stream oracle checks; no hardware performance or fit claim.'}
 write_json(out/'manifest.json',manifest);results=[]
 for path,c,config in campaigns:
     if file_hash(binary)!=manifest['binary_sha256'] or any(file_hash(Path(name))!=value for name,value in identities.items()):raise RuntimeError('executable input changed during matrix')
