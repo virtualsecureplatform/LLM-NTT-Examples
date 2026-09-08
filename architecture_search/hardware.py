@@ -99,9 +99,10 @@ def evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path, 
                 fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
                 break
             except BlockingIOError:
-                if time.monotonic()-start>=timeout:
+                queued=time.monotonic()-start
+                if queued>=timeout:
                     return {'passed':False,'implementation_passed':False,'timing_clean':False,
-                            'target':target,'metrics':{},'error':'Vivado queue timeout'}
+                            'target':target,'metrics':{},'error':'Vivado queue timeout','queue_seconds':queued}
                 time.sleep(min(0.2,max(0,timeout-(time.monotonic()-start))))
         queued=time.monotonic()-start
         result=_evaluate(rtl,top,target,metrics,directory,stage,max(0,timeout-queued),extra_sources,include_dirs,additional_inputs)
