@@ -104,21 +104,25 @@ Qualified frontier: none.
 
 ## HOGE forward hardware comparison
 
-Extracted HOGE passes synthesis timing; NGen full-throughput fails setup and hold. The shorter simulated NGen transaction is not a qualified 250 MHz advantage.
+Only the extracted reference passes synthesis setup. Constant shifts reduce NGen DSP/LUT use but worsen setup slack; SGen composition alone has the same measured resources and timing as pre-shift NGen. No NGen 250 MHz advantage.
 
 Workload: `{"kind": "preset", "task": "hoge_streaming_ntt_1024_p64"}`
 
 Target: `{"clock_period_ns": 4.0, "clock_port": "clock", "part": "xcu280-fsvh2892-2L-e", "tool_version": "2023.2"}`
 
-Stage: **synthesis**. Source: `/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-hardware-comparison`.
+Stage: **synthesis**. Source: `/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-architecture-comparison`.
 
 | Candidate | Configuration | Correct | Qualified | LUT | FF | DSP | BRAM | WNS ns | Hold ns | Integrity |
 | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 2cb48775dc22 | {"backend": "full-throughput", "generator": "ngen-sgen", "profile": "baseline", "transpose": "switch"} | True | False | 214565 | 45852 | 2304 | 0 | -8.332 | -0.029 | verified |
+| 5650fadf1c39 | {"backend": "full-throughput", "generator": "ngen", "profile": "baseline", "transpose": "switch"} | True | False | 177390 | 47528 | 1024 | 0 | -8.937 | -0.029 | verified |
 | e0cac26420eb | {"generator": "extracted-rtl", "task": "hoge_streaming_ntt_1024_p64"} | True | True | 90300 | 194109 | 512 | 0 | 1.519 | 0.014 | verified |
 | f62a296346de | {"backend": "full-throughput", "generator": "ngen", "profile": "baseline", "transpose": "switch"} | True | False | 214565 | 45852 | 2304 | 0 | -8.332 | -0.029 | verified |
 
 | Candidate | Latency/transaction cycles | Frame interval cycles | Qualified latency/transaction ns | Qualified transforms/s |
 | --- | ---: | ---: | ---: | ---: |
+| 2cb48775dc22 | 104 | not measured | unqualified | not measured |
+| 5650fadf1c39 | 104 | not measured | unqualified | not measured |
 | e0cac26420eb | 170 | not measured | 680.0 | not measured |
 | f62a296346de | 104 | not measured | unqualified | not measured |
 

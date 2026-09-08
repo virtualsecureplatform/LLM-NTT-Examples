@@ -26,9 +26,9 @@
     },
     {
       "name": "HOGE forward hardware comparison",
-      "directory": "build/hoge-forward-hardware-comparison",
+      "directory": "build/hoge-forward-architecture-comparison",
       "stage": "synthesis",
-      "notes": "Extracted HOGE passes synthesis timing; NGen full-throughput fails setup and hold. The shorter simulated NGen transaction is not a qualified 250 MHz advantage."
+      "notes": "Only the extracted reference passes synthesis setup. Constant shifts reduce NGen DSP/LUT use but worsen setup slack; SGen composition alone has the same measured resources and timing as pre-shift NGen. No NGen 250 MHz advantage."
     },
     {
       "name": "HOGE inverse hardware comparison",
