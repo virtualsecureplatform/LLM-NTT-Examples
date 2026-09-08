@@ -189,3 +189,13 @@ rejects selections outside the legal campaign space.
 The detailed baseline hold reports identify insufficient output-path delay after
 one identity LUT. A common two-stage identity-LUT target is prepared for fresh
 matched routing. The original one-stage failures remain unchanged evidence.
+
+
+The committed sequential policy pilot is running at `build/live-policy128-trials`.
+Fresh two-buffer routing is running under the common target for NGen, OpenNTT,
+and Proteus. Executable inputs remain fixed while the live trial is active.
+The full 18-point FHE correctness matrix (N=16K/64K/128K, q widths 32/54/64,
+both directions) is also running with PE=2, radix=2, Montgomery, one stage group.
+Campaigns and reports are under `build/fhe-matrix-single-pe2-campaigns` and
+`build/fhe-matrix-single-pe2`. These launches do not establish passes or hardware
+fit; each result still requires inspection.

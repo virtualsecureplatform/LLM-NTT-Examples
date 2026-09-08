@@ -86,8 +86,9 @@ and both directions. Generation of campaign files is not a claim that all result
 hardware fits or has been tested. SGen composition currently replaces supported
 unprefixed square switch networks in NGen presets, retaining the packed valid/data
 boundary. Both source revisions and binaries are recorded. SGen's standalone NTT
-arithmetic is not assumed. Rectangular and linear-permutation composition remain
-outside the implemented search space.
+arithmetic is not assumed. Rectangular components are verified under their width-changing serialized
+contract. Fixed-width stride RAM composition is verified for the small YATA
+8x8 task; see [permutation validation](permutation-validation.md).
 
 ## LLM and empirical costs
 
@@ -178,7 +179,8 @@ bandwidth, not the external stream width. See [current comparison evidence](open
 
 Proteus now has isolated exact-field OP1 generation and a normalized streaming
 adapter. SDF forward/inverse and MDC forward pass at N=256/q32; MDC inverse
-remains ineligible after an impulse-vector failure. The comparison command
+passes with an explicitly recorded ROM-alignment repair in the isolated tree;
+the original failing version remains ineligible. The comparison command
 accepts `--proteus-dirs` for passing stream results. See the reproduction commands
 and measured adapter costs in [comparison evidence](openntt-comparison.md).
 Native NGen SDF/MDC, twiddle recurrence search, RNS/batch resource accounting,
