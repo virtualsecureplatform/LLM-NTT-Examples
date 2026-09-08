@@ -1,5 +1,8 @@
 # Completion audit
 
+The [roadmap acceptance map](roadmap-acceptance.md) ties the numbered criteria
+to inspected implementation and measurement evidence.
+
 The objective remains the full generator/search plan. This checklist records
 missing evidence; it does not narrow the objective to the implemented subset.
 
