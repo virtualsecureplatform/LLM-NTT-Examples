@@ -24,6 +24,8 @@ def score_trial(reference, observed, target, limits, minimums=None,objectives=No
         seen.add(key);matched=by_config[key]
         if record.get('correct') is True and (not record.get('rtl_hash') or record['rtl_hash']!=matched.get('rtl_hash')):
             raise ValueError('observed RTL differs from reference architecture')
+        evidence=record.get('evidence',{}).get('synthesis')
+        if evidence and evidence.get('target')!=target:raise ValueError('observation target differs from reference')
         item=copy.deepcopy(record);item['id']=matched['id'];normalized.append(item)
         actual=record.get('evidence',{}).get('synthesis',{}).get('metrics',{})
         expected=matched['evidence']['synthesis']['metrics']
@@ -32,7 +34,7 @@ def score_trial(reference, observed, target, limits, minimums=None,objectives=No
     truth=frontier(reference,objectives,'synthesis',target,limits,minimums)
     recovered=frontier(normalized,objectives,'synthesis',target,limits,minimums)
     feasible=[r for r in normalized if frontier([r],objectives,'synthesis',target,limits,minimums)]
-    return {'reference_frontier_size':len(truth),'frontier_recall':len(set(truth)&set(recovered))/len(truth) if truth else None,
+    return {'evaluations':len(observed),'failed_evaluations':sum(not r.get('correct') or r.get('evidence',{}).get('synthesis',{}).get('passed') is not True for r in observed),'reference_frontier_size':len(truth),'frontier_recall':len(set(truth)&set(recovered))/len(truth) if truth else None,
             'recovered_reference_ids':sorted(set(truth)&set(recovered)),'feasible_discoveries':len(feasible),
             'best_feasible_transforms_per_second':max((r['evidence']['synthesis']['metrics']['transforms_per_second'] for r in feasible),default=None),
             'measurement_differences':metric_differences}
@@ -74,7 +76,7 @@ def main():
         records=[]
         for step in trial['trace']:
             record=read(a.trials_dir/f"{trial['policy']}-{trial['seed']}"/'candidates'/step['candidate_id']/'record.json')
-            if record.get('status') not in ('complete','hardware_failed'):p.error('nonterminal observation')
+            if record.get('status') not in ('complete','hardware_failed','generation_failed','incorrect','error'):p.error('nonterminal or unscorable observation')
             metrics=record.get('evidence',{}).get('synthesis',{}).get('metrics',{})
             if 'transforms_per_second' in metrics:
                 metrics['bandwidth_capped_transforms_per_second']=min(metrics['transforms_per_second'],transport['upper_transforms_per_second']) if transport else metrics['transforms_per_second']

@@ -90,3 +90,9 @@ zero without an explicit backend seed, and enumeration is deterministic; their
 repetitions are not independent randomized-policy seeds. These repetitions
 expand evidence under one workload, not statistical proof of general policy
 superiority. No follow-up results are available yet.
+
+Terminal generation, arithmetic and evaluation failures count toward the trial
+budget and are reported in `failed_evaluations`; they cannot recover a frontier
+point. A target mismatch rejects the comparison rather than being scored as a
+policy failure. An end-to-end summarizer regression covers a generation-failed
+observation against a complete reference pool.

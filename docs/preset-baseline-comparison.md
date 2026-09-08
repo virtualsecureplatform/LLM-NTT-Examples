@@ -94,3 +94,15 @@ and pipelined evidence together. Pipeline versus prior main trades seven
 transaction cycles and 129 FFs for 6109 fewer LUTs, three fewer DSPs, and setup
 closure. The extracted reference still has much lower area at the same cycle
 count. Reducing replicated storage remains an open architecture task.
+
+## HOGE hardware coverage
+
+Matched synthesis campaigns are now queued for the previously verified faster
+NGen choices: forward full-throughput/switch and inverse stage-parallel/indexed.
+`campaigns/hoge-forward-hardware.json` and `hoge-inverse-hardware.json` retain the
+original task interfaces and shared 4 ns U280 target. Each generated design is
+verified again, then compared with `NTTWrap.v` or `INTTWrap.v` from
+`build/hoge-extracted-generation` using `evaluate_preset_baseline.py`.
+Outputs are `build/hoge-forward-hardware-comparison` and
+`build/hoge-inverse-hardware-comparison`. Results are pending; transaction-cycle
+advantages alone do not establish area or achieved-clock improvements.

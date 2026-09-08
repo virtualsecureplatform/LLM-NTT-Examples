@@ -5,23 +5,23 @@ missing evidence; it does not narrow the objective to the implemented subset.
 
 | Requirement | Current evidence | Remaining acceptance work |
 | --- | --- | --- |
-| Reproducible NGen search | Run/resume/report checks, source/tool/binary manifests, exact oracle gates, fresh extracted Kyber/YATA/HOGE references | Finish preset hardware comparisons and audit evidence reuse |
+| Reproducible NGen search | Run/resume/report checks, source/tool/binary manifests, exact oracle gates, fresh extracted Kyber/YATA/HOGE references | HOGE forward/inverse hardware comparisons running; finish final evidence consolidation |
 | Independent generic arithmetic | All 18 FHE matrix points pass; ordinary search also passes 128K/q64 inverse using automatic Verilator selection | Wider external-generator coverage and FPGA fit remain separate |
 | Permutation choice | Five square widths, 12 rectangular shapes, eight linear cases; SGen switch/stride composed YATA oracles and three-option synthesis complete | Broader full-design cases; all small YATA alternatives still fail setup |
-| Architectural improvements | Seven-stage Montgomery, independent stage groups, compact address logic, Kyber normalization, shared YATA conversion; integrated NGen passes 150 Scala tests; compact Kyber reduces LUT/FF/BRAM with one extra DSP | Finish large control-ROM hardware ablation and wider timing work; retain YATA timing failure |
-| Multi-fidelity search | Functional gates, synthesis/route, constrained frontiers, serialized vendor jobs; bandwidth and issue-capacity bounds | State-capacity lower-bound pruning implemented; finish remaining evidence/cache audit |
+| Architectural improvements | Seven-stage Montgomery, independent stage groups, compact address logic, Kyber normalization, shared YATA conversion; integrated NGen passes 151 Scala tests; compact Kyber reduces LUT/FF/BRAM with one extra DSP | 16K control-ROM/wide-product synthesis ablation complete; registered-issue route and main integration pending; retain YATA timing failure |
+| Multi-fidelity search | Functional gates, synthesis/route, constrained frontiers, serialized vendor jobs; bandwidth and issue-capacity bounds | State-capacity pruning, artifact integrity and executable freshness implemented; audit final experiment bundles |
 | Cost models | Nearest-neighbor and structural fits, held-out architecture, independent five-point N=128 calibration; integrity-gated training | Wider independent validation and policy samples |
-| LLM versus controls | Six-point replay and completed eight-evaluation live N=128 pilot; negative LLM outcomes retained | Wider equal-budget trials; one seed does not establish policy superiority |
-| OpenNTT | Exact-field raw/normalized oracles, forward/inverse and memory options, 16K/q54 stream, matched timing-qualified N=256 route | Wider matched workloads and configuration sampling |
+| LLM versus controls | Six-point replay and completed eight-evaluation live N=128 pilot; negative LLM outcomes retained | Complete reference pool and three equal-budget repetitions running; no superiority claim yet |
+| OpenNTT | Exact-field raw/normalized oracles, forward/inverse and memory options, 16K/q54 stream, matched timing-qualified N=256 and banked-adapter 16K/q54 routes | Consolidate the broader matched comparison and retain adapter versions |
 | Proteus | SDF forward/inverse and portable MDC forward/inverse 32/64-bit oracles; explicit ROM repair; matched timing-qualified N=256 route | Wider matched workload/configuration sampling; preserve modified-baseline label |
-| Routed timing | All three N=256 designs pass under identical two-buffer fabric contract with setup/hold/full-route gates | Compact-address routed ablation complete; 16K/q54 route and broader configurations remain |
+| Routed timing | All three N=256 designs pass under identical two-buffer fabric contract with setup/hold/full-route gates | Compact-address ablation complete; 16K OpenNTT passes while NGen fails setup; registered-issue follow-up running |
 | Paper comparison | Source-linked roadmap, reproducible matched three-generator routed report, resource/cycle tradeoffs and policy results | Consolidate remaining ablations and broader coverage; no board or universal superiority claim |
 | Board execution | Deferred by the approved plan | Not required for the routed-RTL milestone |
 
-Completion requires the missing evidence above. Any performance claim must name
+The table is the current audit. The sections below retain chronological findings, including superseded failures and formerly pending work. Completion requires the missing evidence above. Any performance claim must name
 the workload, interface, target, tool version, timing constraints, and evidence stage.
 
-## Latest timing diagnosis
+## Historical timing diagnosis
 
 `build/u280-registered-contract` completed synthesis and route. Setup slack is
 +1.035 ns; hold slack is −1.589 ns, so routing evidence remains failed. The
@@ -378,3 +378,18 @@ and both full 16K/q54 direction oracles pass, with the expected +15-cycle latenc
 and initiation-interval tradeoff. Full FHE validation and a matched route are
 running. Main-branch integration remains pending to preserve ongoing policy
 inputs. See [registered memory issue](registered-memory-issue.md).
+
+
+## Preset coverage and policy failure accounting
+
+The missing HOGE hardware comparisons are launched with fixed task interfaces:
+forward full-throughput/switch and inverse stage-parallel/indexed, each matched
+against its independently generated extracted reference. The campaigns are
+`hoge-forward-hardware.json` and `hoge-inverse-hardware.json`. Resource/timing
+results remain pending; previous cycle-only wins are not upgraded to hardware
+claims.
+
+The live-policy summarizer now includes terminal generation, arithmetic and
+evaluation failures in the consumed budget, while giving them no frontier
+recovery. Target mismatches still reject comparison. End-to-end CLI regression
+coverage verifies a generation-failed observation. All 125 Python tests pass.
