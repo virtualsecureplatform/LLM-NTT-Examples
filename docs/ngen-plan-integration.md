@@ -44,3 +44,13 @@ includes both completed search runs, the overlap run and its test/CMake sources.
 It excludes still-running hardware jobs. Recorded JSON/build paths remain the
 original absolute paths; this is an exact evidence archive, not a relocated
 measurement or a new timing result.
+
+The integration preservation check now covers the entire 18-case FHE matrix
+(N=16K/64K/128K, fields of 32/54/64 bits, both directions). Every regenerated
+RTL hash and timing declaration matches its originally validated artifact.
+Before comparison, the check revalidates the original candidate and campaign
+manifest hashes, verification-result hash, and all retained verification-input
+hashes. Results and the exact check script are retained in
+`build/plan-integration-fhe-identity/{results.json,check.py}`. This establishes
+preservation of the complete validated matrix, not a new simulation or timing
+measurement. The original 18 full-oracle passes remain the functional evidence.

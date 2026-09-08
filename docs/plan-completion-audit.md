@@ -466,3 +466,8 @@ RTL hashes and timing declarations exactly, including all six policy-reference
 configurations and the qualified 16K route. See
 [prepared integration](ngen-plan-integration.md). Main integration remains pending
 until the frozen policy experiment and HOGE ablation finish.
+
+The combined integration branch also reproduces all 18 FHE matrix RTL hashes
+and timing declarations exactly after verifying the original oracle artifact
+hashes (`build/plan-integration-fhe-identity/results.json`). The integration
+check therefore covers the complete matrix, not only the matched 16K route.
