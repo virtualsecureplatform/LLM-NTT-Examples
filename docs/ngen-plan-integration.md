@@ -28,3 +28,19 @@ The failed check remains in `build/plan-integration-rtl-identity/incomplete.json
 After the live experiment finishes, main can integrate this tested branch if the
 remaining HOGE ablation supports retaining its optimization. Rebuild main and
 verify its source manifest and artifact identities before finalizing the report.
+
+The combined framework/SGen checks also pass with this NGen integration:
+forward and inverse HOGE retain 104/73 transaction cycles, and the forward
+frame-overlap check passes 240 frames at interval 32. Framework branch
+`hoge-sgen-namespaces` at `4f0cab9` contains the campaigns and test, and all
+131 Python tests pass without skips.
+
+Completed combined HOGE evidence is preserved outside the temporary worktree in
+`build/integration-evidence-archive/combined-hoge-evidence.tar.gz` (36,139,441 bytes),
+SHA-256 `79fbcef6f5ea209fd24bfd07c9699782f6d711cc3feb060538bda353d2e13ab5`.
+Its `manifest.json` lists the original path, archive path and SHA-256 for all
+214 files; every archived payload was read back and verified. The archive
+includes both completed search runs, the overlap run and its test/CMake sources.
+It excludes still-running hardware jobs. Recorded JSON/build paths remain the
+original absolute paths; this is an exact evidence archive, not a relocated
+measurement or a new timing result.
