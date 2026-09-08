@@ -4,7 +4,9 @@ Pushed NGen branch `plan-integration`, revision `f4032e9`, combines registered
 memory issue/effective metadata (`42de789`) and HOGE constant shifts (`d277ab4`).
 It is built in `/tmp/ngen-plan-integration`. All 154 Scala tests pass and a fresh
 assembly passes the source-to-executable identity guard. Main remains unchanged
-while live policy inputs are frozen; the HOGE shift hardware ablation is pending.
+while live policy inputs are frozen. The completed HOGE forward shift ablation
+supports retaining the specialization as a DSP/LUT tradeoff, with worse setup
+slack and no timing-qualified throughput advantage.
 
 Fresh generation in `build/plan-integration-rtl-identity-fixed/results.json`
 verifies exact RTL SHA-256 equality and unchanged latency, frame interval,
@@ -17,7 +19,7 @@ pipeline depth, and input/output cycle declarations wherever present for:
 The nine checks retain original report hashes, commands, generator build
 identity, generated paths and RTL hashes. This proves artifact preservation
 for those configurations. It does not supply a new hardware result or complete
-the pending policy or HOGE measurements.
+the pending policy measurements.
 
 The first integration check failed exact byte equality for small generic cores:
 two inactive optional declarations introduced blank lines. The integration
@@ -25,8 +27,8 @@ revision emits those lines only when registered issue is enabled. This preserves
 small-core artifacts without changing the already-routed large-core artifact.
 The failed check remains in `build/plan-integration-rtl-identity/incomplete.json`.
 
-After the live experiment finishes, main can integrate this tested branch if the
-remaining HOGE ablation supports retaining its optimization. Rebuild main and
+After both live policy studies finish, main can integrate this tested branch.
+Rebuild main and
 verify its source manifest and artifact identities before finalizing the report.
 
 The combined framework/SGen checks also pass with this NGen integration:
@@ -55,8 +57,9 @@ hashes. Results and the exact check script are retained in
 preservation of the complete validated matrix, not a new simulation or timing
 measurement. The original 18 full-oracle passes remain the functional evidence.
 
-The framework branch `plan-integration` at `cecaa91` now combines the namespaced
+The framework branch `plan-integration` at `1b4e6e7` combines the namespaced
 SGen composition, HOGE overlap test/campaigns, and queue-timeout elapsed-duration
-fix with main at `555520f`. All 133 Python tests pass with native tools enabled
-(`/tmp/llm-plan-integration-tests.out`). This branch is pushed; main remains
+fix with main at `5f7c3a9`, including the completed HOGE comparisons and explicit
+external-report root support. All 134 Python tests pass with native tools enabled
+(`/tmp/llm-plan-integration-final-tests.out`). This branch is pushed; main remains
 frozen for the running policy study.
