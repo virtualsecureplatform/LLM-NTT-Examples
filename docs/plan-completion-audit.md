@@ -150,3 +150,10 @@ HOGE stage-parallel inverse passes the repaired full stream test as well.
 [Rectangular component validation](permutation-validation.md) now covers all
 12 nonsquare 2/4/8/16 shapes under the memory adapter's serialized contract.
 Linear permutations and full-design adapter measurements remain outstanding.
+
+Kyber's initial preset run also encountered Verilator's nonblocking-array-loop
+elaboration limit. Explicit reset/capture/commit assignments preserve its bank
+transfer semantics. The focused Scala test and unchanged full preset evaluator
+now pass in `build/kyber-explicit-validation`. Together with the HOGE forward
+and inverse checks above, this supplies functional preset campaign evidence;
+extracted baseline and hardware measurements remain separate acceptance work.
