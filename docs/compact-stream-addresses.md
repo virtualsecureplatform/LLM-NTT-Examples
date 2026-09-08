@@ -22,13 +22,29 @@ checks include stalls, saturation, and reset recovery. N=256/PE=2/group=1 RTL
 is 138588 bytes in the forward direction and retains latency 791 and frame
 interval 852 cycles.
 
-A fresh isolated N=128K/q32 generation and Verilator check with externalized
-control ROMs is running under `build/compact-io-large-generation` and
-`build/compact-io-large-verilator-validation`. The generated candidate inherits
-no correctness status from the earlier design. Large-transform compilation,
-correctness, and hardware-resource benefits remain unproven. The original
-Icarus longer-budget check remains independent under
-`build/fhe-icarus-extended-n131072-q32-forward`.
+The isolated N=128K/q32 forward check now passes the complete oracle suite
+with externalized control ROMs. Compact generation reduces RTL from 163761740
+to 83632815 bytes before externalization; after moving exact ROM words into
+hex files, the core RTL is 104502 bytes. Verilator compiles the core check in
+6.9 seconds and completes simulation in 15.0 seconds. These are simulator wall
+times on this host, not hardware measurements.
+
+The first diagnostic artifact (`build/compact-io-large-verilator-validation`)
+checks the core directly and therefore omits the two-cycle registered boundary.
+Use `build/compact-io-large-normalized-verilator-validation` for the normalized
+result: latency 655528, frame interval 688293, eight main frames and full reset
+recovery PASS. These metrics match those observed before the original Icarus
+attempt timed out during its reset checks. The earlier incomplete Icarus and
+signal-9 Verilator attempts remain failed evidence.
+
+`scripts/run_fhe_verilator_matrix.py` runs singleton generic campaigns through
+the same registered-boundary adapter and full Verilator oracle, with exact ROM
+externalization. It snapshots the generator binary, records source/campaign/
+helper hashes, checks executable inputs before each case, and saves generation
+and verification outcomes separately. It does not inherit passes from another
+campaign or claim hardware fit. An N=256 end-to-end smoke check precedes the
+18-point matrix (16K/64K/128K, 32/54/64 bits, forward/inverse). A matched
+N=256 synthesis run is also pending under `build/compact-io-synthesis256`.
 
 The branch is not merged into the generator used by the active live policy
 trial. Integrate only after that trial finishes and after reviewing the large
