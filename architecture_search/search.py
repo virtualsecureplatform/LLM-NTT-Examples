@@ -8,7 +8,7 @@ import shutil
 import subprocess
 import time
 from . import adapters, oracle, hardware, policy, cost, constraints
-from .evaluate import evaluate_generic, parse_metrics
+from .evaluate import evaluate_generic, generic_simulator, parse_metrics
 from .model import digest, file_hash, frontier, metric_number, run, source_identity, write_json
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -104,6 +104,15 @@ def main(argv=None) -> int:
     else:
         task_config=json.loads((ROOT/'tasks'/f"{workload['task']}.json").read_text())
         campaign['target'].setdefault('clock_port',task_config.get('ports',{}).get('clock','clock'))
+    evaluation_options=campaign.get('evaluation',{})
+    if not isinstance(evaluation_options,dict) or set(evaluation_options)-{'simulator','timeout_seconds'}:
+        parser.error('evaluation supports only simulator and timeout_seconds')
+    evaluation_timeout=evaluation_options.get('timeout_seconds',1200)
+    if not metric_number(evaluation_timeout) or evaluation_timeout<=0:parser.error('evaluation timeout must be finite and positive')
+    if workload['kind']=='generic':
+        try:generic_simulator(workload,evaluation_options.get('simulator','auto'))
+        except ValueError as error:parser.error(str(error))
+    elif 'simulator' in evaluation_options:parser.error('simulator selection is only supported for generic workloads')
     ngen=args.ngen_root.resolve(); directory=args.output_dir.resolve()
     configurations=adapters.candidates(workload,ngen,campaign.get('space'))
     if args.configuration_json is not None:
@@ -229,11 +238,11 @@ def main(argv=None) -> int:
                 else:
                     evaluation_dir=work/'evaluation'
                     if workload['kind']=='generic':
-                        evaluation=evaluate_generic(workload,config,rtl,evaluation_dir,min(1200,remaining()))
+                        evaluation=evaluate_generic(workload,config,rtl,evaluation_dir,min(evaluation_timeout,remaining()),simulator=evaluation_options.get('simulator','auto'))
                     else:
                         task=ROOT/'tasks'/f"{workload['task']}.json"
                         process=run(['bash',str(ROOT/'scripts/evaluate_candidate.sh'),'--task',str(task),'--verilog-file',str(rtl),
-                                     '--build-dir',str(evaluation_dir)],ROOT,work/'evaluation.log',min(1200,remaining()))
+                                     '--build-dir',str(evaluation_dir)],ROOT,work/'evaluation.log',min(evaluation_timeout,remaining()))
                         result_path=evaluation_dir/'results.json'
                         raw=json.loads(result_path.read_text()) if result_path.exists() else {}
                         evaluation={'correct':process['returncode']==0 and raw.get('correct') is True and raw.get('mode')=='verilator_test',

@@ -3,8 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import re
+import shutil
+import time
 from . import oracle
-from .model import run, write_json
+from .model import file_hash, run, write_json
+from .rom import externalize
 
 
 def parse_metrics(text: str) -> dict:
@@ -101,18 +104,43 @@ endmodule
 '''
 
 
-def evaluate_generic(workload: dict, config: dict, rtl: Path, directory: Path, timeout: float) -> dict:
+def generic_simulator(workload: dict, requested: str = 'auto') -> str:
+    if requested not in ('auto','iverilog','verilator'):
+        raise ValueError('generic simulator must be auto, iverilog, or verilator')
+    return ('verilator' if int(workload['n'])>=16384 else 'iverilog') if requested=='auto' else requested
+
+
+def evaluate_generic(workload: dict, config: dict, rtl: Path, directory: Path, timeout: float, simulator: str = 'auto') -> dict:
     oracle.validate(workload)
+    selected=generic_simulator(workload,simulator)
+    started=time.monotonic()
+    directory=directory.resolve()
     directory.mkdir(parents=True, exist_ok=True)
+    rtl=rtl.resolve();original_hash=file_hash(rtl)
+    simulation_rtl=rtl
+    roms=[]
+    if selected=='verilator':
+        simulation_rtl=directory/'SearchTop.sv'
+        shutil.copyfile(rtl,simulation_rtl)
+        roms=externalize(simulation_rtl)
     corpus = oracle.vectors(workload)
     for name, data in [('inputs', corpus), ('expected', [oracle.transform(v, workload) for v in corpus])]:
         (directory / f'{name}.mem').write_text(''.join(f'{v:x}\n' for frame in data for v in frame))
     watchdog = int(workload.get('watchdog_cycles', max(10000, int(workload['n']) * int(workload['n']).bit_length() * 64)))
     (directory / 'test.sv').write_text(generic_testbench(workload, config['lanes'], len(corpus), watchdog))
-    build = run(['iverilog', '-g2012', '-s', 'test', '-o', 'simulation', str(rtl), 'test.sv'], directory, directory/'build.log', timeout)
-    test = run(['vvp', 'simulation'], directory, directory/'test.log', timeout-build['seconds']) if build['returncode']==0 else {}
-    text = (directory/'test.log').read_text() if (directory/'test.log').exists() else ''
-    result = {'correct': build['returncode']==0 and test.get('returncode')==0 and 'PASS generic NTT' in text,
-              'mode': 'functional', 'metrics': parse_metrics(text), 'build': build, 'test': test}
-    write_json(directory/'results.json', result)
+    verification={str(path.resolve()):file_hash(path) for path in [simulation_rtl,directory/'inputs.mem',directory/'expected.mem',directory/'test.sv',*[Path(r['path']) for r in roms]]}
+    if selected=='iverilog':
+        build_command=['iverilog','-g2012','-s','test','-o','simulation',str(simulation_rtl),'test.sv']
+        test_command=['vvp','simulation']
+    else:
+        build_command=['verilator','--binary','--timing','--top-module','test','-Wno-fatal','--output-split','10000','--output-split-cfuncs','1000','-j','4',str(simulation_rtl),'test.sv']
+        test_command=[str((directory/'obj_dir/Vtest').resolve())]
+    build=run(build_command,directory,directory/'build.log',max(0,timeout-(time.monotonic()-started)))
+    test=run(test_command,directory,directory/'test.log',max(0,timeout-(time.monotonic()-started))) if build['returncode']==0 else {}
+    text=(directory/'test.log').read_text() if (directory/'test.log').exists() else ''
+    unchanged=file_hash(rtl)==original_hash and all(file_hash(Path(path))==expected for path,expected in verification.items())
+    result={'correct':build['returncode']==0 and test.get('returncode')==0 and 'PASS generic NTT' in text and unchanged,
+            'mode':'functional','metrics':parse_metrics(text),'build':build,'test':test,'simulator':selected,
+            'verification':verification,'inputs_unchanged':unchanged,'original_rtl_sha256':original_hash,'externalized_control_roms':roms}
+    write_json(directory/'results.json',result)
     return result

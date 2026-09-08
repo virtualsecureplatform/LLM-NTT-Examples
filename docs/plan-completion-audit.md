@@ -5,18 +5,18 @@ missing evidence; it does not narrow the objective to the implemented subset.
 
 | Requirement | Current evidence | Remaining acceptance work |
 | --- | --- | --- |
-| Reproducible NGen search | Run/resume/report checks; source/tool/binary manifests; HOGE forward/inverse and Kyber functional campaigns | Include extracted preset baselines and hardware comparisons |
-| Independent generic arithmetic | Direct-definition/convolution unit checks; streaming forward 16K/54-bit and inverse 64-bit RTL | Validate additional FHE matrix points and external generators against the same oracle |
-| Permutation choice | Square streams at five widths; 12 rectangular memory shapes; eight linear/stride cases; switch and stride composition pass YATA | Finish matched full-design permutation synthesis and adapter-cost comparison |
-| Architectural improvements | Buffered stage groups and seven-stage Montgomery pipeline; matched resource/setup ablation and oracle checks | Matched routed ablations; wider scheduling/RAM timing coverage |
-| Multi-fidelity search | Functional gates, synthesis/route stages, constrained frontiers, per-user vendor lock; measured finite-pool replay and optimistic bandwidth/issue pruning | Resource-cost lower bounds and live end-to-end acquisition-policy trials |
-| Cost models | Nearest-neighbor and structural fits; five-point errors and one held-out architecture | Larger independent samples and held-out workload/policy evaluation |
-| LLM versus controls | Live legal-ID ranking, saved requests/responses; six-point equal-budget replay including negative LLM outcome | End-to-end trials and held-out workloads |
-| OpenNTT | Exact-field isolated generation; independent forward/inverse and MemOpt N=256/q32 checks; normalized streaming checks including N=16K/q54; matched N=256/q32 and N=16K/q54 simulation comparisons | Routed/resource measurements and wider configuration sampling |
-| Proteus | Exact-field isolated generation; N=256/q32 SDF forward/inverse and MDC forward pass raw and normalized streaming oracle checks; matched three-generator cycle comparison | Diagnose MDC inverse failure, expand workload coverage, routed/resource comparison |
-| Routed timing | Actual checkpoint/report ingestion; failed hold excluded | Hold traced to zero-delay input boundary and unset clock source; explicit shared I/O/clock constraints added. First explicit-contract route still fails hold (−1.589 ns); diagnose clock insertion/interface model, then verify closure and measure candidates/baselines |
-| Paper comparison | Source-linked roadmap | Matched reproducible comparison report; distinguish reproduced measurements from published numbers |
-| Board execution | Deferred by the approved plan | Not required for the routed-RTL milestone; do not claim board results |
+| Reproducible NGen search | Run/resume/report checks, source/tool/binary manifests, exact oracle gates, fresh extracted Kyber/YATA/HOGE references | Finish preset hardware comparisons and audit evidence reuse |
+| Independent generic arithmetic | Compact address branch passes all six 128K forward/inverse 32/54/64-bit cases; 18-point matrix progressing | Finish full matrix and expose the validated scalable simulator path in ordinary search |
+| Permutation choice | Five square widths, 12 rectangular shapes, eight linear cases; SGen switch/stride composed YATA oracles and three-option synthesis complete | Broader full-design cases; all small YATA alternatives still fail setup |
+| Architectural improvements | Seven-stage Montgomery, independent stage groups, compact address logic, Kyber normalization, shared YATA conversion; integrated NGen passes 148 Scala tests | Finish compact routed and Kyber matched hardware ablations; retain YATA timing failure |
+| Multi-fidelity search | Functional gates, synthesis/route, constrained frontiers, serialized vendor jobs; bandwidth and issue-capacity bounds | Resource lower-bound pruning and remaining evidence/cache audit |
+| Cost models | Nearest-neighbor and structural fits, five-point errors, held-out architecture, live N=128 observations | Wider independent validation and policy samples |
+| LLM versus controls | Six-point replay and completed eight-evaluation live N=128 pilot; negative LLM outcomes retained | Wider equal-budget trials; one seed does not establish policy superiority |
+| OpenNTT | Exact-field raw/normalized oracles, forward/inverse and memory options, 16K/q54 stream, matched timing-qualified N=256 route | Wider matched workloads and configuration sampling |
+| Proteus | SDF forward/inverse and portable MDC forward/inverse 32/64-bit oracles; explicit ROM repair; matched timing-qualified N=256 route | Wider matched workload/configuration sampling; preserve modified-baseline label |
+| Routed timing | All three N=256 designs pass under identical two-buffer fabric contract with setup/hold/full-route gates | Compact-address routed ablation and broader configurations |
+| Paper comparison | Source-linked roadmap, reproducible matched three-generator routed report, resource/cycle tradeoffs and policy results | Consolidate remaining ablations and broader coverage; no board or universal superiority claim |
+| Board execution | Deferred by the approved plan | Not required for the routed-RTL milestone |
 
 Completion requires the missing evidence above. Any performance claim must name
 the workload, interface, target, tool version, timing constraints, and evidence stage.
