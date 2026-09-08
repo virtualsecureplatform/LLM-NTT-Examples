@@ -2,6 +2,8 @@
 
 Snapshot of named comparisons, not certification that the full project plan is complete. Legacy hardware evidence remains explicitly unverified by newer manifests.
 
+Synthesis qualification requires completed implementation and nonnegative setup slack; it does not establish routed timing closure. Route qualification additionally requires nonnegative hold slack and completed routing. Rates at synthesis are estimates under the stated target clock.
+
 ## N=256/q32 three-generator comparison
 
 Same two-buffer fabric contract. All three designs pass timing; resource and throughput tradeoffs remain.
@@ -122,6 +124,24 @@ Stage: **synthesis**. Source: `/home/work-bleaker/kmatsuoka/sources/LLMNTT-works
 
 Qualified frontier: e0cac26420eb.
 
-## Pending comparisons
+## HOGE inverse hardware comparison
 
-- HOGE inverse hardware comparison: `build/hoge-inverse-hardware-comparison`
+Extracted inverse reference passes synthesis setup at +1.518 ns but has -0.075 ns estimated hold slack; no routed closure is established. NGen stage-parallel expires without final hardware metrics. Full-throughput inverse measurement is pending.
+
+Workload: `{"kind": "preset", "task": "hoge_streaming_intt_1024_p64"}`
+
+Target: `{"clock_period_ns": 4.0, "clock_port": "clock", "part": "xcu280-fsvh2892-2L-e", "tool_version": "2023.2"}`
+
+Stage: **synthesis**. Source: `/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-inverse-hardware-comparison`.
+
+| Candidate | Configuration | Correct | Qualified | LUT | FF | DSP | BRAM | WNS ns | Hold ns | Integrity |
+| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 23d403be916a | {"generator": "extracted-rtl", "task": "hoge_streaming_intt_1024_p64"} | True | True | 140242 | 239475 | 512 | 0 | 1.518 | -0.075 | verified |
+| a410fc119fbc | {"backend": "stage-parallel", "generator": "ngen", "profile": "baseline", "transpose": "indexed"} | True | False | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | unmeasured | verified |
+
+| Candidate | Latency/transaction cycles | Frame interval cycles | Qualified latency/transaction ns | Qualified transforms/s |
+| --- | ---: | ---: | ---: | ---: |
+| 23d403be916a | 129 | not measured | 516.0 | not measured |
+| a410fc119fbc | 69 | not measured | unqualified | not measured |
+
+Qualified frontier: 23d403be916a.

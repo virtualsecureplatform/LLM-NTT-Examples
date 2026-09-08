@@ -6,19 +6,16 @@
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/comparison16k54-registered-issue-routed/report.json": "09dd2f391707c58f878c06fbcd479ca17786511d13b1210a48167e0e2a23098c",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-hardware-comparison/manifest.json": "73ab1d40aa56ff95856bd8cf1054ca1e09099e3e21663ec4faf6738fd40aad2b",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-hardware-comparison/report.json": "93b2bfc9b35a3552c55b58ac49d3251d027cb35f4049a3f0825273b61d69ad85",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-inverse-hardware-comparison/manifest.json": "dfbd34eb200e5c773173874b9d67defc2419834038fe910c81d06bfbe762e824",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-inverse-hardware-comparison/report.json": "fae79164fd904d18889efec32202479a7147386a52e4d3429afc598ee3c6c6d8",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/kyber-storage-comparison/manifest.json": "7d11fa9d17a3337c81d8827b9996537bd34e30bf2961229e142c9b091f66a6ff",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/kyber-storage-comparison/report.json": "dca5793bada1305447641cc7bb22ac5a6f95c3e0d17ca7fdf5a23e48c879e3a3",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-permutation-comparison/manifest.json": "16a5a198bd83475448109aa8859760133b335cf71ac17f01faf4cf484d61bef8",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-permutation-comparison/report.json": "5f47ab800bbb92e10fe17f3c22bab95df22af4629212cbd5f0b93ac14a698024",
-    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/campaigns/plan-evidence.json": "3018074b620fa3694c0431d1616d5ea89d269811f85e91456c3b506da740e279"
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/campaigns/plan-evidence.json": "434192567bbfa3bbbf793e3fe52219026300587283311c5496850e895cc5c351"
   },
-  "missing_comparisons": [
-    {
-      "directory": "build/hoge-inverse-hardware-comparison",
-      "name": "HOGE inverse hardware comparison",
-      "stage": "synthesis"
-    }
-  ],
+  "missing_comparisons": [],
+  "qualification": "Synthesis qualification requires completed implementation and nonnegative setup slack; it does not establish routed timing closure. Route qualification additionally requires nonnegative hold slack and completed routing. Rates at synthesis are estimates under the stated target clock.",
   "schema": "ntt-evidence-snapshot-v1",
   "scope": "Snapshot of named comparisons, not certification that the full project plan is complete. Legacy hardware evidence remains explicitly unverified by newer manifests.",
   "sections": [
@@ -690,6 +687,82 @@
       "workload": {
         "kind": "preset",
         "task": "hoge_streaming_ntt_1024_p64"
+      }
+    },
+    {
+      "frontier": [
+        "23d403be916af1f05d4d457879322b7f785ed4cc646736582dd578ed08dcf79f"
+      ],
+      "name": "HOGE inverse hardware comparison",
+      "notes": "Extracted inverse reference passes synthesis setup at +1.518 ns but has -0.075 ns estimated hold slack; no routed closure is established. NGen stage-parallel expires without final hardware metrics. Full-throughput inverse measurement is pending.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "generator": "extracted-rtl",
+            "task": "hoge_streaming_intt_1024_p64"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_intt_input_cycles": 32,
+            "hoge_streaming_intt_max_wait_cycles": 65,
+            "hoge_streaming_intt_output_cycles": 32,
+            "hoge_streaming_intt_tests": 3,
+            "transaction_cycles": 129
+          },
+          "id": "23d403be916af1f05d4d457879322b7f785ed4cc646736582dd578ed08dcf79f",
+          "metrics": {
+            "bram": 0,
+            "dsp": 512,
+            "ff": 239475,
+            "hold_slack_ns": -0.075,
+            "lut": 140242,
+            "transaction_ns": 516.0,
+            "uram": 0,
+            "wns_ns": 1.518
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "stage-parallel",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "indexed"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_intt_input_cycles": 32,
+            "hoge_streaming_intt_max_wait_cycles": 5,
+            "hoge_streaming_intt_output_cycles": 32,
+            "hoge_streaming_intt_tests": 3,
+            "transaction_cycles": 69
+          },
+          "id": "a410fc119fbc3b22713c3fa83c7af0da92a8925f5d38f8df9a459fc440b91820",
+          "metrics": {
+            "transaction_ns": 276.0
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-inverse-hardware-comparison",
+      "stage": "synthesis",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_intt_1024_p64"
       }
     }
   ]

@@ -55,9 +55,10 @@ def main():
         sections.append({'name':item['name'],'source':str(directory),'notes':item.get('notes',''),
                          **summarize(report,manifest['campaign'],item['stage'])})
     result={'schema':'ntt-evidence-snapshot-v1','sections':sections,'missing_comparisons':missing,'inputs':inputs,
+            'qualification':'Synthesis qualification requires completed implementation and nonnegative setup slack; it does not establish routed timing closure. Route qualification additionally requires nonnegative hold slack and completed routing. Rates at synthesis are estimates under the stated target clock.',
             'scope':'Snapshot of named comparisons, not certification that the full project plan is complete. Legacy hardware evidence remains explicitly unverified by newer manifests.'}
     write_json(out/'report.json',result)
-    lines=['# NTT generator evidence snapshot','',result['scope'],'']
+    lines=['# NTT generator evidence snapshot','',result['scope'],'',result['qualification'],'']
     for section in sections:
         lines += ['## '+section['name'],'',section['notes'],'',
                   'Workload: `'+json.dumps(section['workload'],sort_keys=True)+'`','',

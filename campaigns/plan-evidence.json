@@ -33,7 +33,8 @@
     {
       "name": "HOGE inverse hardware comparison",
       "directory": "build/hoge-inverse-hardware-comparison",
-      "stage": "synthesis"
+      "stage": "synthesis",
+      "notes": "Extracted inverse reference passes synthesis setup at +1.518 ns but has -0.075 ns estimated hold slack; no routed closure is established. NGen stage-parallel expires without final hardware metrics. Full-throughput inverse measurement is pending."
     }
   ]
 }

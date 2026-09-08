@@ -39,3 +39,16 @@ architecture already passes the independent inverse oracle at 73 transaction
 cycles and uses the same fixed task boundary as the extracted reference. Its
 hardware metrics remain pending. It is an additional architecture choice;
 the original 69-cycle stage-parallel timeout remains part of the comparison.
+
+The extracted inverse reference completes synthesis with 140242 LUT, 239475 FF,
+512 DSP and zero BRAM/URAM. Setup slack is +1.518 ns; estimated hold slack is
+−0.075 ns. It passes the synthesis setup gate but has no routed-closure claim.
+The comparison snapshot explicitly describes this stage-specific gate.
+
+The future runner fix is pushed on branch `report-queue-timeout` at `bb8fb68`.
+Its held-lock regression verifies elapsed queue duration and that no vendor
+execution occurs on queue timeout; all three hardware-report and seven summary
+tests pass. Main integration awaits the frozen policy run. A subsequent policy
+replication without competing hardware campaigns is required to separate policy
+choice quality from the current run's queue-induced failures; original results
+will remain retained.

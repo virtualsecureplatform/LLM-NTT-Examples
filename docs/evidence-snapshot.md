@@ -2,8 +2,8 @@
 
 [Measured comparison tables](measured-evidence/report.md) and their
 [machine-readable evidence snapshot](measured-evidence/report.json) consolidate
-five completed comparison groups and explicitly list the pending HOGE inverse
-hardware comparison. They are generated from `campaigns/plan-evidence.json`:
+six comparison groups, including the HOGE inverse reference measurement and
+the NGen stage-parallel budget-limited result. They are generated from `campaigns/plan-evidence.json`:
 
 ```sh
 python3 scripts/summarize_ntt_evidence.py --index campaigns/plan-evidence.json --output-dir build/new-evidence-snapshot
@@ -37,3 +37,11 @@ The matched HOGE forward synthesis now qualifies only the extracted reference
 (WNS +1.519 ns, hold +0.014 ns). NGen full-throughput fails setup and hold
 (WNS −8.332 ns, hold −0.029 ns); its shorter simulated transaction is not
 presented as a timing-qualified advantage.
+
+The inverse HOGE reference now has synthesis resources and positive setup slack,
+but its estimated hold slack is −0.075 ns. Snapshot qualification follows each
+evidence stage: synthesis requires setup; routed qualification requires both
+setup and hold plus completed routing. The inverse reference therefore has no
+routed-closure claim. The stage-parallel NGen inverse has no final hardware
+metrics after its execution budget expired. The separate full-throughput inverse,
+forward constant-shift ablation and composed-forward retry remain pending.
