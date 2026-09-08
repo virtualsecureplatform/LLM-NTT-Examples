@@ -46,6 +46,11 @@ campaign or claim hardware fit. An N=256 end-to-end smoke check precedes the
 18-point matrix (16K/64K/128K, 32/54/64 bits, forward/inverse). A matched
 N=256 synthesis run is also pending under `build/compact-io-synthesis256`.
 
-The branch is not merged into the generator used by the active live policy
-trial. Integrate only after that trial finishes and after reviewing the large
-checks and matched hardware results.
+After the live policy trial finished, the compact-address changes were integrated
+into NGen main together with Kyber normalization and YATA converter sharing.
+The combined build passes all 148 Scala tests. N=256 compact-address synthesis
+passes with 5126 LUTs, 1887 FFs, 18 DSPs, four BRAM tiles, WNS +0.599 ns and
+WHS +0.063 ns under the two-buffer target. Before compaction the same synthesis
+target used 5101 LUTs, 1735 FFs and 22 DSPs. The compact version trades 25 LUTs
+and 152 FFs for four DSPs; the full routed ablation is still running at
+`build/ngen-integrated-compact-route256`.
