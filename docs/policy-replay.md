@@ -77,3 +77,33 @@ nearest-neighbor model is unsuitable for resource pruning on this sample.
 Zero WNS error reflects identical +0.599 ns estimates at all five points and
 provides no evidence of general timing prediction. Stronger structural models
 and held-out measurements remain necessary.
+
+## Structural resource model
+
+`calibrate_architecture_cost.py --method structural` fits fixed overhead,
+stage-group count, and PE count times stage-group count. It only combines
+matching streamed radix-2 configuration families within the existing exact
+workload/target check. Insufficient or rank-deficient observations yield an
+unavailable prediction; timing prediction is unsupported. The production
+`--policy cost --cost-model ...` path honors the saved model method. Neither
+model supplies safe pruning bounds.
+
+On the same five completed measurements, leave-one-out MAE is LUT 1977.67 and
+FF 395.98; DSP and BRAM errors are below numerical precision. Results are in
+`build/policy-pool256-five-structural-cost.json`. The model was also checked
+against the separately measured PE=2/groups=1 synthesis from
+`build/ngen-mont7-fabric256/report.json`, excluded from training by configuration
+and RTL identity. `build/policy-pool256-structural-heldout.json` records hashes,
+predictions, and outcomes:
+
+| Metric | Prediction | Measured | Absolute error |
+| --- | ---: | ---: | ---: |
+| LUT | 6281.36 | 4841 | 1440.36 |
+| FF | 1768.50 | 1735 | 33.50 |
+| DSP | 22 | 22 | < 1e-10 |
+| BRAM | 5.33 | 4 | 1.33 |
+
+This is one held-out architecture under the same workload, not an unseen-workload
+test. In particular, the BRAM mismatch shows that a smooth replication fit does
+not capture every memory-banking discontinuity. The stronger model improves
+these resource estimates but does not justify discarding unmeasured candidates.

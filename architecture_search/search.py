@@ -99,7 +99,7 @@ def main(argv=None) -> int:
         if args.cost_model is None:parser.error('--policy cost requires --cost-model')
         fitted=json.loads(args.cost_model.read_text())
         if fitted['workload']!=workload or fitted['target']!=campaign.get('target',{}):parser.error('cost model workload/target mismatch')
-        predictions=[(cost.predict(fitted['samples'],c,'lut'),c) for c in configurations]
+        predictions=[(cost.predict(fitted['samples'],c,'lut','structural' if fitted.get('method')=='structural' else 'nearest'),c) for c in configurations]
         # Reserve every fourth proposal for seeded exploration, even with a fitted model.
         ranked=[c for estimate,c in sorted(predictions,key=lambda pair:pair[0].get('estimate',float('inf')))]
         exploration=list(configurations);random.Random(args.seed).shuffle(exploration)
