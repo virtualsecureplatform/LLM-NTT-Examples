@@ -369,3 +369,12 @@ NGen remains setup-failed, while its smaller simulated cycle count is reported
 only at the simulation stage. This negative comparison is retained and guides
 the next control-path timing work. All 122 Python tests pass, including the new
 live-trial summary tests.
+
+## Registered control decode experiment
+
+NGen `c6445a6` on isolated branch `pipeline-control-rom` registers decoded RAM
+read addresses/enables and aligns tags and operand loading. All 152 Scala tests
+and both full 16K/q54 direction oracles pass, with the expected +15-cycle latency
+and initiation-interval tradeoff. Full FHE validation and a matched route are
+running. Main-branch integration remains pending to preserve ongoing policy
+inputs. See [registered memory issue](registered-memory-issue.md).
