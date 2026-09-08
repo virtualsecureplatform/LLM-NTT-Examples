@@ -1,0 +1,38 @@
+{
+  "comparisons": [
+    {
+      "name": "N=256/q32 three-generator comparison",
+      "directory": "build/comparison-threeway256-compact-routed",
+      "stage": "route",
+      "notes": "Same two-buffer fabric contract. All three designs pass timing; resource and throughput tradeoffs remain."
+    },
+    {
+      "name": "N=16384/q54 NGen and OpenNTT",
+      "directory": "build/comparison16k54-registered-issue-routed",
+      "stage": "route",
+      "notes": "Both designs pass routed timing. Registered-issue NGen trades more LUT/BRAM for lower latency and fewer FF/DSP than OpenNTT. Earlier failed NGen revisions remain in separate reports."
+    },
+    {
+      "name": "Kyber storage and arithmetic ablation",
+      "directory": "build/kyber-storage-comparison",
+      "stage": "synthesis",
+      "notes": "Compact banked Kyber requires serialized host transactions and complete buffer loading. Synthesis qualification is not routed closure."
+    },
+    {
+      "name": "NGen and SGen YATA permutation choices",
+      "directory": "build/yata8x8-permutation-comparison",
+      "stage": "synthesis",
+      "notes": "Composed switch/stride designs pass arithmetic but fail setup under the stated target."
+    },
+    {
+      "name": "HOGE forward hardware comparison",
+      "directory": "build/hoge-forward-hardware-comparison",
+      "stage": "synthesis"
+    },
+    {
+      "name": "HOGE inverse hardware comparison",
+      "directory": "build/hoge-inverse-hardware-comparison",
+      "stage": "synthesis"
+    }
+  ]
+}

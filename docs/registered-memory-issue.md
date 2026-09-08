@@ -37,3 +37,11 @@ The full 18-case matrix is running in `build/fhe-registered-issue-matrix`.
 `build/ngen-fhe16k54-registered-issue-route`. No timing or resource improvement
 is claimed until implementation finishes. The previous -0.459 ns route remains
 the comparison baseline.
+
+Routed measurement completes and passes: 8423 LUT, 3667 FF, 66 DSP, 376 BRAM,
+setup WNS +0.124 ns and hold +0.011 ns under the same 4 ns fabric contract.
+`build/comparison16k54-registered-issue-routed` compares the verified artifact
+with the banked OpenNTT adapter; both enter its routed frontier. Relative to
+OpenNTT, NGen has 33.1% higher route-qualified RTL-derived transform throughput
+and 25.9% lower latency, with fewer FF/DSP and higher LUT/BRAM use. This is not a
+board or universal-generator claim. Main-branch integration remains pending.

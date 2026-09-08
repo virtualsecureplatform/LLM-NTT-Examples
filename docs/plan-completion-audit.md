@@ -393,3 +393,16 @@ The live-policy summarizer now includes terminal generation, arithmetic and
 evaluation failures in the consumed budget, while giving them no frontier
 recovery. Target mismatches still reject comparison. End-to-end CLI regression
 coverage verifies a generation-failed observation. All 125 Python tests pass.
+
+## Qualified registered-issue route and consolidated evidence
+
+NGen `c6445a6` passes the matched 16K route at WNS +0.124 ns and hold +0.011 ns,
+using 8423 LUT/3667 FF/66 DSP/376 BRAM. Both it and OpenNTT qualify in
+`build/comparison16k54-registered-issue-routed`. The NGen throughput/latency
+advantages come with higher LUT/BRAM use; the pushed experiment branch still
+awaits main integration after fixed-input policy work.
+
+A reproducible [evidence snapshot](evidence-snapshot.md) now consolidates the
+N=256, N=16K, Kyber and YATA comparison groups, with pending HOGE measurements
+listed explicitly. It rechecks RTL/artifact integrity and recomputes frontiers.
+All 127 Python tests pass. The snapshot is not full-plan completion evidence.
