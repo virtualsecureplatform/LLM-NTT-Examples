@@ -178,3 +178,14 @@ unchanged contract. [Bandwidth constraints](bandwidth-constraints.md) now add
 optimistic necessary-condition pruning and measured-rate eligibility without
 promoting predictions to evidence. Resource-bound pruning and live acquisition
 trials remain unfinished.
+
+A [sequential policy runner](live-policy-trials.md) now chooses one legal
+configuration, performs fresh oracle/synthesis evaluation, and then exposes
+that observation to the next choice. Its N=128 campaign provides a held-out
+workload execution pilot; measurements are pending. Component tests verify that
+missing measurements never become zero-cost samples, and the ordinary CLI
+rejects selections outside the legal campaign space.
+
+The detailed baseline hold reports identify insufficient output-path delay after
+one identity LUT. A common two-stage identity-LUT target is prepared for fresh
+matched routing. The original one-stage failures remain unchanged evidence.

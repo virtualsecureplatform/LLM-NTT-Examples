@@ -31,7 +31,11 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
              '--clock-period',str(period),'--clock-port',target.get('clock_port','clock'),
              '--build-dir',str(directory),'--metrics-json',str(output),'--vivado-bin',vivado,
              '--jobs','8','--timeout',str(max(1,int(timeout)))]
-    if target.get('output_hold_buffers'):command+=['--output-hold-buffers']
+    if 'output_hold_buffer_stages' in target:
+        stages=target['output_hold_buffer_stages']
+        if not isinstance(stages,int) or isinstance(stages,bool) or not 1<=stages<=4:raise ValueError('output hold buffer stages must be 1..4')
+        command+=['--output-hold-buffer-stages',str(stages)]
+    elif target.get('output_hold_buffers'):command+=['--output-hold-buffers']
     if target.get('io_reference_pin'):command+=['--io-reference-pin',target['io_reference_pin']]
     if target.get('clock_source'):command+=['--clock-source',target['clock_source']]
     for prefix in ('input','output'):

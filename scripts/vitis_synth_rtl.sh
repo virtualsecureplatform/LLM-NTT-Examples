@@ -21,7 +21,8 @@ Options:
                          or clock.
   --clock-period NS      Clock period in ns. Defaults to VITIS_CLOCK_PERIOD or
                          4.0, matching AutoNTT examples.
-  --output-hold-buffers  Insert identity LUTs on output bits for physical hold repair.
+  --output-hold-buffers  Insert one identity LUT on each output bit.
+  --output-hold-buffer-stages N  Insert 1..4 identity LUT stages per output bit.
   --io-reference-pin PIN Fabric clock pin used as the I/O timing reference.
   --include-dir DIR      Additional Verilog header search directory; repeatable.
   --clock-source SITE    Optional OOC clock source site (HD.CLK_SRC).
@@ -102,6 +103,10 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --output-hold-buffers) output_hold_buffers=1; shift ;;
+    --output-hold-buffer-stages)
+      output_hold_buffers="${2:-}"
+      if [[ ! "$output_hold_buffers" =~ ^[1-4]$ ]]; then echo "Output hold buffer stages must be 1..4" >&2; exit 2; fi
+      shift 2 ;;
     --io-reference-pin) io_reference_pin="${2:-}"; shift 2 ;;
     --include-dir) include_dirs+=("${2:-}"); shift 2 ;;
     --clock-source) clock_source="${2:-}"; shift 2 ;;

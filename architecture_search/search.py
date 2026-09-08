@@ -88,6 +88,7 @@ def main(argv=None) -> int:
     parser.add_argument('--policy',choices=['enumerate','random','llm','cost'],default='enumerate')
     parser.add_argument('--cost-model',type=Path)
     parser.add_argument('--seed',type=int,default=1)
+    parser.add_argument('--configuration-json',type=Path,help='evaluate exactly one configuration, which must belong to the declared legal space')
     args=parser.parse_args(argv)
     campaign=json.loads(args.campaign.read_text())
     campaign['target']={'part':'xcu280-fsvh2892-2L-e','tool_version':'2023.2','clock_period_ns':4.0,**campaign.get('target',{})}
@@ -105,6 +106,10 @@ def main(argv=None) -> int:
         campaign['target'].setdefault('clock_port',task_config.get('ports',{}).get('clock','clock'))
     ngen=args.ngen_root.resolve(); directory=args.output_dir.resolve()
     configurations=adapters.candidates(workload,ngen,campaign.get('space'))
+    if args.configuration_json is not None:
+        selected=json.loads(args.configuration_json.read_text())
+        if selected not in configurations:parser.error('selected configuration is outside the legal campaign space')
+        configurations=[selected]
     try:
         bounds={digest(c):constraints.analyze(workload,c,campaign['target'],campaign.get('bandwidth'),campaign.get('requirements')) for c in configurations}
     except ValueError as error:parser.error(str(error))

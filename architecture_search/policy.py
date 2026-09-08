@@ -20,7 +20,7 @@ def rank(configurations: list[dict], workload: dict, settings: dict, directory, 
     indexed={digest(c)[:16]:c for c in configurations}
     request_body={'model':model,'temperature':0,'max_tokens':1024,'chat_template_kwargs':{'enable_thinking':False},'messages':[
         {'role':'system','content':'Rank legal FPGA NTT configurations for exploration of latency, throughput, and resource tradeoffs. Return only a JSON object with an ordered list of candidate IDs in "order". Never invent configurations or report predicted metrics as measurements.'},
-        {'role':'user','content':canonical({'workload':workload,'target':settings.get('target',{}),'resource_limits':settings.get('resource_limits',{}),'objectives':settings.get('objectives',{}),'requirements':settings.get('requirements',{}),'bandwidth':settings.get('bandwidth',{}),'candidates':indexed})}]}
+        {'role':'user','content':canonical({'workload':workload,'target':settings.get('target',{}),'resource_limits':settings.get('resource_limits',{}),'objectives':settings.get('objectives',{}),'requirements':settings.get('requirements',{}),'bandwidth':settings.get('bandwidth',{}),'observations':settings.get('observations',[]),'candidates':indexed})}]}
     write_json(directory/'llm-request.json',request_body)
     request=urllib.request.Request(endpoint+'/chat/completions',data=json.dumps(request_body).encode(),headers=headers)
     with urllib.request.urlopen(request,timeout=timeout) as response:

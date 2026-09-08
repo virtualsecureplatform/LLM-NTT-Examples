@@ -59,3 +59,17 @@ additional BRAM tile; this is not a measured speedup against a timing-closed
 OpenNTT implementation. The common normalized boundary and target are checked
 by the importer; the manifest retains input report hashes. Proteus routing is
 being retried after a measurement-driver failure, with no missing metrics filled.
+
+## Two-stage buffer experiment
+
+Detailed routed reports in `build/baseline-hold-diagnostic` trace both remaining
+baseline failures to output registers through one LUT to output ports. OpenNTT's
+worst path has 0.182 ns data delay versus 0.201 ns effective clock skew; Proteus
+has 0.122 ns versus 0.141 ns. Both miss hold by 0.019 ns.
+
+`campaigns/threeway256-two-buffer-fabric.json` keeps the complete timing contract
+and selects `output_hold_buffer_stages: 2`. The implementation driver supports
+one to four preserved identity LUTs per output, recording every inserted LUT.
+This adds physical delay and measured resource cost without extra cycles or a
+constraint waiver. New matched runs are required for all three generators;
+existing one-stage results cannot be promoted under this changed target.
