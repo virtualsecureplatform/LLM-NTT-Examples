@@ -277,3 +277,28 @@ all 150 Scala tests pass. Synthesis is queued; no area or timing win is claimed.
 See [PE control-ROM prefetch](pe-control-rom-prefetch.md) for exact evidence and
 the matched campaign. The wide Montgomery multiplier remains a separate timing
 limitation, and the overall roadmap is still incomplete.
+
+
+## Correction: generator executable freshness
+
+The initial block-control and early wide-product campaign checks used an older
+assembled `ngen.bat`. They are not evidence for those new optimizations. See the
+correction in [PE control-ROM prefetch](pe-control-rom-prefetch.md). The stale
+queued block-control measurement was stopped before vendor execution; existing
+baseline measurements retain their actual RTL/binary identities.
+
+Fresh `sbt assembly test` passes all 151 Scala tests, including direct 33/54/64-bit
+Montgomery arithmetic, tag, bubble, bypass and reset checks. Rebuilt wide-product
+RTL also passes the full N=256 oracle for 54/64-bit forward/inverse transforms in
+`build/wide-product-rebuilt256-q*-*`; emitted RTL was inspected for the new partial
+product registers. Corrected block-only 16K oracles and the wide-product 18-case
+FHE matrix are running. Hardware improvements remain unproven pending the new
+matched synthesis jobs. An automatic source-to-executable freshness guard remains
+necessary to prevent this class of mistaken attribution in future campaigns.
+
+The corrected block-ROM-only 16K/q54 forward and inverse oracles both pass with
+unchanged metrics. NGen `1ed41d6` adds a nine-stage wide-product Montgomery
+pipeline; rebuilt 16K/q54 forward passes with the expected +30-cycle latency and
+initiation-interval tradeoff. Both fresh hardware candidates are queued. See
+[wide Montgomery product](wide-montgomery-product.md). The 18-case FHE matrix
+has started; partial passes do not establish complete matrix coverage.

@@ -17,15 +17,25 @@ the wide Montgomery multiplier; this ROM change does not claim to fix it.
 Block RAM replaces logic storage, so resource improvement must be measured
 across both LUT and BRAM counts.
 
-The final implementation passed the unchanged full generic oracle in both
-forward and inverse directions:
+Correction: the initially reported `block-control-final16k54-*` campaigns used
+an older assembled `ngen.bat`, despite newer Scala source. Their RTL still has
+distributed ROM, so those runs do **not** validate this optimization. The queued
+`ngen-fhe16k54-block-control` synthesis was stopped before vendor execution;
+`invalidated.json` preserves the reason. Source identity alone does not prove
+executable freshness.
+
+A clean detached checkout at `/tmp/ngen-block-control-ablation`, revision
+`1382267`, has now been built with `sbt assembly`. Corrected oracle runs use
+`build/block-control-rebuilt16k54-{forward,inverse}` and matched synthesis uses
+`build/ngen-fhe16k54-block-control-rebuilt`. The following table records the
+**older executable's** metrics and is retained only as the cycle baseline:
 
 | Evidence directory | Frames | First-output latency | Initiation interval |
 | --- | ---: | ---: | ---: |
 | `build/block-control-final16k54-forward` | 8 | 69773 | 73866 |
 | `build/block-control-final16k54-inverse` | 8 | 69773 | 73866 |
 
-These metrics exactly match the original forward control-ROM implementation.
+These metrics are from the original forward control-ROM implementation.
 The oracle includes input gaps, saturated frames, output stalls/stability and
 reset recovery. All 150 Scala tests pass. The first complete Scala invocation
 lacked `iverilog` on PATH and failed two tool-dependent tests; after sourcing
@@ -33,6 +43,13 @@ lacked `iverilog` on PATH and failed two tool-dependent tests; after sourcing
 
 `campaigns/fhe16k54-block-control.json` runs the same field, lanes, PE count and
 4 ns fabric contract through simulation and synthesis. Its initial measurement
-is queued in `build/ngen-fhe16k54-block-control`; physical inference, resources,
+uses the rebuilt checkout in `build/ngen-fhe16k54-block-control-rebuilt`; physical inference, resources,
 and setup timing remain unverified until that vendor run completes. The
 previous routed campaign is retained as the comparison baseline.
+
+Corrected result: both rebuilt 16K/q54 directions passed all eight frames with
+latency 69773 and initiation interval 73866, exactly matching the older baseline.
+The generated block-ROM RTL, rather than source text alone, is the tested
+artifact. The fresh block-only hardware candidate is `138ee4868aa5` (prefix)
+in `build/ngen-fhe16k54-block-control-rebuilt`; simulation passed and synthesis
+is queued under the common vendor lock.

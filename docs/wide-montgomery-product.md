@@ -1,0 +1,34 @@
+# Wide Montgomery product pipeline
+
+NGen `1ed41d6` uses nine pipeline stages for Montgomery butterflies above 32 bits,
+retaining seven stages for smaller fields. The first product is split into four
+half-word products, followed by two registered addition stages. Bypass constants
+are converted to an ordinary multiplier value of one before those stages. The
+existing correction/reduction path remains, with valid, kind, operand, bypass
+and transaction-tag delays extended consistently. Generator cycle estimates and
+emitted butterfly latency metadata use the actual field width.
+
+The motivation is the N=16384/q54 synthesis path through a multi-DSP product to
+the correction multiplier: WNS -0.292 ns under the 4 ns contract. Extra pipeline
+registers can trade area/latency for timing; this change does not yet establish
+closure or a resource improvement.
+
+Validation uses a fresh `sbt assembly test` build. All 151 Scala tests pass,
+including 240-cycle direct arithmetic/tag/valid sequences for each of 33-, 54-
+and 64-bit fields, bypass cases, bubbles, and two mid-stream reset points.
+The rebuilt executable passes full N=256 forward/inverse oracles for both 54-
+and 64-bit fields in `build/wide-product-rebuilt256-q*-*`.
+
+The rebuilt 16K/q54 forward campaign passes eight frames with first-output
+latency 69803 and initiation interval 73896, versus 69773/73866 for the separately
+rebuilt block-ROM-only revision. The 30-cycle difference matches two additional
+cycles across 15 drained stages. Its hardware candidate is `afb34bb930a4`
+(prefix), in `build/ngen-fhe16k54-wide-product-rebuilt`; synthesis is queued.
+`campaigns/fhe16k54-wide-product.json` preserves the exact matched fabric target.
+The full 18-case FHE run is active in `build/fhe-wide-product-rebuilt-matrix`.
+
+Earlier directories named `wide-product256-q*-*` were generated with an older
+assembled executable and do not validate this change. The corrected directories
+include `rebuilt`. This attribution error and the corresponding block-ROM
+correction are retained in the completion audit; no older measurement is
+promoted to evidence for the new pipeline.
