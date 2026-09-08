@@ -6,7 +6,7 @@ The full pool is used solely by the evaluator to score frontier recovery.
 from __future__ import annotations
 import random
 from . import cost
-from .model import canonical,frontier,metric_number
+from .model import canonical,evidence_integrity,frontier,metric_number
 
 OBJECTIVES={'latency_ns':'min','transforms_per_second':'max','lut':'min','ff':'min','dsp':'min','bram':'min','uram':'min'}
 
@@ -22,6 +22,7 @@ def validate_pool(report: dict,target: dict,stage: str) -> list[dict]:
         e=r.get('evidence',{}).get(stage,{})
         if r.get('status') not in ('complete','hardware_failed') or r.get('mode')!='functional' or r.get('correct') is not True:
             raise ValueError('pool must contain completed, independently correct candidates')
+        if evidence_integrity(e)=='invalid':raise ValueError('hardware evidence artifacts changed or are missing')
         if e.get('target')!=target or not e.get('implementation_passed'):
             raise ValueError('each candidate needs completed implementation under the same target')
         if any(not metric_number(e.get('metrics',{}).get(k)) for k in OBJECTIVES):

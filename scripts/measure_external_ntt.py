@@ -41,7 +41,8 @@ key=digest(identity)
 record={'id':key,'status':'running','correct':True,'configuration':{'generator':generator,**baseline['configuration'],'boundary':'registered-ready-valid'},
         'rtl_hash':stream['rtl_hash'],'provenance':identity,'evidence':{'simulation':{'passed':True,'target':target,'metrics':stream['metrics']}}}
 write_json(out/'record.json',record)
-result=hardware.evaluate(rtl,'SearchTop',target,stream['metrics'],out/a.stage,a.stage,a.timeout,rtl_sources,[directory/'hardware'])
+result=hardware.evaluate(rtl,'SearchTop',target,stream['metrics'],out/a.stage,a.stage,a.timeout,rtl_sources,[directory/'hardware'],
+    additional_inputs=[directory/name for name in baseline['artifacts']]+[Path(name) for name in stream['verification']])
 record['evidence'][a.stage]=result;record['status']='complete';record['mode']=a.stage
 record['measurement_artifacts']={str(f.relative_to(out)):file_hash(f) for f in (out/a.stage).glob('*') if f.is_file() and f.suffix in ('.rpt','.json','.tcl','.xdc','.txt','.properties')}
 write_json(out/'record.json',record)

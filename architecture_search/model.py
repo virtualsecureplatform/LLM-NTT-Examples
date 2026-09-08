@@ -82,6 +82,43 @@ def metric_number(value) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
+def artifact_manifest(files, directories=()) -> dict:
+    """Hash explicit inputs and whole include trees, including tree membership."""
+    paths = {str(Path(p).absolute()) for p in files}
+    trees = {}
+    for directory in directories:
+        root = Path(directory).absolute()
+        trees[str(root)] = sorted(str(p.absolute()) for p in root.rglob('*') if p.is_file()) if root.is_dir() else None
+        paths.update(trees[str(root)] or [])
+    return {'files': {p: file_hash(Path(p)) if Path(p).is_file() else None for p in sorted(paths)},
+            'directories': trees}
+
+
+def evidence_integrity(evidence: dict) -> str:
+    """Legacy measurements remain usable, but are never called hash-verified."""
+    sealed = evidence.get('integrity')
+    if sealed is None:
+        return 'legacy-unverified'
+    try:
+        if sealed['version'] != 1 or not sealed['inputs_unchanged']:
+            return 'invalid'
+        for name in ('inputs', 'outputs'):
+            manifest = sealed[name]
+            if any(value is None for value in manifest['files'].values()):
+                return 'invalid'
+            if artifact_manifest(manifest['files'], manifest['directories']) != manifest:
+                return 'invalid'
+        for name, value in sealed['measurement'].items():
+            if name == 'metrics':
+                if any(evidence.get('metrics', {}).get(k) != v for k, v in value.items()):
+                    return 'invalid'
+            elif evidence.get(name) != value:
+                return 'invalid'
+        return 'verified'
+    except (KeyError, TypeError, OSError, ValueError):
+        return 'invalid'
+
+
 def frontier(records: list[dict], objectives: dict[str, str], stage: str, target: dict,
              limits: dict | None = None, minimums: dict | None = None) -> list[str]:
     """Call per workload. Missing objectives are ineligible, never interpreted as zero."""
@@ -92,7 +129,7 @@ def frontier(records: list[dict], objectives: dict[str, str], stage: str, target
         if record.get('correct') is not True or record.get('mode') != 'functional':
             continue
         evidence = record.get('evidence', {}).get(stage, {})
-        if evidence.get('passed') is not True or evidence.get('target') != target:
+        if evidence.get('passed') is not True or evidence.get('target') != target or evidence_integrity(evidence) == 'invalid':
             continue
         metrics = evidence.get('metrics', {})
         if any(not metric_number(metrics.get(k)) for k in objectives):

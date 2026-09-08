@@ -253,3 +253,17 @@ OpenNTT stream is queued for implementation at
 `build/openntt-fhe16k54-two-buffer-fabric`. These launches do not establish
 resource fit or timing closure. The integrated Kyber work completes 149 Scala
 and 111 Python tests, including both normal search backends and RAM reset checks.
+
+## Hardware provenance and 16K measurement update
+
+New hardware evidence hashes inputs before/after measurement and retains output
+artifact hashes and original measured fields. Pareto selection and policy replay
+reject changed evidence; historical records remain explicitly legacy-unverified.
+See [hardware evidence integrity](hardware-evidence-integrity.md). All 113 Python
+tests pass.
+
+The matched N=16384/q54 NGen simulation passed. Synthesis completed at 114739 LUT,
+2807 FF, 52 DSP, 48 BRAM and setup WNS -0.292 ns under the 4 ns target. This is a
+setup failure, not a qualified 250 MHz result. Routing is still running; the
+matched OpenNTT route follows in the serialized campaign. No routed conclusion
+is available yet.

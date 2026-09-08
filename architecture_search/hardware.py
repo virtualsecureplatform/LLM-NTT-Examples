@@ -1,5 +1,6 @@
 """Vendor implementation stages; target frequency is never treated as achieved automatically."""
 from __future__ import annotations
+import copy
 import json
 import fcntl
 import os
@@ -7,11 +8,12 @@ import shutil
 import tempfile
 import time
 from pathlib import Path
-from .model import metric_number, run
+from .model import artifact_manifest, metric_number, run
 
 
 def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path, stage: str,
-             timeout: float, extra_sources: list[Path] | None = None, include_dirs: list[Path] | None = None) -> dict:
+             timeout: float, extra_sources: list[Path] | None = None, include_dirs: list[Path] | None = None,
+             additional_inputs: list[Path] | None = None) -> dict:
     root=Path(__file__).resolve().parents[1]
     period=float(target.get('clock_period_ns',4.0))
     if not metric_number(period) or period<=0 or stage not in ('synthesis','route'):
@@ -50,6 +52,7 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
         command+=['--include-dir',str(directory_path)]
     for source in extra_sources or []:
         command+=['--verilog-file',str(source)]
+    inputs=artifact_manifest([rtl, *(extra_sources or []), *(additional_inputs or []), *driver.iterdir()], include_dirs or [])
     process=run(command,root,directory.parent/f'{stage}.log',timeout)
     raw=json.loads(output.read_text()) if output.exists() else {}
     values=raw.get('metrics',{})
@@ -65,13 +68,28 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
     timing_clean=metric_number(mapped.get('wns_ns')) and mapped['wns_ns']>=0
     if stage=='route':
         timing_clean=timing_clean and metric_number(mapped.get('hold_slack_ns')) and mapped['hold_slack_ns']>=0
-    return {'passed':process['returncode']==0 and raw.get('passed') is True and timing_clean,
+    result={'passed':process['returncode']==0 and raw.get('passed') is True and timing_clean,
             'implementation_passed':process['returncode']==0 and raw.get('passed') is True,
             'timing_clean':timing_clean,'target':target,'metrics':mapped,'process':process,'reports':raw.get('reports',{})}
+    unchanged=inputs==artifact_manifest(inputs['files'], inputs['directories']) and all(v is not None for v in inputs['files'].values())
+    if not unchanged:
+        result['passed']=False
+        result['error']='Implementation inputs missing or changed during measurement'
+    artifacts=[output]
+    if process.get('log'):
+        artifacts.append(Path(process['log']))
+    for name, path in result['reports'].items():
+        if path and name != 'build_dir':
+            artifacts.append(Path(path) if Path(path).is_absolute() else root/path)
+    result['integrity']={'version':1, 'inputs_unchanged':unchanged, 'inputs':inputs,
+                         'outputs':artifact_manifest(artifacts),
+                         'measurement':copy.deepcopy({k:result[k] for k in ('passed','implementation_passed','timing_clean','target','metrics')})}
+    return result
 
 
 def evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path, stage: str,
-             timeout: float, extra_sources: list[Path] | None = None, include_dirs: list[Path] | None = None) -> dict:
+             timeout: float, extra_sources: list[Path] | None = None, include_dirs: list[Path] | None = None,
+             additional_inputs: list[Path] | None = None) -> dict:
     """Serialize vendor jobs across campaigns for this user; queue time uses the budget."""
     start=time.monotonic()
     lock_path=Path(tempfile.gettempdir())/f'ntt-search-vivado-{os.getuid()}.lock'
@@ -86,5 +104,5 @@ def evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path, 
                             'target':target,'metrics':{},'error':'Vivado queue timeout'}
                 time.sleep(min(0.2,max(0,timeout-(time.monotonic()-start))))
         queued=time.monotonic()-start
-        result=_evaluate(rtl,top,target,metrics,directory,stage,max(0,timeout-queued),extra_sources,include_dirs)
+        result=_evaluate(rtl,top,target,metrics,directory,stage,max(0,timeout-queued),extra_sources,include_dirs,additional_inputs)
         return {**result,'queue_seconds':queued}
