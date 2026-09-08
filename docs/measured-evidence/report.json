@@ -4,15 +4,15 @@
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/comparison-threeway256-compact-routed/report.json": "dcd7ab475ec7575630d7ae9b50b37377c1381f7f9e35264edd5164a9b06105f4",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/comparison16k54-registered-issue-routed/manifest.json": "077f0f42c93c1aefa5f4fc24dfbf1d2d571fa5b908a52c9565e0fb222c8b4b27",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/comparison16k54-registered-issue-routed/report.json": "09dd2f391707c58f878c06fbcd479ca17786511d13b1210a48167e0e2a23098c",
-    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-hardware-comparison/manifest.json": "73ab1d40aa56ff95856bd8cf1054ca1e09099e3e21663ec4faf6738fd40aad2b",
-    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-hardware-comparison/report.json": "93b2bfc9b35a3552c55b58ac49d3251d027cb35f4049a3f0825273b61d69ad85",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-architecture-comparison/manifest.json": "7b9d818e4c5840d9c5510869310d3470b60101aed4b130519e61cad430c60d5b",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-architecture-comparison/report.json": "b2b13ed69c206718d808653c356cfd6e3f812cb85f999e2d97f69bb6c732b9cc",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-inverse-architecture-comparison/manifest.json": "66e03240692a736baf011aa1ed2df4111f38b8f7039a24f827c80dbc444012ba",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-inverse-architecture-comparison/report.json": "c39536f34f7ef26b9691564e4a0bd62a848ef36454c6ad1fc5ea4ee6c15e7def",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/kyber-storage-comparison/manifest.json": "7d11fa9d17a3337c81d8827b9996537bd34e30bf2961229e142c9b091f66a6ff",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/kyber-storage-comparison/report.json": "dca5793bada1305447641cc7bb22ac5a6f95c3e0d17ca7fdf5a23e48c879e3a3",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-permutation-comparison/manifest.json": "16a5a198bd83475448109aa8859760133b335cf71ac17f01faf4cf484d61bef8",
     "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-permutation-comparison/report.json": "5f47ab800bbb92e10fe17f3c22bab95df22af4629212cbd5f0b93ac14a698024",
-    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/campaigns/plan-evidence.json": "89329ac49a74f99891f0ede5c7cb76a3f5196ac21757dec2be622d6ba38e8413"
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/campaigns/plan-evidence.json": "bb360b7333e528802dd8960301ed3a60771c4f3f623c1a6da1118985341eb1d9"
   },
   "missing_comparisons": [],
   "qualification": "Synthesis qualification requires completed implementation and nonnegative setup slack; it does not establish routed timing closure. Route qualification additionally requires nonnegative hold slack and completed routing. Rates at synthesis are estimates under the stated target clock.",
@@ -611,8 +611,72 @@
         "e0cac26420eb0885b7d50ec3508b7fe6b8231aee4c3b912f1cfb6fa74a55358f"
       ],
       "name": "HOGE forward hardware comparison",
-      "notes": "Extracted HOGE passes synthesis timing; NGen full-throughput fails setup and hold. The shorter simulated NGen transaction is not a qualified 250 MHz advantage.",
+      "notes": "Only the extracted reference passes synthesis setup. Constant shifts reduce NGen DSP/LUT use but worsen setup slack; SGen composition alone has the same measured resources and timing as pre-shift NGen. No NGen 250 MHz advantage.",
       "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen-sgen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 40,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 104
+          },
+          "id": "2cb48775dc22529d27854aa4ce4a6e7950f68fcbd4fcbfd1252acb30b2533bbe",
+          "metrics": {
+            "bram": 0,
+            "dsp": 2304,
+            "ff": 45852,
+            "hold_slack_ns": -0.029,
+            "lut": 214565,
+            "transaction_ns": 416.0,
+            "uram": 0,
+            "wns_ns": -8.332
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 40,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 104
+          },
+          "id": "5650fadf1c39e364b417f912678c8dbe80bc3f458ae1e18451561620ebc7e725",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 47528,
+            "hold_slack_ns": -0.029,
+            "lut": 177390,
+            "transaction_ns": 416.0,
+            "uram": 0,
+            "wns_ns": -8.937
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
         {
           "artifact_integrity": "verified",
           "configuration": {
@@ -676,7 +740,7 @@
           "status": "hardware_failed"
         }
       ],
-      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-hardware-comparison",
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-architecture-comparison",
       "stage": "synthesis",
       "target": {
         "clock_period_ns": 4.0,

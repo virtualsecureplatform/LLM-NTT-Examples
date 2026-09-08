@@ -17,12 +17,12 @@ and the live policy comparison must be reported before the final audit.
 | 2: composed complete NTT oracle and reproducible generator identities | All three YATA switch/stride candidates pass in `build/yata8x8-permutation-comparison`; HOGE-SGen forward also passes on branch `hoge-sgen-namespaces` | YATA integrated; both HOGE directions and 240 overlapping forward frames pass on prepared integration branches; main integration pending |
 | 2: count full adapter resources and latency | YATA three-option synthesis includes wrappers and reports 86/86/96 cycles; all three fail setup and remain excluded | Measured; HOGE composition also measured: same resources and failed setup as pre-shift NGen |
 | 3: independent stage parallelism and actual timing hazards | Generic PE/radix/stage-group capability checks; scheduler/arithmetic regression suites; all 18 registered-issue FHE oracles | Demonstrated; registered-issue branch integration pending |
-| 3: identical-workload ablation for improvements | Separated 16K control-ROM/product/registered-issue records; compact-address, Kyber storage and YATA conversion comparisons | Completed ablations documented; HOGE constant-shift synthesis pending |
+| 3: identical-workload ablation for improvements | Separated 16K control-ROM/product/registered-issue records; compact-address, Kyber storage and YATA conversion comparisons | Completed ablations documented; HOGE forward shift ablation complete: fewer DSP/LUT, more FF and worse setup slack |
 | 3: measured benefits and visible tradeoffs | Matched N=16K registered-issue route and OpenNTT both qualify; NGen trades more LUT/BRAM for lower latency and fewer FF/DSP | Demonstrated for that workload; no universal dominance claim |
 | 4: calibrated models and resource/bandwidth pruning | Six-point N=128 integrity-checked calibration, leave-one-out and whole-architecture holdouts; bandwidth/issue and state-capacity bound tests | Demonstrated; structural group holdouts are unavailable, predictions remain advisory |
 | 4: correct candidates, matched baselines and routed results | Integrity-rechecked snapshot contains three qualified N=256 routes and two qualified N=16K routes; baseline adapters and modified Proteus are labeled | Demonstrated for those matched workloads |
 | 4: model error, search cost and policy comparison | Cost holdout reports and completed live pilot/replay retain negative LLM outcomes | Three equal-budget live repetitions still running; summarize time, queue time, consumed evaluations, failures and recovery |
-| 4: final reproducible comparison report and limited claims | Published snapshot covers six completed groups; HOGE forward explicitly favors the reference on timing qualification | Inverse and composed HOGE measurements complete with negative outcomes retained; finish forward constant-shift ablation, policy results and integrated revision identities |
+| 4: final reproducible comparison report and limited claims | Published snapshot covers six completed groups; HOGE forward explicitly favors the reference on timing qualification | Inverse and composed HOGE measurements complete with negative outcomes retained; consolidate policy results and integrated revision identities |
 
 The live policy manifest was rechecked against all 23 executable inputs after
 main documentation updates and isolated experiments: no hash changed. Main
@@ -36,8 +36,8 @@ outside the approved routed-RTL milestone.
 
 ## Remaining execution order
 
-1. Finish the active forward constant-shift synthesis and consolidate it with
-   the pre-shift NGen, SGen-composed and extracted HOGE forward records.
+1. Forward constant-shift synthesis is complete and consolidated with
+   pre-shift NGen, SGen-composed and extracted HOGE forward records.
 2. Finish the current live-policy run without changing its executable inputs.
    Its queue failures consume evaluation budget and must remain visible.
 3. Repeat the same 36 fresh evaluations (four policies, seeds 2/3/4, three

@@ -45,4 +45,8 @@ setup and hold plus completed routing. The inverse reference therefore has no
 routed-closure claim. The stage-parallel NGen inverse has no final hardware
 metrics after its execution budget expired. Full-throughput inverse also completes synthesis, using 136166 LUT, 34058 FF
 and 512 DSP, but fails setup at −9.844 ns (hold −0.029 ns). The forward
-constant-shift ablation and composed-forward retry remain pending.
+constant-shift and composed-forward measurements are complete. Shifts lower
+DSP use from 2304 to 1024 and LUT use from 214565 to 177390, but increase FF
+use and worsen setup slack from −8.332 to −8.937 ns. SGen composition alone
+matches pre-shift resources and timing. The extracted reference remains the
+only synthesis-qualified forward candidate.

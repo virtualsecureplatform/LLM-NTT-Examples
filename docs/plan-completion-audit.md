@@ -501,3 +501,15 @@ cycles, but synthesis reports 214565 LUT, 45852 FF, 2304 DSP, zero BRAM/URAM,
 setup WNS −8.332 ns and hold −0.029 ns. These equal the pre-shift NGen forward
 measurement; composition alone supplies no measured area or timing improvement.
 The forward constant-shift retry is now executing Vivado.
+
+## Completed forward HOGE ablation
+
+The fresh shift retry completed: 177390 LUT, 47528 FF, 1024 DSP, zero BRAM/URAM,
+WNS −8.937 ns, hold −0.029 ns, and 104 oracle-verified transaction cycles.
+Compared with pre-shift NGen this saves 55.6% DSP and 17.3% LUT, increases FF
+by 3.7%, and worsens setup slack by 0.605 ns. Retain the shift specialization
+as a measured resource tradeoff, with no qualified throughput claim.
+`build/hoge-forward-architecture-comparison` preserves all four forward points;
+only the extracted reference qualifies at synthesis. All HOGE hardware jobs
+are now terminal, so no further competing HOGE campaign will be launched
+during the policy study or its clean replication.
