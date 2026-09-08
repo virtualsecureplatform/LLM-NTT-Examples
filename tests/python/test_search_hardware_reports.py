@@ -29,6 +29,11 @@ Path(a[6],'route_status.rpt').write_text('# of routable nets.... : 10 :\\n# of f
             self.assertTrue(result['passed']);self.assertTrue(result['route_complete'])
             self.assertEqual(result['metrics']['vitis_lut'],1112)
             self.assertEqual(result['metrics']['vitis_ff'],442)
+            from architecture_search.hardware import _evaluate
+            measured=_evaluate(rtl,'top',{'vivado':str(fake)}, {},d/'snapshot-build','route',10)
+            self.assertTrue(measured['implementation_passed'])
+            self.assertTrue(measured['passed'])
+            self.assertTrue((d/'snapshot-build-driver/scripts/vitis_synth_rtl.sh').is_file())
             fake.write_text(fake.read_text().replace('fully routed nets.... : 10','fully routed nets.... : 9'))
             self.assertNotEqual(subprocess.run(command,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT).returncode,0)
             self.assertFalse(json.loads(output.read_text())['passed'])

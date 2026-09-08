@@ -22,7 +22,7 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
     vivado=target.get('vivado',f'/home/opt/xilinx/Vivado/{version}/bin/vivado')
     # Bash can read later portions after a long vendor call. Never run a mutable
     # workspace script across that call; snapshot its helper alongside it.
-    driver=directory/'driver/scripts'
+    driver=directory.parent/(directory.name+'-driver')/'scripts'
     driver.mkdir(parents=True,exist_ok=True)
     for name in ('vitis_synth_rtl.sh','insert_output_hold_buffers.tcl'):
         shutil.copyfile(root/'scripts'/name,driver/name)

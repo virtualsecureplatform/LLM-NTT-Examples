@@ -138,3 +138,15 @@ safe pruning bounds. OpenNTT's matched buffered fabric route completed with
 10120 LUTs, 11088 FFs, 32 DSPs, three BRAM tiles, WNS +0.429 ns and WHS -0.019 ns
 (`build/openntt256-buffered-fabric-route`). It remains excluded: the physical
 buffer experiment has not established matched routed closure.
+
+NGen now has a passing routed point at N=256/q32 under the buffered fabric
+contract (WNS +0.299 ns, WHS +0.010 ns). The matched OpenNTT report retains its
+hold failure; see the timing-contract document for resources and limitations.
+Proteus and the missing policy-pool point are being retried after relocating
+driver snapshots outside the build directory cleaned by the shell driver.
+An end-to-end fake-vendor regression covers snapshot survival during cleanup.
+
+HOGE stage-parallel inverse passes the repaired full stream test as well.
+[Rectangular component validation](permutation-validation.md) now covers all
+12 nonsquare 2/4/8/16 shapes under the memory adapter's serialized contract.
+Linear permutations and full-design adapter measurements remain outstanding.

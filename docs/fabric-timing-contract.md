@@ -43,7 +43,19 @@ above and enables `target.output_hold_buffers`. After synthesis,
 `scripts/insert_output_hold_buffers.tcl` inserts a preserved identity LUT on
 each output bit, giving implementation a physical data path. These LUTs count
 in utilization, add no cycles, and are recorded in `output_hold_buffers.txt`.
-The NGen experiment in `build/ngen-mont7-output-buffers256` passed synthesis;
-routed results were still pending when this change was documented. This is an
-optional physical implementation experiment, not a demonstrated timing fix.
+The NGen experiment in `build/ngen-mont7-output-buffers256` completed routing
+with WNS +0.299 ns and WHS +0.010 ns at 4 ns. It uses 4804 LUTs, 1742 FFs,
+22 DSPs, and four BRAM tiles. All 130 output-bit LUTs were inserted before
+implementation; final utilization includes the resulting optimized netlist.
+This establishes closure for this module and conditional fabric contract.
 External comparisons must use the identical target, including this option.
+
+
+`build/comparison-openntt-ngen256-buffered-route` is the first matched routed
+comparison under this contract. OpenNTT uses 10120 LUTs, 11088 FFs, 32 DSPs,
+and three BRAM tiles, with WNS +0.429 ns and WHS -0.019 ns. Its hold failure
+excludes it from the routed frontier. NGen uses fewer logic resources but one
+additional BRAM tile; this is not a measured speedup against a timing-closed
+OpenNTT implementation. The common normalized boundary and target are checked
+by the importer; the manifest retains input report hashes. Proteus routing is
+being retried after a measurement-driver failure, with no missing metrics filled.
