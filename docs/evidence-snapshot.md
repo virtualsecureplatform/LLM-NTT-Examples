@@ -2,8 +2,8 @@
 
 [Measured comparison tables](measured-evidence/report.md) and their
 [machine-readable evidence snapshot](measured-evidence/report.json) consolidate
-four completed comparison groups and explicitly list two pending HOGE hardware
-comparisons. They are generated from `campaigns/plan-evidence.json`:
+five completed comparison groups and explicitly list the pending HOGE inverse
+hardware comparison. They are generated from `campaigns/plan-evidence.json`:
 
 ```sh
 python3 scripts/summarize_ntt_evidence.py --index campaigns/plan-evidence.json --output-dir build/new-evidence-snapshot
@@ -32,3 +32,8 @@ The NGen implementation is still on the pushed `pipeline-control-rom` branch,
 pending integration after the ongoing policy experiment ends. Its previous
 failed routes remain separate evidence. The snapshot is a draft of measured
 results, not a statement that all roadmap acceptance work has finished.
+
+The matched HOGE forward synthesis now qualifies only the extracted reference
+(WNS +1.519 ns, hold +0.014 ns). NGen full-throughput fails setup and hold
+(WNS −8.332 ns, hold −0.029 ns); its shorter simulated transaction is not
+presented as a timing-qualified advantage.

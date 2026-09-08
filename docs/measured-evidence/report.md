@@ -100,7 +100,28 @@ Stage: **synthesis**. Source: `/home/work-bleaker/kmatsuoka/sources/LLMNTT-works
 
 Qualified frontier: none.
 
+## HOGE forward hardware comparison
+
+Extracted HOGE passes synthesis timing; NGen full-throughput fails setup and hold. The shorter simulated NGen transaction is not a qualified 250 MHz advantage.
+
+Workload: `{"kind": "preset", "task": "hoge_streaming_ntt_1024_p64"}`
+
+Target: `{"clock_period_ns": 4.0, "clock_port": "clock", "part": "xcu280-fsvh2892-2L-e", "tool_version": "2023.2"}`
+
+Stage: **synthesis**. Source: `/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-hardware-comparison`.
+
+| Candidate | Configuration | Correct | Qualified | LUT | FF | DSP | BRAM | WNS ns | Hold ns | Integrity |
+| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| e0cac26420eb | {"generator": "extracted-rtl", "task": "hoge_streaming_ntt_1024_p64"} | True | True | 90300 | 194109 | 512 | 0 | 1.519 | 0.014 | verified |
+| f62a296346de | {"backend": "full-throughput", "generator": "ngen", "profile": "baseline", "transpose": "switch"} | True | False | 214565 | 45852 | 2304 | 0 | -8.332 | -0.029 | verified |
+
+| Candidate | Latency/transaction cycles | Frame interval cycles | Qualified latency/transaction ns | Qualified transforms/s |
+| --- | ---: | ---: | ---: | ---: |
+| e0cac26420eb | 170 | not measured | 680.0 | not measured |
+| f62a296346de | 104 | not measured | unqualified | not measured |
+
+Qualified frontier: e0cac26420eb.
+
 ## Pending comparisons
 
-- HOGE forward hardware comparison: `build/hoge-forward-hardware-comparison`
 - HOGE inverse hardware comparison: `build/hoge-inverse-hardware-comparison`
