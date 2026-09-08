@@ -29,17 +29,17 @@ def validate_pool(report: dict,target: dict,stage: str) -> list[dict]:
     return records
 
 
-def score(observed: list[dict],records: list[dict],stage: str,target: dict,limits: dict) -> dict:
-    reference=frontier(records,OBJECTIVES,stage,target,limits)
-    recovered=frontier(observed,OBJECTIVES,stage,target,limits)
+def score(observed: list[dict],records: list[dict],stage: str,target: dict,limits: dict,objectives=None,minimums=None) -> dict:
+    reference=frontier(records,objectives or OBJECTIVES,stage,target,limits,minimums)
+    recovered=frontier(observed,objectives or OBJECTIVES,stage,target,limits,minimums)
     return {'reference_frontier_size':len(reference),'recovered_reference_ids':[i for i in reference if i in recovered],
             'frontier_recall':len(set(reference)&set(recovered))/len(reference) if reference else None,
-            'feasible_discoveries':sum(bool(frontier([r],OBJECTIVES,stage,target,limits)) for r in observed),
+            'feasible_discoveries':sum(bool(frontier([r],objectives or OBJECTIVES,stage,target,limits,minimums)) for r in observed),
             'observed_frontier_ids':recovered}
 
 
 def trial(records: list[dict],target: dict,stage: str,budget: int,policy: str,seed: int,
-          limits: dict | None=None,llm_order: list[dict] | None=None) -> dict:
+          limits: dict | None=None,llm_order: list[dict] | None=None,objectives=None,minimums=None) -> dict:
     if policy not in ('enumerate','random','cost','llm'):raise ValueError('unknown replay policy')
     if not 1<=budget<=len(records):raise ValueError('budget must be within the measured pool size')
     rng=random.Random(seed);remaining=sorted(records,key=lambda r:canonical(r['configuration']))
@@ -62,6 +62,6 @@ def trial(records: list[dict],target: dict,stage: str,budget: int,policy: str,se
         samples.append({'configuration':candidate['configuration'],'metrics':e['metrics'],'rtl_hash':candidate.get('rtl_hash')})
         if prediction:errors.append(abs(prediction['estimate']-e['metrics']['lut']))
         trace.append({'step':step+1,'candidate_id':candidate['id'],'implementation_timing_passed':e.get('passed') is True,
-                      'lut_prediction_before_measurement':prediction,**score(observed,records,stage,target,limits or {})})
+                      'lut_prediction_before_measurement':prediction,**score(observed,records,stage,target,limits or {},objectives,minimums)})
     return {'policy':policy,'seed':seed,'budget':budget,'trace':trace,'final':trace[-1],
             'online_lut_prediction_mae':sum(errors)/len(errors) if errors else None,'prediction_count':len(errors)}

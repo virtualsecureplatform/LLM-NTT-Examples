@@ -83,7 +83,7 @@ def metric_number(value) -> bool:
 
 
 def frontier(records: list[dict], objectives: dict[str, str], stage: str, target: dict,
-             limits: dict | None = None) -> list[str]:
+             limits: dict | None = None, minimums: dict | None = None) -> list[str]:
     """Call per workload. Missing objectives are ineligible, never interpreted as zero."""
     if not objectives or any(v not in ('min', 'max') for v in objectives.values()):
         raise ValueError('objectives require min/max directions')
@@ -98,6 +98,8 @@ def frontier(records: list[dict], objectives: dict[str, str], stage: str, target
         if any(not metric_number(metrics.get(k)) for k in objectives):
             continue
         if any(not metric_number(metrics.get(k)) or metrics[k] > v for k, v in (limits or {}).items()):
+            continue
+        if any(not metric_number(metrics.get(k)) or metrics[k] < v for k,v in (minimums or {}).items()):
             continue
         eligible.append((record['id'], metrics))
     def dominates(a, b):

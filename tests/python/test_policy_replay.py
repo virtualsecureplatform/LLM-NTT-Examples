@@ -32,6 +32,14 @@ class Replay(unittest.TestCase):
         self.assertIsNone(a['trace'][0]['lut_prediction_before_measurement'])
         self.assertEqual(a['trace'][1]['lut_prediction_before_measurement']['samples'],1)
 
+    def test_minimum_sustainable_rate_is_applied_to_policy_scores(self):
+        pool=[record(0,10,100),record(1,20,200)]
+        for r in pool:r['evidence']['synthesis']['metrics']['bandwidth_capped_transforms_per_second']=min(r['evidence']['synthesis']['metrics']['transforms_per_second'],150)
+        result=trial(pool,TARGET,'synthesis',2,'enumerate',1,objectives={'lut':'min','bandwidth_capped_transforms_per_second':'max'},minimums={'bandwidth_capped_transforms_per_second':125})
+        self.assertEqual(result['trace'][0]['feasible_discoveries'],0)
+        self.assertEqual(result['final']['feasible_discoveries'],1)
+        self.assertEqual(result['final']['frontier_recall'],1)
+
     def test_full_budget_recovers_reference_frontier(self):
         pool=[record(0,10,100),record(1,20,200),record(2,30,150)]
         for policy in ('enumerate','random','cost','llm'):

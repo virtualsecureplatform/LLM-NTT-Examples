@@ -7,9 +7,9 @@ import random
 import shutil
 import subprocess
 import time
-from . import adapters, oracle, hardware, policy, cost
+from . import adapters, oracle, hardware, policy, cost, constraints
 from .evaluate import evaluate_generic, parse_metrics
-from .model import digest, file_hash, frontier, run, source_identity, write_json
+from .model import digest, file_hash, frontier, metric_number, run, source_identity, write_json
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -28,13 +28,26 @@ def tool_identity(command: list[str]) -> dict:
 def report(directory: Path, campaign: dict) -> dict:
     records = [json.loads(p.read_text()) for p in sorted((directory/'candidates').glob('*/record.json'))]
     target = campaign.get('target', {})
+    transport=constraints.bandwidth_bound(campaign['workload'],campaign.get('bandwidth',{}))
+    for record in records:
+        for stage in ('synthesis','route'):
+            e=record.get('evidence',{}).get(stage,{})
+            metrics=e.get('metrics',{});rate=metrics.get('transforms_per_second')
+            if metric_number(rate):
+                metrics['bandwidth_capped_transforms_per_second']=min(rate,transport['upper_transforms_per_second']) if transport else rate
     frontiers = {}
     for stage, objectives in [('simulation', {'latency_cycles':'min','initiation_interval_cycles':'min'}),
                               ('synthesis', {'latency_ns':'min','transforms_per_second':'max','lut':'min','ff':'min','dsp':'min','bram':'min','uram':'min'}),
                               ('route', {'latency_ns':'min','transforms_per_second':'max','lut':'min','ff':'min','dsp':'min','bram':'min','uram':'min'})]:
         if campaign['workload']['kind']=='preset':
             objectives={**{k:v for k,v in objectives.items() if k not in ('latency_cycles','latency_ns','initiation_interval_cycles','transforms_per_second')}, ('transaction_cycles' if stage=='simulation' else 'transaction_ns'):'min'}
-        frontiers[stage] = frontier(records, objectives, stage, target, campaign.get('resource_limits', {}) if stage!='simulation' else {})
+        minimums={}
+        if stage!='simulation' and campaign['workload']['kind']=='generic':
+            if transport or campaign.get('requirements'):
+                objectives={('bandwidth_capped_transforms_per_second' if k=='transforms_per_second' else k):v for k,v in objectives.items()}
+            required=campaign.get('requirements',{}).get('min_transforms_per_second')
+            if required is not None:minimums={'bandwidth_capped_transforms_per_second':required}
+        frontiers[stage] = frontier(records, objectives, stage, target, campaign.get('resource_limits', {}) if stage!='simulation' else {},minimums)
     result = {'schema':'ntt-search-report-v1', 'workload':campaign['workload'], 'frontiers':frontiers,
               'counts':{status:sum(r['status']==status for r in records) for status in sorted({r['status'] for r in records})},
               'candidates':records}
@@ -92,6 +105,9 @@ def main(argv=None) -> int:
         campaign['target'].setdefault('clock_port',task_config.get('ports',{}).get('clock','clock'))
     ngen=args.ngen_root.resolve(); directory=args.output_dir.resolve()
     configurations=adapters.candidates(workload,ngen,campaign.get('space'))
+    try:
+        bounds={digest(c):constraints.analyze(workload,c,campaign['target'],campaign.get('bandwidth'),campaign.get('requirements')) for c in configurations}
+    except ValueError as error:parser.error(str(error))
     if args.policy=='random':
         random.Random(args.seed).shuffle(configurations)
     fitted=None
@@ -112,7 +128,7 @@ def main(argv=None) -> int:
     stages=campaign.get('stages',['simulation'])
     if any(s not in ('simulation','synthesis','route') for s in stages):
         parser.error('unknown evaluation stage')
-    plan={'schema':'ntt-search-plan-v1','campaign':campaign,'policy':args.policy,'seed':args.seed,'configurations':configurations,'cost_model':fitted}
+    plan={'schema':'ntt-search-plan-v1','campaign':campaign,'policy':args.policy,'seed':args.seed,'configurations':configurations,'cost_model':fitted,'throughput_bounds':bounds}
     if args.mode=='plan':
         print(json.dumps(plan,indent=2));return 0
     if args.mode=='report':
@@ -168,7 +184,7 @@ def main(argv=None) -> int:
                 parser.error('saved selection differs from legal candidate set')
         else:
             try:
-                configurations=policy.rank(configurations,workload,{**campaign.get('llm',{}),'target':campaign.get('target',{}),'resource_limits':campaign.get('resource_limits',{})},directory,min(campaign.get('llm',{}).get('timeout_seconds',180),remaining()))
+                configurations=policy.rank(configurations,workload,{**campaign.get('llm',{}),'target':campaign.get('target',{}),'resource_limits':campaign.get('resource_limits',{}),'requirements':campaign.get('requirements',{}),'bandwidth':campaign.get('bandwidth',{})},directory,min(campaign.get('llm',{}).get('timeout_seconds',180),remaining()))
             except (ValueError,KeyError,OSError) as error:
                 write_json(directory/'llm-error.json',{'error':str(error),'fallback':'seeded random'})
                 random.Random(args.seed).shuffle(configurations)
@@ -178,6 +194,9 @@ def main(argv=None) -> int:
         key=digest({'manifest':manifest,'config':config})
         work=directory/'candidates'/key; path=work/'record.json'
         if path.exists() and json.loads(path.read_text()).get('status') not in ('running',):
+            continue
+        if bounds[digest(config)]['pruned']:
+            write_json(path,{'schema':'ntt-search-candidate-v1','id':key,'configuration':config,'status':'pruned','correct':False,'mode':'bound','evidence':{},'throughput_bound':bounds[digest(config)]})
             continue
         if remaining()<=0 or state['functional']>=limits['functional']:
             break
@@ -264,4 +283,6 @@ def main(argv=None) -> int:
     checkpoint()
     result=report(directory,campaign)
     print(f"Report: {directory/'report.md'}",flush=True)
+    if campaign.get('requirements') and any(s in stages for s in ('synthesis','route')):
+        return 0 if result['frontiers']['route' if 'route' in stages else 'synthesis'] else 1
     return 0 if any(r.get('correct') and all(r.get('evidence',{}).get(stage,{}).get('passed') for stage in stages) for r in result['candidates']) else 1

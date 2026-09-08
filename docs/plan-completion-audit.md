@@ -5,13 +5,13 @@ missing evidence; it does not narrow the objective to the implemented subset.
 
 | Requirement | Current evidence | Remaining acceptance work |
 | --- | --- | --- |
-| Reproducible NGen search | Run/resume/report smoke checks; source/tool/binary manifests | Expand campaign evidence to HOGE forward/inverse and Kyber; include extracted baselines |
+| Reproducible NGen search | Run/resume/report checks; source/tool/binary manifests; HOGE forward/inverse and Kyber functional campaigns | Include extracted preset baselines and hardware comparisons |
 | Independent generic arithmetic | Direct-definition/convolution unit checks; streaming forward 16K/54-bit and inverse 64-bit RTL | Validate additional FHE matrix points and external generators against the same oracle |
-| Permutation choice | Square NGen/SGen stream checks at five widths; composed YATA correctness | Rectangular, linear and memory permutation comparisons; measure full-design adapter cost |
+| Permutation choice | Square streams at five widths; 12 rectangular memory shapes; eight linear/stride cases; switch and stride composition pass YATA | Finish matched full-design permutation synthesis and adapter-cost comparison |
 | Architectural improvements | Buffered stage groups and seven-stage Montgomery pipeline; matched resource/setup ablation and oracle checks | Matched routed ablations; wider scheduling/RAM timing coverage |
-| Multi-fidelity search | Functional gates, synthesis/route stages, resource-constrained frontiers, per-user vendor lock | Measured acquisition-policy comparison and resource/bandwidth pruning with validated bounds |
-| Cost models | Nearest-neighbor fitting and leave-one-out machinery | Sufficient independent samples, error results, and held-out policy evaluation |
-| LLM versus controls | Live legal-ID ranking, saved response, four passing candidates | Equal-budget trials against enumeration/random/cost with measured search outcomes |
+| Multi-fidelity search | Functional gates, synthesis/route stages, constrained frontiers, per-user vendor lock; measured finite-pool replay and optimistic bandwidth/issue pruning | Resource-cost lower bounds and live end-to-end acquisition-policy trials |
+| Cost models | Nearest-neighbor and structural fits; five-point errors and one held-out architecture | Larger independent samples and held-out workload/policy evaluation |
+| LLM versus controls | Live legal-ID ranking, saved requests/responses; six-point equal-budget replay including negative LLM outcome | End-to-end trials and held-out workloads |
 | OpenNTT | Exact-field isolated generation; independent forward/inverse and MemOpt N=256/q32 checks; normalized streaming checks including N=16K/q54; matched N=256/q32 and N=16K/q54 simulation comparisons | Routed/resource measurements and wider configuration sampling |
 | Proteus | Exact-field isolated generation; N=256/q32 SDF forward/inverse and MDC forward pass raw and normalized streaming oracle checks; matched three-generator cycle comparison | Diagnose MDC inverse failure, expand workload coverage, routed/resource comparison |
 | Routed timing | Actual checkpoint/report ingestion; failed hold excluded | Hold traced to zero-delay input boundary and unset clock source; explicit shared I/O/clock constraints added. First explicit-contract route still fails hold (−1.589 ns); diagnose clock insertion/interface model, then verify closure and measure candidates/baselines |
@@ -168,3 +168,13 @@ The six-point measured policy pool is complete. Its equal-budget replay finds
 both feasible designs with enumeration but none with LLM ranking at budget
 three. All results, including this negative LLM result, are retained in the
 policy-replay document; no default-policy superiority is inferred.
+
+
+All three matched routed measurements are now imported in
+`build/comparison-threeway256-buffered-route-complete`. NGen passes the timing
+gates; OpenNTT and modified Proteus both have WHS -0.019 ns and remain excluded.
+Detailed baseline hold reports are queued to guide a physical fix under the
+unchanged contract. [Bandwidth constraints](bandwidth-constraints.md) now add
+optimistic necessary-condition pruning and measured-rate eligibility without
+promoting predictions to evidence. Resource-bound pruning and live acquisition
+trials remain unfinished.
