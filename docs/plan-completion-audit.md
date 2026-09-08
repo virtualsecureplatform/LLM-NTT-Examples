@@ -13,7 +13,7 @@ missing evidence; it does not narrow the objective to the implemented subset.
 | Cost models | Nearest-neighbor fitting and leave-one-out machinery | Sufficient independent samples, error results, and held-out policy evaluation |
 | LLM versus controls | Live legal-ID ranking, saved response, four passing candidates | Equal-budget trials against enumeration/random/cost with measured search outcomes |
 | OpenNTT | Exact-field isolated generation; independent forward/inverse and MemOpt N=256/q32 checks; normalized streaming checks including N=16K/q54; matched N=256/q32 and N=16K/q54 simulation comparisons | Routed/resource measurements and wider configuration sampling |
-| Proteus | Experimental exact-field isolated generation and raw-memory oracle checker; N=256/q32 SDF compiles but fails frame 1 | Diagnose RTL/testbench mismatch, pass oracle validation, add normalized boundary and routed comparison |
+| Proteus | Exact-field isolated generation; N=256/q32 SDF forward/inverse and MDC forward pass raw and normalized streaming oracle checks; matched three-generator cycle comparison | Diagnose MDC inverse failure, expand workload coverage, routed/resource comparison |
 | Routed timing | Actual checkpoint/report ingestion; failed hold excluded | Hold traced to zero-delay input boundary and unset clock source; explicit shared I/O/clock constraints added. First explicit-contract route still fails hold (−1.589 ns); diagnose clock insertion/interface model, then verify closure and measure candidates/baselines |
 | Paper comparison | Source-linked roadmap | Matched reproducible comparison report; distinguish reproduced measurements from published numbers |
 | Board execution | Deferred by the approved plan | Not required for the routed-RTL milestone; do not claim board results |
@@ -37,13 +37,19 @@ N=256/q32 and N=16K/q54 reports are in `build/comparison-openntt-ngen256` and
 `build/comparison-openntt-ngen16k54`. Proteus integration and the other unmet
 milestones above remain part of the active objective.
 
-## Experimental Proteus adapter
+## Proteus adapter validation
 
-`prepare_proteus_baseline.py` binds the requested field and roots in an isolated
-copy and records source/artifact hashes. `check_proteus_baseline.py` compiles the
-raw memory interface and checks it against the independent oracle. The current
-N=256/q32 SDF run (`build/proteus-sdf256-namespaced`) fails frame 1, address 0:
-actual 0, expected 2002987292. The adapter is experimental; this run is not a
-validated baseline or an eligible performance comparison. Its partial cycle
-metrics must not be used as correctness evidence. A normalized streaming
-interface and further diagnosis remain unfinished.
+The initial SDF failure was stale completion state: upstream validity shift
+registers are not reset. A drain bound derived from N and configured stage
+latencies now clears this state. The streaming adapter includes two frame
+buffers, natural/spectral order conversion, and the drain counter in measured
+RTL. Draining overlaps capture/output when possible; its remaining cost is
+included in the measured transaction.
+
+N=256/q32 SDF forward/inverse and MDC forward pass all eight raw-memory vectors
+and the shared streaming suite (saturation, stalls, and mid-frame reset).
+`build/comparison-threeway256/report.json` compares the passing forward SDF/MDC
+configurations with NGen and both OpenNTT modes. MDC inverse fails the impulse
+vector at frame 2, address 0, lane 1: actual 1870938527, expected 2103843552.
+It remains ineligible pending diagnosis. No Proteus resource or route win is
+claimed from simulation cycles.

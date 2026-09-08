@@ -176,11 +176,13 @@ requires equal workloads, targets, and normalized boundaries. Generation-only
 results cannot enter the frontier. OpenNTT's `io_band` remains internal PE
 bandwidth, not the external stream width. See [current comparison evidence](openntt-comparison.md).
 
-The local Proteus tree informed the architecture choices, but it is not yet an
-executable search adapter. Its hard-coded field/operation variants must be mapped
-to exact workloads before comparison. Native SDF/MDC, twiddle recurrence search,
-RNS/batch resource accounting, and matched routed paper comparisons remain open
-parts of the larger roadmap.
+Proteus now has isolated exact-field OP1 generation and a normalized streaming
+adapter. SDF forward/inverse and MDC forward pass at N=256/q32; MDC inverse
+remains ineligible after an impulse-vector failure. The comparison command
+accepts `--proteus-dirs` for passing stream results. See the reproduction commands
+and measured adapter costs in [comparison evidence](openntt-comparison.md).
+Native NGen SDF/MDC, twiddle recurrence search, RNS/batch resource accounting,
+and matched routed paper comparisons remain open parts of the larger roadmap.
 
 ## Verification from this implementation session
 

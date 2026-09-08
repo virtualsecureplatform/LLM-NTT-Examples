@@ -57,3 +57,36 @@ The first explicit-clock/I/O diagnostic route also failed hold (−1.589 ns),
 while setup slack was +1.035 ns. The clock-source property materially changes
 clock insertion delay, so the assumed interface timing needs further diagnosis.
 The failure remains excluded; no constraint change retroactively promotes it.
+
+## Matched Proteus comparison
+
+The same forward N=256/q32 campaign now includes Proteus OP1 with Montgomery
+reduction, using both SDF and MDC. Each normalized adapter contains two frame
+buffers, synchronous memory reads, ordering conversion, registered ready/valid
+ports, and a reset-drain counter for the upstream unreset validity pipelines.
+All eight oracle vectors and the common stalls/reset suite pass.
+
+| Generator | Organization | First-frame latency (cycles) | Maximum measured frame interval (cycles) |
+| --- | --- | ---: | ---: |
+| Proteus | SDF | 996 | 1058 |
+| Proteus | MDC | 740 | 802 |
+
+The report is `build/comparison-threeway256/report.json`. Proteus MDC has lower
+first-frame latency than the sampled NGen configurations, while the partitioned
+NGen configurations have shorter frame intervals. Area and routed frequency
+remain unmeasured for these external baselines, so these data do not establish
+an overall hardware winner. The conservative drain bound is 384 cycles for
+this configuration and is part of the adapter cost.
+
+Proteus SDF inverse also passes. MDC inverse fails its impulse vector and is
+excluded. The adapter currently limits transforms to N<=4096 because the
+upstream ROM wrapper enumerates twelve stages; larger FHE claims require
+extending and independently validating that implementation.
+
+```sh
+python3 scripts/prepare_proteus_baseline.py --campaign campaigns/openntt-overlap256.json --output-dir build/proteus-sdf256 --architecture sdf
+python3 scripts/check_proteus_baseline.py --baseline-dir build/proteus-sdf256
+python3 scripts/check_proteus_baseline.py --baseline-dir build/proteus-sdf256 --stream
+# Repeat with --architecture mdc and a distinct output directory.
+python3 scripts/compare_openntt_ngen.py --campaign campaigns/openntt-overlap256.json --ngen-report build/ngen-openntt-overlap256/report.json --openntt-dirs build/openntt-256-32 build/openntt-memopt-256-32 --proteus-dirs build/proteus-sdf256 build/proteus-mdc256 --output-dir build/comparison-threeway256
+```
