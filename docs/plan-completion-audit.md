@@ -349,3 +349,23 @@ pass the full eight-frame stream oracle, with the expected two added prefetch
 cycles. All 120 Python tests pass. The fresh 16K routed measurement is queued
 in `build/openntt-banked16k54-route`; inference, resources and timing remain
 pending. See [OpenNTT banked adapter](openntt-banked-adapter.md).
+
+## Routed control-path limitation and wider policy run
+
+The new 16K design routes at 7920 LUT/3417 FF/66 DSP/376 BRAM, but WNS -0.459 ns
+still fails setup (hold +0.010 ns). Its worst path is now control-ROM output to
+coefficient-memory enable. Further timing work must target that path; retain
+the failed routed record in `build/ngen-fhe16k54-wide-product-route`.
+
+A complete six-point N=128 reference and three equal-budget policy repetitions
+are launched. The comparison summarizer validates completeness, workload,
+executable and matched RTL and preserves failed/over-budget results. Two focused
+summary tests pass. Results remain pending; this is not a completed policy claim.
+
+The repaired OpenNTT 16K route completes with 5961 LUT, 7198 FF, 68 DSP and 74
+BRAM, WNS +0.275 ns and hold +0.010 ns. The matched comparison is generated in
+`build/comparison16k54-banked-routed`; OpenNTT alone enters its routed frontier.
+NGen remains setup-failed, while its smaller simulated cycle count is reported
+only at the simulation stage. This negative comparison is retained and guides
+the next control-path timing work. All 122 Python tests pass, including the new
+live-trial summary tests.

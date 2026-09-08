@@ -37,3 +37,10 @@ Reproduce a baseline with `scripts/prepare_openntt_baseline.py`, then run
 `scripts/check_openntt_baseline.py --stream` before
 `scripts/measure_external_ntt.py --stage route`. Use new directories so older
 adapter measurements and failed tool runs remain intact.
+
+The fresh 16K route completes and passes: LUT 5961, FF 7198, DSP 68, BRAM 74,
+setup WNS +0.275 ns and hold +0.010 ns. This verifies that the revised adapter
+avoids the earlier RAM-inference failure. The full matched report is
+`build/comparison16k54-banked-routed`, including failed NGen timing evidence.
+OpenNTT is the only qualified routed point in that two-design comparison;
+NGen's lower simulated cycle count does not qualify its 250 MHz throughput.

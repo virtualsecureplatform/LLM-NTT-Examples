@@ -60,3 +60,11 @@ ROM change accounts for most LUT savings; the arithmetic change adds 14 DSPs,
 450 FFs and 30 frame cycles while improving estimated setup by 1.247 ns.
 The distinct source revisions and RTL artifacts remain in their respective
 candidate records; no combined-change result is substituted for the ablation.
+
+Routed confirmation completed: 7920 LUT, 3417 FF, 66 DSP, 376 BRAM, setup WNS
+-0.459 ns and hold +0.010 ns. Full routing completes but setup still fails at
+4 ns, so the design remains ineligible for the 250 MHz routed frontier. The
+worst path moved from the original wide product to control-ROM output feeding
+a coefficient-memory enable (`control_0_reg_0_130` to
+`buffer_0_bank_0_reg_bram_3/ENBWREN`). The synthesis improvement is real at its
+reported stage; it must not be represented as routed timing closure.

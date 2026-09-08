@@ -65,3 +65,28 @@ machine access. Random and cost chose the same two configurations in this
 one-seed pilot. The result verifies live sequential acquisition and preserves
 negative LLM evidence; it does not establish statistically reliable superiority
 of any policy. Wider trials remain part of the evaluation work.
+
+## Three-repetition follow-up
+
+A fresh complete six-configuration N=128 reference pool is running in
+`build/policy128-reference-current`, followed by
+`build/live-policy128-three-seeds`: seeds 2/3/4, three fresh evaluations per
+policy, four policies, a total 12-hour trial budget. This adds 36 policy
+evaluations after the six-point reference. Input code and NGen executable are
+held fixed; vendor execution remains serialized with ongoing route jobs.
+
+The reference pool is for scoring only; acquisitions do not receive its
+measurements. `scripts/summarize_live_policy_trials.py` requires the complete
+pool, the complete equal-budget trial set, matching workload/target/campaign and
+generator executable, and identical RTL for matched correct configurations.
+It matches configurations and RTL rather than assuming fresh candidate IDs
+coincide with reference IDs. Failed or over-budget observations do not recover
+a frontier point; differences between fresh and reference measurements remain
+visible. Summaries retain input hashes, queue time, per-repetition recovery and
+min/mean/max recovery by policy.
+
+Seeds affect random/cost selection. The current LLM interface uses temperature
+zero without an explicit backend seed, and enumeration is deterministic; their
+repetitions are not independent randomized-policy seeds. These repetitions
+expand evidence under one workload, not statistical proof of general policy
+superiority. No follow-up results are available yet.
