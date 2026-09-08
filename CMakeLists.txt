@@ -175,6 +175,15 @@ target_compile_definitions(kyber_pe1_reference_test PRIVATE
     KYBER_PE1_DATA_DIR="${PROJECT_SOURCE_DIR}/variants/kyber-polmul-hw/pe1/test_pe1")
 endif()
 
+# Explicit opt-in: this stronger overlap contract applies to full-throughput RTL.
+if(LLM_NTT_TEST_TARGET STREQUAL "hoge_streaming_ntt_overlap_test")
+add_ntt_verilator_test(
+  hoge_streaming_ntt_overlap_test
+  ${PROJECT_SOURCE_DIR}/tests/cpp/hoge_streaming_ntt_overlap_test.cpp
+  ${HOGE_STREAMING_NTT_VERILOG}
+)
+endif()
+
 if(NOT LLM_NTT_TEST_TARGET STREQUAL "" AND NOT TARGET ${LLM_NTT_TEST_TARGET})
   message(FATAL_ERROR "Unknown NTT test target: ${LLM_NTT_TEST_TARGET}")
 endif()
