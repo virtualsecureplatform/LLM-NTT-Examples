@@ -133,3 +133,34 @@ provides evidence against using its unassisted ranking as the default here.
 The saved traces permit exact replay; the zero-temperature repeated LLM calls
 are not independent random-seed trials. Structural-cost acquisition and live
 end-to-end/held-out workload trials remain separate work.
+
+## Independent N=128 calibration and evidence eligibility
+
+The eight completed live-pilot measurements contain five distinct generated RTL
+artifacts. Fresh calibration in `build/cost-validation128` excludes three
+repeats, so repeated selections by different policies do not inflate the sample
+count. These are separate N=128 measurements from the earlier N=256 model
+experiment; this evaluates the fitting method on another workload, not transfer
+of fitted coefficients between workloads.
+
+| Leave-one-out mean absolute error | Nearest | Structural |
+| --- | ---: | ---: |
+| LUT | 3351.92 | 2469.96 |
+| FF | 819.13 | 8.96 |
+| DSP | 14.92 | < 1e-12 |
+| BRAM | 2.58 | 2.25 |
+
+All five URAM measurements are zero, so zero URAM error is uninformative.
+Synthesis WNS is effectively constant in this small sample, so near-zero
+nearest-neighbor WNS error is also uninformative. The structural model does not
+predict timing. The substantial LUT error remains evidence against using either
+model as an exact resource constraint or pruning bound.
+
+Calibration now requires completed functional, independently correct records,
+matching target and completed implementation, an RTL identity, and valid
+integrity manifests when present. Failed setup timing still contributes measured
+resource data. Legacy measurements are counted explicitly as unverified by the
+new manifests; all five N=128 samples are legacy. Rejection reasons and hashes
+of the report/campaign inputs are retained by the calibration CLI. Regression
+coverage rejects lint/running records, changed evidence, missing identities,
+wrong targets, and duplicate RTL while retaining completed timing failures.

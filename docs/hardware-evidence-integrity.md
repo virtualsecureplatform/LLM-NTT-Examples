@@ -20,3 +20,8 @@ it is not a signature or protection against deliberate manifest rewriting.
 Validation: 113 Python tests pass, including RTL/ROM mutation during measurement,
 include-file addition/removal, edited metrics/report artifacts, and preservation
 of legacy evidence. Existing vendor report and policy replay regressions pass.
+
+Cost-model calibration applies the integrity gate as well, and reports accepted
+legacy/verified counts and rejection reasons. Calibration CLI artifacts retain
+source report and campaign hashes. This prevents changed evidence from training
+advisory models even when it is already excluded from the Pareto frontier.

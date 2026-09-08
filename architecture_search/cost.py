@@ -5,7 +5,7 @@ Predictions are advisory; they never become evidence or establish dominance.
 from __future__ import annotations
 import math
 from statistics import mean
-from .model import metric_number
+from .model import evidence_integrity, metric_number
 
 
 def distance(a: dict,b: dict) -> float:
@@ -27,14 +27,23 @@ def predict(samples: list[dict], configuration: dict, metric: str, method: str='
 
 def calibrate(reports: list[dict],workload: dict,target: dict,stage='synthesis',method='nearest') -> dict:
     if method not in ('nearest','structural'):raise ValueError('unknown cost method')
-    samples=[];seen=set()
+    samples=[];seen=set();integrity_counts={'verified':0,'legacy-unverified':0};rejected={}
+    def reject(reason):rejected[reason]=rejected.get(reason,0)+1
     for report in reports:
         if report['workload']!=workload:continue
         for record in report['candidates']:
             evidence=record.get('evidence',{}).get(stage,{})
             identity=record.get('rtl_hash')
-            if identity in seen or record.get('correct') is not True or evidence.get('target')!=target or not evidence.get('implementation_passed'):continue
-            seen.add(identity)
+            if record.get('correct') is not True or record.get('mode')!='functional' or record.get('status') not in ('complete','hardware_failed'):
+                reject('not_completed_functional');continue
+            if evidence.get('target')!=target or evidence.get('implementation_passed') is not True:
+                reject('unmatched_or_incomplete_implementation');continue
+            integrity=evidence_integrity(evidence)
+            if integrity=='invalid':reject('invalid_integrity');continue
+            if not isinstance(identity,str) or not identity:
+                reject('missing_rtl_identity');continue
+            if identity in seen:reject('duplicate_rtl');continue
+            seen.add(identity);integrity_counts[integrity]+=1
             samples.append({'configuration':record['configuration'],'metrics':evidence['metrics'],'rtl_hash':identity})
     errors={}
     for metric in ('lut','ff','dsp','bram','uram','wns_ns'):
@@ -47,6 +56,7 @@ def calibrate(reports: list[dict],workload: dict,target: dict,stage='synthesis',
         errors[metric]={'count':len(pairs),'mean_absolute_error':mean(abs(a-b) for a,b in pairs) if pairs else None}
     return {'schema':'ntt-cost-model-v1','method':method,'method_description':('three nearest configurations, inverse-distance weights' if method=='nearest' else 'least squares: fixed overhead + stage groups + PE times stage groups; matching radix-2 streamed family only'),
             'stage':stage,'workload':workload,'target':target,'samples':samples,'leave_one_out':errors,
+            'evidence_integrity':integrity_counts,'rejected_records':rejected,
             'limitation':'Same workload and target only; neighbor range is not a statistical confidence interval. No extrapolation safety guarantee.'}
 
 
