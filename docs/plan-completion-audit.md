@@ -449,8 +449,8 @@ isolated checkout; this branch remains separate while policy sources are frozen.
 ## HOGE constant-factor ablation
 
 NGen experimental revision `d277ab4` replaces radix power-of-two multipliers
-with modular shifts. All 152 Scala tests and the full forward oracle pass;
-the additional overlapping-frame oracle verifies 240 frames and a 32-cycle
-saturated interval. Inverse correctness and matched synthesis are pending.
+with modular shifts. All 152 Scala tests and both full direction oracles pass;
+the additional forward overlapping-frame oracle verifies 240 frames and a
+32-cycle saturated interval. Matched synthesis remains pending.
 See [HOGE constant shifts](hoge-constant-shifts.md). This targets the measured
 full-throughput cost without upgrading functional results into hardware wins.

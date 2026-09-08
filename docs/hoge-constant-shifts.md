@@ -19,8 +19,8 @@ BigInt modular exponentiation for all 192 exponents, seven boundary values and
 oracle with 104 transaction cycles. The separate overlap test in
 `/tmp/llm-hoge-sgen/build/hoge-shifts-overlap` passes 240 random frames with
 input gaps, five reset-abort positions and a saturated frame interval of 32
-cycles. Its log is `/tmp/hoge-shifts-overlap.out`. Inverse validation is running
-in `build/hoge-inverse-shifts-validation`.
+cycles. Its log is `/tmp/hoge-shifts-overlap.out`. The full inverse oracle also passes
+in `build/hoge-inverse-shifts-validation`, candidate `3d54d358f3c7`.
 
 The matched forward synthesis ablation is queued in
 `build/hoge-forward-shifts-hardware`, using the original
