@@ -43,5 +43,6 @@ but its estimated hold slack is −0.075 ns. Snapshot qualification follows each
 evidence stage: synthesis requires setup; routed qualification requires both
 setup and hold plus completed routing. The inverse reference therefore has no
 routed-closure claim. The stage-parallel NGen inverse has no final hardware
-metrics after its execution budget expired. The separate full-throughput inverse,
-forward constant-shift ablation and composed-forward retry remain pending.
+metrics after its execution budget expired. Full-throughput inverse also completes synthesis, using 136166 LUT, 34058 FF
+and 512 DSP, but fails setup at −9.844 ns (hold −0.029 ns). The forward
+constant-shift ablation and composed-forward retry remain pending.

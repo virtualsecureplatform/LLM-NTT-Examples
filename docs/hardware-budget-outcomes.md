@@ -52,3 +52,16 @@ tests pass. Main integration awaits the frozen policy run. A subsequent policy
 replication without competing hardware campaigns is required to separate policy
 choice quality from the current run's queue-induced failures; original results
 will remain retained.
+
+The full-throughput inverse measurement completes in 370.57 vendor seconds:
+136166 LUT, 34058 FF, 512 DSP, zero BRAM/URAM, WNS −9.844 ns and hold
+−0.029 ns. Its smaller simulated 73-cycle transaction is not a qualified
+250 MHz result. `build/hoge-inverse-architecture-comparison` now retains the
+extracted reference, the stage-parallel timeout and this measured setup failure.
+`campaigns/hoge-inverse-comparison.json` spells out the actual clock port so
+strict target matching succeeds without relaxing the comparison gate.
+
+The first forward constant-shift measurement ends with `Vivado queue timeout`
+and no vendor execution (`build/hoge-forward-shifts-hardware`). A fresh attempt
+is running in `build/hoge-forward-shifts-hardware-retry` with the same assembled
+NGen shift revision. The stopped queue-limited attempt remains retained.

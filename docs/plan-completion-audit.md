@@ -483,3 +483,10 @@ now separates that failure from timing failure and preserves unknown queue time;
 all 131 Python tests pass. Correct the runner's missing queue-duration field
 once frozen input restrictions end, and qualify the final policy comparison for
 contention rather than treating this as an acquisition-quality result.
+
+The HOGE inverse comparison now includes a completed full-throughput measurement:
+136166 LUT/34058 FF/512 DSP, WNS −9.844 ns, hold −0.029 ns. The extracted
+reference alone passes the synthesis setup gate; neither result establishes
+routed closure. The timed-out stage-parallel candidate remains unmeasured in
+the same report. The forward constant-shift attempt also exhausted its queue
+budget; a fresh measurement is active with the original attempt preserved.
