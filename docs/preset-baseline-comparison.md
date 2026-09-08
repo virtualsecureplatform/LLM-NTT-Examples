@@ -80,3 +80,17 @@ checks every scheduled address dependency against the pipeline distance. The
 full unchanged preset oracle passes at 1414 transaction cycles, including both
 banks/directions. Synthesis is running at `build/kyber-pipelined-hardware`;
 this branch has not replaced the measured main implementation yet.
+
+The pipelined Kyber synthesis now passes setup at 4 ns: 17056 LUTs, 9585 FFs,
+three DSPs, three BRAM tiles and WNS +1.718 ns. The unchanged arithmetic oracle
+passes at 1414 transaction cycles, and a separate reset regression aborts during
+fetch/read/arithmetic/retirement and late execution, checks no stale completion,
+and verifies fresh zero-frame results after restart on both banks/directions.
+The change is integrated into main. Its synthesis hold estimate remains
+-0.075 ns; this is not routed closure.
+
+`build/kyber-pipeline-threeway-comparison` retains extracted, pre-pipeline,
+and pipelined evidence together. Pipeline versus prior main trades seven
+transaction cycles and 129 FFs for 6109 fewer LUTs, three fewer DSPs, and setup
+closure. The extracted reference still has much lower area at the same cycle
+count. Reducing replicated storage remains an open architecture task.

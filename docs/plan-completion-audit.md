@@ -222,3 +222,16 @@ control ROMs) ended with signal 9, before simulation. Neither is a correctness
 pass. Control-ROM externalization passes an N=256 full-suite check and two
 focused regressions, but does not yet solve large-design elaboration. A fresh
 longer-budget Icarus recheck preserves the original attempts and full oracle.
+
+[Resource-capacity pruning](resource-capacity-pruning.md) now rejects provably
+impossible closed U280 cores using a prefix-state lower bound and a padded
+resource-capacity upper bound. It requires all five resource caps and consumes
+no evaluator budget. The 107-test Python suite passes. The integrated compact
+N=256 design also passes matched routing; the resource tradeoff is recorded
+in the compact-address document.
+
+Kyber now has a pipelined setup-qualified implementation and a matched extracted/
+pre-pipeline/pipeline synthesis comparison. It passes the unchanged arithmetic
+oracle and a new reset-abort regression, but remains much larger than the
+extracted reference. Routed Kyber hold, storage architecture, and wider baseline
+and search-policy coverage remain open; these are not hidden by setup closure.
