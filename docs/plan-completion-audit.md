@@ -3,26 +3,27 @@
 The [roadmap acceptance map](roadmap-acceptance.md) ties the numbered criteria
 to inspected implementation and measurement evidence.
 
-The objective remains the full generator/search plan. This checklist records
-missing evidence; it does not narrow the objective to the implemented subset.
+The four numbered roadmap milestones are now implemented and measured. The
+[final report](final-plan-results.md) records integrated revisions, final checks,
+policy results and the limits of the performance claims.
 
-| Requirement | Current evidence | Remaining acceptance work |
+| Requirement | Final evidence | Qualification |
 | --- | --- | --- |
-| Reproducible NGen search | Run/resume/report checks, source/tool/binary manifests, exact oracle gates, fresh extracted Kyber/YATA/HOGE references | HOGE forward comparison complete; inverse running; finish final evidence consolidation |
-| Independent generic arithmetic | All 18 FHE matrix points pass; ordinary search also passes 128K/q64 inverse using automatic Verilator selection | Wider external-generator coverage and FPGA fit remain separate |
-| Permutation choice | Five square widths, 12 rectangular shapes, eight linear cases; SGen switch/stride composed YATA oracles and three-option synthesis complete | HOGE 1024 SGen-composed forward oracle passes on pushed branch 0cae801; synthesis and main integration pending; YATA still fails setup |
-| Architectural improvements | Seven-stage Montgomery, independent stage groups, compact address logic, Kyber normalization, shared YATA conversion; integrated NGen passes 151 Scala tests; compact Kyber reduces LUT/FF/BRAM with one extra DSP | 16K control-ROM/wide-product synthesis ablation complete; registered-issue route passes; main integration pending; retain YATA timing failure |
-| Multi-fidelity search | Functional gates, synthesis/route, constrained frontiers, serialized vendor jobs; bandwidth and issue-capacity bounds | State-capacity pruning, artifact integrity and executable freshness implemented; audit final experiment bundles |
-| Cost models | Nearest-neighbor and structural fits, held-out architecture, independent five-point N=128 calibration; integrity-gated training | Whole-PE holdouts complete; whole-group structural fits unavailable; complete live policy samples |
-| LLM versus controls | Six-point replay and completed eight-evaluation live N=128 pilot; negative LLM outcomes retained | Six-point reference pool complete; three equal-budget repetitions running; no superiority claim yet |
-| OpenNTT | Exact-field raw/normalized oracles, forward/inverse and memory options, 16K/q54 stream, matched timing-qualified N=256 and banked-adapter 16K/q54 routes | Consolidate the broader matched comparison and retain adapter versions |
-| Proteus | SDF forward/inverse and portable MDC forward/inverse 32/64-bit oracles; explicit ROM repair; matched timing-qualified N=256 route | Wider matched workload/configuration sampling; preserve modified-baseline label |
-| Routed timing | All three N=256 designs pass under identical two-buffer fabric contract with setup/hold/full-route gates | Compact-address ablation complete; 16K OpenNTT and registered-issue NGen both pass; integrate the proven NGen branch |
-| Paper comparison | Source-linked roadmap, reproducible matched three-generator routed report, resource/cycle tradeoffs and policy results | Consolidate remaining ablations and broader coverage; no board or universal superiority claim |
-| Board execution | Deferred by the approved plan | Not required for the routed-RTL milestone |
+| Reproducible NGen search | Commands, source/binary manifests, resume, exact oracle and artifact-integrity gates | Final main reproduces validated artifacts |
+| Independent generic arithmetic | All 18 FHE matrix points pass; main artifact preservation checks | N=16K/64K/128K, q32/54/64, both directions; not all FPGA-fit claims |
+| Permutation choice | Five square widths, 12 rectangular shapes, eight linear cases; composed YATA/HOGE oracles | Protocols and full adapter costs included; main integration complete |
+| Architectural improvements | Pipelined arithmetic, stage groups, compact addressing, registered memory issue, Kyber storage, HOGE shifts | Matched ablations preserve area/timing tradeoffs; HOGE/YATA timing failures retained |
+| Multi-fidelity search | Functional, synthesis and routed gates; serialized vendor jobs; safe bandwidth/issue/state bounds | Empirical predictions cannot become measured evidence or hard pruning guarantees |
+| Cost models | Six-point calibration, leave-one-out and architecture holdouts | Whole-group structural fits unavailable; models advisory |
+| LLM versus controls | Two completed 36-evaluation studies plus pilot/replay | Clean recall: enumeration 75%, random/cost 58.3%, LLM 25%; no LLM advantage |
+| OpenNTT and Proteus | Matched routed N=256 three-way and N=16K NGen/OpenNTT comparisons | Modified adapters/Proteus labeled; no universal winner |
+| Routed timing | Three qualified N=256 designs and two qualified N=16K designs | Same U280/Vivado 2023.2/4 ns fabric contracts within each comparison |
+| Paper comparison | Source-linked roadmap and six-group reproducible measurement snapshot | NGen 16K rate improves 33.1% with more LUT/BRAM; broader superiority unproven |
+| Board execution | Deferred by the approved plan | Outside the routed-RTL milestone |
 
-The table is the current audit. The sections below retain chronological findings, including superseded failures and formerly pending work. Completion requires the missing evidence above. Any performance claim must name
-the workload, interface, target, tool version, timing constraints, and evidence stage.
+The sections below retain chronological findings, including superseded failures
+and formerly pending work. Their present-tense status describes the time of each
+entry; the final report and table above are current.
 
 ## Historical timing diagnosis
 

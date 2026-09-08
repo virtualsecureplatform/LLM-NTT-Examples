@@ -1,10 +1,9 @@
-# Prepared NGen integration
+# NGen and framework integration
 
 Pushed NGen branch `plan-integration`, revision `f4032e9`, combines registered
 memory issue/effective metadata (`42de789`) and HOGE constant shifts (`d277ab4`).
 It is built in `/tmp/ngen-plan-integration`. All 154 Scala tests pass and a fresh
-assembly passes the source-to-executable identity guard. Main remains unchanged
-while live policy inputs are frozen. The completed HOGE forward shift ablation
+assembly passes the source-to-executable identity guard. Main now includes this branch as merge `d59d87a`, after both policy studies completed. The completed HOGE forward shift ablation
 supports retaining the specialization as a DSP/LUT tradeoff, with worse setup
 slack and no timing-qualified throughput advantage.
 
@@ -27,9 +26,7 @@ revision emits those lines only when registered issue is enabled. This preserves
 small-core artifacts without changing the already-routed large-core artifact.
 The failed check remains in `build/plan-integration-rtl-identity/incomplete.json`.
 
-After both live policy studies finish, main can integrate this tested branch.
-Rebuild main and
-verify its source manifest and artifact identities before finalizing the report.
+Both live policy studies finished before the main merge and fresh assembly. Final artifact-preservation checks are recorded in [the final report](final-plan-results.md).
 
 The combined framework/SGen checks also pass with this NGen integration:
 forward and inverse HOGE retain 104/73 transaction cycles, and the forward
@@ -61,5 +58,4 @@ The framework branch `plan-integration` at `1b4e6e7` combines the namespaced
 SGen composition, HOGE overlap test/campaigns, and queue-timeout elapsed-duration
 fix with main at `5f7c3a9`, including the completed HOGE comparisons and explicit
 external-report root support. All 134 Python tests pass with native tools enabled
-(`/tmp/llm-plan-integration-final-tests.out`). This branch is pushed; main remains
-frozen for the running policy study.
+(`/tmp/llm-plan-integration-final-tests.out`). This branch is merged into framework main at `c03f99c`; all 134 Python tests pass after the NGen main rebuild.

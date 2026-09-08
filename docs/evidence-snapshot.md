@@ -28,10 +28,12 @@ rates derived from RTL simulation at a route-qualified clock, not board or
 memory-system measurements. NGen trades higher LUT/BRAM use for the rate,
 latency, FF and DSP advantages. Both remain on the matched frontier.
 
-The NGen implementation is still on the pushed `pipeline-control-rom` branch,
-pending integration after the ongoing policy experiment ends. Its previous
-failed routes remain separate evidence. The snapshot is a draft of measured
-results, not a statement that all roadmap acceptance work has finished.
+The registered-issue implementation is integrated in NGen main `d59d87a`.
+A fresh final snapshot in `build/final-main-evidence-snapshot` rechecks retained
+artifact integrity and recomputes qualification/frontiers. Final main generation
+preserves the qualified RTL artifact exactly. Previous failed routes remain
+separate evidence. See [the final report](final-plan-results.md) and the
+[completed policy replication](policy-uncontended-study.md).
 
 The matched HOGE forward synthesis now qualifies only the extracted reference
 (WNS +1.519 ns, hold +0.014 ns). NGen full-throughput fails setup and hold

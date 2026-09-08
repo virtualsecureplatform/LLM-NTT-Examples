@@ -1,7 +1,7 @@
-# Scheduled policy replication
+# Completed policy replication sequence
 
-The current study is `build/live-policy128-three-seeds`; the clean repetition
-will use `build/live-policy128-uncontended-three-seeds`. Both use four policies,
+The original study is `build/live-policy128-three-seeds`; the clean repetition
+uses `build/live-policy128-uncontended-three-seeds`. Both use four policies,
 seeds 2/3/4, three fresh evaluations per trial and a 12-hour total budget.
 The complete `build/policy128-reference-current` pool is used only for scoring.
 
@@ -26,4 +26,4 @@ hash, process start identity and replication parameters. It writes
 `contended-summary.json`, `replication-start.json`, `replication-process.json`,
 `replication-exit.json`, `replication.log`, and `uncontended-summary.json` as their
 stages complete. Its supervisory log is `/tmp/policy-replication-sequence.out`.
-These scheduled artifacts are not a claim that either study is complete.
+Both summaries are now complete and the supervisor exited successfully. The replication exit record has return code 0. All 23 frozen inputs passed the final hash check. Total replication queue wait was 0.015637 seconds across 36 successful evaluations. See [original results](policy-contended-study.md) and [replication results](policy-uncontended-study.md). Main integration followed termination of both runners and the supervisor.

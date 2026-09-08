@@ -1,0 +1,382 @@
+{
+  "aggregate": {
+    "cost": {
+      "execution_timeout_trials": 0,
+      "max_frontier_recall": 0.75,
+      "mean_frontier_recall": 0.5833333333333334,
+      "min_frontier_recall": 0.5,
+      "queue_timeout_trials": 0,
+      "repetitions": 3
+    },
+    "enumerate": {
+      "execution_timeout_trials": 0,
+      "max_frontier_recall": 0.75,
+      "mean_frontier_recall": 0.75,
+      "min_frontier_recall": 0.75,
+      "queue_timeout_trials": 0,
+      "repetitions": 3
+    },
+    "llm": {
+      "execution_timeout_trials": 0,
+      "max_frontier_recall": 0.25,
+      "mean_frontier_recall": 0.25,
+      "min_frontier_recall": 0.25,
+      "queue_timeout_trials": 0,
+      "repetitions": 3
+    },
+    "random": {
+      "execution_timeout_trials": 0,
+      "max_frontier_recall": 0.75,
+      "mean_frontier_recall": 0.5833333333333334,
+      "min_frontier_recall": 0.5,
+      "queue_timeout_trials": 0,
+      "repetitions": 3
+    }
+  },
+  "campaign": {
+    "budget": {
+      "functional": 64,
+      "hours": 12,
+      "route": 4,
+      "synthesis": 12
+    },
+    "resource_limits": {
+      "bram": 8,
+      "dsp": 50,
+      "ff": 6000,
+      "lut": 10000
+    },
+    "space": {
+      "pe": [
+        1,
+        2,
+        4
+      ],
+      "radix": [
+        2
+      ],
+      "reductions": [
+        "montgomery"
+      ],
+      "stage_groups": [
+        1,
+        2
+      ]
+    },
+    "stages": [
+      "simulation",
+      "synthesis"
+    ],
+    "target": {
+      "clock_period_ns": 4.0,
+      "clock_source": "BUFGCE_X0Y0",
+      "io_delays_ns": {
+        "input_max": 1.0,
+        "input_min": 0.5,
+        "output_max": 1.0,
+        "output_min": 0.0
+      },
+      "io_reference_pin": "input_full_reg/C",
+      "part": "xcu280-fsvh2892-2L-e",
+      "tool_version": "2023.2"
+    },
+    "workload": {
+      "direction": "forward",
+      "kind": "generic",
+      "lanes": 4,
+      "n": 128,
+      "negacyclic": true,
+      "psi": "2141337746",
+      "q": "2147484161",
+      "root": "2023476074"
+    }
+  },
+  "inputs": {
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/cost-2/candidates/23e9c3a5bd2f5ebca4e0b0a8733d0fb7931398448040fa5cfc2ee9633e21c2e8/record.json": "27a2801745a71dd65bee7c47a6906a2aae2b9d6b77162d512dd44d817eca8a55",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/cost-2/candidates/885342ada5ac08c1b04f6cf807ec044aa36381988645b36e2de0d6c738fef111/record.json": "cf8d066179d1d7560e329064726f45197d9d79ee9e37dcd90fc53c86e48e19a8",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/cost-2/candidates/b55b0b13df880174dc42dd622e70017fe63879cfc7ba0c79c7edc65dcaafa988/record.json": "2cea8aff37cb8b652c4685846c18f3117d3a7d36eb67268ec396af0f5f14e123",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/cost-3/candidates/7bb71b814fef8e154532c172817424800868a9902862debe53dcd3ce6a531321/record.json": "4c611b6796c6e23b0d30aa374d125880fbdc29cf52252052b34adea76e54ee65",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/cost-3/candidates/b09b67efd4dccf35d7b0b017646a4d8ed731cecf21d5412741ba57cbe851c223/record.json": "7714aea4005b446ebc5bb0b5b8b2931e065c1f0cb04f3d14dee2773f8898f490",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/cost-3/candidates/c5208a62e6ba196e0f9f8317a61d6b2afa0bae26c959d666d6862a03ef1ea949/record.json": "9acb51d762f5ed9042530f53502b52125e1010539c47485650e43170247062ea",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/cost-4/candidates/56d3b12e5495feee843f101e41d128c01d6fe346ea31fb034b9686e183756625/record.json": "fedec4db75690fff9ad1b1d79746d41b34d5cd7e689df7d645dd3e0671a983cf",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/cost-4/candidates/720f1f77c72b75fc7dc5b14cce5c800a13eb08f19910c1b8d59a357b952c3feb/record.json": "1aa41ca69e2b68a468d2375165feb81f9e9e4413eb3ade823efa3bad0ed7293f",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/cost-4/candidates/77586850415b03938ec155a45abe4ca8e06f60431511c0f4127e118d181bf3a1/record.json": "c672cfe927f5238ab801934906fdc2fd0c31404414fda3ab14d661becc917ed6",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/enumerate-2/candidates/0a40be724d7a721aa2fa3924e3e34863548f6495a39264a46d666a0e541f9e7c/record.json": "36733abbece7d37f12268d341c294fa6378ee9ec66b831eae20a88f1083a547e",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/enumerate-2/candidates/a894cd020356f74ff021a71cf843fb484e34ea6afdc76c6232be1bcb17ec8453/record.json": "c200518356f93b2257c09645c3a8459ce5e2bb0d318e7130b68fed79b39ea624",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/enumerate-2/candidates/ce8c60cb9156497daebe8906de0e1e1d4e82f4cc1301b9e149573ba9bb08059e/record.json": "4a8edacf5c02195a61d4e87bacec252fe5f4700a089a8fc1957d63175f889225",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/enumerate-3/candidates/7e6ba90b2b80ca2348d55c8a0626ccb4bd2767d1a7539784ff8e90f339b590c2/record.json": "4fdd42c5f517641791c74850fac5a941764c8b9a2ef6864f7a0c1a1444b5dd9a",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/enumerate-3/candidates/9ffd9777385cdf9e0d236ebe7a34ed70bb0e4c763a3f5963cd49d7271b4f7323/record.json": "1a9956a632b859f462fe8c1f3a76f23809da38018c8c1d2e69480f664033ae0d",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/enumerate-3/candidates/a89368122644d14866f419f7c3328e383ee07a0413292b2826e619e9b434a5dd/record.json": "0a92408a464c4fbd7b3992311e2e82bdca3a287db2cf0c2e8f69cf186df03c96",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/enumerate-4/candidates/0b2cdc6de4daf825636c2d384439ca5769d7c5eb97a60fe31149ab309c91280d/record.json": "c51db2b59ac5d34c798e85b3c7d06a3e9cdd920642775f028d37b515b085a691",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/enumerate-4/candidates/945ce6561e2c77262168a13ee4cf430c8dc3d807cf61c6f156a7d571ed70eae8/record.json": "fce8253f613be779f8d3b296b0aebe7e21b852b4bcb8e90cce327c87066a200e",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/enumerate-4/candidates/f37e0724ed28df8e9cf08fcb0a9411011be7f1c791e70d930be1e89207aee285/record.json": "0ea79e518f052d9ff3e801dcf92e757a28c545cdac9df9dfbe4153e8166bb65a",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/llm-2/candidates/a99ecba325ff66ece265bdecf8bc53c7b857351523b6352ec6a5d92591e37767/record.json": "4fd7b8463a58184d016460cd051abde2e8133e75c921ec36b901a02e1ebdff5a",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/llm-2/candidates/e00da0d482ea6c06ff7f80714c31d13a8cbe0a5e8ac42a156051fa2217d33ce3/record.json": "e06deff4bc2e4bd7b74656dbf6d4348d62a3c0896e904b922852789972ceaf33",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/llm-2/candidates/e7cb05802a63d2a63906b2ba7124af952d1a48f9f2ce6867ef69806602c45220/record.json": "f222fba09d75bbb764ceb5d53e0853ec6f4dc90613542a7fc42031e09cfd2bb7",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/llm-3/candidates/1e85d24f0d898051c76a7c52c8422023ee1aed953428f4cc4913c282553a436a/record.json": "ee91b24a4d7df19a30388536e6b98b0d5d3318d340f6e60eac101789a692feb9",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/llm-3/candidates/278322372ecaf9679cc6d8f93cbbdd4c31b92ed10cdd40f6ec5276cc444396b5/record.json": "8c2d49a3461201b2553a30ba5d8d2726cde0f8ce0f3541d86bf35cc6503c4f08",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/llm-3/candidates/ba3065047309f99b70d4acf6b6b1203755813a9506fa6de2a096e9eddd5c97f4/record.json": "ee4939b71e258839e76e3b85d19940f4d64065dd110489ee7320b1ed7a1f9202",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/llm-4/candidates/29d0f48ca71f5488d729262f8b2fb21e985fdee95e3888e1f25f3e7f3ad1caf7/record.json": "51a40f857601f00d072b302ca27940fe9f8f114b7d56cc8b6da8101d96e639ec",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/llm-4/candidates/4b700c0aa8721d682774371a5ac02762846e45fcb2726b4300a36858e00c5034/record.json": "a2accd706bce2889f85bbaeef012ff001bc759e5aa8edb3a6936362b6fe6c289",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/llm-4/candidates/fc7f9871f3d0b899eddc8c1a18a03ab984688e01b211ecbaf8ac82e68c7d5132/record.json": "6e536c0848cc3169c8a9f15ff16826869d989cf92efad77c7cdaa6b86c236b83",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/manifest.json": "3475cfe7558b79bb48b2d7b87950b460d49b79621cc03c83880ea50e1e54e5aa",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/random-2/candidates/1ac21a6fef2231f43430b8b20210f91af17cb312b631b08fd382b7887eba06e7/record.json": "61660b529a77abd7d51cbb9b8433aefaaefc40fdd86cc68a90b1997ac1505cd2",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/random-2/candidates/35d6494e09b23e91154bf02dc8b33bcf84c927afa78ba8351b17afa6f2578ab7/record.json": "d083720dce3423aeab4445fc5fc02b2c02a61e71fd454974e1faf7d2b68545ad",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/random-2/candidates/d55ab79c53b97268410918fc222452293b1ef0b2b3d07fd76235b5cc85b5ad90/record.json": "d6e0224c6d61045960c6d7b9b6f432cabaa4385dda35a961e9be391f52b43844",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/random-3/candidates/3c08b9190b7d802f1790e4da8e04c7d49c7828b5fbab69bf3adb54b249bef3e8/record.json": "c0dd013460a492b61f2559d10811db11ca92b3263eacb4fef3f1ebf1a23d3478",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/random-3/candidates/b2eb3eb5088657f87da44ef7509bd156adc1cf6dd86cd602bc4c9e7d94f22be4/record.json": "ac9c192ce57ac424fb3ad0d55e0373456126ff7fd6cacccafe621fe13b755b5e",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/random-3/candidates/b919d74ee836117c038de533237c3c4772c9838eb0ebc1c3302b8846b7438440/record.json": "2b72220eb276d8596d35d8484ceb9d635038270a2e483e57b11cc2aa479119b8",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/random-4/candidates/0db2faef4a8102abd265b3ae1851d45b123db9cfcdbc22077249c0dd8400f7e7/record.json": "bc21d5dc5b908bd8ce9279b3e4f682abb988eb9494b4a7518df69eaed3f1b569",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/random-4/candidates/ba462f80dbd6da7c6c4821362d77c25b53fe925d77c94a9250303db1a144b2fe/record.json": "1a31d01f164b2c7a9a7734a88629bd91fe835d3ea7cdf7f52d37d9488e4d2e84",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/random-4/candidates/f140d7477bc1970cb01b469b10ff313dd98405427cb7226e27fd8c3bd66c75c0/record.json": "d4905d893d9d111bb0200ae0454f0655bccf4a24a1cadf12772a483cb603ff5f",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/live-policy128-uncontended-three-seeds/results.json": "ee5fccc31af46238a68fc6b15bbd32ff51398f602dd2445badcd4e6b459c396c",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/policy128-reference-current/manifest.json": "f2b5582e8fa60ca56d539ba75e57e362eeb5004475750575034d4318c28a07cb",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/policy128-reference-current/report.json": "d6e0ffafb6cb11ad29595df11f9d6dcc37746d435a7da142157abf2e9395a788"
+  },
+  "limitations": "Same-workload synthesis experiment. Queue contention confounds wall time and frontier recovery when evaluation budgets expire. Unknown queue duration remains null. Seeds control random/cost selection, not LLM backend randomness. Repetitions do not establish general policy superiority. Fresh measurement differences remain visible.",
+  "schema": "ntt-live-policy-comparison-v1",
+  "trials": [
+    {
+      "best_feasible_transforms_per_second": 592417.0616113744,
+      "elapsed_seconds": 245.8031018092297,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 3,
+      "frontier_recall": 0.75,
+      "known_queue_seconds": 0.0012382990680634975,
+      "measurement_differences": [],
+      "policy": "enumerate",
+      "queue_seconds": 0.0012382990680634975,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "1547e208f01e71a5d9b99e2be097ad82133f413e69c6ebf00d01f1d30ae4c8ce",
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141",
+        "a32b000dd51bfcad1384e317ffb4efb7e0d37deb76472eee0135cce502ac2c93"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 2
+    },
+    {
+      "best_feasible_transforms_per_second": 950570.3422053232,
+      "elapsed_seconds": 267.48090573213995,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 3,
+      "frontier_recall": 0.75,
+      "known_queue_seconds": 0.0011733369901776314,
+      "measurement_differences": [],
+      "policy": "random",
+      "queue_seconds": 0.0011733369901776314,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "1547e208f01e71a5d9b99e2be097ad82133f413e69c6ebf00d01f1d30ae4c8ce",
+        "3b3886e743619f070835ab2a5565923e2537eeab702876326ada8779af14af41",
+        "a32b000dd51bfcad1384e317ffb4efb7e0d37deb76472eee0135cce502ac2c93"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 2
+    },
+    {
+      "best_feasible_transforms_per_second": 950570.3422053232,
+      "elapsed_seconds": 371.15574740292504,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 2,
+      "frontier_recall": 0.5,
+      "known_queue_seconds": 0.0011746780946850777,
+      "measurement_differences": [],
+      "policy": "cost",
+      "queue_seconds": 0.0011746780946850777,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "3b3886e743619f070835ab2a5565923e2537eeab702876326ada8779af14af41",
+        "a32b000dd51bfcad1384e317ffb4efb7e0d37deb76472eee0135cce502ac2c93"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 2
+    },
+    {
+      "best_feasible_transforms_per_second": 350140.05602240894,
+      "elapsed_seconds": 543.0865199388936,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 1,
+      "frontier_recall": 0.25,
+      "known_queue_seconds": 0.0014239093288779259,
+      "measurement_differences": [],
+      "policy": "llm",
+      "queue_seconds": 0.0014239093288779259,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 2
+    },
+    {
+      "best_feasible_transforms_per_second": 592417.0616113744,
+      "elapsed_seconds": 251.1701878090389,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 3,
+      "frontier_recall": 0.75,
+      "known_queue_seconds": 0.0010957308113574982,
+      "measurement_differences": [],
+      "policy": "enumerate",
+      "queue_seconds": 0.0010957308113574982,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "1547e208f01e71a5d9b99e2be097ad82133f413e69c6ebf00d01f1d30ae4c8ce",
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141",
+        "a32b000dd51bfcad1384e317ffb4efb7e0d37deb76472eee0135cce502ac2c93"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 3
+    },
+    {
+      "best_feasible_transforms_per_second": 592417.0616113744,
+      "elapsed_seconds": 411.2312320070341,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 2,
+      "frontier_recall": 0.5,
+      "known_queue_seconds": 0.001340803224593401,
+      "measurement_differences": [],
+      "policy": "random",
+      "queue_seconds": 0.001340803224593401,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "1547e208f01e71a5d9b99e2be097ad82133f413e69c6ebf00d01f1d30ae4c8ce",
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 3
+    },
+    {
+      "best_feasible_transforms_per_second": 950570.3422053232,
+      "elapsed_seconds": 268.78969210293144,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 3,
+      "frontier_recall": 0.75,
+      "known_queue_seconds": 0.0013999040238559246,
+      "measurement_differences": [],
+      "policy": "cost",
+      "queue_seconds": 0.0013999040238559246,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "1547e208f01e71a5d9b99e2be097ad82133f413e69c6ebf00d01f1d30ae4c8ce",
+        "3b3886e743619f070835ab2a5565923e2537eeab702876326ada8779af14af41",
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 3
+    },
+    {
+      "best_feasible_transforms_per_second": 350140.05602240894,
+      "elapsed_seconds": 530.2266171397641,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 1,
+      "frontier_recall": 0.25,
+      "known_queue_seconds": 0.0016061235219240189,
+      "measurement_differences": [],
+      "policy": "llm",
+      "queue_seconds": 0.0016061235219240189,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 3
+    },
+    {
+      "best_feasible_transforms_per_second": 592417.0616113744,
+      "elapsed_seconds": 253.09718981431797,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 3,
+      "frontier_recall": 0.75,
+      "known_queue_seconds": 0.0012104758061468601,
+      "measurement_differences": [],
+      "policy": "enumerate",
+      "queue_seconds": 0.0012104758061468601,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "1547e208f01e71a5d9b99e2be097ad82133f413e69c6ebf00d01f1d30ae4c8ce",
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141",
+        "a32b000dd51bfcad1384e317ffb4efb7e0d37deb76472eee0135cce502ac2c93"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 4
+    },
+    {
+      "best_feasible_transforms_per_second": 950570.3422053232,
+      "elapsed_seconds": 372.5953152133152,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 2,
+      "frontier_recall": 0.5,
+      "known_queue_seconds": 0.0012910286895930767,
+      "measurement_differences": [],
+      "policy": "random",
+      "queue_seconds": 0.0012910286895930767,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "3b3886e743619f070835ab2a5565923e2537eeab702876326ada8779af14af41",
+        "a32b000dd51bfcad1384e317ffb4efb7e0d37deb76472eee0135cce502ac2c93"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 4
+    },
+    {
+      "best_feasible_transforms_per_second": 950570.3422053232,
+      "elapsed_seconds": 380.38249094970524,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 2,
+      "frontier_recall": 0.5,
+      "known_queue_seconds": 0.0014228657819330692,
+      "measurement_differences": [],
+      "policy": "cost",
+      "queue_seconds": 0.0014228657819330692,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "1547e208f01e71a5d9b99e2be097ad82133f413e69c6ebf00d01f1d30ae4c8ce",
+        "3b3886e743619f070835ab2a5565923e2537eeab702876326ada8779af14af41"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 4
+    },
+    {
+      "best_feasible_transforms_per_second": 350140.05602240894,
+      "elapsed_seconds": 529.4259106582031,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 1,
+      "frontier_recall": 0.25,
+      "known_queue_seconds": 0.0012602810747921467,
+      "measurement_differences": [],
+      "policy": "llm",
+      "queue_seconds": 0.0012602810747921467,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 4
+    }
+  ]
+}

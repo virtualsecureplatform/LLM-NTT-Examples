@@ -1,0 +1,172 @@
+{
+  "checks": [
+    {
+      "case": "hoge-combined-integration",
+      "generation": {
+        "command": [
+          "bash",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "-preset",
+          "hoge1024",
+          "-k",
+          "5",
+          "-r",
+          "5",
+          "-preset-backend",
+          "full-throughput",
+          "-profile",
+          "baseline",
+          "-transpose",
+          "switch",
+          "-o",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/final-main-composed-identity/hoge-combined-integration/NTTWrap.v",
+          "ntt"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/final-main-composed-identity/hoge-combined-integration/generation.log",
+        "ngen_build": {
+          "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "binary_sha256": "a3cd5403fc7bd8c4479be2292fcdf8b895f4f88f8bb8e6977d1f987230d3ccb9",
+          "changed_inputs": [],
+          "manifest_sha256": "d28278f38fdf054955f802dd09d407cd6631ce85105d30fb37414333f605facc",
+          "source_files": 68,
+          "verified": true
+        },
+        "returncode": 0,
+        "seconds": 0.6090061687864363,
+        "sgen": {
+          "boundary": "packed valid/data, uninterrupted frames",
+          "command": [
+            "bash",
+            "/tmp/llm-hoge-sgen/build/hoge-combined-integration/generator/sgen.bat",
+            "-nologo",
+            "-n",
+            "10",
+            "-k",
+            "5",
+            "-hw",
+            "signed",
+            "64",
+            "-o",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/final-main-composed-identity/hoge-combined-integration/sgen-permutation.v",
+            "switchtranspose"
+          ],
+          "data_width": 64,
+          "lanes": 32,
+          "latency_cycles": 31,
+          "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/final-main-composed-identity/hoge-combined-integration/sgen.log",
+          "replaced_modules": [
+            "HogeFTNGenSwitchTransposeNetwork_1",
+            "HogeFTNGenSwitchTransposeNetwork_2",
+            "HogeFTNGenSwitchTransposeNetwork_3",
+            "HogeFTNGenSwitchTransposeNetwork_4",
+            "HogeFTNGenSwitchTransposeNetwork_5"
+          ],
+          "returncode": 0,
+          "seconds": 0.34383096219971776,
+          "timed_out": false
+        },
+        "timed_out": false
+      },
+      "reference_report_sha256": "4f4215e61cd75a28a65d5ee564d145df5dbdf96bbb6fe1de898b4880357f5c04",
+      "rtl_sha256": "0c198e6a558fe5e8ebcf94f084dbe24ee0b4995cfd40c2c76450e114a74ddab7",
+      "sgen_binary_sha256": "bc46c96294510aed92494a869015eecbd70db204c5a787996d602b5f041bb85b",
+      "timing": {
+        "initiation_interval": 32,
+        "input_cycles": 32,
+        "latency": 40,
+        "output_cycles": 32,
+        "pipeline_depth": 40
+      }
+    },
+    {
+      "case": "hoge-combined-inverse-integration",
+      "generation": {
+        "command": [
+          "bash",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "-preset",
+          "hoge1024",
+          "-k",
+          "5",
+          "-r",
+          "5",
+          "-preset-backend",
+          "full-throughput",
+          "-profile",
+          "baseline",
+          "-transpose",
+          "switch",
+          "-o",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/final-main-composed-identity/hoge-combined-inverse-integration/INTTWrap.v",
+          "intt"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/final-main-composed-identity/hoge-combined-inverse-integration/generation.log",
+        "ngen_build": {
+          "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "binary_sha256": "a3cd5403fc7bd8c4479be2292fcdf8b895f4f88f8bb8e6977d1f987230d3ccb9",
+          "changed_inputs": [],
+          "manifest_sha256": "d28278f38fdf054955f802dd09d407cd6631ce85105d30fb37414333f605facc",
+          "source_files": 68,
+          "verified": true
+        },
+        "returncode": 0,
+        "seconds": 0.49356702296063304,
+        "sgen": {
+          "boundary": "packed valid/data, uninterrupted frames",
+          "command": [
+            "bash",
+            "/tmp/llm-hoge-sgen/build/hoge-combined-inverse-integration/generator/sgen.bat",
+            "-nologo",
+            "-n",
+            "10",
+            "-k",
+            "5",
+            "-hw",
+            "signed",
+            "64",
+            "-o",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/final-main-composed-identity/hoge-combined-inverse-integration/sgen-permutation.v",
+            "switchtranspose"
+          ],
+          "data_width": 64,
+          "lanes": 32,
+          "latency_cycles": 31,
+          "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/final-main-composed-identity/hoge-combined-inverse-integration/sgen.log",
+          "replaced_modules": [
+            "HogeFTNGenSwitchTransposeNetwork_1",
+            "HogeFTNGenSwitchTransposeNetwork_2",
+            "HogeFTNGenSwitchTransposeNetwork_3",
+            "HogeFTNGenSwitchTransposeNetwork_4",
+            "HogeFTNGenSwitchTransposeNetwork_5"
+          ],
+          "returncode": 0,
+          "seconds": 0.33694605715572834,
+          "timed_out": false
+        },
+        "timed_out": false
+      },
+      "reference_report_sha256": "e6c234319ffd1d6eada7e666df927c0decc5406ad9396b39618bdf38b3fd7ec6",
+      "rtl_sha256": "d9913282489aa61cade7763e799e33bde587a000be3996ef76d5a974abd06395",
+      "sgen_binary_sha256": "bc46c96294510aed92494a869015eecbd70db204c5a787996d602b5f041bb85b",
+      "timing": {
+        "initiation_interval": 32,
+        "input_cycles": 32,
+        "latency": 9,
+        "output_cycles": 32,
+        "pipeline_depth": 9
+      }
+    }
+  ],
+  "completed": 2,
+  "correct": true,
+  "expected": 2,
+  "framework_source": {
+    "revision": "c03f99c7b3aedc979b30277964903b3fb3eb706c",
+    "source_hash": "1e625b5751e713a60903ccb0b5a989547de0e173fa383bddf0063f8f0751ced0"
+  },
+  "generator_source": {
+    "revision": "d59d87a65ab198b4cb85b473fa3d3c1c8ded25d6",
+    "source_hash": "0d89b2edbed31df256838117497c15f91ec4ce97209051313da2bfb5d7f77f02"
+  },
+  "script_sha256": "2519fb190fc6d2379d645d6c5f8a2b9336690dbdc731c8f6edf03ee35eabf02a"
+}

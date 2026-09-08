@@ -41,10 +41,7 @@ correctness and synthesis timing. Feasibility under caps is separate from
 implementation success. Seeds do not control backend LLM randomness; these
 zero-temperature calls are repetitions, not independent LLM random seeds.
 
-The separate replication in `build/live-policy128-uncontended-three-seeds`
-has started with all 23 executable hashes unchanged and the Vivado queue idle.
-No competing hardware jobs will be launched. Inspect its eventual queue
-durations before treating it as uncontended; its results remain pending.
+The [separate replication](policy-uncontended-study.md) is complete: 36 successful evaluations, no metric differences from the reference, and 0.015637 seconds of total recorded queue wait. Both studies retained the same executable inputs.
 
 Source: `build/policy-replication-sequence/contended-summary.json`. The published
 [JSON](measured-evidence/policy-contended.json) retains per-trial metrics,
