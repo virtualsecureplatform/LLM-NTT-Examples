@@ -95,3 +95,15 @@ matched synthesis improves WNS from -3.447 ns to +0.582 ns at 4 ns. Its resource
 and cycle tradeoffs, latency metadata correction, and evidence paths are in
 [the pipeline comparison](montgomery-pipeline-comparison.md). The prior setup
 failure is historical evidence for the change; routed closure remains open.
+
+## Routed arithmetic and policy evaluation
+
+The seven-stage NGen N=256/q32 implementation completed routing with WNS
++0.329 ns, WHS -0.080 ns, 4722 LUTs, 1742 FFs, 22 DSPs and four BRAM tiles.
+It is excluded under the original zero-delay I/O contract. Fresh runs now use
+[the shared fabric contract](fabric-timing-contract.md); no older run is promoted.
+
+An equal-budget [policy replay](policy-replay.md) now saves acquisition traces,
+frontier recovery, prediction errors, and live LLM requests/responses. The small
+smoke pool gives no policy advantage. A larger resource-constrained measured
+pool is running; end-to-end and held-out evaluation remain unfinished.

@@ -1,0 +1,67 @@
+"""Equal-evaluation-budget policy replay over a frozen, measured candidate pool.
+
+Policies see legal configurations and only the measurements they have acquired.
+The full pool is used solely by the evaluator to score frontier recovery.
+"""
+from __future__ import annotations
+import random
+from . import cost
+from .model import canonical,frontier,metric_number
+
+OBJECTIVES={'latency_ns':'min','transforms_per_second':'max','lut':'min','ff':'min','dsp':'min','bram':'min','uram':'min'}
+
+
+def validate_pool(report: dict,target: dict,stage: str) -> list[dict]:
+    records=report['candidates'];seen=set()
+    if stage not in ('synthesis','route'):raise ValueError('replay requires measured hardware evidence')
+    if len(records)<2:raise ValueError('at least two measured candidates are required')
+    for r in records:
+        key=canonical(r['configuration'])
+        if key in seen:raise ValueError('duplicate configuration: do not mix architecture revisions in one replay')
+        seen.add(key)
+        e=r.get('evidence',{}).get(stage,{})
+        if r.get('status')!='complete' or r.get('mode')!='functional' or r.get('correct') is not True:
+            raise ValueError('pool must contain completed, independently correct candidates')
+        if e.get('target')!=target or not e.get('implementation_passed'):
+            raise ValueError('each candidate needs completed implementation under the same target')
+        if any(not metric_number(e.get('metrics',{}).get(k)) for k in OBJECTIVES):
+            raise ValueError('missing hardware objective in replay pool')
+    return records
+
+
+def score(observed: list[dict],records: list[dict],stage: str,target: dict,limits: dict) -> dict:
+    reference=frontier(records,OBJECTIVES,stage,target,limits)
+    recovered=frontier(observed,OBJECTIVES,stage,target,limits)
+    return {'reference_frontier_size':len(reference),'recovered_reference_ids':[i for i in reference if i in recovered],
+            'frontier_recall':len(set(reference)&set(recovered))/len(reference) if reference else None,
+            'feasible_discoveries':sum(bool(frontier([r],OBJECTIVES,stage,target,limits)) for r in observed),
+            'observed_frontier_ids':recovered}
+
+
+def trial(records: list[dict],target: dict,stage: str,budget: int,policy: str,seed: int,
+          limits: dict | None=None,llm_order: list[dict] | None=None) -> dict:
+    if policy not in ('enumerate','random','cost','llm'):raise ValueError('unknown replay policy')
+    if not 1<=budget<=len(records):raise ValueError('budget must be within the measured pool size')
+    rng=random.Random(seed);remaining=sorted(records,key=lambda r:canonical(r['configuration']))
+    if policy in ('random','cost'):rng.shuffle(remaining)
+    if policy=='llm':
+        if llm_order is None:raise ValueError('LLM order required')
+        rank={canonical(c):i for i,c in enumerate(llm_order)}
+        if len(rank)!=len(records) or set(rank)!={canonical(r['configuration']) for r in records}:raise ValueError('LLM order must be an exact legal permutation')
+        remaining.sort(key=lambda r:rank[canonical(r['configuration'])])
+    observed=[];samples=[];trace=[];errors=[]
+    for step in range(budget):
+        prediction=None
+        if policy=='cost' and samples and step%4!=3:
+            ranked=[(cost.predict(samples,r['configuration'],'lut'),i,r) for i,r in enumerate(remaining)]
+            prediction,_,candidate=min(ranked,key=lambda row:(row[0]['estimate'],row[1]))
+            remaining.remove(candidate)
+        else:candidate=remaining.pop(0)
+        # Only now reveal this candidate's outcome to the policy.
+        observed.append(candidate);e=candidate['evidence'][stage]
+        samples.append({'configuration':candidate['configuration'],'metrics':e['metrics'],'rtl_hash':candidate.get('rtl_hash')})
+        if prediction:errors.append(abs(prediction['estimate']-e['metrics']['lut']))
+        trace.append({'step':step+1,'candidate_id':candidate['id'],'implementation_timing_passed':e.get('passed') is True,
+                      'lut_prediction_before_measurement':prediction,**score(observed,records,stage,target,limits or {})})
+    return {'policy':policy,'seed':seed,'budget':budget,'trace':trace,'final':trace[-1],
+            'online_lut_prediction_mae':sum(errors)/len(errors) if errors else None,'prediction_count':len(errors)}
