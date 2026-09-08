@@ -73,3 +73,7 @@ one to four preserved identity LUTs per output, recording every inserted LUT.
 This adds physical delay and measured resource cost without extra cycles or a
 constraint waiver. New matched runs are required for all three generators;
 existing one-stage results cannot be promoted under this changed target.
+
+All three fresh two-stage runs have now passed routed timing. See the
+[matched comparison](threeway-routed-comparison.md) for resources, cycles,
+slacks, provenance, and the narrow workload/interface scope of the result.

@@ -208,3 +208,17 @@ has finished; all three fail setup, and the stride adapter is more expensive
 on this small task. An isolated Kyber normalization improvement removes 256
 inverse cycles and passes the original oracle; integration and matched hardware
 measurement remain pending while live trial inputs are fixed.
+
+The [matched three-generator routed comparison](threeway-routed-comparison.md)
+now passes for all three N=256/q32 streams under the shared two-buffer fabric
+contract. NGen has the lowest LUT/FF/DSP cost; modified Proteus has the shortest
+frame interval, and OpenNTT uses one less BRAM tile than NGen. This closes the
+single-workload matched-route evidence gap, not the wider comparison scope.
+
+The first N=128K/q32 forward matrix attempt compiled with Icarus but exhausted
+its 1200-second evaluation budget during reset verification after eight main
+frames. Both independent Verilator attempts (original RTL and externalized
+control ROMs) ended with signal 9, before simulation. Neither is a correctness
+pass. Control-ROM externalization passes an N=256 full-suite check and two
+focused regressions, but does not yet solve large-design elaboration. A fresh
+longer-budget Icarus recheck preserves the original attempts and full oracle.
