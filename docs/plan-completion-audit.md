@@ -8,7 +8,7 @@ missing evidence; it does not narrow the objective to the implemented subset.
 | Reproducible NGen search | Run/resume/report smoke checks; source/tool/binary manifests | Expand campaign evidence to HOGE forward/inverse and Kyber; include extracted baselines |
 | Independent generic arithmetic | Direct-definition/convolution unit checks; streaming forward 16K/54-bit and inverse 64-bit RTL | Validate additional FHE matrix points and external generators against the same oracle |
 | Permutation choice | Square NGen/SGen stream checks at five widths; composed YATA correctness | Rectangular, linear and memory permutation comparisons; measure full-design adapter cost |
-| Architectural improvements | Buffered stage-group implementation, arithmetic tests, measured interval/latency tradeoffs | Matched resource/routing ablations; inspect scheduling hazards against actual RAM timing |
+| Architectural improvements | Buffered stage groups and seven-stage Montgomery pipeline; matched resource/setup ablation and oracle checks | Matched routed ablations; wider scheduling/RAM timing coverage |
 | Multi-fidelity search | Functional gates, synthesis/route stages, resource-constrained frontiers, per-user vendor lock | Measured acquisition-policy comparison and resource/bandwidth pruning with validated bounds |
 | Cost models | Nearest-neighbor fitting and leave-one-out machinery | Sufficient independent samples, error results, and held-out policy evaluation |
 | LLM versus controls | Live legal-ID ranking, saved response, four passing candidates | Equal-budget trials against enumeration/random/cost with measured search outcomes |
@@ -83,6 +83,15 @@ The critical path runs from `correction_product_1` through the final Montgomery
 multiply/reduction and butterfly subtraction to `out1`, with 7.397 ns estimated
 delay and 34 logic levels. This is an internal arithmetic setup failure, separate
 from the small-design OOC hold issue. Increasing stage-group count alone cannot
-resolve it. The next NGen change must pipeline this arithmetic path, preserve
-valid/tag alignment and stage-drain correctness, and update latency metadata
-before repeating the matched oracle and implementation checks.
+resolve it. This identified the need to pipeline the arithmetic path, preserve valid/tag
+alignment and stage-drain correctness, and correct latency metadata. The
+implementation and matched checks are recorded below.
+
+## Revised Montgomery arithmetic
+
+The seven-stage radix-2 Montgomery pipeline is now implemented and independently
+verified, including 64-bit inverse and 16K/54-bit forward transforms. The first
+matched synthesis improves WNS from -3.447 ns to +0.582 ns at 4 ns. Its resource
+and cycle tradeoffs, latency metadata correction, and evidence paths are in
+[the pipeline comparison](montgomery-pipeline-comparison.md). The prior setup
+failure is historical evidence for the change; routed closure remains open.

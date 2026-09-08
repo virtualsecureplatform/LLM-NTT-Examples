@@ -30,7 +30,7 @@ def report(directory: Path, campaign: dict) -> dict:
     target = campaign.get('target', {})
     frontiers = {}
     for stage, objectives in [('simulation', {'latency_cycles':'min','initiation_interval_cycles':'min'}),
-                              ('synthesis', {'latency_ns':'min','lut':'min','ff':'min','dsp':'min','bram':'min','uram':'min'}),
+                              ('synthesis', {'latency_ns':'min','transforms_per_second':'max','lut':'min','ff':'min','dsp':'min','bram':'min','uram':'min'}),
                               ('route', {'latency_ns':'min','transforms_per_second':'max','lut':'min','ff':'min','dsp':'min','bram':'min','uram':'min'})]:
         if campaign['workload']['kind']=='preset':
             objectives={**{k:v for k,v in objectives.items() if k not in ('latency_cycles','latency_ns','initiation_interval_cycles','transforms_per_second')}, ('transaction_cycles' if stage=='simulation' else 'transaction_ns'):'min'}

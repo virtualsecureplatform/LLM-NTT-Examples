@@ -1,8 +1,9 @@
 # OpenNTT comparison evidence
 
-The first workload-matched comparison uses N=256, q=2147484161, a negacyclic
+The first workload-matched comparison used NGen revision `adb15a7` and
+N=256, q=2147484161, a negacyclic
 forward transform, and four natural-order input/output lanes. Both generators
-pass the same arbitrary-precision oracle and streaming checks. These are
+passed the same arbitrary-precision oracle and streaming checks. These are
 simulation measurements for the listed configurations, not a claim that NGen
 outperforms the best possible OpenNTT design or published routed implementations.
 
@@ -98,3 +99,11 @@ routed-frequency result. The evidence record is
 `build/proteus-mdc256-synthesis/record.json`, imported into
 `build/comparison-threeway256-synthesis`. Matched NGen/OpenNTT resource samples
 are required before drawing an area tradeoff conclusion.
+
+NGen has since changed to a seven-stage Montgomery pipeline. Its updated cycle
+and resource evidence is in [the pipeline comparison](montgomery-pipeline-comparison.md).
+The earlier tables above remain measurements of the original revision; running
+the current generator produces the updated tradeoff rather than reproducing
+those historical numbers. The original matched synthesis report is
+`build/comparison-threeway256-original-synthesis` and includes passing OpenNTT
+and Proteus estimates alongside the original NGen setup failures.

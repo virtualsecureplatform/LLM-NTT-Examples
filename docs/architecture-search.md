@@ -222,3 +222,8 @@ Pass resulting `record.json` files to `compare_openntt_ngen.py --measured-record
 alongside the matching `--proteus-dirs`/`--openntt-dirs`. The importer verifies
 report hashes, matching stream provenance, and the target contract. Failed
 measurements remain visible but cannot enter a passing evidence frontier.
+
+The radix-2 Montgomery pipeline now has seven arithmetic stages. See the
+[measured pipeline comparison](montgomery-pipeline-comparison.md) for timing,
+resource, and latency changes. Measured simulation evidence remains the source
+for frontiers; declared timing is checked separately against that evidence.
