@@ -490,3 +490,14 @@ reference alone passes the synthesis setup gate; neither result establishes
 routed closure. The timed-out stage-parallel candidate remains unmeasured in
 the same report. The forward constant-shift attempt also exhausted its queue
 budget; a fresh measurement is active with the original attempt preserved.
+
+The framework integration is now pushed as `plan-integration` (`cecaa91`), with
+all 133 Python tests passing. It combines the namespaced composition and queue
+duration fix without changing the running experiment's sources.
+
+The fresh HOGE-SGen forward measurement completed in
+`build/hoge-sgen-forward-hardware-retry`: correctness passes at 104 transaction
+cycles, but synthesis reports 214565 LUT, 45852 FF, 2304 DSP, zero BRAM/URAM,
+setup WNS −8.332 ns and hold −0.029 ns. These equal the pre-shift NGen forward
+measurement; composition alone supplies no measured area or timing improvement.
+The forward constant-shift retry is now executing Vivado.

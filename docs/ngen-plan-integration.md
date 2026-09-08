@@ -54,3 +54,9 @@ hashes. Results and the exact check script are retained in
 `build/plan-integration-fhe-identity/{results.json,check.py}`. This establishes
 preservation of the complete validated matrix, not a new simulation or timing
 measurement. The original 18 full-oracle passes remain the functional evidence.
+
+The framework branch `plan-integration` at `cecaa91` now combines the namespaced
+SGen composition, HOGE overlap test/campaigns, and queue-timeout elapsed-duration
+fix with main at `555520f`. All 133 Python tests pass with native tools enabled
+(`/tmp/llm-plan-integration-tests.out`). This branch is pushed; main remains
+frozen for the running policy study.
