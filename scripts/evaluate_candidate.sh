@@ -45,6 +45,8 @@ Options:
 EOF
 }
 
+cmake_bin="${CMAKE_BIN:-$(command -v cmake3 || command -v cmake)}"
+
 task_arg=""
 verilog_dir=""
 verilog_file=""
@@ -294,9 +296,10 @@ if [[ "${mode}" == "verilator_test" ]]; then
 
   start_time="$(date +%s)"
   if run_logged "${configure_log}" \
-      cmake -S "${repo_root}" -B "${build_dir}" -G Ninja \
+      "${cmake_bin}" -S "${repo_root}" -B "${build_dir}" -G Ninja \
         -DCMAKE_CXX_COMPILER="${CXX:-clang++}" \
         -DCMAKE_C_COMPILER="${CC:-clang}" \
+        -DLLM_NTT_TEST_TARGET="${test_target}" \
         -D"${cmake_var}=${verilog_file}"; then
     configure_status=0
   else
@@ -304,7 +307,7 @@ if [[ "${mode}" == "verilator_test" ]]; then
   fi
 
   if [[ "${configure_status}" -eq 0 ]] &&
-     run_logged "${build_log}" cmake --build "${build_dir}" --target "${test_target}"; then
+     run_logged "${build_log}" "${cmake_bin}" --build "${build_dir}" --target "${test_target}"; then
     build_status=0
     build_passed=true
   else

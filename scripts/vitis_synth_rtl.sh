@@ -9,6 +9,7 @@ Usage:
   scripts/vitis_synth_rtl.sh --top TOP --verilog-file FILE [--verilog-file FILE ...] [options]
 
 Options:
+  --stage STAGE          synthesis (default) or route.
   --top TOP              Top Verilog module to synthesize.
   --verilog-file FILE    Verilog source file. Repeat for multi-file RTL.
   --build-dir DIR        Output directory. Defaults to build/vitis-synth/<top>.
@@ -33,6 +34,7 @@ Options:
 EOF
 }
 
+stage="synthesis"
 top_module=""
 verilog_files=()
 build_dir=""
@@ -51,6 +53,10 @@ clean_build=1
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --stage)
+      stage="${2:-}"
+      shift 2
+      ;;
     --top)
       top_module="${2:-}"
       shift 2
@@ -111,6 +117,12 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$stage" != synthesis && "$stage" != route ]]; then
+  echo "stage must be synthesis or route" >&2
+  exit 2
+fi
+export LLM_NTT_IMPLEMENTATION_STAGE="$stage"
+
 if [[ -z "${top_module}" || "${#verilog_files[@]}" -eq 0 ]]; then
   echo "Missing required --top or --verilog-file" >&2
   usage >&2
@@ -156,20 +168,22 @@ mkdir -p "${build_dir}" "$(dirname "${metrics_json}")"
 tcl_script="${build_dir}/synth.tcl"
 source_list="${build_dir}/sources.txt"
 xdc_file="${build_dir}/clock.xdc"
-utilization_rpt="${build_dir}/utilization_synth.rpt"
-timing_rpt="${build_dir}/timing_summary_synth.rpt"
+utilization_rpt="${build_dir}/utilization_${stage}.rpt"
+timing_rpt="${build_dir}/timing_summary_${stage}.rpt"
 timing_props="${build_dir}/timing.properties"
-checkpoint_file="${build_dir}/${top_module}_synth.dcp"
+checkpoint_file="${build_dir}/${top_module}_${stage}.dcp"
 
 write_missing_tool_json() {
   python3 - "$metrics_json" "$vivado_bin" <<'PY'
 import json
+import os
 import sys
 from datetime import datetime, timezone
 
 metrics_json, vivado_bin = sys.argv[1:]
 result = {
     "schema": "llm-ntt-vitis-synth-v1",
+    "stage": os.environ.get("LLM_NTT_IMPLEMENTATION_STAGE", "synthesis"),
     "timestamp_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
     "passed": False,
     "error": f"Vivado executable not found: {vivado_bin}",
@@ -218,6 +232,14 @@ fi
   printf 'close $xdc_fp\n'
   printf 'read_xdc $xdc_file\n'
   printf 'synth_design -top $top_module -part $part_name -mode out_of_context -flatten_hierarchy rebuilt\n'
+  if [[ "$stage" == route ]]; then
+    printf 'set data_inputs [get_ports -filter {DIRECTION == IN}]\n'
+    printf 'set data_inputs [lsearch -all -inline -not -exact $data_inputs $clock_port]\n'
+    printf 'set_input_delay 0 -clock [get_clocks $clock_port] $data_inputs\n'
+    printf 'set_output_delay 0 -clock [get_clocks $clock_port] [all_outputs]\n'
+    printf 'opt_design\nplace_design\nphys_opt_design\nroute_design\n'
+    printf 'report_route_status -file [file join $out_dir route_status.rpt]\n'
+  fi
   printf 'report_utilization -file $utilization_rpt\n'
   printf 'report_timing_summary -file $timing_rpt -delay_type max -max_paths 10\n'
   printf 'proc safe_get_property {property object} {\n'
@@ -228,6 +250,8 @@ fi
   printf '}\n'
   printf 'set props_fp [open $timing_props w]\n'
   printf 'puts $props_fp "vitis_clock_period_ns=$clock_period"\n'
+  printf 'set hold_paths [get_timing_paths -max_paths 1 -nworst 1 -delay_type min -quiet]\n'
+  printf 'if {[llength $hold_paths] > 0} { puts $props_fp "vitis_hold_slack_ns=[get_property SLACK [lindex $hold_paths 0]]" }\n'
   printf 'set timing_paths [get_timing_paths -max_paths 1 -nworst 1 -delay_type max -quiet]\n'
   printf 'if {[llength $timing_paths] > 0} {\n'
   printf '  set timing_path [lindex $timing_paths 0]\n'
@@ -263,26 +287,15 @@ vivado_cmd=(
 
 set +e
 if [[ "${timeout_seconds}" -gt 0 ]]; then
-  timeout --kill-after=60s "${timeout_seconds}" "${vivado_cmd[@]}"
+  (cd "${build_dir}" && timeout --kill-after=60s "${timeout_seconds}" "${vivado_cmd[@]}")
 else
-  "${vivado_cmd[@]}"
+  (cd "${build_dir}" && "${vivado_cmd[@]}")
 fi
 vivado_status=$?
 set -e
 
 script_status="${vivado_status}"
 completion_warning=""
-if [[ "${vivado_status}" -ne 0 &&
-      -s "${utilization_rpt}" &&
-      -s "${timing_rpt}" &&
-      -s "${timing_props}" &&
-      -s "${checkpoint_file}" ]]; then
-  script_status=0
-  completion_warning="Vivado exited with status ${vivado_status} after generating synthesis reports and checkpoint"
-elif [[ "${vivado_status}" -ne 0 && -s "${utilization_rpt}" ]]; then
-  script_status=0
-  completion_warning="Vivado exited with status ${vivado_status} after synthesis utilization was generated; timing or checkpoint output is incomplete"
-fi
 
 python3 - "$metrics_json" "$script_status" "$vivado_status" "$completion_warning" "$top_module" "$source_list" \
   "$part" "$clock_port" "$clock_period" "$build_dir" "$utilization_rpt" \
@@ -359,6 +372,8 @@ if os.path.exists(utilization_rpt):
             if used is None or name.lower() in ("site type", "name"):
                 continue
             key = sanitize(name)
+            if key in rows:
+                continue  # Later SLR tables repeat names; retain whole-device totals.
             rows[key] = cells
             metrics[f"vitis_util_{key}_used"] = used
             if len(cells) >= 5:
@@ -403,7 +418,18 @@ clock_period_value = parse_number(clock_period)
 if clock_period_value is not None:
     metrics.setdefault("vitis_clock_period_ns", clock_period_value)
 
+route_status = os.path.join(build_dir, "route_status.rpt")
+route_complete = None
+if os.environ.get("LLM_NTT_IMPLEMENTATION_STAGE") == "route":
+    route_text = open(route_status).read() if os.path.exists(route_status) else ""
+    def route_count(label):
+        match = re.search(r"# of " + label + r"\.+\s*:\s*([0-9,]+)", route_text)
+        return int(match.group(1).replace(",", "")) if match else None
+    routable, routed, errors = [route_count(label) for label in ("routable nets", "fully routed nets", "nets with routing errors")]
+    route_complete = routable is not None and routable > 0 and routed == routable and errors == 0
+
 reports = {
+    "route_status": rel(route_status) if os.path.exists(route_status) else "",
     "build_dir": rel(build_dir),
     "checkpoint": rel(checkpoint_file) if os.path.exists(checkpoint_file) else "",
     "synth_tcl": rel(os.path.join(build_dir, "synth.tcl")),
@@ -414,8 +440,10 @@ reports = {
 
 result = {
     "schema": "llm-ntt-vitis-synth-v1",
+    "stage": os.environ.get("LLM_NTT_IMPLEMENTATION_STAGE", "synthesis"),
     "timestamp_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
-    "passed": int(script_status) == 0,
+    "passed": int(script_status) == 0 and route_complete is not False,
+    "route_complete": route_complete,
     "status": int(script_status),
     "vivado_exit_status": int(vivado_status),
     "top_module": top_module,
@@ -439,6 +467,8 @@ with open(metrics_json, "w", encoding="utf-8") as f:
     f.write("\n")
 
 print(json.dumps(result, indent=2, sort_keys=True))
+if not result["passed"]:
+    sys.exit(int(script_status) or 1)
 PY
 
 exit "${script_status}"

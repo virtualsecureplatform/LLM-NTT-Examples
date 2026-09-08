@@ -307,7 +307,7 @@ choice. It then writes candidate Verilog into `build/llm-runs/` and can call
 `LLM_NTT_LAB_ENDPOINT`; pass a full endpoint URL or set `LLM_NTT_LLM_ENDPOINT`
 when using a different server. In this workspace, `--endpoint kunashiri`
 resolves to the llama.cpp OpenAI-compatible server at
-`http://kunashiri:8080/v1`; use `--disable-thinking` for Qwen-style models that
+`http://kunashiri.sato.lab:8080/v1`; use `--disable-thinking` for Qwen-style models that
 otherwise return reasoning content before the requested JSON.
 The identity task is a correctness-scored smoke test for the full endpoint,
 Verilog extraction, and prepared-evaluator loop, but it is not evidence of

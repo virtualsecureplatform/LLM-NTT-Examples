@@ -112,6 +112,9 @@ scripts/run_yata_hls_synth_compare.py --sif auto
 
 ## More Detail
 
+- `docs/ngen-sgen-search-roadmap.md`: paper-based target architecture and milestones
+  for NGen/SGen architecture search.
+
 - `docs/reproduction.md`: fresh-clone HLS reproduction and expected outputs.
 - `docs/apptainer.md`: SIF build modes, Vitis binding, and TAPA runtime notes.
 - `docs/autontt-adapter.md`: AutoNTT adapter boundary and HLS bring-up details.
@@ -137,3 +140,5 @@ scripts/run_yata_hls_synth_compare.py --sif auto
 The HOGE forward `NTTWrap` manifest, `hoge_streaming_ntt_1024_p64`, has a
 standalone exact-residue cuHEpp oracle. `hoge_externalproduct_ntt_1024_p64`
 remains the larger final-output composition boundary.
+
+The executable NGen/SGen search framework and verification boundaries are documented in [Architecture search](docs/architecture-search.md).

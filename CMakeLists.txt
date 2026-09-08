@@ -12,6 +12,10 @@ set(CMAKE_CXX_EXTENSIONS ON)
 find_package(verilator REQUIRED)
 enable_testing()
 
+if(NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  message(FATAL_ERROR "TFHEpp compressed RAINTT requires Clang _BitInt; GCC changes the reference arithmetic width")
+endif()
+
 set(TFHEPP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/third_party/TFHEpp/include)
 set(TFHEPP_THIRDPARTY_INCLUDE_DIRS
     ${PROJECT_SOURCE_DIR}/third_party/TFHEpp/thirdparties/BLAKE3/c
@@ -78,44 +82,59 @@ function(add_ntt_verilator_test target source top_verilog)
   add_test(NAME ${target} COMMAND ${target})
 endfunction()
 
+set(LLM_NTT_TEST_TARGET "" CACHE STRING "Build only this benchmark; empty builds all")
+
+if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "yata_raintt_reference_test")
 add_ntt_verilator_test(
   yata_raintt_reference_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/yata_raintt_reference_test.cpp
   ${YATA_RAINTT_VERILOG}
 )
 target_compile_definitions(yata_raintt_reference_test PRIVATE USE_COMPRESS)
+endif()
 
+if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "hoge_streaming_reference_test")
 add_ntt_verilator_test(
   hoge_streaming_reference_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/hoge_streaming_reference_test.cpp
   ${HOGE_STREAMING_INTT_VERILOG}
 )
+endif()
 
+if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "hoge_streaming_ntt_reference_test")
 add_ntt_verilator_test(
   hoge_streaming_ntt_reference_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/hoge_streaming_ntt_reference_test.cpp
   ${HOGE_STREAMING_NTT_VERILOG}
 )
+endif()
 
+if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "hoge_nttid_identity_test")
 add_ntt_verilator_test(
   hoge_nttid_identity_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/hoge_nttid_identity_test.cpp
   ${HOGE_NTTID_VERILOG}
 )
+endif()
 
+if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "hoge_externalproduct_ntt_reference_test")
 add_ntt_verilator_test(
   hoge_externalproduct_ntt_reference_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/hoge_externalproduct_ntt_reference_test.cpp
   ${HOGE_EXTERNALPRODUCT_VERILOG}
   THREADS 2
 )
+endif()
 
+if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "small_hoge32_reference_test")
 add_ntt_verilator_test(
   small_hoge32_reference_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/small_hoge32_reference_test.cpp
   ${SMALL_HOGE32_VERILOG}
 )
+endif()
 
+if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "small_yata8_reference_test")
 add_ntt_verilator_test(
   small_yata8_reference_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/small_yata_reference_test.cpp
@@ -128,7 +147,9 @@ target_compile_definitions(small_yata8_reference_test PRIVATE
     SMALL_YATA_TOP_HEADER=<VSmallYata8RainttP27Rtl.h>
     SMALL_YATA_TOP_TYPE=VSmallYata8RainttP27Rtl
     SMALL_YATA_METRIC_PREFIX="small_yata8_raintt_p27")
+endif()
 
+if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "small_yata8x8_reference_test")
 add_ntt_verilator_test(
   small_yata8x8_reference_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/small_yata_reference_test.cpp
@@ -141,7 +162,9 @@ target_compile_definitions(small_yata8x8_reference_test PRIVATE
     SMALL_YATA_TOP_HEADER=<VSmallYata8x8RainttP27Rtl.h>
     SMALL_YATA_TOP_TYPE=VSmallYata8x8RainttP27Rtl
     SMALL_YATA_METRIC_PREFIX="small_yata8x8_raintt_p27")
+endif()
 
+if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "kyber_pe1_reference_test")
 add_ntt_verilator_test(
   kyber_pe1_reference_test
   ${PROJECT_SOURCE_DIR}/tests/cpp/kyber_pe1_reference_test.cpp
@@ -150,3 +173,8 @@ add_ntt_verilator_test(
 )
 target_compile_definitions(kyber_pe1_reference_test PRIVATE
     KYBER_PE1_DATA_DIR="${PROJECT_SOURCE_DIR}/variants/kyber-polmul-hw/pe1/test_pe1")
+endif()
+
+if(NOT LLM_NTT_TEST_TARGET STREQUAL "" AND NOT TARGET ${LLM_NTT_TEST_TARGET})
+  message(FATAL_ERROR "Unknown NTT test target: ${LLM_NTT_TEST_TARGET}")
+endif()

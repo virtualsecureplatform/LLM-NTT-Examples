@@ -416,7 +416,7 @@ accepted as a hardware-goal pass.
 `--endpoint lab` reads the private endpoint from `LLM_NTT_LAB_ENDPOINT`. The
 endpoint can also be supplied directly with `LLM_NTT_LLM_ENDPOINT`.
 In this workspace, `--endpoint kunashiri` resolves to the llama.cpp
-OpenAI-compatible server at `http://kunashiri:8080/v1`. Use
+OpenAI-compatible server at `http://kunashiri.sato.lab:8080/v1`. Use
 `--disable-thinking` with Qwen-style llama.cpp models so bounded JSON selection
 prompts return the requested JSON in `content` rather than a long
 `reasoning_content` prelude.

@@ -163,7 +163,7 @@ class LlmRtlGeneratorTests(unittest.TestCase):
         )
         self.assertEqual(
             normalize_endpoint("kunashiri"),
-            "http://kunashiri:8080/v1",
+            "http://kunashiri.sato.lab:8080/v1",
         )
         self.assertEqual(
             normalize_endpoint("http://kunashiri"),

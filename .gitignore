@@ -20,3 +20,5 @@ project/project/
 variants/*/chisel/target/
 variants/*/chisel/project/target/
 variants/*/chisel/project/project/
+
+!campaigns/*.json

@@ -1,0 +1,24 @@
+{
+  "target": {
+    "part": "xcu280-fsvh2892-2L-e",
+    "tool_version": "2023.2",
+    "clock_period_ns": 4.0
+  },
+  "budget": {
+    "hours": 12,
+    "functional": 64,
+    "synthesis": 12,
+    "route": 4
+  },
+  "workload": {
+    "kind": "generic",
+    "n": 16384,
+    "q": "9007199255560193",
+    "root": "2574240303494213",
+    "psi": "8877445661101042",
+    "direction": "forward",
+    "negacyclic": true,
+    "lanes": 4
+  },
+  "space": {}
+}
