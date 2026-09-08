@@ -22,8 +22,9 @@ input gaps, five reset-abort positions and a saturated frame interval of 32
 cycles. Its log is `/tmp/hoge-shifts-overlap.out`. The full inverse oracle also passes
 in `build/hoge-inverse-shifts-validation`, candidate `3d54d358f3c7`.
 
-The matched forward synthesis ablation is queued in
-`build/hoge-forward-shifts-hardware`, using the original
+The first forward synthesis attempt in `build/hoge-forward-shifts-hardware`
+exhausted its queue budget without running Vivado. A fresh measurement is
+executing in `build/hoge-forward-shifts-hardware-retry`, using the original
 `campaigns/hoge-forward-hardware.json` and `--ngen-root /tmp/ngen-hoge-shifts`.
 The baseline is `build/ngen-hoge-forward-hardware`. No DSP, LUT or timing
 improvement is claimed before the measurement completes. Both generator source
@@ -37,3 +38,13 @@ campaigns and an assembled checkout of the experimental NGen revision:
 python3 scripts/search_architectures.py --campaign campaigns/hoge-forward-shifts-validation.json --ngen-root /path/to/ngen-hoge-shifts --output-dir build/fresh-hoge-shifts-forward --mode run
 python3 scripts/search_architectures.py --campaign campaigns/hoge-inverse-shifts-validation.json --ngen-root /path/to/ngen-hoge-shifts --output-dir build/fresh-hoge-shifts-inverse --mode run
 ```
+
+The inverse full-throughput implementation has now completed synthesis in
+`build/hoge-inverse-full-throughput-hardware`, using the prepared NGen
+integration `f4032e9`. The unchanged oracle passes at 73 transaction cycles.
+Synthesis reports 136166 LUT, 34058 FF, 512 DSP, zero BRAM/URAM, setup
+WNS −9.844 ns and hold −0.029 ns. It fails the 4 ns setup requirement.
+This is an inverse architecture comparison, not a same-architecture inverse
+shift ablation: no pre-shift inverse hardware measurement is available.
+The matched forward ablation remains the test of the shift optimization's
+resource and timing effects.
