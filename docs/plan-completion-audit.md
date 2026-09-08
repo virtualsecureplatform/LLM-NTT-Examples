@@ -1,20 +1,23 @@
 # Completion audit
 
+The [roadmap acceptance map](roadmap-acceptance.md) ties the numbered criteria
+to inspected implementation and measurement evidence.
+
 The objective remains the full generator/search plan. This checklist records
 missing evidence; it does not narrow the objective to the implemented subset.
 
 | Requirement | Current evidence | Remaining acceptance work |
 | --- | --- | --- |
-| Reproducible NGen search | Run/resume/report checks, source/tool/binary manifests, exact oracle gates, fresh extracted Kyber/YATA/HOGE references | HOGE forward/inverse hardware comparisons running; finish final evidence consolidation |
+| Reproducible NGen search | Run/resume/report checks, source/tool/binary manifests, exact oracle gates, fresh extracted Kyber/YATA/HOGE references | HOGE forward comparison complete; inverse running; finish final evidence consolidation |
 | Independent generic arithmetic | All 18 FHE matrix points pass; ordinary search also passes 128K/q64 inverse using automatic Verilator selection | Wider external-generator coverage and FPGA fit remain separate |
-| Permutation choice | Five square widths, 12 rectangular shapes, eight linear cases; SGen switch/stride composed YATA oracles and three-option synthesis complete | Broader full-design cases; all small YATA alternatives still fail setup |
-| Architectural improvements | Seven-stage Montgomery, independent stage groups, compact address logic, Kyber normalization, shared YATA conversion; integrated NGen passes 151 Scala tests; compact Kyber reduces LUT/FF/BRAM with one extra DSP | 16K control-ROM/wide-product synthesis ablation complete; registered-issue route and main integration pending; retain YATA timing failure |
+| Permutation choice | Five square widths, 12 rectangular shapes, eight linear cases; SGen switch/stride composed YATA oracles and three-option synthesis complete | HOGE 1024 SGen-composed forward oracle passes on pushed branch 0cae801; synthesis and main integration pending; YATA still fails setup |
+| Architectural improvements | Seven-stage Montgomery, independent stage groups, compact address logic, Kyber normalization, shared YATA conversion; integrated NGen passes 151 Scala tests; compact Kyber reduces LUT/FF/BRAM with one extra DSP | 16K control-ROM/wide-product synthesis ablation complete; registered-issue route passes; main integration pending; retain YATA timing failure |
 | Multi-fidelity search | Functional gates, synthesis/route, constrained frontiers, serialized vendor jobs; bandwidth and issue-capacity bounds | State-capacity pruning, artifact integrity and executable freshness implemented; audit final experiment bundles |
-| Cost models | Nearest-neighbor and structural fits, held-out architecture, independent five-point N=128 calibration; integrity-gated training | Wider independent validation and policy samples |
-| LLM versus controls | Six-point replay and completed eight-evaluation live N=128 pilot; negative LLM outcomes retained | Complete reference pool and three equal-budget repetitions running; no superiority claim yet |
+| Cost models | Nearest-neighbor and structural fits, held-out architecture, independent five-point N=128 calibration; integrity-gated training | Whole-PE holdouts complete; whole-group structural fits unavailable; complete live policy samples |
+| LLM versus controls | Six-point replay and completed eight-evaluation live N=128 pilot; negative LLM outcomes retained | Six-point reference pool complete; three equal-budget repetitions running; no superiority claim yet |
 | OpenNTT | Exact-field raw/normalized oracles, forward/inverse and memory options, 16K/q54 stream, matched timing-qualified N=256 and banked-adapter 16K/q54 routes | Consolidate the broader matched comparison and retain adapter versions |
 | Proteus | SDF forward/inverse and portable MDC forward/inverse 32/64-bit oracles; explicit ROM repair; matched timing-qualified N=256 route | Wider matched workload/configuration sampling; preserve modified-baseline label |
-| Routed timing | All three N=256 designs pass under identical two-buffer fabric contract with setup/hold/full-route gates | Compact-address ablation complete; 16K OpenNTT passes while NGen fails setup; registered-issue follow-up running |
+| Routed timing | All three N=256 designs pass under identical two-buffer fabric contract with setup/hold/full-route gates | Compact-address ablation complete; 16K OpenNTT and registered-issue NGen both pass; integrate the proven NGen branch |
 | Paper comparison | Source-linked roadmap, reproducible matched three-generator routed report, resource/cycle tradeoffs and policy results | Consolidate remaining ablations and broader coverage; no board or universal superiority claim |
 | Board execution | Deferred by the approved plan | Not required for the routed-RTL milestone |
 
@@ -427,3 +430,39 @@ unavailable. This adds independent validation and keeps empirical predictions
 advisory rather than using error averages as pruning guarantees. All 129 Python
 tests pass, including no-leakage and unavailable-fit coverage. Live policies are
 unchanged and remain running.
+
+## HOGE forward hardware and broader SGen composition
+
+The matched forward synthesis comparison is complete in
+`build/hoge-forward-hardware-comparison`. The extracted reference uses 90300 LUT,
+194109 FF and 512 DSP, with WNS +1.519 ns and hold +0.014 ns. NGen's
+full-throughput backend uses 214565 LUT, 45852 FF and 2304 DSP, with WNS
+−8.332 ns and hold −0.029 ns. Both use zero BRAM/URAM. Under the same 4 ns
+task contract, only the reference qualifies; NGen's 104 simulated transaction
+cycles versus 170 do not establish a 250 MHz hardware advantage. Inverse
+measurement remains running.
+
+The HOGE-SGen adapter initially rejected the backend's namespaced switch modules.
+Pushed branch `hoge-sgen-namespaces` at `0cae801` preserves those names and
+records all replaced networks. The full 1024-point forward oracle passes all
+three cases at the same 104 transaction cycles. Two focused regressions and
+13 architecture-search tests pass. Hardware measurement is queued in the
+isolated checkout; this branch remains separate while policy sources are frozen.
+
+## HOGE constant-factor ablation
+
+NGen experimental revision `d277ab4` replaces radix power-of-two multipliers
+with modular shifts. All 152 Scala tests and both full direction oracles pass;
+the additional forward overlapping-frame oracle verifies 240 frames and a
+32-cycle saturated interval. Matched synthesis remains pending.
+See [HOGE constant shifts](hoge-constant-shifts.md). This targets the measured
+full-throughput cost without upgrading functional results into hardware wins.
+
+## Prepared combined generator integration
+
+NGen `plan-integration` at `f4032e9` combines the registered-issue and HOGE-shift
+branches and passes all 154 Scala tests. Fresh generation reproduces nine prior
+RTL hashes and timing declarations exactly, including all six policy-reference
+configurations and the qualified 16K route. See
+[prepared integration](ngen-plan-integration.md). Main integration remains pending
+until the frozen policy experiment and HOGE ablation finish.
