@@ -311,3 +311,25 @@ fresh guarded N=256/q54 campaign passes. See [NGen build identity](ngen-build-id
 Integration into direct library/matrix entry points remains open while the
 frozen 18-case FHE run is active. The manifest does not retroactively verify
 historical measurements.
+
+## Completed FHE validation and first 16K hardware outcomes
+
+The rebuilt wide-product matrix completes all 18/18 full oracles. The combined
+block-ROM/wide-product 16K synthesis passes setup at +0.955 ns, using 8201 LUT,
+3301 FF, 66 DSP and 376 BRAM; individual ablation and route remain pending.
+The original route completes but fails setup (-0.739 ns, hold +0.010 ns).
+See [wide Montgomery product](wide-montgomery-product.md).
+
+The matched OpenNTT 16K run fails during synthesis: the normalized adapter's
+884736-bit `input_buffer_reg` has an unsupported RAM inference pattern. No
+OpenNTT hardware resource or timing comparison is available for this point.
+The failed record remains in `build/openntt-fhe16k54-two-buffer-fabric`; fix the
+adapter memory pattern and re-run under the same contract rather than treating
+this flow failure as a generator performance result.
+
+Executable freshness enforcement is now integrated into direct search,
+generator adapters and standalone matrix runs, including post-generation input
+checks and recorded build identity. All 120 Python tests pass. The previous
+standalone integration gap is closed. An isolated smoke run also exposed and
+fixed provenance recursion for uninitialized gitlinks; the corrected matrix
+smoke test passes.

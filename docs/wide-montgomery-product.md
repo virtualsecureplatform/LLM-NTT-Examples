@@ -32,3 +32,23 @@ assembled executable and do not validate this change. The corrected directories
 include `rebuilt`. This attribution error and the corresponding block-ROM
 correction are retained in the completion audit; no older measurement is
 promoted to evidence for the new pipeline.
+
+The rebuilt full FHE matrix completed: all 18 cases pass (N=16384/65536/131072,
+32/54/64-bit fields, forward/inverse). Matched 16K/q54 synthesis also completed:
+
+| Implementation | LUT | FF | DSP | BRAM | Setup WNS (ns) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Original distributed control, seven-stage arithmetic | 114739 | 2807 | 52 | 48 | -0.292 |
+| Block control, nine-stage wide arithmetic | 8201 | 3301 | 66 | 376 | +0.955 |
+
+These are synthesis results under the identical 4 ns fabric contract. The
+combined change trades BRAM/DSP/FF and +30 cycles for lower LUT use and passing
+estimated setup timing. Block-only synthesis remains pending, so this table
+does not assign the individual resource benefits to one optimization.
+`campaigns/fhe16k54-wide-product-route.json` now queues routed confirmation in
+`build/ngen-fhe16k54-wide-product-route` after fresh simulation.
+
+The original routed implementation completed with LUT 113238, FF 3909, DSP 52,
+BRAM 48, setup WNS -0.739 ns and hold slack +0.010 ns. Full implementation
+completed, but failed setup excludes it from the 250 MHz routed frontier. Its
+critical path still crosses the wide DSP product to `product_1_reg`.
