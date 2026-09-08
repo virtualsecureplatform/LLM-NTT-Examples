@@ -53,3 +53,16 @@ The change is isolated in `/tmp/ngen-kyber-normalization` to preserve executable
 inputs of active live trials. It is not yet merged into main and still needs
 matched implementation measurements; a seven-cycle transaction advantage is
 not a timing-closed hardware speedup.
+
+## Integrated Kyber hardware check
+
+NGen main now includes inverse normalization distributed across the seven
+butterfly layers. The unchanged combined forward/inverse preset test passes
+with 1407 transaction cycles. Synthesis under the original 4 ns Kyber target
+in `build/kyber-normalization-main-hardware` uses 23165 LUTs, 9456 FFs, six
+DSPs, and three BRAM tiles, but fails timing: WNS -6.720 ns and WHS -0.075 ns.
+The critical path is control-ROM output `pc_reg_rep__4/CLKARDCLK` through work
+selection and modular arithmetic to `work_reg[160][3]/D`, with 10.654 ns data
+delay and 39 logic levels. Reducing transaction cycles did not establish a
+4 ns hardware implementation. Matched extracted-reference synthesis is running;
+the failing NGen point remains outside the hardware frontier.

@@ -6,7 +6,7 @@ missing evidence; it does not narrow the objective to the implemented subset.
 | Requirement | Current evidence | Remaining acceptance work |
 | --- | --- | --- |
 | Reproducible NGen search | Run/resume/report checks, source/tool/binary manifests, exact oracle gates, fresh extracted Kyber/YATA/HOGE references | Finish preset hardware comparisons and audit evidence reuse |
-| Independent generic arithmetic | Compact address branch passes all six 128K forward/inverse 32/54/64-bit cases; 18-point matrix progressing | Finish full matrix and expose the validated scalable simulator path in ordinary search |
+| Independent generic arithmetic | All 18 FHE matrix points pass; ordinary search also passes 128K/q64 inverse using automatic Verilator selection | Wider external-generator coverage and FPGA fit remain separate |
 | Permutation choice | Five square widths, 12 rectangular shapes, eight linear cases; SGen switch/stride composed YATA oracles and three-option synthesis complete | Broader full-design cases; all small YATA alternatives still fail setup |
 | Architectural improvements | Seven-stage Montgomery, independent stage groups, compact address logic, Kyber normalization, shared YATA conversion; integrated NGen passes 148 Scala tests | Finish compact routed and Kyber matched hardware ablations; retain YATA timing failure |
 | Multi-fidelity search | Functional gates, synthesis/route, constrained frontiers, serialized vendor jobs; bandwidth and issue-capacity bounds | Resource lower-bound pruning and remaining evidence/cache audit |

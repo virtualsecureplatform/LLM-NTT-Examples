@@ -53,3 +53,16 @@ and verifies that hardware RTL remains unchanged.
 
 The original 128K Icarus timeout and signal-9 Verilator attempts are retained.
 They motivated compact emission and are not retroactively relabeled as passes.
+
+The ordinary search command also passes N=128K/q64 inverse from integrated
+NGen main in `build/fhe-main-auto-n131072-q64-inverse`. It automatically selects
+Verilator, passes the complete oracle, and reports latency 655528 and frame
+interval 688293 cycles with unchanged hardware RTL. Thus the large check is
+available through the normal campaign entry point, not just the matrix helper.
+
+All 103 Python tests pass after regenerating their required reference fixtures
+with `sbt 'runMain hoge.HogeTops'` in `variants/hoge/chisel` and
+`sbt 'runMain YataRainttTop'` in `variants/yata-raintt/chisel`. The first broader
+suite run recorded nine missing-reference-file errors; no tests were skipped
+or weakened to obtain the passing result. Generated fixtures remain build
+artifacts. NGen's integrated Scala suite separately passes all 148 tests.
