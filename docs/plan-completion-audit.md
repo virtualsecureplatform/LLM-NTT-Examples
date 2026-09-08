@@ -53,3 +53,36 @@ configurations with NGen and both OpenNTT modes. MDC inverse fails the impulse
 vector at frame 2, address 0, lane 1: actual 1870938527, expected 2103843552.
 It remains ineligible pending diagnosis. No Proteus resource or route win is
 claimed from simulation cycles.
+
+## Follow-up hold diagnostic
+
+Post-route `phys_opt_design -aggressive_hold_fix` followed by `route_design`
+on a copy of the failed checkpoint leaves WHS at -1.589 ns. Vivado reports
+unroutable boundary paths for which it cannot add routing detours. Reports are
+under `build/hold-fix-diagnostic`. This run does not establish timing closure.
+The next diagnostic uses an explicit fabric-clock reference for the module I/O
+contract; changing a contract requires fresh implementation evidence before
+any new result can enter the routed frontier.
+
+The fabric-reference diagnostic (`set_input_delay`/`set_output_delay` relative
+to `input_full_reg/C`) changes WNS to +0.779 ns and WHS to -0.082 ns. It still
+fails; no checkpoint is promoted under the changed constraints. Remaining
+boundary hold depends on the external launch/capture model and physical clock
+skew. An integrated fabric harness or a justified shared interface contract,
+followed by new implementation runs, is still needed for routed closure.
+
+Proteus MDC N=256/q32 normalized-stream synthesis at 4 ns completed with 17,672
+LUTs, 21,754 FFs, 64 DSPs, zero BRAM/URAM, and estimated WNS +1.454 ns. These
+are synthesis estimates, not routed timing. `measure_external_ntt.py` and the
+comparison importer now retain hash-checked implementation evidence alongside
+the verified stream. The measurement is `build/proteus-mdc256-synthesis`.
+
+The first matched NGen N=256/q32, PE=2, stage-groups=1 synthesis uses 5,216
+LUTs, 1,688 FFs, 22 DSPs and four BRAM tiles, but WNS is -3.447 ns at 4 ns.
+The critical path runs from `correction_product_1` through the final Montgomery
+multiply/reduction and butterfly subtraction to `out1`, with 7.397 ns estimated
+delay and 34 logic levels. This is an internal arithmetic setup failure, separate
+from the small-design OOC hold issue. Increasing stage-group count alone cannot
+resolve it. The next NGen change must pipeline this arithmetic path, preserve
+valid/tag alignment and stage-drain correctness, and update latency metadata
+before repeating the matched oracle and implementation checks.

@@ -202,3 +202,23 @@ and matched routed paper comparisons remain open parts of the larger roadmap.
 
 Run artifacts are under `build/search-*`, `build/permutation-comparison`, and
 `build/openntt-fhe16k54-2`. They are ignored generated files, not committed results.
+
+## Measuring external baselines
+
+After a passing normalized stream check, use the shared implementation flow:
+
+```sh
+python3 scripts/measure_external_ntt.py --campaign campaigns/openntt-overlap256.json --baseline-dir build/proteus-mdc-forward256 --output-dir build/proteus-mdc256-synthesis --stage synthesis
+```
+
+The command checks the workload, wrapper, generated sources, and verification
+hashes before invoking Vivado. It includes all adapter RTL and accepts either
+Proteus or OpenNTT. `--stage route` requests full implementation with the same
+setup, hold, and completed-routing gates used for NGen. Use a distinct output
+directory for each measurement; a failed measurement retains its reports.
+Vendor jobs share the existing per-user lock and the timeout includes queue time.
+
+Pass resulting `record.json` files to `compare_openntt_ngen.py --measured-records`
+alongside the matching `--proteus-dirs`/`--openntt-dirs`. The importer verifies
+report hashes, matching stream provenance, and the target contract. Failed
+measurements remain visible but cannot enter a passing evidence frontier.

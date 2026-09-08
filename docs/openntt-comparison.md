@@ -90,3 +90,11 @@ python3 scripts/check_proteus_baseline.py --baseline-dir build/proteus-sdf256 --
 # Repeat with --architecture mdc and a distinct output directory.
 python3 scripts/compare_openntt_ngen.py --campaign campaigns/openntt-overlap256.json --ngen-report build/ngen-openntt-overlap256/report.json --openntt-dirs build/openntt-256-32 build/openntt-memopt-256-32 --proteus-dirs build/proteus-sdf256 build/proteus-mdc256 --output-dir build/comparison-threeway256
 ```
+
+Proteus MDC's normalized N=256/q32 wrapper has now been synthesized for the
+U280 at a 4 ns target: 17,672 LUTs, 21,754 FFs, 64 DSPs, and zero BRAM/URAM.
+Estimated WNS is +1.454 ns. This includes both frame buffers; it is not a
+routed-frequency result. The evidence record is
+`build/proteus-mdc256-synthesis/record.json`, imported into
+`build/comparison-threeway256-synthesis`. Matched NGen/OpenNTT resource samples
+are required before drawing an area tradeoff conclusion.

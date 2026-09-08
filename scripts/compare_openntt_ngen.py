@@ -15,6 +15,7 @@ p.add_argument('--campaign',type=Path,required=True)
 p.add_argument('--ngen-report',type=Path,required=True)
 p.add_argument('--openntt-dirs',type=Path,nargs='+',default=[])
 p.add_argument('--proteus-dirs',type=Path,nargs='+',default=[])
+p.add_argument('--measured-records',type=Path,nargs='+',default=[])
 p.add_argument('--output-dir',type=Path,required=True)
 a=p.parse_args();c=json.loads(a.campaign.read_text());ngen=json.loads(a.ngen_report.read_text())
 if ngen['workload']!=c['workload']:p.error('NGen workload differs from comparison workload')
@@ -40,9 +41,27 @@ for generator,path in [('OpenNTT',p) for p in a.openntt_dirs]+[('Proteus',p) for
                     'configuration':{'generator':generator,**baseline['configuration'],'boundary':'registered-ready-valid'},
                     'provenance':{'baseline':baseline,'stream':result},
                     'evidence':{'simulation':{'passed':True,'target':c['target'],'metrics':result['metrics']}}})
+for measurement_path in a.measured_records:
+    measured=json.loads(measurement_path.read_text())
+    if measured.get('status')!='complete' or measured.get('correct') is not True:p.error('external measurement is incomplete or incorrect')
+    provenance=measured['provenance']
+    key=digest({'baseline':provenance['baseline'],'stream':provenance['stream']})
+    matching=[r for r in records if r['id']==key]
+    if len(matching)!=1:p.error('measurement has no matching verified external stream')
+    if provenance['target']!=c['target']:p.error('measurement target mismatch')
+    if not measured.get('measurement_artifacts'):p.error('measurement report hashes missing')
+    for name,expected in measured['measurement_artifacts'].items():
+        if file_hash(measurement_path.parent/name)!=expected:p.error('measurement report changed')
+    record=matching[0]
+    for stage,evidence in measured['evidence'].items():
+        if stage=='simulation':continue
+        if stage not in ('synthesis','route') or evidence['target']!=c['target']:p.error('invalid measurement evidence stage or target')
+        if stage in record['evidence']:p.error('duplicate measurement stage for external candidate')
+        record['evidence'][stage]=evidence
+    record.setdefault('measurement_provenance',[]).append({'record':str(measurement_path.resolve()),'sha256':file_hash(measurement_path),'measurement_source':provenance['measurement_source']})
 for record in records:
     if record.get('evidence',{}).get('simulation',{}).get('target')!=c['target']:p.error('target contract mismatch')
     write_json(a.output_dir/'candidates'/record['id']/'record.json',record)
-write_json(a.output_dir/'manifest.json',{'schema':'ntt-comparison-v1','campaign':c,'ngen_report_sha256':file_hash(a.ngen_report),'openntt_dirs':[str(p.resolve()) for p in a.openntt_dirs],'proteus_dirs':[str(p.resolve()) for p in a.proteus_dirs],'scope':'Normalized streaming simulation; resource and routed frontiers require corresponding measured evidence.'})
+write_json(a.output_dir/'manifest.json',{'schema':'ntt-comparison-v1','campaign':c,'ngen_report_sha256':file_hash(a.ngen_report),'openntt_dirs':[str(p.resolve()) for p in a.openntt_dirs],'proteus_dirs':[str(p.resolve()) for p in a.proteus_dirs],'measured_records':[str(p.resolve()) for p in a.measured_records],'scope':'Normalized streaming comparison; resource and routed frontiers require corresponding measured evidence.'})
 report(a.output_dir,c)
 print(a.output_dir/'report.md')

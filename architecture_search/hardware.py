@@ -10,10 +10,10 @@ from .model import metric_number, run
 
 
 def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path, stage: str,
-             timeout: float, extra_sources: list[Path] | None = None) -> dict:
+             timeout: float, extra_sources: list[Path] | None = None, include_dirs: list[Path] | None = None) -> dict:
     root=Path(__file__).resolve().parents[1]
     period=float(target.get('clock_period_ns',4.0))
-    if period<=0 or stage not in ('synthesis','route'):
+    if not metric_number(period) or period<=0 or stage not in ('synthesis','route'):
         raise ValueError('invalid clock or implementation stage')
     directory.mkdir(parents=True,exist_ok=True)
     output=directory/'metrics.json'
@@ -33,6 +33,8 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
         value=target.get('io_delays_ns',{}).get(name,0)
         if not metric_number(value):raise ValueError('I/O delays must be finite numbers')
         command+=['--'+name.replace('_','-delay-'),str(value)]
+    for directory_path in include_dirs or []:
+        command+=['--include-dir',str(directory_path)]
     for source in extra_sources or []:
         command+=['--verilog-file',str(source)]
     process=run(command,root,directory.parent/f'{stage}.log',timeout)
@@ -56,7 +58,7 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
 
 
 def evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path, stage: str,
-             timeout: float, extra_sources: list[Path] | None = None) -> dict:
+             timeout: float, extra_sources: list[Path] | None = None, include_dirs: list[Path] | None = None) -> dict:
     """Serialize vendor jobs across campaigns for this user; queue time uses the budget."""
     start=time.monotonic()
     lock_path=Path(tempfile.gettempdir())/f'ntt-search-vivado-{os.getuid()}.lock'
@@ -71,5 +73,5 @@ def evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path, 
                             'target':target,'metrics':{},'error':'Vivado queue timeout'}
                 time.sleep(min(0.2,max(0,timeout-(time.monotonic()-start))))
         queued=time.monotonic()-start
-        result=_evaluate(rtl,top,target,metrics,directory,stage,max(0,timeout-queued),extra_sources)
+        result=_evaluate(rtl,top,target,metrics,directory,stage,max(0,timeout-queued),extra_sources,include_dirs)
         return {**result,'queue_seconds':queued}

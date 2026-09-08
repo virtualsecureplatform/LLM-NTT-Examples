@@ -21,6 +21,7 @@ Options:
                          or clock.
   --clock-period NS      Clock period in ns. Defaults to VITIS_CLOCK_PERIOD or
                          4.0, matching AutoNTT examples.
+  --include-dir DIR      Additional Verilog header search directory; repeatable.
   --clock-source SITE    Optional OOC clock source site (HD.CLK_SRC).
   --input-delay-min NS   Input arrival minimum relative to clock; default 0.
   --input-delay-max NS   Input arrival maximum relative to clock; default 0.
@@ -39,6 +40,7 @@ Options:
 EOF
 }
 
+include_dirs=()
 clock_source=""
 input_delay_min=0
 input_delay_max=0
@@ -95,6 +97,7 @@ while [[ $# -gt 0 ]]; do
       clock_period="${2:-}"
       shift 2
       ;;
+    --include-dir) include_dirs+=("${2:-}"); shift 2 ;;
     --clock-source) clock_source="${2:-}"; shift 2 ;;
     --input-delay-min) input_delay_min="${2:-}"; shift 2 ;;
     --input-delay-max) input_delay_max="${2:-}"; shift 2 ;;
@@ -148,6 +151,11 @@ if ! [[ "${timeout_seconds}" =~ ^[0-9]+$ ]]; then
   echo "Invalid --timeout value: ${timeout_seconds}" >&2
   exit 2
 fi
+
+for i in "${!include_dirs[@]}"; do
+  [[ -d "${include_dirs[$i]}" ]] || { echo "Include directory not found" >&2; exit 2; }
+  include_dirs[$i]="$(readlink -f "${include_dirs[$i]}")"
+done
 
 for i in "${!verilog_files[@]}"; do
   if [[ ! -f "${verilog_files[$i]}" ]]; then
@@ -237,6 +245,9 @@ fi
   printf 'create_project llm_ntt_vitis_synth [file join $out_dir vivado_project] -part $part_name -force\n'
   printf 'set_property target_language Verilog [current_project]\n'
   printf 'set_property source_mgmt_mode None [current_project]\n'
+  printf 'set include_fp [open [lindex $argv 17] r]\n'
+  printf 'set_property include_dirs [split [string trim [read $include_fp]] "\\n"] [current_fileset]\n'
+  printf 'close $include_fp\n'
   printf 'set source_fp [open $source_list_file r]\n'
   printf 'set verilog_files [split [string trim [read $source_fp]] "\\n"]\n'
   printf 'close $source_fp\n'
@@ -296,13 +307,14 @@ fi
 } >"${tcl_script}"
 
 printf '%s\n' "${verilog_files[@]}" >"${source_list}"
+printf '%s\n' "${include_dirs[@]}" >"${build_dir}/includes.txt"
 
 vivado_cmd=(
   "${vivado_bin}" -mode batch -nojournal -nolog -source "${tcl_script}" -tclargs
   "${source_list}" "${top_module}" "${part}" "${clock_port}" "${clock_period}"
   "${jobs}" "${build_dir}" "${xdc_file}" "${utilization_rpt}" "${timing_rpt}"
   "${timing_props}" "${checkpoint_file}"
-  "$clock_source" "$input_delay_min" "$input_delay_max" "$output_delay_min" "$output_delay_max"
+  "$clock_source" "$input_delay_min" "$input_delay_max" "$output_delay_min" "$output_delay_max" "${build_dir}/includes.txt"
 )
 
 set +e
