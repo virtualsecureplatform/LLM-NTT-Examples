@@ -79,3 +79,25 @@ class TrialSummary(unittest.TestCase):
             self.assertEqual(row['evaluations'],1)
             self.assertEqual(row['failed_evaluations'],1)
             self.assertEqual(row['frontier_recall'],0)
+
+    def test_queue_timeout_duration_is_unknown_not_zero(self):
+        record=self.record('1',10,100)
+        record['evidence']['synthesis']={'passed':False,'implementation_passed':False,'target':{},'metrics':{},'error':'Vivado queue timeout'}
+        result=summary.execution_accounting([record],[{'queue_seconds':None}])
+        self.assertIsNone(result['queue_seconds'])
+        self.assertFalse(result['queue_time_complete'])
+        self.assertEqual(result['failure_categories'],{'queue_timeout':1})
+        scored=summary.score_trial([self.record('1',10,100)],[record],{}, {})
+        self.assertEqual(scored['failed_evaluations'],1)
+        self.assertEqual(scored['frontier_recall'],0)
+
+    def test_execution_timeout_is_distinct_from_timing_failure(self):
+        timed_out=self.record('1',10,100)
+        timed_out['evidence']['synthesis'].update(passed=False,implementation_passed=False,queue_seconds=5340,
+                                                 process={'returncode':124,'timed_out':False})
+        timing_failed=self.record('2',20,200)
+        timing_failed['evidence']['synthesis'].update(passed=False,implementation_passed=True,queue_seconds=2)
+        result=summary.execution_accounting([timed_out,timing_failed],[{},{}])
+        self.assertEqual(result['queue_seconds'],5342)
+        self.assertTrue(result['queue_time_complete'])
+        self.assertEqual(result['failure_categories'],{'execution_timeout':1,'timing_failure':1})

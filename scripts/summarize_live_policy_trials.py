@@ -40,6 +40,30 @@ def score_trial(reference, observed, target, limits, minimums=None,objectives=No
             'measurement_differences':metric_differences}
 
 
+def execution_accounting(records, trace):
+    """Keep missing queue duration unknown and separate scheduling failures."""
+    categories={};known_queue=0.0;queue_complete=True
+    for record,step in zip(records,trace):
+        hardware=record.get('evidence',{}).get('synthesis',{})
+        process=hardware.get('process',{})
+        queue=hardware.get('queue_seconds',step.get('queue_seconds'))
+        if queue is not None:known_queue+=queue
+        if hardware.get('error')=='Vivado queue timeout':
+            category='queue_timeout'
+            if queue is None:queue_complete=False
+        elif process.get('timed_out') or process.get('returncode')==124:
+            category='execution_timeout'
+        elif record.get('status')=='generation_failed':category='generation_failed'
+        elif record.get('correct') is not True:category='functional_or_evaluation_failure'
+        elif hardware.get('implementation_passed') and hardware.get('passed') is not True:category='timing_failure'
+        elif hardware.get('passed') is not True:category='implementation_failure'
+        else:continue
+        categories[category]=categories.get(category,0)+1
+    return {'queue_seconds':known_queue if queue_complete else None,
+            'known_queue_seconds':known_queue,'queue_time_complete':queue_complete,
+            'failure_categories':categories}
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--reference-dir',type=Path,required=True)
@@ -83,15 +107,17 @@ def main():
             records.append(record)
         if len(records)!=trial['evaluations_completed']:p.error('trace/evaluation count mismatch')
         rows.append({'policy':trial['policy'],'seed':trial['seed'],'evaluations':len(records),
-                     'elapsed_seconds':trial['elapsed_seconds'],'queue_seconds':sum(step.get('queue_seconds') or 0 for step in trial['trace']),
+                     'elapsed_seconds':trial['elapsed_seconds'],**execution_accounting(records,trial['trace']),
                      **score_trial(reference,records,campaign['target'],campaign.get('resource_limits',{}),minimums,objectives)})
     aggregate={}
     for policy in trial_manifest['policies']:
         samples=[r for r in rows if r['policy']==policy];values=[r['frontier_recall'] for r in samples if r['frontier_recall'] is not None]
         aggregate[policy]={'repetitions':len(samples),'mean_frontier_recall':statistics.mean(values) if values else None,
-                           'min_frontier_recall':min(values) if values else None,'max_frontier_recall':max(values) if values else None}
+                           'min_frontier_recall':min(values) if values else None,'max_frontier_recall':max(values) if values else None,
+                           'queue_timeout_trials':sum(r['failure_categories'].get('queue_timeout',0)>0 for r in samples),
+                           'execution_timeout_trials':sum(r['failure_categories'].get('execution_timeout',0)>0 for r in samples)}
     write_json(a.output,{'schema':'ntt-live-policy-comparison-v1','campaign':campaign,'trials':rows,'aggregate':aggregate,'inputs':inputs,
-                        'limitations':'Same-workload synthesis experiment. Queue contention confounds wall time. Seeds control random/cost selection, not LLM backend randomness. Repetitions do not establish general policy superiority. Fresh measurement differences remain visible.'})
+                        'limitations':'Same-workload synthesis experiment. Queue contention confounds wall time and frontier recovery when evaluation budgets expire. Unknown queue duration remains null. Seeds control random/cost selection, not LLM backend randomness. Repetitions do not establish general policy superiority. Fresh measurement differences remain visible.'})
     print(a.output)
 
 if __name__=='__main__':main()

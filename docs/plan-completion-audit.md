@@ -471,3 +471,15 @@ The combined integration branch also reproduces all 18 FHE matrix RTL hashes
 and timing declarations exactly after verifying the original oracle artifact
 hashes (`build/plan-integration-fhe-identity/results.json`). The integration
 check therefore covers the complete matrix, not only the matched 16K route.
+
+## Terminal hardware budgets and live-policy contention
+
+The stage-parallel HOGE inverse run expires after 5379.81 seconds without final
+hardware metrics. The first HOGE-SGen forward attempt also expires after almost
+its entire budget was spent queued; its original process is stopped and a fresh
+measurement budget is running. See [hardware budget outcomes](hardware-budget-outcomes.md).
+A live random-policy observation also has a queue timeout. Summary accounting
+now separates that failure from timing failure and preserves unknown queue time;
+all 131 Python tests pass. Correct the runner's missing queue-duration field
+once frozen input restrictions end, and qualify the final policy comparison for
+contention rather than treating this as an acquisition-quality result.
