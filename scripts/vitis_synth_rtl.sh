@@ -285,7 +285,7 @@ fi
     printf 'report_route_status -file [file join $out_dir route_status.rpt]\n'
   fi
   printf 'report_utilization -file $utilization_rpt\n'
-  printf 'report_timing_summary -file $timing_rpt -delay_type max -max_paths 10\n'
+  printf 'report_timing_summary -file $timing_rpt -delay_type min_max -max_paths 10\n'
   printf 'proc safe_get_property {property object} {\n'
   printf '  if {[catch {get_property $property $object} value]} {\n'
   printf '    return ""\n'

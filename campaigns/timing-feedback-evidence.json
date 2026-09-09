@@ -1,0 +1,22 @@
+{
+  "comparisons": [
+    {
+      "name": "HOGE forward pipeline ablation",
+      "directory": "build/hoge-forward-timing-fix-comparison",
+      "stage": "synthesis",
+      "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain."
+    },
+    {
+      "name": "HOGE inverse pipeline ablation",
+      "directory": "build/hoge-inverse-timing-fix-comparison",
+      "stage": "synthesis",
+      "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain."
+    },
+    {
+      "name": "YATA arithmetic and output pipeline ablation",
+      "directory": "build/yata8x8-timing-fix-comparison",
+      "stage": "synthesis",
+      "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain."
+    }
+  ]
+}
