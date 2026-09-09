@@ -205,7 +205,7 @@ def main(argv=None) -> int:
                 parser.error('saved selection differs from legal candidate set')
         else:
             try:
-                configurations=policy.rank(configurations,workload,{**campaign.get('llm',{}),'target':campaign.get('target',{}),'resource_limits':campaign.get('resource_limits',{}),'requirements':campaign.get('requirements',{}),'bandwidth':campaign.get('bandwidth',{})},directory,min(campaign.get('llm',{}).get('timeout_seconds',180),remaining()))
+                configurations=policy.rank(configurations,workload,{**campaign.get('llm',{}),'target':campaign.get('target',{}),'resource_limits':campaign.get('resource_limits',{}),'requirements':campaign.get('requirements',{}),'bandwidth':campaign.get('bandwidth',{}),'objectives':campaign.get('objectives',{}),'evaluations_remaining':max(0,limits['functional']-state['functional'])},directory,min(campaign.get('llm',{}).get('timeout_seconds',180),remaining()))
             except (ValueError,KeyError,OSError) as error:
                 write_json(directory/'llm-error.json',{'error':str(error),'fallback':'seeded random'})
                 random.Random(args.seed).shuffle(configurations)

@@ -54,3 +54,21 @@ class Replay(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'duplicate configuration'):validate_pool({'candidates':pool},TARGET,'synthesis')
         pool=[record(0,10,100),record(1,20,200)];del pool[1]['evidence']['synthesis']['metrics']['lut']
         with self.assertRaisesRegex(ValueError,'missing hardware objective'):validate_pool({'candidates':pool},TARGET,'synthesis')
+
+    def test_sequential_selector_receives_only_acquired_metrics(self):
+        pool=[record(0,10,100),record(1,20,200),record(2,30,300)]
+        calls=[]
+        def select(remaining,observed,step):
+            self.assertEqual(len(observed),step)
+            self.assertTrue(all('metrics' not in c and 'id' not in c for c in remaining))
+            calls.append(copy.deepcopy((remaining,observed)))
+            selected=copy.deepcopy(remaining[0])
+            remaining[0]['pe']=999 # caller mutation cannot alter the reference
+            return selected
+        result=trial(pool,TARGET,'synthesis',3,'llm',2,llm_selector=select)
+        self.assertEqual(result['final']['frontier_recall'],1)
+        self.assertEqual(calls[0][1],[])
+        self.assertEqual(calls[1][1][0]['metrics']['lut'],10)
+        self.assertEqual(pool[0]['configuration']['pe'],1)
+        with self.assertRaisesRegex(ValueError,'unknown or already'):
+            trial(pool,TARGET,'synthesis',1,'llm',2,llm_selector=lambda *args:{'pe':999})

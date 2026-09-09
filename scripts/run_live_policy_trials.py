@@ -48,7 +48,7 @@ for seed in a.seeds:
             work=trialdir/f'step-{step+1}';work.mkdir();prediction=None;selection_start=time.monotonic()
             if method=='llm':
                 try:
-                    ranked=policy.rank(remaining,campaign['workload'],{**campaign.get('llm',{}),'target':campaign['target'],'resource_limits':campaign.get('resource_limits',{}),'requirements':campaign.get('requirements',{}),'bandwidth':campaign.get('bandwidth',{}),'observations':observed},work,min(180,budget))
+                    ranked=policy.rank(remaining,campaign['workload'],{**campaign.get('llm',{}),'target':campaign['target'],'resource_limits':campaign.get('resource_limits',{}),'requirements':campaign.get('requirements',{}),'bandwidth':campaign.get('bandwidth',{}),'observations':observed,'objectives':{'lut':'min','ff':'min','dsp':'min','bram':'min','latency_ns':'min','transforms_per_second':'max'},'evaluations_remaining':a.evaluations-step},work,min(180,budget))
                     selected=ranked[0]
                 except Exception as error:
                     reason='LLM acquisition failed: '+str(error);write_json(work/'acquisition-failure.json',{'error':reason});break
