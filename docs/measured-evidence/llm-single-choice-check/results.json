@@ -1,0 +1,98 @@
+[
+  {
+    "case": "ckks8k-prime1-forward-step-2",
+    "passed": true,
+    "selected": {
+      "backend": "streamed",
+      "boundary": "registered-ready-valid",
+      "generator": "ngen",
+      "lanes": 4,
+      "pe": 2,
+      "profile": "baseline",
+      "radix": 2,
+      "reduction": "barrett",
+      "stage_groups": 1,
+      "transpose": "indexed"
+    },
+    "validation": {
+      "accepted": true,
+      "attempts": 1,
+      "errors": [],
+      "selected_ids": [
+        "02d02cc989ef5b0c"
+      ]
+    }
+  },
+  {
+    "case": "ckks8k-prime1-inverse-step-2",
+    "passed": true,
+    "selected": {
+      "backend": "streamed",
+      "boundary": "registered-ready-valid",
+      "generator": "ngen",
+      "lanes": 4,
+      "pe": 2,
+      "profile": "baseline",
+      "radix": 2,
+      "reduction": "barrett",
+      "stage_groups": 1,
+      "transpose": "indexed"
+    },
+    "validation": {
+      "accepted": true,
+      "attempts": 1,
+      "errors": [],
+      "selected_ids": [
+        "02d02cc989ef5b0c"
+      ]
+    }
+  },
+  {
+    "case": "fhe4k32-inverse-step-2",
+    "passed": true,
+    "selected": {
+      "backend": "streamed",
+      "boundary": "registered-ready-valid",
+      "generator": "ngen",
+      "lanes": 4,
+      "pe": 2,
+      "profile": "baseline",
+      "radix": 2,
+      "reduction": "barrett",
+      "stage_groups": 1,
+      "transpose": "indexed"
+    },
+    "validation": {
+      "accepted": true,
+      "attempts": 1,
+      "errors": [],
+      "selected_ids": [
+        "02d02cc989ef5b0c"
+      ]
+    }
+  },
+  {
+    "case": "fhe4k60-inverse-step-3",
+    "passed": true,
+    "selected": {
+      "backend": "streamed",
+      "boundary": "registered-ready-valid",
+      "generator": "ngen",
+      "lanes": 4,
+      "pe": 2,
+      "profile": "baseline",
+      "radix": 2,
+      "reduction": "barrett",
+      "stage_groups": 2,
+      "transpose": "indexed"
+    },
+    "validation": {
+      "accepted": true,
+      "attempts": 1,
+      "errors": [],
+      "selected_ids": [
+        "0dc7bea9dde01230"
+      ]
+    }
+  }
+]

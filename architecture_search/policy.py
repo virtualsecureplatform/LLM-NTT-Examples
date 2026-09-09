@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json
 import os
+import time
 import urllib.request
 from .model import canonical, digest, write_json, metric_number
 from . import cost
@@ -43,6 +44,13 @@ def feedback(configurations: list[dict], settings: dict) -> dict:
 
 
 def rank(configurations: list[dict], workload: dict, settings: dict, directory, timeout=60) -> list[dict]:
+    if not configurations:
+        raise ValueError('LLM acquisition requires legal candidates')
+    deadline=time.monotonic()+timeout
+    def remaining():
+        value=deadline-time.monotonic()
+        if value<=0:raise TimeoutError('LLM acquisition time budget exhausted')
+        return value
     endpoint=settings.get('endpoint','http://kunashiri.sato.lab:8080/v1').rstrip('/')
     headers={'Content-Type':'application/json'}
     key=os.environ.get(settings.get('api_key_env','NTT_LLM_API_KEY'))
@@ -51,23 +59,55 @@ def rank(configurations: list[dict], workload: dict, settings: dict, directory, 
     model=settings.get('model')
     if not model:
         request=urllib.request.Request(endpoint+'/models',headers=headers)
-        with urllib.request.urlopen(request,timeout=timeout) as response:
+        with urllib.request.urlopen(request,timeout=remaining()) as response:
             model=json.load(response)['data'][0]['id']
     indexed={digest(c)[:16]:c for c in configurations}
+    count=settings.get('rank_count',len(indexed))
+    if not isinstance(count,int) or isinstance(count,bool) or not 1<=count<=len(indexed):
+        raise ValueError('rank_count must be within the legal candidate count')
     context=feedback(configurations,settings)
     request_body={'model':model,'temperature':0,'max_tokens':1024,'chat_template_kwargs':{'enable_thinking':False},'messages':[
         {'role':'system','content':'Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in "order". Never invent configurations or report predicted metrics as measurements.'},
         {'role':'user','content':canonical({'workload':workload,'target':settings.get('target',{}),'resource_limits':settings.get('resource_limits',{}),'objectives':settings.get('objectives',{}),'requirements':settings.get('requirements',{}),'bandwidth':settings.get('bandwidth',{}),'evaluations_remaining':settings.get('evaluations_remaining'),'candidates':indexed,**context})}]}
-    write_json(directory/'llm-request.json',request_body)
-    request=urllib.request.Request(endpoint+'/chat/completions',data=json.dumps(request_body).encode(),headers=headers)
-    with urllib.request.urlopen(request,timeout=timeout) as response:
-        raw=json.load(response)
-    write_json(directory/'llm-response.json',raw)
-    text=raw['choices'][0]['message']['content'].strip()
-    if text.startswith('```'):
-        text=text.split('\n',1)[1].rsplit('```',1)[0].strip()
-    order=json.loads(text)['order']
-    if not isinstance(order,list) or any(not isinstance(i,str) or i not in indexed for i in order) or len(order)!=len(set(order)):
-        raise ValueError('LLM returned unknown or duplicate candidate IDs')
-    # Unmentioned legal choices remain available. No shell, code, or metric output is accepted.
-    return [indexed[i] for i in order]+[c for i,c in indexed.items() if i not in order]
+    request_body['messages'][0]['content'] += f' Return exactly {count} distinct candidate IDs, best first. Do not list other candidates.'
+    request_body['response_format']={'type':'json_schema','json_schema':{
+        'name':'candidate_ranking','strict':True,'schema':{
+            'type':'object','properties':{'order':{'type':'array','items':{'type':'string','enum':list(indexed)},
+                                                   'minItems':count,'maxItems':count}},
+            'required':['order'],'additionalProperties':False}}}
+    errors=[]
+    for attempt in range(2):
+        write_json(directory/f'llm-request-attempt-{attempt+1}.json',request_body)
+        if attempt==0:write_json(directory/'llm-request.json',request_body)
+        request=urllib.request.Request(endpoint+'/chat/completions',data=json.dumps(request_body).encode(),headers=headers)
+        with urllib.request.urlopen(request,timeout=remaining()) as response:
+            raw=json.load(response)
+        write_json(directory/f'llm-response-attempt-{attempt+1}.json',raw)
+        if attempt==0:write_json(directory/'llm-response.json',raw)
+        try:
+            choice=raw['choices'][0]
+            if choice.get('finish_reason') not in (None,'stop'):
+                raise ValueError('LLM response did not finish normally')
+            text=choice['message']['content'].strip()
+            if text.startswith('```'):
+                text=text.split('\n',1)[1].rsplit('```',1)[0].strip()
+            payload=json.loads(text)
+            if not isinstance(payload,dict) or set(payload)!={'order'}:
+                raise ValueError('LLM response must contain only order')
+            order=payload['order']
+            if not isinstance(order,list) or len(order)!=count:
+                raise ValueError(f'LLM must return exactly {count} candidate IDs')
+            if any(not isinstance(i,str) or i not in indexed for i in order):
+                raise ValueError('LLM returned unknown candidate IDs')
+            if len(order)!=len(set(order)):
+                raise ValueError('LLM returned duplicate candidate IDs')
+        except (ValueError,KeyError,TypeError,AttributeError,IndexError) as error:
+            errors.append(str(error))
+            write_json(directory/'llm-validation.json',{'accepted':False,'attempts':attempt+1,'errors':errors})
+            if attempt==1:raise ValueError('LLM acquisition invalid after two attempts: '+str(error)) from error
+            request_body['messages'].append({'role':'user','content':
+                f'Your response failed validation: {error}. Return exactly {count} distinct IDs from candidates, using the required JSON schema.'})
+            continue
+        write_json(directory/'llm-validation.json',{'accepted':True,'attempts':attempt+1,'errors':errors,'selected_ids':order})
+        # Only validated legal choices lead; omitted candidates retain their original order.
+        return [indexed[i] for i in order]+[c for i,c in indexed.items() if i not in order]

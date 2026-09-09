@@ -1,0 +1,28 @@
+{
+  "time_utc": "2026-09-09T12:19:43.623118+00:00",
+  "purpose": "Four previously failed call contexts; API regression only, no hardware measurements",
+  "python_tests_passed": 160,
+  "files": {
+    "results.json": "09311823c43cc563bd743d45041b23803407e3712fde2f1c83e2db910fbc77f6",
+    "fhe4k32-inverse-step-2/llm-validation.json": "643e1accfdd63897e60587026b238fd56a668cc8fbe4773584a1ea4e4e6924da",
+    "fhe4k32-inverse-step-2/llm-request-attempt-1.json": "54ee55f3a28de156d542f4c35db91afeb8f35cad549caa5df1955f367f0119ca",
+    "fhe4k32-inverse-step-2/llm-response-attempt-1.json": "9e2005e4e42f24a34ab041862d8365b57bcf7a969d2e25c0f8000539462aa1f7",
+    "fhe4k32-inverse-step-2/llm-request.json": "54ee55f3a28de156d542f4c35db91afeb8f35cad549caa5df1955f367f0119ca",
+    "fhe4k32-inverse-step-2/llm-response.json": "9e2005e4e42f24a34ab041862d8365b57bcf7a969d2e25c0f8000539462aa1f7",
+    "fhe4k60-inverse-step-3/llm-request-attempt-1.json": "288f5cb6a9668908878cb118ef5bc8137494dff77c008e2797a8010537611630",
+    "fhe4k60-inverse-step-3/llm-validation.json": "4af109e1848108543e7e017154fd37e8797806af168118e7834cdfd0f7ca2574",
+    "fhe4k60-inverse-step-3/llm-request.json": "288f5cb6a9668908878cb118ef5bc8137494dff77c008e2797a8010537611630",
+    "fhe4k60-inverse-step-3/llm-response-attempt-1.json": "5f47f3b01827c4e400763d76a2dd67be11a593e6c11ee9da2b72aad12ee668ba",
+    "fhe4k60-inverse-step-3/llm-response.json": "5f47f3b01827c4e400763d76a2dd67be11a593e6c11ee9da2b72aad12ee668ba",
+    "ckks8k-prime1-forward-step-2/llm-response.json": "047e42525cb3d106a50f4994e37e2cb765a3a4544578095eee73b0d0af12482f",
+    "ckks8k-prime1-forward-step-2/llm-request-attempt-1.json": "12b0bb4e80fce83071c670305d95791e2922e1d9140e2a75dacb1ad18776fa84",
+    "ckks8k-prime1-forward-step-2/llm-validation.json": "643e1accfdd63897e60587026b238fd56a668cc8fbe4773584a1ea4e4e6924da",
+    "ckks8k-prime1-forward-step-2/llm-response-attempt-1.json": "047e42525cb3d106a50f4994e37e2cb765a3a4544578095eee73b0d0af12482f",
+    "ckks8k-prime1-forward-step-2/llm-request.json": "12b0bb4e80fce83071c670305d95791e2922e1d9140e2a75dacb1ad18776fa84",
+    "ckks8k-prime1-inverse-step-2/llm-request.json": "08916698b7345dac34a93da89bb1640caf31d2f26957bd1e779c1c6a4cf6eb1f",
+    "ckks8k-prime1-inverse-step-2/llm-validation.json": "643e1accfdd63897e60587026b238fd56a668cc8fbe4773584a1ea4e4e6924da",
+    "ckks8k-prime1-inverse-step-2/llm-response.json": "b4c3b0a351e5dc6a1f0992b0c6ec0b8c26298a23b9eb33aa7aa420897a6b04ee",
+    "ckks8k-prime1-inverse-step-2/llm-response-attempt-1.json": "b4c3b0a351e5dc6a1f0992b0c6ec0b8c26298a23b9eb33aa7aa420897a6b04ee",
+    "ckks8k-prime1-inverse-step-2/llm-request-attempt-1.json": "08916698b7345dac34a93da89bb1640caf31d2f26957bd1e779c1c6a4cf6eb1f"
+  }
+}
