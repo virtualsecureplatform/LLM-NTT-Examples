@@ -3,6 +3,9 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import unittest
+import os
+import shutil
+import subprocess
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -102,7 +105,8 @@ class StudyTests(unittest.TestCase):
         p = {'cases': [{'name': split, 'split': split, 'campaign': str(campaign_path)}
                        for split in ('development', 'held-out')],
              'policies': study.POLICIES, 'seed': 2, 'evaluations_per_trial': 3,
-             'hours_per_trial': 2, 'ngen_root': str(self.root), 'route_selection': 'test'}
+             'hours_per_trial': 2, 'ngen_root': str(self.root), 'route_selection': 'test',
+             'verilator': {'path': '/unused/in/mocked/test'}}
         write_json(self.root / 'protocol.json', p)
         calls = []
         def fake_run(command, cwd, log, timeout):
@@ -116,7 +120,7 @@ class StudyTests(unittest.TestCase):
             return {'returncode': 1}  # Failed attempts still consume their scheduled slot.
         def fake_summary(out, protocol):
             write_json(out / 'summary.json', {'attempts': len(calls)})
-        with patch.object(study, 'guard'), patch.object(study, 'run', side_effect=fake_run), \
+        with patch.dict(os.environ), patch.object(study, 'guard'), patch.object(study, 'run', side_effect=fake_run), \
                 patch.object(study, 'trial_rows', return_value=[]), \
                 patch.object(study, 'summarize', side_effect=fake_summary):
             study.execute(self.root, p)
@@ -141,6 +145,29 @@ class StudyTests(unittest.TestCase):
         self.assertEqual(result['evaluations_completed'], 0)
         self.assertIsNone(result['trials'][0]['best_bandwidth_capped_transforms_per_second'])
         self.assertEqual(result['trials'][0]['stop_reason'], 'Runner ended without results.json')
+
+    @unittest.skipUnless(shutil.which('verilator'), 'requires native Verilator')
+    def test_long_rom_filename_runtime(self):
+        directory = self.root / ('a' * 100) / ('b' * 100) / ('c' * 80)
+        directory.mkdir(parents=True)
+        memory = directory / 'control.mem'
+        memory.write_text('2a\n')
+        self.assertGreater(len(str(memory)), 256)
+        rtl = self.root / 'test.sv'
+        rtl.write_text('module test; reg [7:0] mem[0:0]; initial begin\n'
+                       + '$readmemh("' + str(memory) + '", mem);\n'
+                       + 'if (mem[0] !== 8\'h2a) $fatal(1, "bad ROM");\n'
+                       + '$display("LONG_ROM_PASS"); $finish; end endmodule\n')
+        environment = {**os.environ, 'NTT_STUDY_VERILATOR': shutil.which('verilator')}
+        wrapper = ROOT / 'scripts/realistic-study-tools/verilator'
+        build = subprocess.run(['bash', str(wrapper), '--binary', '--top-module', 'test', str(rtl)],
+                               cwd=self.root, env=environment, text=True, stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT, timeout=120)
+        self.assertEqual(build.returncode, 0, build.stdout)
+        result = subprocess.run([str(self.root / 'obj_dir/Vtest')], cwd=self.root, env=environment,
+                                text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=20)
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertIn('LONG_ROM_PASS', result.stdout)
 
 
 if __name__ == '__main__':

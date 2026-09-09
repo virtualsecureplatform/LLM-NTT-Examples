@@ -5,7 +5,9 @@ import copy
 from datetime import datetime, timezone
 import fcntl
 import json
+import os
 from pathlib import Path
+import shutil
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,6 +35,7 @@ def executable_inputs(ngen):
     paths += [ROOT / 'scripts' / name for name in (
         'run_realistic_study.py', 'run_live_policy_trials.py', 'search_architectures.py',
         'vitis_synth_rtl.sh', 'insert_output_hold_buffers.tcl', 'insert_input_hold_buffers.tcl')]
+    paths += [ROOT / 'scripts/realistic-study-tools/verilator']
     paths += [ngen / 'ngen.bat']
     paths += list((ngen / 'scripts').glob('*.py'))
     return {str(p): file_hash(p) for p in sorted(paths)}
@@ -44,6 +47,9 @@ def prepare(out, ngen):
     identity = build_identity.verify(ngen)
     if not identity['verified']:
         raise ValueError('NGen assembly does not match checkout: ' + canonical(identity))
+    verilator = shutil.which('verilator')
+    if not verilator or Path(verilator).resolve() == ROOT / 'scripts/realistic-study-tools/verilator':
+        raise ValueError('Preparation requires the native Verilator executable on PATH')
     cases = []
     for split, names in [('development', DEVELOPMENT), ('held-out', HELD_OUT)]:
         for name in names:
@@ -63,6 +69,8 @@ def prepare(out, ngen):
         'schema': 'ntt-realistic-policy-study-v1', 'created_utc': now(),
         'framework': source_identity(ROOT), 'ngen': source_identity(ngen),
         'ngen_root': str(ngen), 'ngen_build': identity,
+        'verilator': {'path': str(Path(verilator).absolute()), 'sha256': file_hash(Path(verilator)),
+                      'runtime_cflags': '-DVL_VALUE_STRING_MAX_WORDS=1024'},
         'inputs': executable_inputs(ngen), 'cases': cases,
         'policies': POLICIES, 'seed': 2, 'evaluations_per_trial': 3, 'hours_per_trial': 2,
         'route_hours_per_candidate': 3,
@@ -84,6 +92,8 @@ def guard(out, p):
         raise ValueError('Frozen protocol changed')
     if executable_inputs(Path(p['ngen_root'])) != p['inputs']:
         raise ValueError('Frozen executable inputs changed')
+    if file_hash(Path(p['verilator']['path'])) != p['verilator']['sha256']:
+        raise ValueError('Native Verilator executable changed')
     if not build_identity.verify(Path(p['ngen_root']))['verified']:
         raise ValueError('Frozen NGen sources no longer match assembly')
     for case in p['cases']:
@@ -228,6 +238,8 @@ def execute(out, p):
     with (out / 'orchestrator.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         guard(out, p)
+        os.environ['NTT_STUDY_VERILATOR'] = p['verilator']['path']
+        os.environ['PATH'] = str(ROOT / 'scripts/realistic-study-tools') + os.pathsep + os.environ['PATH']
         statepath = out / 'state.json'
         state = read(statepath) if statepath.exists() else {'completed': {}, 'active': None}
         if state['active']:

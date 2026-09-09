@@ -1,0 +1,52 @@
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+[New Thread 0x7ffff77ff640 (LWP 3602308)]
+[New Thread 0x7ffff6ffe640 (LWP 3602309)]
+[New Thread 0x7ffff67fd640 (LWP 3602310)]
+[New Thread 0x7ffff5ffc640 (LWP 3602311)]
+[New Thread 0x7ffff57fb640 (LWP 3602312)]
+[New Thread 0x7ffff4ffa640 (LWP 3602313)]
+[New Thread 0x7ffff47f9640 (LWP 3602314)]
+[New Thread 0x7ffff3ff8640 (LWP 3602315)]
+[New Thread 0x7ffff37f7640 (LWP 3602316)]
+[New Thread 0x7ffff2ff6640 (LWP 3602317)]
+[New Thread 0x7ffff27f5640 (LWP 3602318)]
+[New Thread 0x7ffff1ff4640 (LWP 3602319)]
+[New Thread 0x7ffff17f3640 (LWP 3602320)]
+[New Thread 0x7ffff0ff2640 (LWP 3602321)]
+[New Thread 0x7ffff07f1640 (LWP 3602322)]
+[New Thread 0x7fffefff0640 (LWP 3602323)]
+[New Thread 0x7fffef7ef640 (LWP 3602324)]
+[New Thread 0x7fffeefee640 (LWP 3602325)]
+[New Thread 0x7fffee7ed640 (LWP 3602326)]
+[New Thread 0x7fffedfec640 (LWP 3602327)]
+[New Thread 0x7fffed7eb640 (LWP 3602328)]
+[New Thread 0x7fffecfea640 (LWP 3602329)]
+[New Thread 0x7fffec7e9640 (LWP 3602330)]
+[New Thread 0x7fffebfe8640 (LWP 3602331)]
+[New Thread 0x7fffeb7e7640 (LWP 3602332)]
+[New Thread 0x7fffeafe6640 (LWP 3602333)]
+[New Thread 0x7fffea7e5640 (LWP 3602334)]
+[New Thread 0x7fffe9fe4640 (LWP 3602335)]
+[New Thread 0x7fffe97e3640 (LWP 3602336)]
+[New Thread 0x7fffe8fe2640 (LWP 3602337)]
+[New Thread 0x7fffe87e1640 (LWP 3602338)]
+
+Thread 1 "Vtest" received signal SIGSEGV, Segmentation fault.
+0x00000000004078b0 in VL_CVT_PACK_STR_NW[abi:cxx11](int, unsigned int const*) ()
+#0  0x00000000004078b0 in VL_CVT_PACK_STR_NW[abi:cxx11](int, unsigned int const*) ()
+#1  0x65726f4368637261 in ?? ()
+#2  0x6c6f72746e6f632e in ?? ()
+#3  0x6d2e6d6f725f305f in ?? ()
+#4  0x00000000004490a0 in ?? ()
+#5  0x0000000000000123 in ?? ()
+#6  0x0000000000000123 in ?? ()
+#7  0x00007ffff7b47100 in ?? ()
+#8  0x0000000000443eb0 in ?? ()
+#9  0x00007ffff7b47040 in ?? ()
+#10 0x00007fffffffd230 in ?? ()
+#11 0x00007ffff7b47100 in ?? ()
+#12 0x0000000000443eb0 in ?? ()
+#13 0x00000000004047e4 in Vtest___024root___eval_initial(Vtest___024root*) ()
+#14 0x0000000000411d19 in Vtest::eval_step() ()
+#15 0x00000000004048fc in main ()

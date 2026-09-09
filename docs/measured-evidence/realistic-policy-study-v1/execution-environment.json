@@ -1,0 +1,51 @@
+{
+  "captured_utc": "2026-09-09T07:38:40.946496+00:00",
+  "tools": {
+    "verilator": {
+      "path": "/tmp/ngen-tools/verilator-rpm/usr/bin/verilator",
+      "sha256": "bcebcce608dfa948a6285f9f2e0492306f447c4e807bc638da8f49e035a497c5",
+      "version": [
+        "Verilator 5.022 2024-02-24 rev fedora-5.022"
+      ]
+    },
+    "iverilog": {
+      "path": "/tmp/ngen-tools/iverilog/bin/iverilog",
+      "sha256": "303fa1185112d01fa8e7e726b26bc5bdc3a9cf8ac9c79522fb7dd47306326f66",
+      "version": [
+        "Icarus Verilog version 14.0 (devel) (a079347)",
+        "",
+        "Copyright (c) 2000-2026 Stephen Williams (steve@icarus.com)"
+      ]
+    },
+    "clang": {
+      "path": "/tmp/ngen-tools/clang-rpm/usr/bin/clang",
+      "sha256": "6f4d98060a0e9039f04a090aa3a1bd01d99961ae38801ac516f80735584eef18",
+      "version": [
+        "clang version 21.1.8 (AlmaLinux OS Foundation 21.1.8-2.el9)",
+        "Target: x86_64-redhat-linux-gnu",
+        "Thread model: posix"
+      ]
+    },
+    "java": {
+      "path": "/usr/bin/java",
+      "sha256": "b9ccc4e0d8bbde312710bc0669cc6445a5e07c93ac8e58ad5c46a141004a83a5",
+      "version": [
+        "openjdk version \"21.0.12\" 2026-07-21 LTS",
+        "OpenJDK Runtime Environment (Red_Hat-21.0.12.0.8-1) (build 21.0.12+8-LTS)",
+        "OpenJDK 64-Bit Server VM (Red_Hat-21.0.12.0.8-1) (build 21.0.12+8-LTS, mixed mode, sharing)"
+      ]
+    },
+    "python3": {
+      "path": "/usr/bin/python3",
+      "sha256": "c7b3d12b0bcda9356ce5a7e21e66c41476310d595c54b5689bca1e38abd8f42b",
+      "version": [
+        "Python 3.9.25"
+      ]
+    }
+  },
+  "logical_cpus": 32,
+  "vendor_processes": [
+    "3593165  9267       19:02 /home/opt/xilinx/Vivado/2023.2/bin/unwrapped/lnx64.o/vivado -log vivado.log -applog -messageDb vivado.pb -mode batch -source vpl.tcl -notrace",
+    "3593456  9267       18:37 /home/opt/xilinx/Vivado/2023.2/bin/unwrapped/lnx64.o/vivado -log level0_wrapper.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source level0_wrapper.tcl -notrace"
+  ]
+}

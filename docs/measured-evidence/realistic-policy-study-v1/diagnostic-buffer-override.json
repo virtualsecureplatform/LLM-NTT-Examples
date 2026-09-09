@@ -1,0 +1,59 @@
+{
+  "build": {
+    "command": [
+      "verilator",
+      "--binary",
+      "--timing",
+      "--top-module",
+      "test",
+      "-Wno-fatal",
+      "--output-split",
+      "10000",
+      "--output-split-cfuncs",
+      "1000",
+      "-j",
+      "4",
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/SearchTop.sv",
+      "test.sv"
+    ],
+    "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/build.log",
+    "returncode": 0,
+    "seconds": 4.931944385170937,
+    "timed_out": false
+  },
+  "correct": true,
+  "externalized_control_roms": [
+    {
+      "path": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/SearchTop.SearchCore.control_0_rom.mem",
+      "word_bits": 118,
+      "words": 28671
+    }
+  ],
+  "inputs_unchanged": true,
+  "metrics": {
+    "completed_frames": 8,
+    "elapsed_cycles": 233076,
+    "initiation_interval_cycles": 30800,
+    "latency_cycles": 29779,
+    "max_loaded_latency_cycles": 85231
+  },
+  "mode": "functional",
+  "original_rtl_sha256": "ee40163ab975ce4c96cf50a84e6365710d230f3df7863b295cb470bdcbfdc9d1",
+  "simulator": "verilator",
+  "test": {
+    "command": [
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/obj_dir/Vtest"
+    ],
+    "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/test.log",
+    "returncode": 0,
+    "seconds": 0.47688919212669134,
+    "timed_out": false
+  },
+  "verification": {
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/SearchTop.SearchCore.control_0_rom.mem": "6775392707841332dc65e0264d551d44ee8dabb2395a0613bc519cca193646d8",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/SearchTop.sv": "73e79912ca829b35e4645aa1dc853ab8e259e9c25f146b94c3707c551ddff8ad",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/expected.mem": "b951fc69b34eb17b81e24f987eda4f804012d21d7b157e44c32a1a42aa719c1e",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/inputs.mem": "55ae7fe931e42bdbc791fb4a3afec4e90a15642d1c8f03a5f9afcbc409d2f290",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/diagnostic-buffer-override/test.sv": "d7df7e2436188e12bc2719d199a102cab56a7c613614a4760160f25bfa24290c"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "pid": 3600028,
+  "started_utc": "2026-09-09T07:38:08.201829+00:00",
+  "protocol_sha256": "49687d543ca0352a713cb22b3b77f4ef9ac778f38f8db6388675b7639a0bfaa4",
+  "launcher_sha256": "ab3b35b145190dced8dc00be34add134547a634446b8844cb86d9d4551dad87d",
+  "native_tools_sha256": "88ceea7b216378fddc110519de64b484c24d782a9b6a76a1e1929aa840ce2362"
+}

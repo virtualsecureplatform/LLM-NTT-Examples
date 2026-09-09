@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Verilator 5.022 converts packed filename literals through a 256-byte buffer.
+# Nested trial paths exceed that. Use its supported compile-time size override
+# for all generated/runtime translation units (4096 bytes, Linux PATH_MAX).
+exec "${NTT_STUDY_VERILATOR:?Set the absolute native Verilator executable}" -CFLAGS -DVL_VALUE_STRING_MAX_WORDS=1024 "$@"

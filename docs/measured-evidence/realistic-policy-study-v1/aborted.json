@@ -1,0 +1,5 @@
+{
+  "aborted_utc": "2026-09-09T07:40:34.478665+00:00",
+  "reason": "Verilator 5.022 packed-string conversion overflows its default 256-byte buffer for generated absolute ROM paths. Debugger locates SIGSEGV in VL_CVT_PACK_STR_NW; no arithmetic comparison completed. Preserve as aborted infrastructure run; restart all policies in a separately registered study with compiler buffer definition.",
+  "debug_log": "/tmp/realistic-study-simulator-debug.log"
+}
