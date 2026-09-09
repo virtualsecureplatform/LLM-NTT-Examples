@@ -8,7 +8,7 @@
     },
     {
       "name": "HOGE inverse pipeline ablation",
-      "directory": "build/hoge-inverse-arithmetic-reset-comparison",
+      "directory": "build/hoge-inverse-final-timing-comparison",
       "stage": "synthesis",
       "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain."
     },
@@ -53,6 +53,18 @@
       "directory": "build/hoge-control-reset-forward-route-evidence",
       "stage": "route",
       "notes": "Setup meets 4 ns at 0.000 ns slack; eleven output hold failures remain, worst -0.017 ns. Original failed route retained."
+    },
+    {
+      "name": "HOGE output repair attempt with DSP placement-lock error",
+      "directory": "build/hoge-control-reset-output-eco",
+      "stage": "route",
+      "notes": "Vivado rejected BEL locks on expanded DSP48E2 subcells before repair. Retained failed attempt; no timing or utilization result is fabricated."
+    },
+    {
+      "name": "HOGE forward after targeted output hold repair",
+      "directory": "build/hoge-control-reset-output-eco-dsp",
+      "stage": "route",
+      "notes": "Final setup and hold both 0.000 ns under the original 4 ns conditional fabric window. Eleven targeted identity LUTs plus one Vivado control-register replica; completed routing, verified source and output artifacts. No spare timing margin, board-shell result, or matched extracted-reference route claim."
     }
   ]
 }

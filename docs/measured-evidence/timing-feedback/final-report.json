@@ -1,0 +1,1274 @@
+{
+  "inputs": {
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-forward-route-evidence/manifest.json": "62932b1ce8d628b7dd93d413474e5198056b233a483d8be7f2ea085dbaa66c72",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-forward-route-evidence/report.json": "d18dbe2a748aee63557e028bf54c9227f77d62a47e0d25b92e4fb6b4f0a82e56",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-output-eco-dsp/manifest.json": "a7e9292e47804f99b4cdecf0b8dc1b2e99c514a6b7ff0660156fb736bf8a6333",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-output-eco-dsp/report.json": "2aa0175b8767ac7ff651b3c677a42ca884b2cd5b30d4cfeff946feb190d9933a",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-output-eco/manifest.json": "a7e9292e47804f99b4cdecf0b8dc1b2e99c514a6b7ff0660156fb736bf8a6333",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-output-eco/report.json": "15d1dd1652aa1d783c0145a4800a4c0d2f64456e223eb80feb98f24cff53f72a",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-final-timing-comparison/manifest.json": "d3ba36e5bd8ae2c62f829f1dc27ad4ddb649870fba186b70ce3dc41b3f3f51d4",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-final-timing-comparison/report.json": "952f9f10ae5b2a40ecedfebffd26efa84c6b76d26c31b2855a408f2e525dc1b1",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-inverse-final-timing-comparison/manifest.json": "08fe0bf3205d709fd7915344b902fbb59988824d36cecc52a8a82a8e629362a2",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-inverse-final-timing-comparison/report.json": "b40d84d4acdffedcb04aab5a6cfc161a95feaaa8f1d3ecf5cce9cb77fb7fdf83",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-radix-pipeline-forward-input-route-evidence/manifest.json": "a5a652c55864156fd0dc7629350977a44d67983ede086706fb48bd88261c8d9a",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-radix-pipeline-forward-input-route-evidence/report.json": "e71b65cb34205368ede8066ba527061f139a86c58c067e96356071700656b033",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-radix-pipeline-forward-route-evidence/manifest.json": "f08b4085649352fe116baf970d694a1a70fa1ec66b2168ef3c4d5cd7ea9a64ec",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-radix-pipeline-forward-route-evidence/report.json": "1090e1d31d281e0eaf7582a7ac78e177889a64fe61a8e445e2fd9037c012ec8b",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-valid-reset-forward-route-evidence/manifest.json": "677130fcd380480342a9629bf7d92c3d1a14b998bc9ff17b73196b94e3ee2155",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-valid-reset-forward-route-evidence/report.json": "b75b87f40fa0a8d5da59ca34c5b7d0462b470d9f7beb0dcf2419e9132f2356cd",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-output-pipeline-input-route-evidence/manifest.json": "afbdf7019c9a1d1cfd4b296da7bc203b948278f912c6a3796dbf696417032bf9",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-output-pipeline-input-route-evidence/report.json": "bb8921efa372b0f3aae7153a25e9e6382e3252d9ba7437eef9b994291ecdcc17",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-output-pipeline-route-evidence/manifest.json": "8048fd3a87b56dfe8ca556fdf34b3f9defa17a4037dc558e5b6acfda0513bb22",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-output-pipeline-route-evidence/report.json": "25fe30243d9f150e2be775682b7dc317809b2a99882fb0aabcce60b0cd9dd211",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-timing-fix-comparison/manifest.json": "0141823703d2c353879462f705e5f18ef560e5aa34b255b1e4e17108f8081671",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-timing-fix-comparison/report.json": "c1fdcd2d0e11a923e41a1be88cb51068f9047428a129ee05c540f61ab0431823",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/campaigns/timing-feedback-evidence.json": "a5d1eac44643be313c7da60a6e0a66600546b4dd39a2249c4ed31039164186ee"
+  },
+  "missing_comparisons": [],
+  "qualification": "Synthesis qualification requires completed implementation and nonnegative setup slack; it does not establish routed timing closure. Route qualification additionally requires nonnegative hold slack and completed routing. Rates at synthesis are estimates under the stated target clock.",
+  "schema": "ntt-evidence-snapshot-v1",
+  "scope": "Snapshot of named comparisons, not certification that the full project plan is complete. Legacy hardware evidence remains explicitly unverified by newer manifests.",
+  "sections": [
+    {
+      "frontier": [
+        "e0cac26420eb0885b7d50ec3508b7fe6b8231aee4c3b912f1cfb6fa74a55358f"
+      ],
+      "name": "HOGE forward pipeline ablation",
+      "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 138,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 202
+          },
+          "id": "1fcbad1aa58492081cd77472fcb2e7d772a787b2ad185bda08e5f3337211b03a",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 259090,
+            "hold_slack_ns": -0.075,
+            "lut": 206909,
+            "transaction_ns": 808.0,
+            "uram": 0,
+            "wns_ns": 1.77
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen-sgen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 40,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 104
+          },
+          "id": "2cb48775dc22529d27854aa4ce4a6e7950f68fcbd4fcbfd1252acb30b2533bbe",
+          "metrics": {
+            "bram": 0,
+            "dsp": 2304,
+            "ff": 45852,
+            "hold_slack_ns": -0.029,
+            "lut": 214565,
+            "transaction_ns": 416.0,
+            "uram": 0,
+            "wns_ns": -8.332
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 58,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 122
+          },
+          "id": "35d81fa5dd3e09079955db210038a62ed54f4f910d93874f54547687a4600ca1",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 103519,
+            "hold_slack_ns": -0.029,
+            "lut": 176563,
+            "transaction_ns": 488.0,
+            "uram": 0,
+            "wns_ns": -1.92
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 40,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 104
+          },
+          "id": "5650fadf1c39e364b417f912678c8dbe80bc3f458ae1e18451561620ebc7e725",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 47528,
+            "hold_slack_ns": -0.029,
+            "lut": 177390,
+            "transaction_ns": 416.0,
+            "uram": 0,
+            "wns_ns": -8.937
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 138,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 202
+          },
+          "id": "92a70b187a4ee83f0aedbe1e425685707ebd0e54586050e70571fb696d6be89c",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 273241,
+            "hold_slack_ns": -0.075,
+            "lut": 209171,
+            "transaction_ns": 808.0,
+            "uram": 0,
+            "wns_ns": 1.77
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 138,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 202
+          },
+          "id": "b445b73a4bfa354308950ea7324626dc2fcdd084a63fdb4f1383b320238eace3",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 273392,
+            "hold_slack_ns": -0.075,
+            "lut": 210715,
+            "transaction_ns": 808.0,
+            "uram": 0,
+            "wns_ns": 1.77
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "generator": "extracted-rtl",
+            "task": "hoge_streaming_ntt_1024_p64"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 106,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 170
+          },
+          "id": "e0cac26420eb0885b7d50ec3508b7fe6b8231aee4c3b912f1cfb6fa74a55358f",
+          "metrics": {
+            "bram": 0,
+            "dsp": 512,
+            "ff": 194109,
+            "hold_slack_ns": 0.014,
+            "lut": 90300,
+            "transaction_ns": 680.0,
+            "uram": 0,
+            "wns_ns": 1.519
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 40,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 104
+          },
+          "id": "f62a296346de85e7f64c1a37ef275ccb7d12a5e6e855e6af11d36b59a392a207",
+          "metrics": {
+            "bram": 0,
+            "dsp": 2304,
+            "ff": 45852,
+            "hold_slack_ns": -0.029,
+            "lut": 214565,
+            "transaction_ns": 416.0,
+            "uram": 0,
+            "wns_ns": -8.332
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-forward-final-timing-comparison",
+      "stage": "synthesis",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_ntt_1024_p64"
+      }
+    },
+    {
+      "frontier": [
+        "23d403be916af1f05d4d457879322b7f785ed4cc646736582dd578ed08dcf79f",
+        "db59d15c272e0898e47641dba2899457ebab0dce32158e2f0c7c554aeadbbef3"
+      ],
+      "name": "HOGE inverse pipeline ablation",
+      "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "generator": "extracted-rtl",
+            "task": "hoge_streaming_intt_1024_p64"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_intt_input_cycles": 32,
+            "hoge_streaming_intt_max_wait_cycles": 65,
+            "hoge_streaming_intt_output_cycles": 32,
+            "hoge_streaming_intt_tests": 3,
+            "transaction_cycles": 129
+          },
+          "id": "23d403be916af1f05d4d457879322b7f785ed4cc646736582dd578ed08dcf79f",
+          "metrics": {
+            "bram": 0,
+            "dsp": 512,
+            "ff": 239475,
+            "hold_slack_ns": -0.075,
+            "lut": 140242,
+            "transaction_ns": 516.0,
+            "uram": 0,
+            "wns_ns": 1.518
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_intt_input_cycles": 32,
+            "hoge_streaming_intt_max_wait_cycles": 18,
+            "hoge_streaming_intt_output_cycles": 32,
+            "hoge_streaming_intt_tests": 3,
+            "transaction_cycles": 82
+          },
+          "id": "2a0d2b6508d1286ed937b2cf2823d9efd2fddf48cc39822453cd273173b27ff9",
+          "metrics": {
+            "bram": 0,
+            "dsp": 512,
+            "ff": 62058,
+            "hold_slack_ns": -0.029,
+            "lut": 135711,
+            "transaction_ns": 328.0,
+            "uram": 0,
+            "wns_ns": -3.838
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_intt_input_cycles": 32,
+            "hoge_streaming_intt_max_wait_cycles": 105,
+            "hoge_streaming_intt_output_cycles": 32,
+            "hoge_streaming_intt_tests": 3,
+            "transaction_cycles": 169
+          },
+          "id": "3bbc74c500dd7eeb789936cf94c592f6692f4e00d83c8b07cdc78d1b707e2b67",
+          "metrics": {
+            "bram": 0,
+            "dsp": 512,
+            "ff": 243609,
+            "hold_slack_ns": -0.112,
+            "lut": 174396,
+            "transaction_ns": 676.0,
+            "uram": 0,
+            "wns_ns": 1.77
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_intt_input_cycles": 32,
+            "hoge_streaming_intt_max_wait_cycles": 105,
+            "hoge_streaming_intt_output_cycles": 32,
+            "hoge_streaming_intt_tests": 3,
+            "transaction_cycles": 169
+          },
+          "id": "712946530a202aca971ee7f53fc89c3cf099d76566c932884ab5ecd210f879d6",
+          "metrics": {
+            "bram": 0,
+            "dsp": 512,
+            "ff": 241803,
+            "hold_slack_ns": -0.112,
+            "lut": 171422,
+            "transaction_ns": 676.0,
+            "uram": 0,
+            "wns_ns": 1.77
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "stage-parallel",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "indexed"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_intt_input_cycles": 32,
+            "hoge_streaming_intt_max_wait_cycles": 5,
+            "hoge_streaming_intt_output_cycles": 32,
+            "hoge_streaming_intt_tests": 3,
+            "transaction_cycles": 69
+          },
+          "id": "a410fc119fbc3b22713c3fa83c7af0da92a8925f5d38f8df9a459fc440b91820",
+          "metrics": {
+            "transaction_ns": 276.0
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_intt_input_cycles": 32,
+            "hoge_streaming_intt_max_wait_cycles": 9,
+            "hoge_streaming_intt_output_cycles": 32,
+            "hoge_streaming_intt_tests": 3,
+            "transaction_cycles": 73
+          },
+          "id": "aedcad880dd664a8cc27d780b226a7490787ab0d7227a6b148f92f3345362f28",
+          "metrics": {
+            "bram": 0,
+            "dsp": 512,
+            "ff": 34058,
+            "hold_slack_ns": -0.029,
+            "lut": 136166,
+            "transaction_ns": 292.0,
+            "uram": 0,
+            "wns_ns": -9.844
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_intt_input_cycles": 32,
+            "hoge_streaming_intt_max_wait_cycles": 105,
+            "hoge_streaming_intt_output_cycles": 32,
+            "hoge_streaming_intt_tests": 3,
+            "transaction_cycles": 169
+          },
+          "id": "db59d15c272e0898e47641dba2899457ebab0dce32158e2f0c7c554aeadbbef3",
+          "metrics": {
+            "bram": 0,
+            "dsp": 512,
+            "ff": 236444,
+            "hold_slack_ns": -0.075,
+            "lut": 172490,
+            "transaction_ns": 676.0,
+            "uram": 0,
+            "wns_ns": 1.77
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-inverse-final-timing-comparison",
+      "stage": "synthesis",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_intt_1024_p64"
+      }
+    },
+    {
+      "frontier": [
+        "ecc815f2608a419259dae48fea93be7528e790329e01fd639ceb22ea30c86274"
+      ],
+      "name": "YATA arithmetic and output pipeline ablation",
+      "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "microcoded",
+            "generator": "ngen",
+            "profile": "f300",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "small_yata8x8_raintt_p27_intt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_intt_max_wait_cycles": 497,
+            "small_yata8x8_raintt_p27_intt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_max_wait_cycles": 433,
+            "small_yata8x8_raintt_p27_ntt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_tests": 3,
+            "transaction_cycles": 513
+          },
+          "id": "152a494e0ad16e5e75da4343b7dbf89942f4b89d53ba7eb98e252740fb32f1f1",
+          "metrics": {
+            "bram": 0,
+            "dsp": 80,
+            "ff": 16020,
+            "hold_slack_ns": -0.029,
+            "lut": 49713,
+            "transaction_ns": 2052.0,
+            "uram": 0,
+            "wns_ns": -1.574
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "legacy-unverified",
+          "configuration": {
+            "backend": "microcoded",
+            "generator": "ngen-sgen-linear",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "small_yata8x8_raintt_p27_intt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_intt_max_wait_cycles": 80,
+            "small_yata8x8_raintt_p27_intt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_max_wait_cycles": 72,
+            "small_yata8x8_raintt_p27_ntt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_tests": 3,
+            "transaction_cycles": 96
+          },
+          "id": "5049111e3b7613140b47bc68956e1b7ffd71b553cdaf214f3ad90e8ee2f94100",
+          "metrics": {
+            "bram": 8,
+            "dsp": 424,
+            "ff": 11306,
+            "hold_slack_ns": -0.075,
+            "lut": 58769,
+            "transaction_ns": 384.0,
+            "uram": 0,
+            "wns_ns": -5.483
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "legacy-unverified",
+          "configuration": {
+            "backend": "microcoded",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "small_yata8x8_raintt_p27_intt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_intt_max_wait_cycles": 70,
+            "small_yata8x8_raintt_p27_intt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_max_wait_cycles": 62,
+            "small_yata8x8_raintt_p27_ntt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_tests": 3,
+            "transaction_cycles": 86
+          },
+          "id": "7f19e997defbf961db3de66ce58cb54db12b2d01f5d08925a820c182b06a9814",
+          "metrics": {
+            "bram": 0,
+            "dsp": 424,
+            "ff": 9823,
+            "hold_slack_ns": -0.042,
+            "lut": 58565,
+            "transaction_ns": 344.0,
+            "uram": 0,
+            "wns_ns": -5.483
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "legacy-unverified",
+          "configuration": {
+            "backend": "microcoded",
+            "generator": "ngen-sgen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "small_yata8x8_raintt_p27_intt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_intt_max_wait_cycles": 70,
+            "small_yata8x8_raintt_p27_intt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_max_wait_cycles": 62,
+            "small_yata8x8_raintt_p27_ntt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_tests": 3,
+            "transaction_cycles": 86
+          },
+          "id": "818225ba72422f87c4fc3d121d40bc2195c4fdc1e5e6bdb535aedae54724defc",
+          "metrics": {
+            "bram": 0,
+            "dsp": 424,
+            "ff": 9823,
+            "hold_slack_ns": -0.042,
+            "lut": 58565,
+            "transaction_ns": 344.0,
+            "uram": 0,
+            "wns_ns": -5.483
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "legacy-unverified",
+          "configuration": {
+            "backend": "microcoded",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "small_yata8x8_raintt_p27_intt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_intt_max_wait_cycles": 70,
+            "small_yata8x8_raintt_p27_intt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_max_wait_cycles": 62,
+            "small_yata8x8_raintt_p27_ntt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_tests": 3,
+            "transaction_cycles": 86
+          },
+          "id": "d3ae87212810bcf12ee0f146a40dc7ea1c5cebc251a5e09e866e9d8eb8da3a93",
+          "metrics": {
+            "bram": 0,
+            "dsp": 88,
+            "ff": 9774,
+            "hold_slack_ns": -0.042,
+            "lut": 51489,
+            "transaction_ns": 344.0,
+            "uram": 0,
+            "wns_ns": -5.805
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "hardware_failed"
+        },
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "microcoded",
+            "generator": "ngen",
+            "profile": "f300",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "small_yata8x8_raintt_p27_intt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_intt_max_wait_cycles": 497,
+            "small_yata8x8_raintt_p27_intt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_max_wait_cycles": 436,
+            "small_yata8x8_raintt_p27_ntt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_tests": 3,
+            "transaction_cycles": 513
+          },
+          "id": "ecc815f2608a419259dae48fea93be7528e790329e01fd639ceb22ea30c86274",
+          "metrics": {
+            "bram": 0,
+            "dsp": 80,
+            "ff": 16403,
+            "hold_slack_ns": -0.042,
+            "lut": 52340,
+            "transaction_ns": 2052.0,
+            "uram": 0,
+            "wns_ns": 1.282
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "synthesis",
+          "status": "complete"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-timing-fix-comparison",
+      "stage": "synthesis",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "small_yata8x8_raintt_p27"
+      }
+    },
+    {
+      "frontier": [],
+      "name": "HOGE forward first route (hold failure)",
+      "notes": "Completed routing and positive setup, but negative hold. Conditional neighboring-fabric contract; no board timing or matched reference route claim. The prior exact-RTL arithmetic oracle is reused without changing its target.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 138,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 202
+          },
+          "id": "92a70b187a4ee83f0aedbe1e425685707ebd0e54586050e70571fb696d6be89c",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 273327,
+            "hold_slack_ns": -0.68,
+            "lut": 211201,
+            "transaction_ns": 808.0,
+            "uram": 0,
+            "wns_ns": 0.28
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "route",
+          "status": "hardware_failed"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-radix-pipeline-forward-route-evidence",
+      "stage": "route",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "clock_source": "BUFGCE_X0Y0",
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "input_cycle_reg[0]/C",
+        "output_hold_buffer_stages": 2,
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_ntt_1024_p64"
+      }
+    },
+    {
+      "frontier": [],
+      "name": "YATA first route (hold failure)",
+      "notes": "Completed routing and positive setup, but negative hold. Conditional neighboring-fabric contract; no board timing or matched reference route claim. The prior exact-RTL arithmetic oracle is reused without changing its target.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "microcoded",
+            "generator": "ngen",
+            "profile": "f300",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "small_yata8x8_raintt_p27_intt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_intt_max_wait_cycles": 497,
+            "small_yata8x8_raintt_p27_intt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_max_wait_cycles": 436,
+            "small_yata8x8_raintt_p27_ntt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_tests": 3,
+            "transaction_cycles": 513
+          },
+          "id": "ecc815f2608a419259dae48fea93be7528e790329e01fd639ceb22ea30c86274",
+          "metrics": {
+            "bram": 0,
+            "dsp": 80,
+            "ff": 16804,
+            "hold_slack_ns": -0.02,
+            "lut": 52252,
+            "transaction_ns": 2052.0,
+            "uram": 0,
+            "wns_ns": 0.149
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "route",
+          "status": "hardware_failed"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-output-pipeline-route-evidence",
+      "stage": "route",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "clock_source": "BUFGCE_X0Y0",
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "core/executing_reg/C",
+        "output_hold_buffer_stages": 2,
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "small_yata8x8_raintt_p27"
+      }
+    },
+    {
+      "frontier": [],
+      "name": "HOGE input buffering before reset correction",
+      "notes": "Same 4 ns conditional neighboring-fabric I/O window; two physical identity LUT stages per input and output. Full arithmetic oracle reused for identical RTL. No board or extracted-reference route claim.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 138,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 202
+          },
+          "id": "92a70b187a4ee83f0aedbe1e425685707ebd0e54586050e70571fb696d6be89c",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 273312,
+            "hold_slack_ns": 0.01,
+            "lut": 214738,
+            "transaction_ns": 808.0,
+            "uram": 0,
+            "wns_ns": -0.858
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "route",
+          "status": "hardware_failed"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-radix-pipeline-forward-input-route-evidence",
+      "stage": "route",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "clock_source": "BUFGCE_X0Y0",
+        "input_hold_buffer_stages": 2,
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "input_cycle_reg[0]/C",
+        "output_hold_buffer_stages": 2,
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_ntt_1024_p64"
+      }
+    },
+    {
+      "frontier": [
+        "ecc815f2608a419259dae48fea93be7528e790329e01fd639ceb22ea30c86274"
+      ],
+      "name": "YATA with repaired input boundaries",
+      "notes": "Same 4 ns conditional neighboring-fabric I/O window; two physical identity LUT stages per input and output. Full arithmetic oracle reused for identical RTL. No board or extracted-reference route claim.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "microcoded",
+            "generator": "ngen",
+            "profile": "f300",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "small_yata8x8_raintt_p27_intt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_intt_max_wait_cycles": 497,
+            "small_yata8x8_raintt_p27_intt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_input_cycles": 8,
+            "small_yata8x8_raintt_p27_ntt_max_wait_cycles": 436,
+            "small_yata8x8_raintt_p27_ntt_output_cycles": 8,
+            "small_yata8x8_raintt_p27_tests": 3,
+            "transaction_cycles": 513
+          },
+          "id": "ecc815f2608a419259dae48fea93be7528e790329e01fd639ceb22ea30c86274",
+          "metrics": {
+            "bram": 0,
+            "dsp": 80,
+            "ff": 16882,
+            "hold_slack_ns": 0.01,
+            "lut": 52863,
+            "transaction_ns": 2052.0,
+            "uram": 0,
+            "wns_ns": 0.067
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "route",
+          "status": "complete"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-output-pipeline-input-route-evidence",
+      "stage": "route",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "clock_source": "BUFGCE_X0Y0",
+        "input_hold_buffer_stages": 2,
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "core/executing_reg/C",
+        "output_hold_buffer_stages": 2,
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "small_yata8x8_raintt_p27"
+      }
+    },
+    {
+      "frontier": [],
+      "name": "HOGE arithmetic-only reset correction before transpose correction",
+      "notes": "Retained setup and hold failure. Worst setup path still runs from reset to transpose data registers; same conditional fabric window and physical input/output buffers.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 138,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 202
+          },
+          "id": "b445b73a4bfa354308950ea7324626dc2fcdd084a63fdb4f1383b320238eace3",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 273472,
+            "hold_slack_ns": -0.02,
+            "lut": 215952,
+            "transaction_ns": 808.0,
+            "uram": 0,
+            "wns_ns": -0.427
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "route",
+          "status": "hardware_failed"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-valid-reset-forward-route-evidence",
+      "stage": "route",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "clock_source": "BUFGCE_X0Y0",
+        "input_hold_buffer_stages": 2,
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "input_cycle_reg[0]/C",
+        "output_hold_buffer_stages": 2,
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_ntt_1024_p64"
+      }
+    },
+    {
+      "frontier": [],
+      "name": "HOGE control-only reset before output hold repair",
+      "notes": "Setup meets 4 ns at 0.000 ns slack; eleven output hold failures remain, worst -0.017 ns. Original failed route retained.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 138,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 202
+          },
+          "id": "1fcbad1aa58492081cd77472fcb2e7d772a787b2ad185bda08e5f3337211b03a",
+          "metrics": {
+            "bram": 0,
+            "dsp": 1024,
+            "ff": 259061,
+            "hold_slack_ns": -0.017,
+            "lut": 207133,
+            "transaction_ns": 808.0,
+            "uram": 0,
+            "wns_ns": 0
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "route",
+          "status": "hardware_failed"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-forward-route-evidence",
+      "stage": "route",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "clock_source": "BUFGCE_X0Y0",
+        "input_hold_buffer_stages": 2,
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "input_cycle_reg[0]/C",
+        "output_hold_buffer_stages": 2,
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_ntt_1024_p64"
+      }
+    },
+    {
+      "frontier": [],
+      "name": "HOGE output repair attempt with DSP placement-lock error",
+      "notes": "Vivado rejected BEL locks on expanded DSP48E2 subcells before repair. Retained failed attempt; no timing or utilization result is fabricated.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 138,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 202
+          },
+          "id": "1fcbad1aa58492081cd77472fcb2e7d772a787b2ad185bda08e5f3337211b03a",
+          "metrics": {
+            "transaction_ns": 808.0
+          },
+          "qualified": false,
+          "rtl_integrity": "verified",
+          "stage": "route",
+          "status": "hardware_failed"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-output-eco",
+      "stage": "route",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "clock_source": "BUFGCE_X0Y0",
+        "input_hold_buffer_stages": 2,
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "input_cycle_reg[0]/C",
+        "output_hold_buffer_stages": 2,
+        "output_hold_eco": {
+          "fixed_existing_placement": true,
+          "max_passes": 2
+        },
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_ntt_1024_p64"
+      }
+    },
+    {
+      "frontier": [
+        "1fcbad1aa58492081cd77472fcb2e7d772a787b2ad185bda08e5f3337211b03a"
+      ],
+      "name": "HOGE forward after targeted output hold repair",
+      "notes": "Final setup and hold both 0.000 ns under the original 4 ns conditional fabric window. Eleven targeted identity LUTs plus one Vivado control-register replica; completed routing, verified source and output artifacts. No spare timing margin, board-shell result, or matched extracted-reference route claim.",
+      "rows": [
+        {
+          "artifact_integrity": "verified",
+          "configuration": {
+            "backend": "full-throughput",
+            "generator": "ngen",
+            "profile": "baseline",
+            "transpose": "switch"
+          },
+          "correct": true,
+          "cycle_metrics": {
+            "hoge_streaming_ntt_input_cycles": 32,
+            "hoge_streaming_ntt_max_wait_cycles": 138,
+            "hoge_streaming_ntt_output_cycles": 32,
+            "hoge_streaming_ntt_tests": 3,
+            "transaction_cycles": 202
+          },
+          "id": "1fcbad1aa58492081cd77472fcb2e7d772a787b2ad185bda08e5f3337211b03a",
+          "metrics": {
+            "added_output_luts": 11.0,
+            "bram": 0.0,
+            "dsp": 1024.0,
+            "ff": 259062.0,
+            "hold_slack_ns": 0.0,
+            "lut": 207144.0,
+            "transaction_ns": 808.0,
+            "uram": 0.0,
+            "wns_ns": 0.0
+          },
+          "qualified": true,
+          "rtl_integrity": "verified",
+          "stage": "route",
+          "status": "complete"
+        }
+      ],
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-output-eco-dsp",
+      "stage": "route",
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_port": "clock",
+        "clock_source": "BUFGCE_X0Y0",
+        "input_hold_buffer_stages": 2,
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "input_cycle_reg[0]/C",
+        "output_hold_buffer_stages": 2,
+        "output_hold_eco": {
+          "fixed_existing_placement": true,
+          "max_passes": 2
+        },
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_ntt_1024_p64"
+      }
+    }
+  ]
+}
