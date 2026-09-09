@@ -1,0 +1,295 @@
+{
+  "failures": [],
+  "trials": [
+    {
+      "budget": 3,
+      "final": {
+        "candidate_id": "6ac7930c4c2ae3fbb1e5f71974041c6a2c9a48c5d1c7802dec49b78e179d73e3",
+        "feasible_discoveries": 2,
+        "frontier_recall": 1.0,
+        "implementation_timing_passed": true,
+        "lut_prediction_before_measurement": null,
+        "observed_frontier_ids": [
+          "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+          "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+        ],
+        "recovered_reference_ids": [
+          "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+          "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+        ],
+        "reference_frontier_size": 2,
+        "step": 3
+      },
+      "online_lut_prediction_mae": null,
+      "policy": "llm",
+      "prediction_count": 0,
+      "seed": 2,
+      "trace": [
+        {
+          "candidate_id": "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+          "feasible_discoveries": 1,
+          "frontier_recall": 0.5,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a"
+          ],
+          "recovered_reference_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a"
+          ],
+          "reference_frontier_size": 2,
+          "step": 1
+        },
+        {
+          "candidate_id": "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615",
+          "feasible_discoveries": 2,
+          "frontier_recall": 1.0,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "recovered_reference_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "reference_frontier_size": 2,
+          "step": 2
+        },
+        {
+          "candidate_id": "6ac7930c4c2ae3fbb1e5f71974041c6a2c9a48c5d1c7802dec49b78e179d73e3",
+          "feasible_discoveries": 2,
+          "frontier_recall": 1.0,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "recovered_reference_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "reference_frontier_size": 2,
+          "step": 3
+        }
+      ]
+    },
+    {
+      "budget": 3,
+      "final": {
+        "candidate_id": "6ac7930c4c2ae3fbb1e5f71974041c6a2c9a48c5d1c7802dec49b78e179d73e3",
+        "feasible_discoveries": 2,
+        "frontier_recall": 1.0,
+        "implementation_timing_passed": true,
+        "lut_prediction_before_measurement": null,
+        "observed_frontier_ids": [
+          "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+          "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+        ],
+        "recovered_reference_ids": [
+          "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+          "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+        ],
+        "reference_frontier_size": 2,
+        "step": 3
+      },
+      "online_lut_prediction_mae": null,
+      "policy": "enumerate",
+      "prediction_count": 0,
+      "seed": 2,
+      "trace": [
+        {
+          "candidate_id": "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+          "feasible_discoveries": 1,
+          "frontier_recall": 0.5,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a"
+          ],
+          "recovered_reference_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a"
+          ],
+          "reference_frontier_size": 2,
+          "step": 1
+        },
+        {
+          "candidate_id": "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615",
+          "feasible_discoveries": 2,
+          "frontier_recall": 1.0,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "recovered_reference_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "reference_frontier_size": 2,
+          "step": 2
+        },
+        {
+          "candidate_id": "6ac7930c4c2ae3fbb1e5f71974041c6a2c9a48c5d1c7802dec49b78e179d73e3",
+          "feasible_discoveries": 2,
+          "frontier_recall": 1.0,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "recovered_reference_ids": [
+            "c3a1abe82fde22dc75438d714f1ff75a8d131e93682c6f84678a8568fe7e109a",
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "reference_frontier_size": 2,
+          "step": 3
+        }
+      ]
+    },
+    {
+      "budget": 3,
+      "final": {
+        "candidate_id": "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615",
+        "feasible_discoveries": 1,
+        "frontier_recall": 0.5,
+        "implementation_timing_passed": true,
+        "lut_prediction_before_measurement": null,
+        "observed_frontier_ids": [
+          "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+        ],
+        "recovered_reference_ids": [
+          "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+        ],
+        "reference_frontier_size": 2,
+        "step": 3
+      },
+      "online_lut_prediction_mae": null,
+      "policy": "random",
+      "prediction_count": 0,
+      "seed": 2,
+      "trace": [
+        {
+          "candidate_id": "6ac7930c4c2ae3fbb1e5f71974041c6a2c9a48c5d1c7802dec49b78e179d73e3",
+          "feasible_discoveries": 0,
+          "frontier_recall": 0.0,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [],
+          "recovered_reference_ids": [],
+          "reference_frontier_size": 2,
+          "step": 1
+        },
+        {
+          "candidate_id": "9f5332590628060c89343ab5cbf34c795ee43f3ac0bbc2caacd5f5849dbd0728",
+          "feasible_discoveries": 0,
+          "frontier_recall": 0.0,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [],
+          "recovered_reference_ids": [],
+          "reference_frontier_size": 2,
+          "step": 2
+        },
+        {
+          "candidate_id": "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615",
+          "feasible_discoveries": 1,
+          "frontier_recall": 0.5,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "recovered_reference_ids": [
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "reference_frontier_size": 2,
+          "step": 3
+        }
+      ]
+    },
+    {
+      "budget": 3,
+      "final": {
+        "candidate_id": "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615",
+        "feasible_discoveries": 1,
+        "frontier_recall": 0.5,
+        "implementation_timing_passed": true,
+        "lut_prediction_before_measurement": {
+          "available": true,
+          "estimate": 11250.055555555555,
+          "neighbor_max": 12064,
+          "neighbor_min": 10937,
+          "samples": 2
+        },
+        "observed_frontier_ids": [
+          "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+        ],
+        "recovered_reference_ids": [
+          "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+        ],
+        "reference_frontier_size": 2,
+        "step": 3
+      },
+      "online_lut_prediction_mae": 3347.5277777777774,
+      "policy": "cost",
+      "prediction_count": 2,
+      "seed": 2,
+      "trace": [
+        {
+          "candidate_id": "6ac7930c4c2ae3fbb1e5f71974041c6a2c9a48c5d1c7802dec49b78e179d73e3",
+          "feasible_discoveries": 0,
+          "frontier_recall": 0.0,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": null,
+          "observed_frontier_ids": [],
+          "recovered_reference_ids": [],
+          "reference_frontier_size": 2,
+          "step": 1
+        },
+        {
+          "candidate_id": "9f5332590628060c89343ab5cbf34c795ee43f3ac0bbc2caacd5f5849dbd0728",
+          "feasible_discoveries": 0,
+          "frontier_recall": 0.0,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": {
+            "available": true,
+            "estimate": 10937.0,
+            "neighbor_max": 10937,
+            "neighbor_min": 10937,
+            "samples": 1
+          },
+          "observed_frontier_ids": [],
+          "recovered_reference_ids": [],
+          "reference_frontier_size": 2,
+          "step": 2
+        },
+        {
+          "candidate_id": "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615",
+          "feasible_discoveries": 1,
+          "frontier_recall": 0.5,
+          "implementation_timing_passed": true,
+          "lut_prediction_before_measurement": {
+            "available": true,
+            "estimate": 11250.055555555555,
+            "neighbor_max": 12064,
+            "neighbor_min": 10937,
+            "samples": 2
+          },
+          "observed_frontier_ids": [
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "recovered_reference_ids": [
+            "df829d09e7293c322c8be4a45e2914fe65326fde07666d6c5b92f07502593615"
+          ],
+          "reference_frontier_size": 2,
+          "step": 3
+        }
+      ]
+    }
+  ]
+}
