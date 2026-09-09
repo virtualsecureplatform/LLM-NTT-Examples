@@ -1,0 +1,42 @@
+{
+  "capture_sha256": "9a1588a3522ce8c3f0623f05cf483cc02fb18b2948d5c014c555ebb680389032",
+  "chain": [
+    {
+      "bits": 60,
+      "position": 0,
+      "psi": "100406242475323",
+      "q": "1152921504606748673",
+      "special_key_prime": false
+    },
+    {
+      "bits": 40,
+      "position": 1,
+      "psi": "5405730",
+      "q": "1099510890497",
+      "special_key_prime": false
+    },
+    {
+      "bits": 40,
+      "position": 2,
+      "psi": "30370987",
+      "q": "1099511480321",
+      "special_key_prime": false
+    },
+    {
+      "bits": 60,
+      "position": 3,
+      "psi": "25959043411404",
+      "q": "1152921504606830593",
+      "special_key_prime": true
+    }
+  ],
+  "inputs": {
+    "cpp_sha256": "72d46328bd5e47cded97c945fb1ea8c701a36438d55084ad33bf350f4a1df1cb",
+    "executable_sha256": "b1283418fce5d79c4f3ec51f8c53b9a262d94486a9c87abe1e9367eec0629de0",
+    "library_sha256": "a9fed3ab16d98661ea45a8374d99c9619c971aeccd49a104941aa1177477a427"
+  },
+  "n": 8192,
+  "schema": "ntt-seal-ckks-chain-v1",
+  "scope": "Ordered CoeffModulus::Create(8192,{60,40,40,60}) output from the instrumented capture library; last prime is special, not an ordinary active ciphertext limb.",
+  "seal_revision": "119dc32e135cb89c1062076a69310d4413ebc824"
+}

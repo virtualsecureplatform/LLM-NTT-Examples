@@ -1,0 +1,44 @@
+{
+  "files": {
+    "mlkem-products.json": "9f262598972af6c3203a295b2aca8493a6ac14241b62e0758c32a905ccda7880",
+    "mlkem-validation.json": "8fd0b5647ba9da1205ef9c5097b5801ff4b94eff96f25e2c2a9ee69c9b9e6fee",
+    "seal-chain.json": "db076522440ab5735ed42e05c950d9c616b5e873d66c700ae5550d87cda2cbdc",
+    "seal-rtl.json": "11350cc0054166dc4458248b0fd52dcc90d9414f96e7d22cf7706f8be54ebdee",
+    "seal-samples.zip": "98fc0aef51b1465feaa740e2616969560da24afc6add12c37a9491658a6e9768",
+    "seal-trace.json": "9a1588a3522ce8c3f0623f05cf483cc02fb18b2948d5c014c555ebb680389032",
+    "validation-manifest.json": "936e04983607efce36f54e49b583dfb70cc96e7bdfb9139e787d3374aa0c6eb7",
+    "validation.json": "a293d96cbe35733937146f7ce863560a78c829e02fbdb79dae8389b9209e6c12"
+  },
+  "schema": "ntt-realistic-publication-v1",
+  "scope": "Functional validation and actual SEAL transform trace. No PPA or realistic-workload search superiority claim.",
+  "sources": {
+    "mlkem-products.json": {
+      "sha256": "9f262598972af6c3203a295b2aca8493a6ac14241b62e0758c32a905ccda7880",
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem-products/results.json"
+    },
+    "mlkem-validation.json": {
+      "sha256": "8fd0b5647ba9da1205ef9c5097b5801ff4b94eff96f25e2c2a9ee69c9b9e6fee",
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/report.json"
+    },
+    "seal-chain.json": {
+      "sha256": "db076522440ab5735ed42e05c950d9c616b5e873d66c700ae5550d87cda2cbdc",
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-chain/chain.json"
+    },
+    "seal-rtl.json": {
+      "sha256": "11350cc0054166dc4458248b0fd52dcc90d9414f96e7d22cf7706f8be54ebdee",
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/results.json"
+    },
+    "seal-trace.json": {
+      "sha256": "9a1588a3522ce8c3f0623f05cf483cc02fb18b2948d5c014c555ebb680389032",
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/results.json"
+    },
+    "validation-manifest.json": {
+      "sha256": "936e04983607efce36f54e49b583dfb70cc96e7bdfb9139e787d3374aa0c6eb7",
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/manifest.json"
+    },
+    "validation.json": {
+      "sha256": "a293d96cbe35733937146f7ce863560a78c829e02fbdb79dae8389b9209e6c12",
+      "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/results.json"
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "benchmark": {
+    "inverse_normalization": "multiply by N^-1",
+    "name": "fhe4k60",
+    "ordering": "natural input and output",
+    "performance_status": "unmeasured",
+    "residues": "canonical [0,q)",
+    "resource_budget_note": "Assign the same explicit caps to all policies in a measured study; these templates do not claim a complete reference frontier.",
+    "scope": "Paper size/width; deterministic benchmark prime, not a claim to reproduce the paper exact modulus. Single RNS limb.",
+    "source": "https://zhenman.github.io/files/C45-FCCM2025-AutoNTT.pdf",
+    "split": "development"
+  },
+  "budget": {
+    "functional": 64,
+    "hours": 12,
+    "route": 4,
+    "synthesis": 12
+  },
+  "evaluation": {
+    "simulator": "verilator",
+    "timeout_seconds": 3600
+  },
+  "space": {
+    "pe": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "radix": [
+      2,
+      4
+    ],
+    "reductions": [
+      "montgomery",
+      "barrett",
+      "shoup"
+    ],
+    "stage_groups": [
+      1,
+      2,
+      4
+    ]
+  },
+  "stages": [
+    "simulation",
+    "synthesis"
+  ],
+  "target": {
+    "clock_period_ns": 4.0,
+    "clock_source": "BUFGCE_X0Y0",
+    "io_delays_ns": {
+      "input_max": 1.0,
+      "input_min": 0.5,
+      "output_max": 1.0,
+      "output_min": 0.0
+    },
+    "io_reference_pin": "input_full_reg/C",
+    "output_hold_buffer_stages": 2,
+    "part": "xcu280-fsvh2892-2L-e",
+    "tool_version": "2023.2"
+  },
+  "workload": {
+    "direction": "inverse",
+    "kind": "generic",
+    "lanes": 4,
+    "n": 4096,
+    "negacyclic": true,
+    "psi": "539139271544522278",
+    "q": "576460752303439873",
+    "root": "518817372818490065"
+  }
+}

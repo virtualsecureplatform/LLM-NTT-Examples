@@ -1,0 +1,40 @@
+{
+  "benchmark": {
+    "algorithm": "incomplete NTT and quadratic base multiplication",
+    "n": 256,
+    "name": "mlkem256",
+    "q": "3329",
+    "scope": "Dedicated Kyber preset/oracle. Never passed to the full negacyclic generic adapter.",
+    "source": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf"
+  },
+  "budget": {
+    "functional": 64,
+    "hours": 12,
+    "route": 4,
+    "synthesis": 12
+  },
+  "space": {
+    "backends": [
+      "compact"
+    ],
+    "profiles": [
+      "baseline"
+    ],
+    "transposes": [
+      "indexed"
+    ]
+  },
+  "stages": [
+    "simulation"
+  ],
+  "target": {
+    "clock_period_ns": 4.0,
+    "clock_port": "clk",
+    "part": "xcu280-fsvh2892-2L-e",
+    "tool_version": "2023.2"
+  },
+  "workload": {
+    "kind": "preset",
+    "task": "kyber_ntt_256_p12_pe1"
+  }
+}

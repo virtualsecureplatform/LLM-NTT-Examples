@@ -1,0 +1,392 @@
+{
+  "application_trace": {
+    "calls": 386,
+    "seal_revision": "119dc32e135cb89c1062076a69310d4413ebc824",
+    "sha256": "9a1588a3522ce8c3f0623f05cf483cc02fb18b2948d5c014c555ebb680389032",
+    "source": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/results.json"
+  },
+  "cases": [
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/fhe4k32-forward.json",
+          "sha256": "a6355c5e756db1f647106e3ed0f53eb9af3405c3fda39cd100b8b4606cb92aea"
+        },
+        "search-inverse": {
+          "path": "search/fhe4k32-inverse.json",
+          "sha256": "a2566f59444d3fb6f70d5cfa60f8eaa71ef897d9e40203f21957a5017e196927"
+        },
+        "validation-forward": {
+          "path": "validation/fhe4k32-forward.json",
+          "sha256": "27efa9fd4ac7dd338c21a0dbfb951d5921171a196c91a230662a3a6c6de91738"
+        },
+        "validation-inverse": {
+          "path": "validation/fhe4k32-inverse.json",
+          "sha256": "b28829f4b66fe812fb20d77d807aa3cb6edeba56a6223597277d6fc861f42426"
+        }
+      },
+      "domain": {
+        "n": 4096,
+        "psi": "101573657",
+        "q": "2147565569",
+        "root": "2143697989"
+      },
+      "name": "fhe4k32",
+      "negacyclic": true,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Paper size/width; deterministic benchmark prime, not a claim to reproduce the paper exact modulus. Single RNS limb.",
+      "source": "https://zhenman.github.io/files/C45-FCCM2025-AutoNTT.pdf",
+      "split": "development"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/fhe4k60-forward.json",
+          "sha256": "5ca208130d79eaa3fc763f25d27da326c57344ddcfe36c24a91daa6bbb62f28e"
+        },
+        "search-inverse": {
+          "path": "search/fhe4k60-inverse.json",
+          "sha256": "689c6420c0cf6778c991b26491e191dc7caa8b50b1ce417428f5a93e31a5ec66"
+        },
+        "validation-forward": {
+          "path": "validation/fhe4k60-forward.json",
+          "sha256": "b999561b70add9c57280fe78628f4a327dd1fdf7baca5cb78a710f79501b76c2"
+        },
+        "validation-inverse": {
+          "path": "validation/fhe4k60-inverse.json",
+          "sha256": "60f1632f881f14f9844bd2480052e7e3ce77b9c22339de3521b48232aedb5c32"
+        }
+      },
+      "domain": {
+        "n": 4096,
+        "psi": "539139271544522278",
+        "q": "576460752303439873",
+        "root": "518817372818490065"
+      },
+      "name": "fhe4k60",
+      "negacyclic": true,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Paper size/width; deterministic benchmark prime, not a claim to reproduce the paper exact modulus. Single RNS limb.",
+      "source": "https://zhenman.github.io/files/C45-FCCM2025-AutoNTT.pdf",
+      "split": "development"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/fhe16k54-forward.json",
+          "sha256": "a4bd9237d320c8d2adc8d6e812cc33047bea594ca0753579e97588d42c4376c7"
+        },
+        "search-inverse": {
+          "path": "search/fhe16k54-inverse.json",
+          "sha256": "7ed79f56b2974d4275ca3a2b46b66d223e54caae5e954e84452ccc9762ee0575"
+        },
+        "validation-forward": {
+          "path": "validation/fhe16k54-forward.json",
+          "sha256": "0acc5fdcc4bb8b756f51f3aa01de1f3a7edf0ac816f6f5937946d254c47db92b"
+        },
+        "validation-inverse": {
+          "path": "validation/fhe16k54-inverse.json",
+          "sha256": "69d1b00eb75b99e6c33455b106b2f98eb4a55b0126613bff37bcd41d17dc2221"
+        }
+      },
+      "domain": {
+        "n": 16384,
+        "psi": "8877445661101042",
+        "q": "9007199255560193",
+        "root": "2574240303494213"
+      },
+      "name": "fhe16k54",
+      "negacyclic": true,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Paper size/width; deterministic benchmark prime, not a claim to reproduce the paper exact modulus. Single RNS limb.",
+      "source": "https://zhenman.github.io/files/C45-FCCM2025-AutoNTT.pdf",
+      "split": "held-out"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/fhe64k54-forward.json",
+          "sha256": "2d55505cea11da48e49b5cf6df1fc2849adbc4d76b36bde430fe9a6c2e3715f5"
+        },
+        "search-inverse": {
+          "path": "search/fhe64k54-inverse.json",
+          "sha256": "0d3fb53357a2aff901396bc1b173a3b1f218f3e08417df3225baa39dbe0c32c3"
+        },
+        "validation-forward": {
+          "path": "validation/fhe64k54-forward.json",
+          "sha256": "32955f7c0f2cc9d55a6b9fded032d0b05adb05a59555da65ce19a29d0c026daf"
+        },
+        "validation-inverse": {
+          "path": "validation/fhe64k54-inverse.json",
+          "sha256": "e229292f5b093058ce6662f95a3e4d249c0b3d8f8cd306af0987cfbe60ff704d"
+        }
+      },
+      "domain": {
+        "n": 65536,
+        "psi": "2509744512604643",
+        "q": "9007199255658497",
+        "root": "2534713700142403"
+      },
+      "name": "fhe64k54",
+      "negacyclic": true,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Paper size/width; deterministic benchmark prime, not a claim to reproduce the paper exact modulus. Single RNS limb.",
+      "source": "https://zhenman.github.io/files/C45-FCCM2025-AutoNTT.pdf",
+      "split": "held-out"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/ckks8k-prime0-forward.json",
+          "sha256": "b3054549f37252e8de1d6854bd1c42c143d7018e40d5ba5a80f20318f6c67726"
+        },
+        "search-inverse": {
+          "path": "search/ckks8k-prime0-inverse.json",
+          "sha256": "45de808877dcf798bbca74705c2e543402594756e997c3ab617b608fe0c9b325"
+        },
+        "validation-forward": {
+          "path": "validation/ckks8k-prime0-forward.json",
+          "sha256": "8a75fb3692d82d7b365feb924aadefafa9e94d23c60fe4d01a7b65241a1cd90e"
+        },
+        "validation-inverse": {
+          "path": "validation/ckks8k-prime0-inverse.json",
+          "sha256": "71e37e97ed5d114ec09e8bafa685c7fb804396f56798c5f8795fa97230488431"
+        }
+      },
+      "domain": {
+        "n": 8192,
+        "psi": "5405730",
+        "q": "1099510890497",
+        "root": "634633679978"
+      },
+      "name": "ckks8k-prime0",
+      "negacyclic": true,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Exact prime/root observed in SEAL CKKS example. Index sorts primes numerically; it is not an RNS chain position.",
+      "source": "https://github.com/microsoft/SEAL/blob/119dc32e135cb89c1062076a69310d4413ebc824/native/examples/5_ckks_basics.cpp",
+      "split": "development"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/ckks8k-prime1-forward.json",
+          "sha256": "73af8fee2f9ed43ec674c31f3fed21c66543c8a12492504bf0d712d39ce1cb7f"
+        },
+        "search-inverse": {
+          "path": "search/ckks8k-prime1-inverse.json",
+          "sha256": "255bc29a428c261d314f8dade9ff4ae228288784b6827a9aca7948157b31e307"
+        },
+        "validation-forward": {
+          "path": "validation/ckks8k-prime1-forward.json",
+          "sha256": "8d05c90e8452b0ff686bcd8459c3a0c0a78ecc5912f0a282d7aa1f016a450a36"
+        },
+        "validation-inverse": {
+          "path": "validation/ckks8k-prime1-inverse.json",
+          "sha256": "c9b450165083fb46d6ab36911c8558cf502d99aecb8c3fd230ecc5e5c7bfd215"
+        }
+      },
+      "domain": {
+        "n": 8192,
+        "psi": "30370987",
+        "q": "1099511480321",
+        "root": "1006230845171"
+      },
+      "name": "ckks8k-prime1",
+      "negacyclic": true,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Exact prime/root observed in SEAL CKKS example. Index sorts primes numerically; it is not an RNS chain position.",
+      "source": "https://github.com/microsoft/SEAL/blob/119dc32e135cb89c1062076a69310d4413ebc824/native/examples/5_ckks_basics.cpp",
+      "split": "development"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/ckks8k-prime2-forward.json",
+          "sha256": "639c8c6818d8e57178570c3873f87120870049ae0f5c1b5d51c647d852cb81f1"
+        },
+        "search-inverse": {
+          "path": "search/ckks8k-prime2-inverse.json",
+          "sha256": "7cac9b9edf4e6195993bd1c608e56d3cf07cc47ce5af85dd402a3729081cb7f4"
+        },
+        "validation-forward": {
+          "path": "validation/ckks8k-prime2-forward.json",
+          "sha256": "e9317df270ba0cc1bbcede7499961a9af3babd54fc8c7129b4c19519f3a7325e"
+        },
+        "validation-inverse": {
+          "path": "validation/ckks8k-prime2-inverse.json",
+          "sha256": "12d3a7e2860327cce715158e415113ee3518f1d28a32140a0fd39810783baf40"
+        }
+      },
+      "domain": {
+        "n": 8192,
+        "psi": "100406242475323",
+        "q": "1152921504606748673",
+        "root": "44057242037044722"
+      },
+      "name": "ckks8k-prime2",
+      "negacyclic": true,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Exact prime/root observed in SEAL CKKS example. Index sorts primes numerically; it is not an RNS chain position.",
+      "source": "https://github.com/microsoft/SEAL/blob/119dc32e135cb89c1062076a69310d4413ebc824/native/examples/5_ckks_basics.cpp",
+      "split": "development"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/ckks8k-prime3-forward.json",
+          "sha256": "96a8be08407abb38d51cc2791e9f3ad0faaa162dcc139c2cf78fdc1baec75cce"
+        },
+        "search-inverse": {
+          "path": "search/ckks8k-prime3-inverse.json",
+          "sha256": "62e7147514787c6376005273a89e42b885600877576ec1716a1c123bee2b3396"
+        },
+        "validation-forward": {
+          "path": "validation/ckks8k-prime3-forward.json",
+          "sha256": "542512876c4662f621ac849442176efeeab27060720469c98bc7c9f238f97931"
+        },
+        "validation-inverse": {
+          "path": "validation/ckks8k-prime3-inverse.json",
+          "sha256": "ca75c4caf2f7a267739fd72b019245522fe420a413c82fd4cb91678e2d3537b9"
+        }
+      },
+      "domain": {
+        "n": 8192,
+        "psi": "25959043411404",
+        "q": "1152921504606830593",
+        "root": "668969636494687140"
+      },
+      "name": "ckks8k-prime3",
+      "negacyclic": true,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Exact prime/root observed in SEAL CKKS example. Index sorts primes numerically; it is not an RNS chain position.",
+      "source": "https://github.com/microsoft/SEAL/blob/119dc32e135cb89c1062076a69310d4413ebc824/native/examples/5_ckks_basics.cpp",
+      "split": "development"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/goldilocks1024-forward.json",
+          "sha256": "69c7daf5da3cfabd7ac1c8120dcfad4e9d622a94b37c851c5d78157d00730e66"
+        },
+        "search-inverse": {
+          "path": "search/goldilocks1024-inverse.json",
+          "sha256": "24bedef49df52bac63c4f60fa8fa4e973866d7e45f09423f78d0328796587bf4"
+        },
+        "validation-forward": {
+          "path": "validation/goldilocks1024-forward.json",
+          "sha256": "842a8dd39ae8b35d188832b48f1d83647366a64fe06e84e6b2ffda3f72e4fa06"
+        },
+        "validation-inverse": {
+          "path": "validation/goldilocks1024-inverse.json",
+          "sha256": "c791400332ca200834b6de71e3a3e3283e44027bb10d878a2ca8806f78ae6b61"
+        }
+      },
+      "domain": {
+        "n": 1024,
+        "psi": "455906449640507599",
+        "q": "18446744069414584321",
+        "root": "11353340290879379826"
+      },
+      "name": "goldilocks1024",
+      "negacyclic": false,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Goldilocks cyclic NTT/INTT; 64K is a proposed scale-up of the field used by HOGE/Proteus examples.",
+      "source": "https://eprint.iacr.org/2023/267.pdf",
+      "split": "extension"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/goldilocks65536-forward.json",
+          "sha256": "3233e82d2b120c0fc304649ffa1550e9620eb22016cec787c7b25408f2684544"
+        },
+        "search-inverse": {
+          "path": "search/goldilocks65536-inverse.json",
+          "sha256": "7038a44a61161215eb144caf1c7b3c14c4a528880e5ca5b09fdcdac96d8f6772"
+        },
+        "validation-forward": {
+          "path": "validation/goldilocks65536-forward.json",
+          "sha256": "1d26fbc17430cfacca670f24fcc187dc8a5a642cd5eafaa0840ac725767faca9"
+        },
+        "validation-inverse": {
+          "path": "validation/goldilocks65536-inverse.json",
+          "sha256": "4db7f7559a91553b65de9d4b82eb814f1eb52f0d9c3403b93a96aabdbe9a618d"
+        }
+      },
+      "domain": {
+        "n": 65536,
+        "psi": "12380578893860276750",
+        "q": "18446744069414584321",
+        "root": "6115771955107415310"
+      },
+      "name": "goldilocks65536",
+      "negacyclic": false,
+      "polynomial_product_oracle_passed": true,
+      "scope": "Goldilocks cyclic NTT/INTT; 64K is a proposed scale-up of the field used by HOGE/Proteus examples.",
+      "source": "https://eprint.iacr.org/2023/267.pdf",
+      "split": "extension"
+    },
+    {
+      "campaigns": {
+        "search-forward": {
+          "path": "search/mldsa256-forward.json",
+          "sha256": "0e5416196b6cc5319d7e9b433f8594f8d90c4fd545a06ddb0cdd9f100b8afc39"
+        },
+        "search-inverse": {
+          "path": "search/mldsa256-inverse.json",
+          "sha256": "df6bfc0edea6d5aee0e28756df3b03b5a214e69ef9b827ac4b30947775bd44b2"
+        },
+        "validation-forward": {
+          "path": "validation/mldsa256-forward.json",
+          "sha256": "f3f3625b0e649e8407e2aea86847abd4ab648759902fb71e5a210c575f574773"
+        },
+        "validation-inverse": {
+          "path": "validation/mldsa256-inverse.json",
+          "sha256": "b208ad6c1eb2d52a192d1b128632334806893bf1e6aff7e1963d791975662c55"
+        }
+      },
+      "domain": {
+        "n": 256,
+        "psi": "1753",
+        "q": "8380417",
+        "root": "3073009"
+      },
+      "name": "mldsa256",
+      "negacyclic": true,
+      "polynomial_product_oracle_passed": true,
+      "scope": "ML-DSA field and root; natural-order normalized NTT boundary, not a complete signature implementation.",
+      "source": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf",
+      "split": "extension"
+    }
+  ],
+  "methodology": {
+    "directions": [
+      "forward",
+      "inverse"
+    ],
+    "holdout_rule": "Freeze policy/settings before measuring 16K/64K FHE outcomes; initial correctness tests do not supply PPA observations.",
+    "primary_metrics": [
+      "routed setup and hold",
+      "LUT",
+      "FF",
+      "DSP",
+      "BRAM",
+      "URAM",
+      "transaction cycles",
+      "frame interval",
+      "transfer-inclusive throughput"
+    ],
+    "scope": "Workload templates and mathematical checks; hardware qualification comes only from separate measured reports.",
+    "traffic": [
+      "single frame",
+      "back-to-back frames",
+      "input gaps",
+      "output backpressure"
+    ]
+  },
+  "preset": {
+    "path": "preset/mlkem256.json",
+    "sha256": "518c93da1cbcf7350ca8ac21bbe99ac767574b1f9832da4d55d2350070791a0a"
+  },
+  "schema": "ntt-realistic-benchmarks-v1"
+}

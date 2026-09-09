@@ -1,0 +1,217 @@
+{
+  "capture_sha256": "9a1588a3522ce8c3f0623f05cf483cc02fb18b2948d5c014c555ebb680389032",
+  "completed": 8,
+  "correct": true,
+  "expected": 8,
+  "results": [
+    {
+      "case": "ckks8k-prime0-forward",
+      "correct": true,
+      "expected_source": "Captured SEAL output, normalized and reordered; no oracle-generated expected vector.",
+      "inputs": {
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/trace/8192_1099510890497_forward.txt": "559498901be2ad1d4ba860e9ad9061e3c4e38f95f29374e58a3ab68ad8025316",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime0-forward/expected.mem": "d60d9e86279d78b6a3998cb0f4d036aeab2ffe2e04d3046af04a45a13a15bfd8",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime0-forward/inputs.mem": "9a1b323746e53677c1d87816a5ccd5d6143f768d0846548db9180ddf2acf8a65",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-forward/verification/SearchTop.SearchCore.control_0_rom.mem": "f9c283d4562aac99952a081997da245644926c971d5573c9d97f6f014be1aec3",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-forward/verification/SearchTop.SearchCore.control_1_rom.mem": "5f1530a499111470bdd35eefd5ecba7c3539b989a9556b0fd8e0dde5ac55af63",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-forward/verification/SearchTop.sv": "b1b535b47b348706ac4e2a7ef7bbd6fa3e189c6177b243f615ed91a3db1ad7c7",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-forward/verification/expected.mem": "179db442c68628dfc061d57693b499922a718a9ede2674a8e0efbe2b02a5893a",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-forward/verification/inputs.mem": "b572f818177b6e641e087745905c13ab926c456a741f9014a534618d27d45ed5",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-forward/verification/obj_dir/Vtest": "05652dece86085bc7ef4fa3cbcef418d64eb23d4327252f22a5e203b470f00d5",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-forward/verification/test.sv": "a13b0db75736699753ebcd51d13cf389039dd477bd03ac13dfa3bb4888d31f29"
+      },
+      "process": {
+        "command": [
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-forward/verification/obj_dir/Vtest"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime0-forward/test.log",
+        "returncode": 0,
+        "seconds": 0.6285238158889115,
+        "timed_out": false
+      }
+    },
+    {
+      "case": "ckks8k-prime0-inverse",
+      "correct": true,
+      "expected_source": "Captured SEAL output, normalized and reordered; no oracle-generated expected vector.",
+      "inputs": {
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/trace/8192_1099510890497_inverse.txt": "f9f7b37e89b3ce4df4bf44d54470fcd58e6f7bb9dfb650a330f1800ee88bfd98",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime0-inverse/expected.mem": "24699b34e3e7c0661429c08971dfe91338b32bef22323a7b93013261a3bef582",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime0-inverse/inputs.mem": "2a4d43bc3fea1545e337bb349c84bca4a5f739005448e8b3f85369d43e5cad84",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-inverse/verification/SearchTop.SearchCore.control_0_rom.mem": "e7f615fea567cad7eaf30c43af7b0bf8bf215de7014d16882bf6d9a84e6f8874",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-inverse/verification/SearchTop.SearchCore.control_1_rom.mem": "c09400834cc75a3fc203b2ec469e02cd9c9c5b45e0d14e3192233346dee52b78",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-inverse/verification/SearchTop.sv": "a00dea846bdd144068dcd428571e974e33706697497d4724c6ee8fd4204d7e44",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-inverse/verification/expected.mem": "6a57d8b287cebbfcef0aa56d63443cfa770345e3c1496ff373da91ed7fbba8e6",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-inverse/verification/inputs.mem": "b572f818177b6e641e087745905c13ab926c456a741f9014a534618d27d45ed5",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-inverse/verification/obj_dir/Vtest": "545f3f641b8a1d3950244e21a37a610ed9c8fde2af39d6c8371e5aa6ea8c8f76",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-inverse/verification/test.sv": "a13b0db75736699753ebcd51d13cf389039dd477bd03ac13dfa3bb4888d31f29"
+      },
+      "process": {
+        "command": [
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime0-inverse/verification/obj_dir/Vtest"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime0-inverse/test.log",
+        "returncode": 0,
+        "seconds": 0.6791579080745578,
+        "timed_out": false
+      }
+    },
+    {
+      "case": "ckks8k-prime1-forward",
+      "correct": true,
+      "expected_source": "Captured SEAL output, normalized and reordered; no oracle-generated expected vector.",
+      "inputs": {
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/trace/8192_1099511480321_forward.txt": "234d2764a6e7c30f9978d383a3f16ef1e894b32d451f48ec7b88e8c7082c80b2",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime1-forward/expected.mem": "8aa97c36b0895afdb6ef9c59e47a1382fcfd511cfcc9929b5fe3d17648032ea8",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime1-forward/inputs.mem": "7fa8d7d4ae4cb6eff4f457f16fbc94ce14ac0df9c48ea4c3432e8d7214531990",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-forward/verification/SearchTop.SearchCore.control_0_rom.mem": "6cb02d3c8116d01ec090b0305c843c1a25ba97a9a4c17df8e3c1fdc3dcf210be",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-forward/verification/SearchTop.SearchCore.control_1_rom.mem": "47116073954095ae260786ff11ef14f3ae0674f86e8d1ed0bee5f4914d40df39",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-forward/verification/SearchTop.sv": "a8961fb4a6bdf81732fa4b01de6c7bd761275caaff31a795166062be2e61fbfb",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-forward/verification/expected.mem": "0fc26889040f31261a1718037e2c0ee9a8db7d67b6082ae31fb75de3a71454f6",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-forward/verification/inputs.mem": "9e80969287ef96b060a0c3e754bb13acba6262e09853adb6b6b9dc0ccf03d162",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-forward/verification/obj_dir/Vtest": "e6ab1b583b4917004f2ea56e39872ba01aa239cdf81ff9f4f1c78e3a34b5d26a",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-forward/verification/test.sv": "a13b0db75736699753ebcd51d13cf389039dd477bd03ac13dfa3bb4888d31f29"
+      },
+      "process": {
+        "command": [
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-forward/verification/obj_dir/Vtest"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime1-forward/test.log",
+        "returncode": 0,
+        "seconds": 0.6270160679705441,
+        "timed_out": false
+      }
+    },
+    {
+      "case": "ckks8k-prime1-inverse",
+      "correct": true,
+      "expected_source": "Captured SEAL output, normalized and reordered; no oracle-generated expected vector.",
+      "inputs": {
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/trace/8192_1099511480321_inverse.txt": "be42bf60b486b05b74b22e337b90dbd11afc3f223c2aca1599d8e3a90a97fbc8",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime1-inverse/expected.mem": "18758934a12b98c4b51b5240498d24522560daaffaa3988db7df419ee8519562",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime1-inverse/inputs.mem": "dc255e03c5de90f9bafe2a544704c992e67fbcfd6e37ff0c7f4676de1ab6d513",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-inverse/verification/SearchTop.SearchCore.control_0_rom.mem": "da882414db3f547dee7647926da046e27917bc11e3ef8e7327bc72dd814760e5",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-inverse/verification/SearchTop.SearchCore.control_1_rom.mem": "d70937e56e3a6dde8b04a0f8ffce0520cd811ad346b65113a9b42f14986a4e07",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-inverse/verification/SearchTop.sv": "81ce6610c6b70c824f15d3f83da58f3806c0bedfe0fab1e220c6dfee8f3726e2",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-inverse/verification/expected.mem": "2f4de7ad0abf6788cb2ab097983e24f30a10777ac585b96a2a963e85a819a585",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-inverse/verification/inputs.mem": "9e80969287ef96b060a0c3e754bb13acba6262e09853adb6b6b9dc0ccf03d162",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-inverse/verification/obj_dir/Vtest": "d2898bea431b4223025da4310e94341bfcc37f6e034f704b47ea1ca715cb6909",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-inverse/verification/test.sv": "a13b0db75736699753ebcd51d13cf389039dd477bd03ac13dfa3bb4888d31f29"
+      },
+      "process": {
+        "command": [
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime1-inverse/verification/obj_dir/Vtest"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime1-inverse/test.log",
+        "returncode": 0,
+        "seconds": 0.6815995890647173,
+        "timed_out": false
+      }
+    },
+    {
+      "case": "ckks8k-prime2-forward",
+      "correct": true,
+      "expected_source": "Captured SEAL output, normalized and reordered; no oracle-generated expected vector.",
+      "inputs": {
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/trace/8192_1152921504606748673_forward.txt": "18e5b53a8b8eaf54f12cc72787d18d5e3a6b6e560544d70bd16c91fa284ae101",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime2-forward/expected.mem": "d37ef465ad9dff5562637b93f1324b833f3bbf459fc4cc3b8e1ef0686301b5fb",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime2-forward/inputs.mem": "c83eb383bd00918e034c3b5041bcd9bdf813f0443cd81cf06955f5644b170dcc",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-forward/verification/SearchTop.SearchCore.control_0_rom.mem": "bf1b9a35833b86eeb55e64fcfe2d5f6e95a0095e21170d379b91ef63df478e17",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-forward/verification/SearchTop.SearchCore.control_1_rom.mem": "fed15de54891dd98c363421cb52fd0b5c6bfe03e762b142cd87addc99bff1173",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-forward/verification/SearchTop.sv": "e7617a7437b6f738fc0cf4c9f45d4bd57f7f9267e4bf047552052c6f181c16f2",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-forward/verification/expected.mem": "d86abb1bbb44449cb7837a210e8c08be7ad972e1aff0f81e9821f66638ea94f9",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-forward/verification/inputs.mem": "977e67c436072d88a0f426cc81d0610c11cea14a3975622f003b34b68c741690",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-forward/verification/obj_dir/Vtest": "d230bac8880e82089eec76d7217ae527bd9bd19d09eb26a81b36e93a852f260c",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-forward/verification/test.sv": "5606f770b4a345c956b1dc3270003323c3e2ae12128fac3b1feceabc338fa3bc"
+      },
+      "process": {
+        "command": [
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-forward/verification/obj_dir/Vtest"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime2-forward/test.log",
+        "returncode": 0,
+        "seconds": 0.7816293621435761,
+        "timed_out": false
+      }
+    },
+    {
+      "case": "ckks8k-prime2-inverse",
+      "correct": true,
+      "expected_source": "Captured SEAL output, normalized and reordered; no oracle-generated expected vector.",
+      "inputs": {
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/trace/8192_1152921504606748673_inverse.txt": "ec3ee8ebca8451a5ce0f248c5ba062cfd51a380593f7ca948739c6af66df2e5b",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime2-inverse/expected.mem": "ce504eb8c489a2c4cb7e1f9f8527b63e545d195c1d08610f572f56e37ec220c8",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime2-inverse/inputs.mem": "f966b3606b0be62c389047f78d3902f8d21c74d0f50285f7b33ecc8dd3fe3000",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-inverse/verification/SearchTop.SearchCore.control_0_rom.mem": "2b14bf888f2c99909765e7f44bf2e3c6f0c75e85449d486a7dd56f3f97076ff3",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-inverse/verification/SearchTop.SearchCore.control_1_rom.mem": "07efa02611042888b42fdf643be78e1e6ebb1f2707a298429f6df9fab1f255c3",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-inverse/verification/SearchTop.sv": "0b9ca002c4c7fd8ce52df106beeb8aec404d381445c53fc99775a5ba0ff9532d",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-inverse/verification/expected.mem": "3002d3fda054aaceadae4ab59e00ebad3b94ed548e842ea25e7513c2ebcb8ac0",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-inverse/verification/inputs.mem": "977e67c436072d88a0f426cc81d0610c11cea14a3975622f003b34b68c741690",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-inverse/verification/obj_dir/Vtest": "b52ba17d1c46bb871ce94500bc0da23c1dd97b971e5548aaca9ddb44be6fd946",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-inverse/verification/test.sv": "5606f770b4a345c956b1dc3270003323c3e2ae12128fac3b1feceabc338fa3bc"
+      },
+      "process": {
+        "command": [
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime2-inverse/verification/obj_dir/Vtest"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime2-inverse/test.log",
+        "returncode": 0,
+        "seconds": 0.830468141939491,
+        "timed_out": false
+      }
+    },
+    {
+      "case": "ckks8k-prime3-forward",
+      "correct": true,
+      "expected_source": "Captured SEAL output, normalized and reordered; no oracle-generated expected vector.",
+      "inputs": {
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/trace/8192_1152921504606830593_forward.txt": "c8c140e9469e84a6e784d062306d28150b616c42101dc38eab14c841045e3b48",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime3-forward/expected.mem": "dbc7ef17b72ccc26627dfaae6dfa57519b7458ef51a772f8af39fbbe40d0cdf4",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime3-forward/inputs.mem": "0e0cfb422d3a60eb16d34bc1034b0f4de4580438f7bd9bd3f9e69ac26e318e8c",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-forward/verification/SearchTop.SearchCore.control_0_rom.mem": "b6fe33e9b9b7b7336eb78882e429546e8aa56109ce499135a3552d87fae1f815",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-forward/verification/SearchTop.SearchCore.control_1_rom.mem": "7f3da88fc216db7800889755c48d5a92ceafea0f3a83d42d27905151263aa4c0",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-forward/verification/SearchTop.sv": "ee5367587cbd94c39a4f3412f0efa7fb694e2ed4e2a6e8a21d49e8931085e2fd",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-forward/verification/expected.mem": "79cd1a6a9d63e84184876a99c69c83efe7d42276f697c55cb9ffeb10b5ae2405",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-forward/verification/inputs.mem": "9d78e61648b6c2ebed2b0ac22b0569efe5ed9095fc61c787303a175a11219f90",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-forward/verification/obj_dir/Vtest": "9634d55aae793829bc43a4391258b99c0a5db4efb3cbd08983b0a2a1c0821dd4",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-forward/verification/test.sv": "5606f770b4a345c956b1dc3270003323c3e2ae12128fac3b1feceabc338fa3bc"
+      },
+      "process": {
+        "command": [
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-forward/verification/obj_dir/Vtest"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime3-forward/test.log",
+        "returncode": 0,
+        "seconds": 0.7819722699932754,
+        "timed_out": false
+      }
+    },
+    {
+      "case": "ckks8k-prime3-inverse",
+      "correct": true,
+      "expected_source": "Captured SEAL output, normalized and reordered; no oracle-generated expected vector.",
+      "inputs": {
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-seal-trace/trace/8192_1152921504606830593_inverse.txt": "5f84a94f74b7cd05c7439c7846e6c71cee7dd8ee9f4348d93ff701715eb07943",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime3-inverse/expected.mem": "5a4922c3f804bea55f4df13995106f66d6b90ee2de8dfe5868f1f1c503480f6f",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime3-inverse/inputs.mem": "38b19fb1913c437964f92a636680298291d23b6b79f7dce0cc872bd686a7b751",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-inverse/verification/SearchTop.SearchCore.control_0_rom.mem": "1be4348b3d1932756b47fdbc440766e1e687dea6e70f3bc992a69ed38c1d9788",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-inverse/verification/SearchTop.SearchCore.control_1_rom.mem": "a8816587887735f55f240141accb5128feafa9980a6abd62c523e0e4223230e1",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-inverse/verification/SearchTop.sv": "bd8c7546ef43e9255f3bbd6e6185f3732380c3d4fc23f27d5c97316d3f4f95f1",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-inverse/verification/expected.mem": "32126881ca9151e781f89dd13224f18a9cfe9459208a1c7525561f9f1d1f30ae",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-inverse/verification/inputs.mem": "9d78e61648b6c2ebed2b0ac22b0569efe5ed9095fc61c787303a175a11219f90",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-inverse/verification/obj_dir/Vtest": "ff996429487fab6ebc96f3b84a7356f3cffa9289d06b58863436abf8162176f6",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-inverse/verification/test.sv": "5606f770b4a345c956b1dc3270003323c3e2ae12128fac3b1feceabc338fa3bc"
+      },
+      "process": {
+        "command": [
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-validation/ckks8k-prime3-inverse/verification/obj_dir/Vtest"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-seal-rtl/ckks8k-prime3-inverse/test.log",
+        "returncode": 0,
+        "seconds": 0.7805529590696096,
+        "timed_out": false
+      }
+    }
+  ],
+  "scope": "One captured operand/result pair per prime/direction, repeated through the existing gap/backpressure/reset testbench. No full FHE accelerator or timing claim."
+}

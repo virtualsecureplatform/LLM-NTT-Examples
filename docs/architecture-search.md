@@ -1,5 +1,8 @@
 # Running architecture search
 
+The [realistic benchmark suite](realistic-benchmarks.md) adds FHE 4K–64K, a
+verified SEAL CKKS trace, Goldilocks, ML-DSA and the dedicated ML-KEM preset.
+
 The implementation provides a reproducible search loop around NGen, optional
 SGen square permutations, independent generic NTT checking, and staged Vivado
 measurement. It does **not yet establish an advantage over AutoNTT, Proteus,

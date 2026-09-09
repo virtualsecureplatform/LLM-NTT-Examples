@@ -1,0 +1,38 @@
+{
+  "build": {
+    "command": [
+      "verilator",
+      "--cc",
+      "--exe",
+      "--build",
+      "--top-module",
+      "KyberHPM1PE",
+      "-Wno-fatal",
+      "-j",
+      "4",
+      "KyberHPM1PE.v",
+      "kyber_polynomial_product_test.cpp"
+    ],
+    "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem-products/build.log",
+    "returncode": 0,
+    "seconds": 3.0318568982183933,
+    "timed_out": false
+  },
+  "correct": true,
+  "inputs": {
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem-products/KyberHPM1PE.v": "71a1c6f9ce582e2ef02032ede1c3cfbc54be6d1650a21d3a792d7d73db60162f",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem-products/kyber_pe1_reference_test.cpp": "1895e759b68803bebc6d498cede0592b2a6d2379a9e9ccc87fa17537412fc277",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem-products/kyber_polynomial_product_test.cpp": "b33dc782c22a29c37706a2296d26785f77c410d99d147d6ce59f78246e1bd1f5"
+  },
+  "scope": "Four full negacyclic polynomial products; NGen RTL performs forward/inverse incomplete NTT, host C++ performs quadratic multiplication. Independent schoolbook oracle. No hardware base-multiplier or complete ML-KEM implementation claim.",
+  "source_record_sha256": "3632c8b47554e2f7929b1e0eb67b07283084e0a48bbaf0d625f58440cb5721ec",
+  "test": {
+    "command": [
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem-products/obj_dir/VKyberHPM1PE"
+    ],
+    "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem-products/test.log",
+    "returncode": 0,
+    "seconds": 0.043526054825633764,
+    "timed_out": false
+  }
+}

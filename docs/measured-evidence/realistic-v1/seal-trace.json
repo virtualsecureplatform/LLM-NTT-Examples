@@ -1,0 +1,3065 @@
+{
+  "application": "unmodified arithmetic of native/examples/5_ckks_basics.cpp",
+  "configured_chain_bits": [
+    60,
+    40,
+    40,
+    60
+  ],
+  "correct": true,
+  "counts": [
+    {
+      "calls": 1,
+      "direction": "inverse",
+      "phase": "encoder.decode",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "encoder.encode",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "encoder.encode",
+      "q": "1099511480321"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "encoder.encode",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 5,
+      "direction": "forward",
+      "phase": "encryptor.encrypt",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 5,
+      "direction": "forward",
+      "phase": "encryptor.encrypt",
+      "q": "1099511480321"
+    },
+    {
+      "calls": 5,
+      "direction": "forward",
+      "phase": "encryptor.encrypt",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 3,
+      "direction": "forward",
+      "phase": "encryptor.encrypt",
+      "q": "1152921504606830593"
+    },
+    {
+      "calls": 2,
+      "direction": "inverse",
+      "phase": "encryptor.encrypt",
+      "q": "1152921504606830593"
+    },
+    {
+      "calls": 7,
+      "direction": "forward",
+      "phase": "evaluator.relinearize_inplace",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 2,
+      "direction": "inverse",
+      "phase": "evaluator.relinearize_inplace",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 4,
+      "direction": "forward",
+      "phase": "evaluator.relinearize_inplace",
+      "q": "1099511480321"
+    },
+    {
+      "calls": 1,
+      "direction": "inverse",
+      "phase": "evaluator.relinearize_inplace",
+      "q": "1099511480321"
+    },
+    {
+      "calls": 7,
+      "direction": "forward",
+      "phase": "evaluator.relinearize_inplace",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 2,
+      "direction": "inverse",
+      "phase": "evaluator.relinearize_inplace",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 5,
+      "direction": "forward",
+      "phase": "evaluator.relinearize_inplace",
+      "q": "1152921504606830593"
+    },
+    {
+      "calls": 4,
+      "direction": "inverse",
+      "phase": "evaluator.relinearize_inplace",
+      "q": "1152921504606830593"
+    },
+    {
+      "calls": 6,
+      "direction": "forward",
+      "phase": "evaluator.rescale_to_next_inplace",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 2,
+      "direction": "inverse",
+      "phase": "evaluator.rescale_to_next_inplace",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 6,
+      "direction": "inverse",
+      "phase": "evaluator.rescale_to_next_inplace",
+      "q": "1099511480321"
+    },
+    {
+      "calls": 8,
+      "direction": "forward",
+      "phase": "evaluator.rescale_to_next_inplace",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "keygen",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "keygen",
+      "q": "1099511480321"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "keygen",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "keygen",
+      "q": "1152921504606830593"
+    },
+    {
+      "calls": 72,
+      "direction": "forward",
+      "phase": "keygen.create_galois_keys",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 72,
+      "direction": "forward",
+      "phase": "keygen.create_galois_keys",
+      "q": "1099511480321"
+    },
+    {
+      "calls": 72,
+      "direction": "forward",
+      "phase": "keygen.create_galois_keys",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 72,
+      "direction": "forward",
+      "phase": "keygen.create_galois_keys",
+      "q": "1152921504606830593"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "keygen.create_public_key",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "keygen.create_public_key",
+      "q": "1099511480321"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "keygen.create_public_key",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 1,
+      "direction": "forward",
+      "phase": "keygen.create_public_key",
+      "q": "1152921504606830593"
+    },
+    {
+      "calls": 3,
+      "direction": "forward",
+      "phase": "keygen.create_relin_keys",
+      "q": "1099510890497"
+    },
+    {
+      "calls": 3,
+      "direction": "forward",
+      "phase": "keygen.create_relin_keys",
+      "q": "1099511480321"
+    },
+    {
+      "calls": 3,
+      "direction": "forward",
+      "phase": "keygen.create_relin_keys",
+      "q": "1152921504606748673"
+    },
+    {
+      "calls": 3,
+      "direction": "forward",
+      "phase": "keygen.create_relin_keys",
+      "q": "1152921504606830593"
+    }
+  ],
+  "events": [
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_public_key",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_public_key",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_public_key",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_public_key",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_relin_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "keygen.create_galois_keys",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encoder.encode",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encoder.encode",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encoder.encode",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "encryptor.encrypt",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "25959043411404",
+      "q": "1152921504606830593"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.relinearize_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "30370987",
+      "q": "1099511480321"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    },
+    {
+      "direction": "forward",
+      "n": 8192,
+      "phase": "evaluator.rescale_to_next_inplace",
+      "psi": "5405730",
+      "q": "1099510890497"
+    },
+    {
+      "direction": "inverse",
+      "n": 8192,
+      "phase": "encoder.decode",
+      "psi": "100406242475323",
+      "q": "1152921504606748673"
+    }
+  ],
+  "inputs": {
+    "events_sha256": "d3d753801e4f99518c3e5f29a7b2e7ebc27ccbeae3a97d5ba2d1cd9d512f376c",
+    "executable_sha256": "c1969546511840dc8d8a4d5e7f70234431ded479c8d2598f0319d273250fba52",
+    "instrumented": {
+      "native/examples/5_ckks_basics.cpp": "8f870545faf49835e5d796e1dbbe6a04a6c49fa5e83e08f071f5c984c18fec4e",
+      "native/examples/examples.cpp": "81c2d9cc0d3e5a7321b3586243780e08ade35e733eaf5a5d70fe4b8bf3806890",
+      "native/src/seal/util/ntt.cpp": "c26b83d7eed8adf94ac34061630005ffb073e5d8f925d07ee259e9b32f3f27c2",
+      "native/src/seal/util/ntt_trace.h": "5d9d25c4343903d536ae0262bea9178415de4198293827cdfce7e0df755375df"
+    },
+    "originals": {
+      "native/examples/5_ckks_basics.cpp": "da39e9c65356bff1a78234063ce4b2eb9657c0d0d88ae97f7fdb0d89cceab24c",
+      "native/examples/examples.cpp": "a60250a0bd1456062989864e1ffa2071705cd3a45a2b561c2e8c0154a1a1570d",
+      "native/src/seal/util/ntt.cpp": "0f47a9d0fe609f342b11f9f99c750930708c916d6fca6e8b3d014503eeb70a8b"
+    },
+    "runner_sha256": "9885ae0572ad5d69a37699a2190129b7bfe898907b420332b55210ba20701f2e"
+  },
+  "n": 8192,
+  "samples": [
+    {
+      "correct": true,
+      "sample": "8192_1099510890497_forward.txt",
+      "sha256": "559498901be2ad1d4ba860e9ad9061e3c4e38f95f29374e58a3ab68ad8025316",
+      "workload": {
+        "direction": "forward",
+        "n": 8192,
+        "negacyclic": true,
+        "psi": "5405730",
+        "q": "1099510890497",
+        "root": "634633679978"
+      }
+    },
+    {
+      "correct": true,
+      "sample": "8192_1099510890497_inverse.txt",
+      "sha256": "f9f7b37e89b3ce4df4bf44d54470fcd58e6f7bb9dfb650a330f1800ee88bfd98",
+      "workload": {
+        "direction": "inverse",
+        "n": 8192,
+        "negacyclic": true,
+        "psi": "5405730",
+        "q": "1099510890497",
+        "root": "634633679978"
+      }
+    },
+    {
+      "correct": true,
+      "sample": "8192_1099511480321_forward.txt",
+      "sha256": "234d2764a6e7c30f9978d383a3f16ef1e894b32d451f48ec7b88e8c7082c80b2",
+      "workload": {
+        "direction": "forward",
+        "n": 8192,
+        "negacyclic": true,
+        "psi": "30370987",
+        "q": "1099511480321",
+        "root": "1006230845171"
+      }
+    },
+    {
+      "correct": true,
+      "sample": "8192_1099511480321_inverse.txt",
+      "sha256": "be42bf60b486b05b74b22e337b90dbd11afc3f223c2aca1599d8e3a90a97fbc8",
+      "workload": {
+        "direction": "inverse",
+        "n": 8192,
+        "negacyclic": true,
+        "psi": "30370987",
+        "q": "1099511480321",
+        "root": "1006230845171"
+      }
+    },
+    {
+      "correct": true,
+      "sample": "8192_1152921504606748673_forward.txt",
+      "sha256": "18e5b53a8b8eaf54f12cc72787d18d5e3a6b6e560544d70bd16c91fa284ae101",
+      "workload": {
+        "direction": "forward",
+        "n": 8192,
+        "negacyclic": true,
+        "psi": "100406242475323",
+        "q": "1152921504606748673",
+        "root": "44057242037044722"
+      }
+    },
+    {
+      "correct": true,
+      "sample": "8192_1152921504606748673_inverse.txt",
+      "sha256": "ec3ee8ebca8451a5ce0f248c5ba062cfd51a380593f7ca948739c6af66df2e5b",
+      "workload": {
+        "direction": "inverse",
+        "n": 8192,
+        "negacyclic": true,
+        "psi": "100406242475323",
+        "q": "1152921504606748673",
+        "root": "44057242037044722"
+      }
+    },
+    {
+      "correct": true,
+      "sample": "8192_1152921504606830593_forward.txt",
+      "sha256": "c8c140e9469e84a6e784d062306d28150b616c42101dc38eab14c841045e3b48",
+      "workload": {
+        "direction": "forward",
+        "n": 8192,
+        "negacyclic": true,
+        "psi": "25959043411404",
+        "q": "1152921504606830593",
+        "root": "668969636494687140"
+      }
+    },
+    {
+      "correct": true,
+      "sample": "8192_1152921504606830593_inverse.txt",
+      "sha256": "5f84a94f74b7cd05c7439c7846e6c71cee7dd8ee9f4348d93ff701715eb07943",
+      "workload": {
+        "direction": "inverse",
+        "n": 8192,
+        "negacyclic": true,
+        "psi": "25959043411404",
+        "q": "1152921504606830593",
+        "root": "668969636494687140"
+      }
+    }
+  ],
+  "schema": "ntt-seal-ckks-trace-v1",
+  "scope": "Actual sequential transform-call trace, including key generation and application evaluation; not an FPGA timing measurement. Samples normalized modulo q and converted between SEAL bit-reversed and natural order before independent oracle comparison.",
+  "seal_revision": "119dc32e135cb89c1062076a69310d4413ebc824",
+  "special_prime_position": 3
+}

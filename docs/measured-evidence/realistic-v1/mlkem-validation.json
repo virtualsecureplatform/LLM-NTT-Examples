@@ -1,0 +1,158 @@
+{
+  "candidates": [
+    {
+      "configuration": {
+        "backend": "compact",
+        "generator": "ngen",
+        "host_schedule": "serialized-load-compute-read",
+        "profile": "baseline",
+        "storage": "banked-pointer-swap",
+        "transpose": "indexed"
+      },
+      "correct": true,
+      "declared": {
+        "architecture": "kyber-pe1-banked",
+        "dependencies": [],
+        "direction": "both",
+        "domain": "kyber256",
+        "full_throughput": false,
+        "generator_version": "0.2.0-dev",
+        "initiation_interval": 903,
+        "input_cycles": 256,
+        "input_order": "natural",
+        "latency": 905,
+        "minimum_gap": 647,
+        "modulus": "3329",
+        "output_cycles": 256,
+        "output_file": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/candidates/d1bdf25ccf9c158c17dae67c592acc74c4ad1063b8ba32b8e1f958df354a97da/generated/KyberHPM1PE.v",
+        "output_order": "natural",
+        "pipeline_depth": 905,
+        "preset_contract": {
+          "forward_input_order": "natural",
+          "forward_output_order": "mixed-4",
+          "host_schedule": "serialized-load-compute-read",
+          "inverse_input_order": "mixed-4",
+          "inverse_output_order": "interleaved-halves",
+          "reset_contents": "undefined-until-full-load",
+          "storage": "three-logical-buffers-in-two-physical-banks",
+          "timing_scope": "declared compute schedule; transaction and initiation interval require interface measurement"
+        },
+        "profile": "baseline",
+        "protocol": "next",
+        "radix": 2,
+        "reduction": "KyberMontgomery",
+        "reduction_request": "auto",
+        "schema": "ngen-design-v1",
+        "streaming_width": 1,
+        "transform_size": 256,
+        "transpose": "indexed"
+      },
+      "evaluation": {
+        "correct": true,
+        "metrics": {
+          "kyber_pe1_fntt_input_cycles": 256,
+          "kyber_pe1_fntt_max_wait_cycles": 902,
+          "kyber_pe1_fntt_output_cycles": 256,
+          "kyber_pe1_fntt_tests": 2,
+          "kyber_pe1_intt_input_cycles": 256,
+          "kyber_pe1_intt_max_wait_cycles": 902,
+          "kyber_pe1_intt_output_cycles": 256,
+          "kyber_pe1_intt_tests": 2,
+          "transaction_cycles": 1414
+        },
+        "process": {
+          "command": [
+            "bash",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/scripts/evaluate_candidate.sh",
+            "--task",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/tasks/kyber_ntt_256_p12_pe1.json",
+            "--verilog-file",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/candidates/d1bdf25ccf9c158c17dae67c592acc74c4ad1063b8ba32b8e1f958df354a97da/generated/KyberHPM1PE.v",
+            "--build-dir",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/candidates/d1bdf25ccf9c158c17dae67c592acc74c4ad1063b8ba32b8e1f958df354a97da/evaluation"
+          ],
+          "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/candidates/d1bdf25ccf9c158c17dae67c592acc74c4ad1063b8ba32b8e1f958df354a97da/evaluation.log",
+          "returncode": 0,
+          "seconds": 40.903070610016584,
+          "timed_out": false
+        }
+      },
+      "evidence": {
+        "simulation": {
+          "metrics": {
+            "kyber_pe1_fntt_input_cycles": 256,
+            "kyber_pe1_fntt_max_wait_cycles": 902,
+            "kyber_pe1_fntt_output_cycles": 256,
+            "kyber_pe1_fntt_tests": 2,
+            "kyber_pe1_intt_input_cycles": 256,
+            "kyber_pe1_intt_max_wait_cycles": 902,
+            "kyber_pe1_intt_output_cycles": 256,
+            "kyber_pe1_intt_tests": 2,
+            "transaction_cycles": 1414
+          },
+          "passed": true,
+          "target": {
+            "clock_period_ns": 4.0,
+            "clock_port": "clk",
+            "part": "xcu280-fsvh2892-2L-e",
+            "tool_version": "2023.2"
+          }
+        }
+      },
+      "generation": {
+        "command": [
+          "bash",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/generator/ngen.bat",
+          "-preset",
+          "kyber256",
+          "-k",
+          "0",
+          "-r",
+          "1",
+          "-preset-backend",
+          "compact",
+          "-profile",
+          "baseline",
+          "-transpose",
+          "indexed",
+          "-o",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/candidates/d1bdf25ccf9c158c17dae67c592acc74c4ad1063b8ba32b8e1f958df354a97da/generated/KyberHPM1PE.v",
+          "kyberpe"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/candidates/d1bdf25ccf9c158c17dae67c592acc74c4ad1063b8ba32b8e1f958df354a97da/generated/generation.log",
+        "ngen_build": {
+          "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/generator/ngen.bat",
+          "binary_sha256": "2142aeb4da6bcb7d1c92248ebfa7f5e28071697d9a9a0cf32a4290892a755d5c",
+          "changed_inputs": [],
+          "manifest_sha256": "1a15379ef1f5b8368397de7d6f3fe53ce04c5aa45e43cc9624fb300eb9498dff",
+          "source_files": 70,
+          "verified": true
+        },
+        "returncode": 0,
+        "seconds": 0.38016978232190013,
+        "timed_out": false
+      },
+      "id": "d1bdf25ccf9c158c17dae67c592acc74c4ad1063b8ba32b8e1f958df354a97da",
+      "mode": "functional",
+      "rtl_hash": "71a1c6f9ce582e2ef02032ede1c3cfbc54be6d1650a21d3a792d7d73db60162f",
+      "rtl_path": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-v1-mlkem/candidates/d1bdf25ccf9c158c17dae67c592acc74c4ad1063b8ba32b8e1f958df354a97da/generated/KyberHPM1PE.v",
+      "schema": "ntt-search-candidate-v1",
+      "status": "complete"
+    }
+  ],
+  "counts": {
+    "complete": 1
+  },
+  "frontiers": {
+    "route": [],
+    "simulation": [
+      "d1bdf25ccf9c158c17dae67c592acc74c4ad1063b8ba32b8e1f958df354a97da"
+    ],
+    "synthesis": []
+  },
+  "schema": "ntt-search-report-v1",
+  "workload": {
+    "kind": "preset",
+    "task": "kyber_ntt_256_p12_pe1"
+  }
+}
