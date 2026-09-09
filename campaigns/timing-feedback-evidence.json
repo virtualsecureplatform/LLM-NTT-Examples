@@ -2,13 +2,13 @@
   "comparisons": [
     {
       "name": "HOGE forward pipeline ablation",
-      "directory": "build/hoge-forward-timing-fix-comparison",
+      "directory": "build/hoge-forward-final-timing-comparison",
       "stage": "synthesis",
       "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain."
     },
     {
       "name": "HOGE inverse pipeline ablation",
-      "directory": "build/hoge-inverse-timing-fix-comparison",
+      "directory": "build/hoge-inverse-arithmetic-reset-comparison",
       "stage": "synthesis",
       "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain."
     },
@@ -41,6 +41,18 @@
       "directory": "build/yata8x8-output-pipeline-input-route-evidence",
       "stage": "route",
       "notes": "Same 4 ns conditional neighboring-fabric I/O window; two physical identity LUT stages per input and output. Full arithmetic oracle reused for identical RTL. No board or extracted-reference route claim."
+    },
+    {
+      "name": "HOGE arithmetic-only reset correction before transpose correction",
+      "directory": "build/hoge-valid-reset-forward-route-evidence",
+      "stage": "route",
+      "notes": "Retained setup and hold failure. Worst setup path still runs from reset to transpose data registers; same conditional fabric window and physical input/output buffers."
+    },
+    {
+      "name": "HOGE control-only reset before output hold repair",
+      "directory": "build/hoge-control-reset-forward-route-evidence",
+      "stage": "route",
+      "notes": "Setup meets 4 ns at 0.000 ns slack; eleven output hold failures remain, worst -0.017 ns. Original failed route retained."
     }
   ]
 }

@@ -11,7 +11,8 @@ The [synthesis measurements](measured-evidence/timing-feedback/synthesis-report.
 [256-point replay](measured-evidence/timing-feedback/replay256.json), and
 [generic RTL preservation check](measured-evidence/timing-feedback/generic-preservation.json)
 are published with their original records. [YATA now closes routed timing](measured-evidence/timing-feedback/yata-closed-report.md).
-HOGE routed validation and fresh live policy trials remain in progress.
+HOGE now meets routed setup at 0.000 ns but retains eleven output hold failures,
+worst −0.017 ns ([control-reset measurements](measured-evidence/timing-feedback/control-reset-report.md)). Targeted output repair and fresh live policy trials remain in progress.
 
 ## Resource-aware LLM feedback
 
@@ -158,8 +159,10 @@ checks with bubbles and reset. Complete native and SGen-composed forward/inverse
 Both native and composed overlap/gap/reset tests pass 240 frames at interval
 32 ([functional evidence](measured-evidence/timing-feedback/valid-reset-functional.json)). All seven generic designs remain byte-identical under the corrected
 revision ([preservation evidence](measured-evidence/timing-feedback/valid-reset-generic-preservation.json)).
-Fresh hardware measurements are in progress. Earlier buffered-route failure remains
-separate from this RTL revision.
+Arithmetic-only reset synthesis uses 210715 LUT / 273392 FF forward and
+174396 LUT / 243609 FF inverse, with +1.770 ns estimated setup slack. Its route
+still fails setup and hold; that result remains separate from the later
+transpose correction.
 
 ## Transpose delay reset correction
 
@@ -177,7 +180,13 @@ validity-only delay implementations over 1,200 cycles at widths 2, 8 and 32,
 including gaps and aborted frames. Native and SGen-composed complete forward
 and inverse oracles pass. Both native and composed overlap checks pass 240 frames at interval 32
 ([functional evidence](measured-evidence/timing-feedback/control-reset-functional.json)).
-Fresh hardware measurements are in progress; previous failed runs remain separate.
+The control-only-reset forward synthesis uses 206909 LUT, 259090 FF and
+1024 DSP, with +1.770 ns estimated setup slack. The completed route uses
+207133 LUT and 259061 FF, meets setup at 0.000 ns, and retains eleven output
+hold failures, worst −0.017 ns. It therefore does not yet qualify.
+A targeted incremental repair adds identity LUTs only to failing output paths,
+keeping existing placement and the original timing constraints. Final signoff
+and inverse synthesis are still in progress; previous failed runs remain separate.
 
 Preset-report import accepts an omitted simulation clock-port name as the
 existing default `clock`, without changing the saved record. Every hardware
