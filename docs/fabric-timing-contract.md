@@ -77,3 +77,32 @@ existing one-stage results cannot be promoted under this changed target.
 All three fresh two-stage runs have now passed routed timing. See the
 [matched comparison](threeway-routed-comparison.md) for resources, cycles,
 slacks, provenance, and the narrow workload/interface scope of the result.
+
+## Incremental output hold repair
+
+`scripts/repair_output_hold.py` takes a single-candidate report with verified
+routed evidence, correct unchanged RTL, and nonnegative setup slack. It opens
+the original checkpoint, fixes existing cell sites and ordinary cell BELs, and
+inserts an identity LUT only at each negative-hold output endpoint. Expanded
+DSP48E2 subcells retain their site locks; individually fixing their BELs conflicts
+in Vivado 2023.2. Incremental placement and `route_design -preserve` then repair
+the changed nets. No clock or I/O constraint is changed.
+
+```sh
+python3 scripts/repair_output_hold.py \
+  --report build/hoge-control-reset-forward-route/report.json \
+  --output-dir build/fresh-output-hold-repair
+```
+
+Use a fresh output directory for every attempt. The default limit is two repair
+passes; `--max-passes` accepts one through four. The timeout includes waiting on
+the shared Vivado lock. Output reports retain the source report/checkpoint
+hashes, the exact Tcl snapshot, added-cell map, measured utilization, and final
+setup/hold/routing status. A result passes only if both final slacks are
+nonnegative, routing is complete, the checkpoint is written, and source evidence
+remains unchanged. Failures and missing measurements remain explicit.
+
+The result target records `output_hold_eco` in addition to the unchanged source
+target. Comparisons must match this physical procedure as well as the clock and
+I/O contract. This repair adds physical delay and resource cost, but no transform
+cycles. A successful repair of one candidate does not qualify another candidate.
