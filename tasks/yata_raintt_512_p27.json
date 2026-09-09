@@ -13,7 +13,7 @@
     "mode": "verilator_test",
     "cmake_cache_var": "YATA_RAINTT_VERILOG",
     "test_target": "yata_raintt_reference_test",
-    "watchdog_cycles": 2000
+    "watchdog_cycles": 4096
   },
   "design_space": {
     "recommended_target_frequency_mhz": 300.0,

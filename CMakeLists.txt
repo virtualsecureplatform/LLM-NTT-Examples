@@ -164,6 +164,21 @@ target_compile_definitions(small_yata8x8_reference_test PRIVATE
     SMALL_YATA_METRIC_PREFIX="small_yata8x8_raintt_p27")
 endif()
 
+if(LLM_NTT_TEST_TARGET STREQUAL "yata_microcoded_reset_test")
+add_ntt_verilator_test(
+  yata_microcoded_reset_test
+  ${PROJECT_SOURCE_DIR}/tests/cpp/yata_microcoded_reset_test.cpp
+  ${SMALL_YATA8X8_VERILOG}
+)
+target_compile_definitions(yata_microcoded_reset_test PRIVATE
+    USE_COMPRESS
+    SMALL_YATA_NBIT=6
+    SMALL_YATA_CYCLES=8
+    SMALL_YATA_TOP_HEADER=<VSmallYata8x8RainttP27Rtl.h>
+    SMALL_YATA_TOP_TYPE=VSmallYata8x8RainttP27Rtl
+    SMALL_YATA_METRIC_PREFIX="small_yata8x8_raintt_p27")
+endif()
+
 if(LLM_NTT_TEST_TARGET STREQUAL "" OR LLM_NTT_TEST_TARGET STREQUAL "kyber_pe1_reference_test")
 add_ntt_verilator_test(
   kyber_pe1_reference_test

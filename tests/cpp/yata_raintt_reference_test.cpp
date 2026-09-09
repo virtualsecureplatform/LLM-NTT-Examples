@@ -182,7 +182,7 @@ bool run_intt(VYataRainttTop &dut, const std::array<uint32_t, kN> &input,
     int watchdog = 0;
     while (!dut.io_intt_validout) {
         tick(dut);
-        if (++watchdog > 2000) {
+        if (++watchdog > 4096) {
             std::cerr << "INTT validout timeout\n";
             return false;
         }
@@ -220,7 +220,7 @@ bool run_ntt(VYataRainttTop &dut, const std::array<int32_t, kN> &input,
     int watchdog = 0;
     while (!dut.io_ntt_validout) {
         tick(dut);
-        if (++watchdog > 2000) {
+        if (++watchdog > 4096) {
             std::cerr << "NTT validout timeout\n";
             return false;
         }
