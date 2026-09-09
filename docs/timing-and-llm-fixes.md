@@ -156,7 +156,7 @@ reset fanout without adding cycles, changing arithmetic, or weakening reset
 requirements. All 158 Scala tests pass, including four-state arithmetic pipeline
 checks with bubbles and reset. Complete native and SGen-composed forward/inverse transform oracles pass.
 Both native and composed overlap/gap/reset tests pass 240 frames at interval
-32. All seven generic designs remain byte-identical under the corrected
+32 ([functional evidence](measured-evidence/timing-feedback/valid-reset-functional.json)). All seven generic designs remain byte-identical under the corrected
 revision ([preservation evidence](measured-evidence/timing-feedback/valid-reset-generic-preservation.json)).
 Fresh hardware measurements are in progress. Earlier buffered-route failure remains
 separate from this RTL revision.
