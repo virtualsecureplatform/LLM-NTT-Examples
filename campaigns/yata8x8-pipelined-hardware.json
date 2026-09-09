@@ -1,0 +1,33 @@
+{
+  "budget": {
+    "functional": 64,
+    "hours": 12,
+    "route": 4,
+    "synthesis": 12
+  },
+  "space": {
+    "backends": [
+      "microcoded"
+    ],
+    "profiles": [
+      "f300"
+    ],
+    "transposes": [
+      "switch"
+    ]
+  },
+  "stages": [
+    "simulation",
+    "synthesis"
+  ],
+  "target": {
+    "clock_period_ns": 4.0,
+    "clock_port": "clock",
+    "part": "xcu280-fsvh2892-2L-e",
+    "tool_version": "2023.2"
+  },
+  "workload": {
+    "kind": "preset",
+    "task": "small_yata8x8_raintt_p27"
+  }
+}

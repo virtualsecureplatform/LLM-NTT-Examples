@@ -1,0 +1,42 @@
+{
+  "budget": {
+    "functional": 64,
+    "hours": 12,
+    "route": 4,
+    "synthesis": 12
+  },
+  "space": {
+    "backends": [
+      "microcoded"
+    ],
+    "profiles": [
+      "f300"
+    ],
+    "transposes": [
+      "switch"
+    ]
+  },
+  "stages": [
+    "simulation",
+    "route"
+  ],
+  "target": {
+    "clock_period_ns": 4.0,
+    "clock_port": "clock",
+    "clock_source": "BUFGCE_X0Y0",
+    "io_delays_ns": {
+      "input_max": 1.0,
+      "input_min": 0.5,
+      "output_max": 1.0,
+      "output_min": 0.0
+    },
+    "io_reference_pin": "core/executing_reg/C",
+    "output_hold_buffer_stages": 2,
+    "part": "xcu280-fsvh2892-2L-e",
+    "tool_version": "2023.2"
+  },
+  "workload": {
+    "kind": "preset",
+    "task": "small_yata8x8_raintt_p27"
+  }
+}

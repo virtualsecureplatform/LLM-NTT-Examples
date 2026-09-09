@@ -1,0 +1,33 @@
+{
+  "target": {
+    "part": "xcu280-fsvh2892-2L-e",
+    "tool_version": "2023.2",
+    "clock_period_ns": 4.0,
+    "clock_port": "clock"
+  },
+  "budget": {
+    "hours": 12,
+    "functional": 64,
+    "synthesis": 12,
+    "route": 4
+  },
+  "workload": {
+    "kind": "preset",
+    "task": "hoge_streaming_intt_1024_p64"
+  },
+  "space": {
+    "backends": [
+      "full-throughput"
+    ],
+    "profiles": [
+      "baseline"
+    ],
+    "transposes": [
+      "switch"
+    ]
+  },
+  "stages": [
+    "simulation",
+    "synthesis"
+  ]
+}
