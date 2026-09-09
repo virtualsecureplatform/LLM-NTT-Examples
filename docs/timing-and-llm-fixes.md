@@ -175,8 +175,9 @@ YATA designs ([generic](measured-evidence/timing-feedback/control-reset-generic-
 All 159 Scala tests pass. A new four-state test compares resettable and
 validity-only delay implementations over 1,200 cycles at widths 2, 8 and 32,
 including gaps and aborted frames. Native and SGen-composed complete forward
-and inverse oracles pass. Overlap checks and fresh hardware measurements are
-in progress; previous failed runs remain separate.
+and inverse oracles pass. Both native and composed overlap checks pass 240 frames at interval 32
+([functional evidence](measured-evidence/timing-feedback/control-reset-functional.json)).
+Fresh hardware measurements are in progress; previous failed runs remain separate.
 
 Preset-report import accepts an omitted simulation clock-port name as the
 existing default `clock`, without changing the saved record. Every hardware

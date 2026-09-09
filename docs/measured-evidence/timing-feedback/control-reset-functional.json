@@ -1,0 +1,128 @@
+{
+  "schema": "ntt-functional-evidence-v1",
+  "ngen_revision": "e6bffa0",
+  "checks": [
+    {
+      "name": "hoge-control-reset-forward",
+      "report": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-forward/report.json",
+      "report_sha256": "537838b71703645e76acd82ec3dd02d98cf85811b52d5fb1398485af5c157db6",
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_ntt_1024_p64"
+      },
+      "configuration": {
+        "backend": "full-throughput",
+        "generator": "ngen",
+        "profile": "baseline",
+        "transpose": "switch"
+      },
+      "rtl_sha256": "b38a19a1935d85c4cc0184aae8de2175442ad8fedc6f24ce71e55f4e54f8526a",
+      "correct": true,
+      "metrics": {
+        "hoge_streaming_ntt_input_cycles": 32,
+        "hoge_streaming_ntt_max_wait_cycles": 138,
+        "hoge_streaming_ntt_output_cycles": 32,
+        "hoge_streaming_ntt_tests": 3,
+        "transaction_cycles": 202
+      }
+    },
+    {
+      "name": "hoge-control-reset-inverse",
+      "report": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-inverse/report.json",
+      "report_sha256": "ca658c3484680d4ddafe6766fe43c1cf26751a65661f4c362dd5c9c97d8f27f7",
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_intt_1024_p64"
+      },
+      "configuration": {
+        "backend": "full-throughput",
+        "generator": "ngen",
+        "profile": "baseline",
+        "transpose": "switch"
+      },
+      "rtl_sha256": "ce40d1d366d74ba3f062f194ca23c5e56c7b526c5df7ecda0e56b038fdd53f1f",
+      "correct": true,
+      "metrics": {
+        "hoge_streaming_intt_input_cycles": 32,
+        "hoge_streaming_intt_max_wait_cycles": 105,
+        "hoge_streaming_intt_output_cycles": 32,
+        "hoge_streaming_intt_tests": 3,
+        "transaction_cycles": 169
+      }
+    },
+    {
+      "name": "hoge-control-reset-sgen-forward",
+      "report": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-sgen-forward/report.json",
+      "report_sha256": "c4afa9aaacaaa644b9ac20637f18f147ba7c7debd7ed7656429df773d8982de3",
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_ntt_1024_p64"
+      },
+      "configuration": {
+        "backend": "full-throughput",
+        "generator": "ngen-sgen",
+        "profile": "baseline",
+        "transpose": "switch"
+      },
+      "rtl_sha256": "b0b54ddabbcb41e080905d3ee2671b846eb42d01a277dcba8d725f3473eb3a33",
+      "correct": true,
+      "metrics": {
+        "hoge_streaming_ntt_input_cycles": 32,
+        "hoge_streaming_ntt_max_wait_cycles": 138,
+        "hoge_streaming_ntt_output_cycles": 32,
+        "hoge_streaming_ntt_tests": 3,
+        "transaction_cycles": 202
+      }
+    },
+    {
+      "name": "hoge-control-reset-sgen-inverse",
+      "report": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-sgen-inverse/report.json",
+      "report_sha256": "b12a2281402834deeccf8494a20633538b229167bff88711b62973333d13e7ec",
+      "workload": {
+        "kind": "preset",
+        "task": "hoge_streaming_intt_1024_p64"
+      },
+      "configuration": {
+        "backend": "full-throughput",
+        "generator": "ngen-sgen",
+        "profile": "baseline",
+        "transpose": "switch"
+      },
+      "rtl_sha256": "36b9098da195e4972bb1b6b52150fee70bae69c0c0caee6bcd7c627224acaf13",
+      "correct": true,
+      "metrics": {
+        "hoge_streaming_intt_input_cycles": 32,
+        "hoge_streaming_intt_max_wait_cycles": 105,
+        "hoge_streaming_intt_output_cycles": 32,
+        "hoge_streaming_intt_tests": 3,
+        "transaction_cycles": 169
+      }
+    },
+    {
+      "name": "hoge-control-reset-overlap",
+      "report": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-overlap/result.json",
+      "report_sha256": "2563de0716eeea882f664841633dd8ad8b4a474d2805ded973dbb2abd0e5d675",
+      "stdout_sha256": "8738c945b27d98998445dc17fd2eb852852b267311c0dbf85636f19f78d88b19",
+      "correct": true,
+      "metrics": {
+        "frames": 240,
+        "saturated_interval_cycles": 32
+      },
+      "rtl_sha256": "b38a19a1935d85c4cc0184aae8de2175442ad8fedc6f24ce71e55f4e54f8526a",
+      "test_sha256": "b89c6538b790e4152e2ea0cd45be1419b1e676b23b2fa3c1227fe7861a0f30aa"
+    },
+    {
+      "name": "hoge-control-reset-sgen-overlap",
+      "report": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/hoge-control-reset-sgen-overlap/result.json",
+      "report_sha256": "2ddd1cd6e68838137667cb82e237d3cbceeb0921c53536b7575ea674843691b4",
+      "stdout_sha256": "8738c945b27d98998445dc17fd2eb852852b267311c0dbf85636f19f78d88b19",
+      "correct": true,
+      "metrics": {
+        "frames": 240,
+        "saturated_interval_cycles": 32
+      },
+      "rtl_sha256": "b0b54ddabbcb41e080905d3ee2671b846eb42d01a277dcba8d725f3473eb3a33",
+      "test_sha256": "b89c6538b790e4152e2ea0cd45be1419b1e676b23b2fa3c1227fe7861a0f30aa"
+    }
+  ]
+}
