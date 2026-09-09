@@ -31,3 +31,13 @@ The first startup (`realistic-policy-study-v1`) was aborted after six simulator 
 `state.json` checkpoints scheduled work. `summary.json` can be refreshed during execution; `development-summary.json` and `final-summary.json` preserve phase results. `complete.json` means all scheduled attempts ended, not that every evaluation succeeded. An interrupted active attempt stops automatic resumption for inspection rather than silently overwriting evidence. Restarting the runner after a clean checkpoint skips completed work. Do not edit frozen inputs or remove checkpoints to manufacture a successful trial; corrections require a separately named study.
 
 The worst-case allowance is 128 trial-hours plus 48 route-hours, excluding orchestration overhead. Actual completion depends on synthesis and routing runtimes. The runner is designed to continue detached across interactive sessions.
+
+The registered replacement run is `build/realistic-policy-study-v2`, launched on 2026-09-09 at 07:43 UTC. It uses framework commit `f981644` in `/tmp/ntt-realistic-study-framework-v2` and NGen commit `e6bffa0` in `/tmp/ntt-realistic-study-ngen`. The exact protocol and campaigns are published under `docs/measured-evidence/realistic-policy-study-v2`. Refresh local progress with:
+
+```bash
+python3 /tmp/ntt-realistic-study-framework-v2/scripts/run_realistic_study.py summarize --output-dir build/realistic-policy-study-v2
+cat build/realistic-policy-study-v2/state.json
+tail -n 20 build/realistic-policy-study-v2/orchestrator.log
+```
+
+The initial NGen forward FHE4096/32 candidate (one PE, Barrett, one stage group) passed all eight simulator vectors and completed synthesis: 3,621 LUTs, 1,274 registers, 16 DSPs and 67 BRAM tiles. Setup slack was **−4.809 ns** against the 4 ns target, so the scorer excludes it from feasible discoveries. Its cycle-derived throughput is not a timing-qualified performance result. The startup record is published alongside the protocol; final comparative results remain pending until the scheduled trials and routes finish.

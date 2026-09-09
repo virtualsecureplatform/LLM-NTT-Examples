@@ -1,0 +1,10 @@
+{
+  "captured_utc": "2026-09-09T07:45:40.837715+00:00",
+  "protocol_sha256": "e805b995d01a16be2f840c14e8138893d61fb9b2b0d18babe5ef4907239e5304",
+  "python_tests_passed": 157,
+  "rtl_hash_verified": true,
+  "source_record": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/record.json",
+  "source_record_sha256": "45dc344b52d1b1bbe953e5ce02db20d80b51b1fc47d43f8694e652e3c2da6239",
+  "study_status": "running; this is an initial candidate, not a completed policy comparison",
+  "synthesis_integrity": "verified"
+}

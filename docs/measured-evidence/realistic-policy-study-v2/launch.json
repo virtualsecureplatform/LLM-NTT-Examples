@@ -1,0 +1,8 @@
+{
+  "pid": 3604632,
+  "started_utc": "2026-09-09T07:43:10.578485+00:00",
+  "protocol_sha256": "e805b995d01a16be2f840c14e8138893d61fb9b2b0d18babe5ef4907239e5304",
+  "launcher_sha256": "022f0a1c5b08b998e24aabeb33ade3a7e56b5592f5a655faa8992b9bd0f18d5e",
+  "native_tools_sha256": "88ceea7b216378fddc110519de64b484c24d782a9b6a76a1e1929aa840ce2362",
+  "supersedes_aborted_run": "realistic-policy-study-v1"
+}

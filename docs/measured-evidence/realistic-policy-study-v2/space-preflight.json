@@ -1,0 +1,245 @@
+{
+  "cases": [
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 524288,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 122070.3125
+          }
+        ],
+        "upper_transforms_per_second": 122070.3125
+      },
+      "case": "fhe4k32-forward",
+      "legal_configurations": 48
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 524288,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 122070.3125
+          }
+        ],
+        "upper_transforms_per_second": 122070.3125
+      },
+      "case": "fhe4k32-inverse",
+      "legal_configurations": 48
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 524288,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 122070.3125
+          }
+        ],
+        "upper_transforms_per_second": 122070.3125
+      },
+      "case": "fhe4k60-forward",
+      "legal_configurations": 48
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 524288,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 122070.3125
+          }
+        ],
+        "upper_transforms_per_second": 122070.3125
+      },
+      "case": "fhe4k60-inverse",
+      "legal_configurations": 48
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 1048576,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 61035.15625
+          }
+        ],
+        "upper_transforms_per_second": 61035.15625
+      },
+      "case": "ckks8k-prime0-forward",
+      "legal_configurations": 36
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 1048576,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 61035.15625
+          }
+        ],
+        "upper_transforms_per_second": 61035.15625
+      },
+      "case": "ckks8k-prime0-inverse",
+      "legal_configurations": 36
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 1048576,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 61035.15625
+          }
+        ],
+        "upper_transforms_per_second": 61035.15625
+      },
+      "case": "ckks8k-prime1-forward",
+      "legal_configurations": 36
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 1048576,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 61035.15625
+          }
+        ],
+        "upper_transforms_per_second": 61035.15625
+      },
+      "case": "ckks8k-prime1-inverse",
+      "legal_configurations": 36
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 1048576,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 61035.15625
+          }
+        ],
+        "upper_transforms_per_second": 61035.15625
+      },
+      "case": "ckks8k-prime2-forward",
+      "legal_configurations": 36
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 1048576,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 61035.15625
+          }
+        ],
+        "upper_transforms_per_second": 61035.15625
+      },
+      "case": "ckks8k-prime2-inverse",
+      "legal_configurations": 36
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 1048576,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 61035.15625
+          }
+        ],
+        "upper_transforms_per_second": 61035.15625
+      },
+      "case": "ckks8k-prime3-forward",
+      "legal_configurations": 36
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 1048576,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 61035.15625
+          }
+        ],
+        "upper_transforms_per_second": 61035.15625
+      },
+      "case": "ckks8k-prime3-inverse",
+      "legal_configurations": 36
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 2097152,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 30517.578125
+          }
+        ],
+        "upper_transforms_per_second": 30517.578125
+      },
+      "case": "fhe16k54-forward",
+      "legal_configurations": 48
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 2097152,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 30517.578125
+          }
+        ],
+        "upper_transforms_per_second": 30517.578125
+      },
+      "case": "fhe16k54-inverse",
+      "legal_configurations": 48
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 8388608,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 7629.39453125
+          }
+        ],
+        "upper_transforms_per_second": 7629.39453125
+      },
+      "case": "fhe64k54-forward",
+      "legal_configurations": 48
+    },
+    {
+      "bandwidth_bound": {
+        "assumption": "One full input and output vector per transform, no compression or inter-transform reuse. Bandwidth is a declared service limit, not a measured board rate.",
+        "terms": [
+          {
+            "bits_per_transform": 8388608,
+            "constraint": "shared_bits_per_second",
+            "upper_transforms_per_second": 7629.39453125
+          }
+        ],
+        "upper_transforms_per_second": 7629.39453125
+      },
+      "case": "fhe64k54-inverse",
+      "legal_configurations": 48
+    }
+  ],
+  "note": "Static legality and transport assumptions only; no implementation outcomes or policy feedback."
+}

@@ -1,0 +1,40 @@
+{
+  "captured_utc": "2026-09-09T07:44:36.927464+00:00",
+  "native_tools": {
+    "verilator": {
+      "path": "/tmp/ngen-tools/verilator-rpm/usr/bin/verilator",
+      "sha256": "bcebcce608dfa948a6285f9f2e0492306f447c4e807bc638da8f49e035a497c5",
+      "version": [
+        "Verilator 5.022 2024-02-24 rev fedora-5.022"
+      ]
+    },
+    "g++": {
+      "path": "/usr/bin/g++",
+      "sha256": "e4c8d221728a1cf7ef62cc8d97e3efd05ebfc2ee2b53bb5646a205233a58cfbe",
+      "version": [
+        "g++ (GCC) 11.5.0 20240719 (Red Hat 11.5.0-14)",
+        "Copyright (C) 2021 Free Software Foundation, Inc.",
+        "This is free software; see the source for copying conditions.  There is NO"
+      ]
+    },
+    "java": {
+      "path": "/usr/bin/java",
+      "sha256": "b9ccc4e0d8bbde312710bc0669cc6445a5e07c93ac8e58ad5c46a141004a83a5",
+      "version": [
+        "openjdk version \"21.0.12\" 2026-07-21 LTS",
+        "OpenJDK Runtime Environment (Red_Hat-21.0.12.0.8-1) (build 21.0.12+8-LTS)",
+        "OpenJDK 64-Bit Server VM (Red_Hat-21.0.12.0.8-1) (build 21.0.12+8-LTS, mixed mode, sharing)"
+      ]
+    },
+    "python3": {
+      "path": "/usr/bin/python3",
+      "sha256": "c7b3d12b0bcda9356ce5a7e21e66c41476310d595c54b5689bca1e38abd8f42b",
+      "version": [
+        "Python 3.9.25"
+      ]
+    }
+  },
+  "verilator_runtime_cflags": "-DVL_VALUE_STRING_MAX_WORDS=1024",
+  "logical_cpus": 32,
+  "contention_note": "Unrelated Vivado jobs were present at study startup. Per-user lock does not cover all external jobs."
+}

@@ -1,0 +1,349 @@
+{
+  "configuration": {
+    "backend": "streamed",
+    "boundary": "registered-ready-valid",
+    "generator": "ngen",
+    "lanes": 4,
+    "pe": 1,
+    "profile": "baseline",
+    "radix": 2,
+    "reduction": "barrett",
+    "stage_groups": 1,
+    "transpose": "indexed"
+  },
+  "correct": true,
+  "declared": {
+    "architecture": "custom-ntt-banked-pe-radix2",
+    "architecture_parameters": {
+      "axi4stream": 0,
+      "bank_count_per_buffer": 4,
+      "bank_depth": 1024,
+      "block_control_rom_groups": 1,
+      "butterfly_pipeline_latency": 3,
+      "coefficient_buffers": 2,
+      "control_record_width": 118,
+      "dsp_decompose": 0,
+      "dsp_multiplier_tiles": 0,
+      "dsp_partial_adder_levels": 0,
+      "lazy_butterfly_levels": 32,
+      "lazy_correction_points": 4,
+      "montgomery_signed_digits": 5,
+      "operation_bundles": 28671,
+      "pe_count": 1,
+      "prime_form": 3,
+      "radix": 2,
+      "registered_memory_issue_groups": 1,
+      "runtime_control": 0,
+      "switch_transpose": 0,
+      "two_adicity": 14
+    },
+    "dependencies": [],
+    "direction": "forward",
+    "domain": "custom",
+    "full_throughput": false,
+    "generator_version": "0.2.0-dev",
+    "initiation_interval": 30800,
+    "input_cycles": 1024,
+    "input_order": "natural",
+    "latency": 29777,
+    "minimum_gap": 29776,
+    "modulus": "2147565569",
+    "output_cycles": 1024,
+    "output_file": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/generated/SearchTop.sv",
+    "output_order": "natural",
+    "pipeline_depth": 29777,
+    "profile": "baseline",
+    "protocol": "ready-valid",
+    "radix": 2,
+    "reduction": "Barrett",
+    "schema": "ngen-design-v1",
+    "streaming_width": 4,
+    "transform_size": 4096
+  },
+  "evaluation": {
+    "build": {
+      "command": [
+        "verilator",
+        "--binary",
+        "--timing",
+        "--top-module",
+        "test",
+        "-Wno-fatal",
+        "--output-split",
+        "10000",
+        "--output-split-cfuncs",
+        "1000",
+        "-j",
+        "4",
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/SearchTop.sv",
+        "test.sv"
+      ],
+      "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/build.log",
+      "returncode": 0,
+      "seconds": 4.786824639886618,
+      "timed_out": false
+    },
+    "correct": true,
+    "externalized_control_roms": [
+      {
+        "path": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/SearchTop.SearchCore.control_0_rom.mem",
+        "word_bits": 118,
+        "words": 28671
+      }
+    ],
+    "inputs_unchanged": true,
+    "metrics": {
+      "completed_frames": 8,
+      "elapsed_cycles": 233076,
+      "initiation_interval_cycles": 30800,
+      "latency_cycles": 29779,
+      "max_loaded_latency_cycles": 85231
+    },
+    "mode": "functional",
+    "original_rtl_sha256": "ee40163ab975ce4c96cf50a84e6365710d230f3df7863b295cb470bdcbfdc9d1",
+    "simulator": "verilator",
+    "test": {
+      "command": [
+        "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/obj_dir/Vtest"
+      ],
+      "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/test.log",
+      "returncode": 0,
+      "seconds": 0.4789242269471288,
+      "timed_out": false
+    },
+    "verification": {
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/SearchTop.SearchCore.control_0_rom.mem": "6775392707841332dc65e0264d551d44ee8dabb2395a0613bc519cca193646d8",
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/SearchTop.sv": "2f1240f649aa1cdad3a2414433e07ef2b9f6d01eef9f123d84d7d6202e123239",
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/expected.mem": "b951fc69b34eb17b81e24f987eda4f804012d21d7b157e44c32a1a42aa719c1e",
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/inputs.mem": "55ae7fe931e42bdbc791fb4a3afec4e90a15642d1c8f03a5f9afcbc409d2f290",
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/evaluation/test.sv": "d7df7e2436188e12bc2719d199a102cab56a7c613614a4760160f25bfa24290c"
+    }
+  },
+  "evidence": {
+    "simulation": {
+      "metrics": {
+        "completed_frames": 8,
+        "elapsed_cycles": 233076,
+        "initiation_interval_cycles": 30800,
+        "latency_cycles": 29779,
+        "max_loaded_latency_cycles": 85231
+      },
+      "passed": true,
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_source": "BUFGCE_X0Y0",
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "input_full_reg/C",
+        "output_hold_buffer_stages": 2,
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      }
+    },
+    "synthesis": {
+      "implementation_passed": true,
+      "integrity": {
+        "inputs": {
+          "directories": {},
+          "files": {
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/generated/SearchTop.sv": "ee40163ab975ce4c96cf50a84e6365710d230f3df7863b295cb470bdcbfdc9d1",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis-driver/scripts/insert_input_hold_buffers.tcl": "33e36d319806522641abcb9600879409f46a3190d563edf190ba85f5ce159b41",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis-driver/scripts/insert_output_hold_buffers.tcl": "2450fcce7bfae201e8688731126e4cc158e65822ccd46941a885f7282f21c443",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis-driver/scripts/vitis_synth_rtl.sh": "2a82e3179f242436b9fddf4a0245c350c4800203e5e0d2073c53c3e02a9f3a0c"
+          }
+        },
+        "inputs_unchanged": true,
+        "measurement": {
+          "implementation_passed": true,
+          "metrics": {
+            "bram": 67,
+            "dsp": 16,
+            "ff": 1274,
+            "hold_slack_ns": 0.073,
+            "latency_ns": 119116.0,
+            "lut": 3621,
+            "transforms_per_second": 8116.883116883117,
+            "uram": 0,
+            "wns_ns": -4.809
+          },
+          "passed": false,
+          "target": {
+            "clock_period_ns": 4.0,
+            "clock_source": "BUFGCE_X0Y0",
+            "io_delays_ns": {
+              "input_max": 1.0,
+              "input_min": 0.5,
+              "output_max": 1.0,
+              "output_min": 0.0
+            },
+            "io_reference_pin": "input_full_reg/C",
+            "output_hold_buffer_stages": 2,
+            "part": "xcu280-fsvh2892-2L-e",
+            "tool_version": "2023.2"
+          },
+          "timing_clean": false
+        },
+        "outputs": {
+          "directories": {},
+          "files": {
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis.log": "37d527f9dac9b247b20b4611ab1e99515e09be859fc16cd82a1355358dfb449d",
+            "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/metrics.json": "3a145df0b9ee8ba6c1bccadb2be7032ca7933de29ac70e8f42698f19247506e1",
+            "/tmp/ntt-realistic-study-framework-v2/../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/SearchTop_synthesis.dcp": "e23cf2763f91d2484313eb2e8291063df89c623b60a76e2800206cb2511bc0cc",
+            "/tmp/ntt-realistic-study-framework-v2/../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/synth.tcl": "1c7e100068fb630c3500a0449169db5dbe682dabb1028db5265628da47d96269",
+            "/tmp/ntt-realistic-study-framework-v2/../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/timing.properties": "39f532790a84cd2bdd414600c859f59b83b71a6b287e20374ef60507c6e9aabd",
+            "/tmp/ntt-realistic-study-framework-v2/../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/timing_summary_synthesis.rpt": "1740bfb8c372e43e7e5e3f4d07847bd43f405650024da820351b467738b32c41",
+            "/tmp/ntt-realistic-study-framework-v2/../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/utilization_synthesis.rpt": "256f026617ada32ffc19be0763e176d9be579a4b98eb61bb5a37c6ccf2441ad3"
+          }
+        },
+        "version": 1
+      },
+      "metrics": {
+        "bram": 67,
+        "dsp": 16,
+        "ff": 1274,
+        "hold_slack_ns": 0.073,
+        "latency_ns": 119116.0,
+        "lut": 3621,
+        "transforms_per_second": 8116.883116883117,
+        "uram": 0,
+        "wns_ns": -4.809
+      },
+      "passed": false,
+      "process": {
+        "command": [
+          "bash",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis-driver/scripts/vitis_synth_rtl.sh",
+          "--stage",
+          "synthesis",
+          "--top",
+          "SearchTop",
+          "--verilog-file",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/generated/SearchTop.sv",
+          "--part",
+          "xcu280-fsvh2892-2L-e",
+          "--clock-period",
+          "4.0",
+          "--clock-port",
+          "clock",
+          "--build-dir",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis",
+          "--metrics-json",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/metrics.json",
+          "--vivado-bin",
+          "/home/opt/xilinx/Vivado/2023.2/bin/vivado",
+          "--jobs",
+          "8",
+          "--timeout",
+          "5399",
+          "--output-hold-buffer-stages",
+          "2",
+          "--io-reference-pin",
+          "input_full_reg/C",
+          "--clock-source",
+          "BUFGCE_X0Y0",
+          "--input-delay-min",
+          "0.5",
+          "--input-delay-max",
+          "1.0",
+          "--output-delay-min",
+          "0.0",
+          "--output-delay-max",
+          "1.0"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis.log",
+        "returncode": 0,
+        "seconds": 74.37165391491726,
+        "timed_out": false
+      },
+      "queue_seconds": 0.0003470848314464092,
+      "reports": {
+        "build_dir": "../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis",
+        "checkpoint": "../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/SearchTop_synthesis.dcp",
+        "route_status": "",
+        "synth_tcl": "../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/synth.tcl",
+        "timing": "../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/timing_summary_synthesis.rpt",
+        "timing_properties": "../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/timing.properties",
+        "utilization": "../../home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/synthesis/utilization_synthesis.rpt"
+      },
+      "target": {
+        "clock_period_ns": 4.0,
+        "clock_source": "BUFGCE_X0Y0",
+        "io_delays_ns": {
+          "input_max": 1.0,
+          "input_min": 0.5,
+          "output_max": 1.0,
+          "output_min": 0.0
+        },
+        "io_reference_pin": "input_full_reg/C",
+        "output_hold_buffer_stages": 2,
+        "part": "xcu280-fsvh2892-2L-e",
+        "tool_version": "2023.2"
+      },
+      "timing_clean": false
+    }
+  },
+  "generation": {
+    "boundary": {
+      "elastic_register_stages": 2,
+      "included_in_measurements": true,
+      "kind": "registered-ready-valid"
+    },
+    "command": [
+      "bash",
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/generator/ngen.bat",
+      "-n",
+      "12",
+      "-q",
+      "2147565569",
+      "-root",
+      "2143697989",
+      "-k",
+      "2",
+      "-pe",
+      "1",
+      "-r",
+      "1",
+      "-architecture",
+      "streamed",
+      "-reduction",
+      "barrett",
+      "-protocol",
+      "ready-valid",
+      "-top",
+      "SearchTop",
+      "-stage-groups",
+      "1",
+      "-psi",
+      "101573657",
+      "-profile",
+      "baseline",
+      "-transpose",
+      "indexed",
+      "-o",
+      "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/generated/SearchTop.sv",
+      "ntt"
+    ],
+    "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/generated/generation.log",
+    "ngen_build": {
+      "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/generator/ngen.bat",
+      "binary_sha256": "2142aeb4da6bcb7d1c92248ebfa7f5e28071697d9a9a0cf32a4290892a755d5c",
+      "changed_inputs": [],
+      "manifest_sha256": "1a15379ef1f5b8368397de7d6f3fe53ce04c5aa45e43cc9624fb300eb9498dff",
+      "source_files": 70,
+      "verified": true
+    },
+    "returncode": 0,
+    "seconds": 1.2297500730492175,
+    "timed_out": false
+  },
+  "id": "ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498",
+  "mode": "functional",
+  "rtl_hash": "ee40163ab975ce4c96cf50a84e6365710d230f3df7863b295cb470bdcbfdc9d1",
+  "rtl_path": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v2/trials/fhe4k32-forward/enumerate/enumerate-2/step-1/evaluation/candidates/ec3ca8ffe471dd46cb05c6636c7be6f53b7c02a24f45247ff51ef60334dd9498/generated/SearchTop.sv",
+  "schema": "ntt-search-candidate-v1",
+  "status": "hardware_failed"
+}
