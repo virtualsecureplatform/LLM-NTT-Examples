@@ -1,0 +1,88 @@
+{
+  "bandwidth": {
+    "coefficient_bits": 64,
+    "shared_bits_per_second": 64000000000
+  },
+  "benchmark": {
+    "inverse_normalization": "multiply by N^-1",
+    "name": "fhe64k54",
+    "ordering": "natural input and output",
+    "performance_status": "unmeasured",
+    "residues": "canonical [0,q)",
+    "resource_budget_note": "Assign the same explicit caps to all policies in a measured study; these templates do not claim a complete reference frontier.",
+    "scope": "Paper size/width; deterministic benchmark prime, not a claim to reproduce the paper exact modulus. Single RNS limb.",
+    "source": "https://zhenman.github.io/files/C45-FCCM2025-AutoNTT.pdf",
+    "split": "held-out"
+  },
+  "budget": {
+    "functional": 3,
+    "hours": 2,
+    "route": 0,
+    "synthesis": 3
+  },
+  "evaluation": {
+    "simulator": "verilator",
+    "timeout_seconds": 3600
+  },
+  "llm": {
+    "endpoint": "http://kunashiri.sato.lab:8080/v1",
+    "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS"
+  },
+  "resource_limits": {
+    "bram": 512,
+    "dsp": 512,
+    "ff": 100000,
+    "lut": 50000,
+    "uram": 64
+  },
+  "space": {
+    "pe": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "radix": [
+      2,
+      4
+    ],
+    "reductions": [
+      "montgomery",
+      "barrett",
+      "shoup"
+    ],
+    "stage_groups": [
+      1,
+      2,
+      4
+    ]
+  },
+  "stages": [
+    "simulation",
+    "synthesis"
+  ],
+  "target": {
+    "clock_period_ns": 4.0,
+    "clock_source": "BUFGCE_X0Y0",
+    "io_delays_ns": {
+      "input_max": 1.0,
+      "input_min": 0.5,
+      "output_max": 1.0,
+      "output_min": 0.0
+    },
+    "io_reference_pin": "input_full_reg/C",
+    "output_hold_buffer_stages": 2,
+    "part": "xcu280-fsvh2892-2L-e",
+    "tool_version": "2023.2"
+  },
+  "workload": {
+    "direction": "forward",
+    "kind": "generic",
+    "lanes": 4,
+    "n": 65536,
+    "negacyclic": true,
+    "psi": "2509744512604643",
+    "q": "9007199255658497",
+    "root": "2534713700142403"
+  }
+}

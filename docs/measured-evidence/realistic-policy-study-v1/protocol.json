@@ -1,0 +1,173 @@
+{
+  "cases": [
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/fhe4k32-forward.json",
+      "name": "fhe4k32-forward",
+      "sha256": "ef3bdb92b287805f5f561e80922a4485b5fe893c767e20f3bd793f0776996ea8",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/fhe4k32-inverse.json",
+      "name": "fhe4k32-inverse",
+      "sha256": "6903803aea3eadcc6e96e71b85004da1d7154b665ef51f603f4164331106c997",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/fhe4k60-forward.json",
+      "name": "fhe4k60-forward",
+      "sha256": "7b8cf5bda88079d5253de33aea1ed04d485d77a9ce64dddf543a7dfceac941e2",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/fhe4k60-inverse.json",
+      "name": "fhe4k60-inverse",
+      "sha256": "4f1a5c22a5c50cb75b8313922e2bdf1d32ff939132c26e0a2d2d9bcde7dc01ae",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/ckks8k-prime0-forward.json",
+      "name": "ckks8k-prime0-forward",
+      "sha256": "f50b192d9af310e98ef35ccaac71f660ce016ee193b390d6d6482764832358df",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/ckks8k-prime0-inverse.json",
+      "name": "ckks8k-prime0-inverse",
+      "sha256": "605c8ec40dae47e27a5e91bcc6f2246fca281e8c586c465f2ebbe710a3c2fef5",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/ckks8k-prime1-forward.json",
+      "name": "ckks8k-prime1-forward",
+      "sha256": "cf6ecea7beadd6630f665d6157c8357f32f8341144e28eb0934a83f176efebb0",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/ckks8k-prime1-inverse.json",
+      "name": "ckks8k-prime1-inverse",
+      "sha256": "cd5e5bb6266c3fae87583cf9aae5b133ea9ad8dc1c2b2894e68c87ae431e0385",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/ckks8k-prime2-forward.json",
+      "name": "ckks8k-prime2-forward",
+      "sha256": "cffa038052389948a9929c9add8d002c01d19cdfe15b2d1ea961509f39e3d510",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/ckks8k-prime2-inverse.json",
+      "name": "ckks8k-prime2-inverse",
+      "sha256": "c1f3d76100f8c332ede7e8b27f7c819d81e6c7e22591409309f229fc42170881",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/ckks8k-prime3-forward.json",
+      "name": "ckks8k-prime3-forward",
+      "sha256": "e414bbd6484c1276bfa4b5da70acbd50ef396aa80fcb28b64a61ce820923e915",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/ckks8k-prime3-inverse.json",
+      "name": "ckks8k-prime3-inverse",
+      "sha256": "027011cfbf45082d1de1f7779808745f280ca55097c7c1f89226258cdcd942ab",
+      "split": "development"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/fhe16k54-forward.json",
+      "name": "fhe16k54-forward",
+      "sha256": "625578c1a1b802f3f8abfc5bbe53b2d1deecc12db1a929a21243c5c3d8543e59",
+      "split": "held-out"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/fhe16k54-inverse.json",
+      "name": "fhe16k54-inverse",
+      "sha256": "46b2a0fd799456ebdb5ce01ccc363ba7bc2452429657725607404b58c9f482bf",
+      "split": "held-out"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/fhe64k54-forward.json",
+      "name": "fhe64k54-forward",
+      "sha256": "2c5e6068a59e1e49fa4b218723e9e80d1d556ae926faeb13f12b955b58115a46",
+      "split": "held-out"
+    },
+    {
+      "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/realistic-policy-study-v1/campaigns/fhe64k54-inverse.json",
+      "name": "fhe64k54-inverse",
+      "sha256": "9a3d746d94dc5730478b3670a478f8d9c633daf2f32d213fc6ccd028ae8b4347",
+      "split": "held-out"
+    }
+  ],
+  "created_utc": "2026-09-09T07:37:34.142328+00:00",
+  "evaluations_per_trial": 3,
+  "framework": {
+    "revision": "19ed0f8ac57f9c60fe8ebd473f97fb4deb3b0071",
+    "source_hash": "0efb71ba829efa4020b6e1ea94f03e12c6c6a6d7729c831c53a6dea3bff07825"
+  },
+  "hours_per_trial": 2,
+  "inputs": {
+    "/tmp/ntt-realistic-study-framework/architecture_search/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/ntt-realistic-study-framework/architecture_search/acquisition.py": "11ac55c7a5bd7dbd8e24d51e73526fc883014127e39025a23ee3d452a0737dc4",
+    "/tmp/ntt-realistic-study-framework/architecture_search/adapters.py": "b12a0417f5af1a53783ce261cc489dd329a5ac6847196967f8398ea120910de2",
+    "/tmp/ntt-realistic-study-framework/architecture_search/benchmark_suite.py": "601eaf9e58ea3d4d965ec6a48f12fc14386b643b65df60e6e1d45496e2c56a98",
+    "/tmp/ntt-realistic-study-framework/architecture_search/boundary.py": "f46af0db54657dbb116541c7bf55a7bc23b4ca65bcb2466cd730145fe3a52157",
+    "/tmp/ntt-realistic-study-framework/architecture_search/build_identity.py": "0779d03de3c8b2176c958aa9a7d0ec2642a5b5211b26815abb1839cf5dea90f6",
+    "/tmp/ntt-realistic-study-framework/architecture_search/constraints.py": "6749d7a4fe1b67377d0730ebe34f9a7bdec3a0c87cc2c2e374787dff95ae9485",
+    "/tmp/ntt-realistic-study-framework/architecture_search/cost.py": "f26ef7c2a68043b525ba73c7f87981472c0188491cc852ede0198c32c155c688",
+    "/tmp/ntt-realistic-study-framework/architecture_search/evaluate.py": "ad1783bac7545a464a56fc479e3bb2b2a7016a22aea64e53ea62fed2fd7d5d59",
+    "/tmp/ntt-realistic-study-framework/architecture_search/hardware.py": "85a90a03e5142d53e1ef93e3d1eb3199c0560a75fc2d460f71ddfa12774c9a5f",
+    "/tmp/ntt-realistic-study-framework/architecture_search/model.py": "685553808391d8d6bbd80812eaa2d770a59b6be4bf604bba1472729c26e1ae74",
+    "/tmp/ntt-realistic-study-framework/architecture_search/openntt.py": "4cdde6dd3b159540033aa8e0e6cac0a4c1025a1851888cd9a565e411ff676a65",
+    "/tmp/ntt-realistic-study-framework/architecture_search/oracle.py": "559342abf63e66ae4ffb2a1c95300706c4f15cecac2306b07b7679853250c5c6",
+    "/tmp/ntt-realistic-study-framework/architecture_search/permutation.py": "4f5ee16dd87b95badbca7dffafd6b1cebbc8d0fb90e6a7b018fad1b84d60ecf6",
+    "/tmp/ntt-realistic-study-framework/architecture_search/policy.py": "5d1f207677596d164a82a127c40f47dd7c0ee16ac073c1626040af6e7329dc42",
+    "/tmp/ntt-realistic-study-framework/architecture_search/proteus.py": "779a7eb2d1c5781a60ea04241656cd9d3d2397fee3dce7a1fecbba5b70e443bf",
+    "/tmp/ntt-realistic-study-framework/architecture_search/replay.py": "10bdb271cc716f226661391cc99e918f7c0cc3c3e91e11f92496e914bea83584",
+    "/tmp/ntt-realistic-study-framework/architecture_search/rom.py": "3a6cbc6c5635b297ac60c77237a9c38a652a794cb60680b19e1bd0f6fca11cf4",
+    "/tmp/ntt-realistic-study-framework/architecture_search/search.py": "6b5ad30d2f672824317f2fbad2ccd960a78610ae6f9569c0c6309ef49bb95687",
+    "/tmp/ntt-realistic-study-framework/scripts/insert_input_hold_buffers.tcl": "33e36d319806522641abcb9600879409f46a3190d563edf190ba85f5ce159b41",
+    "/tmp/ntt-realistic-study-framework/scripts/insert_output_hold_buffers.tcl": "2450fcce7bfae201e8688731126e4cc158e65822ccd46941a885f7282f21c443",
+    "/tmp/ntt-realistic-study-framework/scripts/run_live_policy_trials.py": "93d0ec733fdf649eb1f4593d79a37b3daf584d60044fd84b58ba57f6e06037ad",
+    "/tmp/ntt-realistic-study-framework/scripts/run_realistic_study.py": "493e769f0d0cf7626412d6b198d91d27cdd78a5306972e628c18ad0166e4872a",
+    "/tmp/ntt-realistic-study-framework/scripts/search_architectures.py": "cd7c87b73b01e432251d7bb8ea60c8cff1b53217ff258a5d89a7a5d0f3721f7d",
+    "/tmp/ntt-realistic-study-framework/scripts/vitis_synth_rtl.sh": "2a82e3179f242436b9fddf4a0245c350c4800203e5e0d2073c53c3e02a9f3a0c",
+    "/tmp/ntt-realistic-study-ngen/ngen.bat": "2142aeb4da6bcb7d1c92248ebfa7f5e28071697d9a9a0cf32a4290892a755d5c",
+    "/tmp/ntt-realistic-study-ngen/scripts/benchmark_presets.py": "16542d937da429a7575b1f2cecc66b5c2a6fcb001d36a9041b3ccc134741354a",
+    "/tmp/ntt-realistic-study-ngen/scripts/ngen_llm_ntt.py": "37a674e9a8f7c38a0e91aa8b73d240011f4f088a4045afa457c80480560f8e72",
+    "/tmp/ntt-realistic-study-ngen/scripts/test_general_ntt.py": "3f81bd4b174d2917dfb857834f6238fd520c308d30e7d3b8ecca4431e4be2a32",
+    "/tmp/ntt-realistic-study-ngen/scripts/test_pipelined_butterfly.py": "0b8b410cf52101e57a21b62b21ff6942ca7b20672bdca29bab2801e27d3ec50f",
+    "/tmp/ntt-realistic-study-ngen/scripts/test_rns_polymul.py": "70f58a5ac93c82bd19b2acdebe2ecd8d249a5eb4d0116d4106c7638238df0fff",
+    "/tmp/ntt-realistic-study-ngen/scripts/test_streamed_ntt.py": "597c27e111d1f59be684143e033fc8b4a45a2447a552aad947292064ff2e812d"
+  },
+  "limitations": [
+    "One repetition per policy; no statistical superiority claim.",
+    "No complete reference pool: no frontier recall.",
+    "8 GB/s aggregate transfer rate is a declared service model, not measured board bandwidth.",
+    "OOC U280 fabric at 4 ns; synthesis feasibility does not establish routed timing closure.",
+    "Queue time consumes each trial budget; unrelated vendor jobs can confound wall time.",
+    "Held-out workloads have prior functional validation; policy receives no cross-trial measurements."
+  ],
+  "ngen": {
+    "revision": "e6bffa03de0b39d40aac5e303f0fee6f1905ccaa",
+    "source_hash": "db2a9178173fb1dba8d134b5961c9284b8fae0f15d17d8ce81b997891cb8d21f"
+  },
+  "ngen_build": {
+    "binary": "/tmp/ntt-realistic-study-ngen/ngen.bat",
+    "binary_sha256": "2142aeb4da6bcb7d1c92248ebfa7f5e28071697d9a9a0cf32a4290892a755d5c",
+    "changed_inputs": [],
+    "manifest_sha256": "1a15379ef1f5b8368397de7d6f3fe53ce04c5aa45e43cc9624fb300eb9498dff",
+    "source_files": 70,
+    "verified": true
+  },
+  "ngen_root": "/tmp/ntt-realistic-study-ngen",
+  "order": "Development trials, development routes, held-out freeze marker, held-out trials, held-out routes. Rotate policy order by case index.",
+  "policies": [
+    "enumerate",
+    "random",
+    "cost",
+    "llm"
+  ],
+  "route_hours_per_candidate": 3,
+  "route_selection": "Forward only: fastest bandwidth-capped feasible synthesis, then lowest LUT; ties use configuration then policy; deduplicate configurations. Freeze selections before routing.",
+  "schema": "ntt-realistic-policy-study-v1",
+  "seed": 2
+}
