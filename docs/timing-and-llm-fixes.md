@@ -115,7 +115,10 @@ Both first routes fail hold on direct primary-input paths. A follow-up adds two
 preserved identity LUTs per non-clock input, including reset, giving the router
 a real internal path for hold repair. It preserves all original consumers,
 clock connectivity, transform latency and the I/O delay window. Connectivity
-and argument-validation tests pass; both fresh routes are running. No failed
+and argument-validation tests pass. The first buffered HOGE route closes hold
+at +0.010 ns, but fails setup at −0.858 ns, with 214738 LUT, 273312 FF and
+1024 DSP. Its worst setup path runs from reset to an arithmetic data register.
+YATA's buffered route is still running. No failed
 checkpoint, report or timing constraint is overwritten.
 
 This is the same conditional neighboring-fabric modeling approach as the
@@ -138,3 +141,18 @@ These changes repair preset setup timing at a substantial register and latency
 cost. The extracted HOGE references remain better in the matched synthesis
 area/transaction comparison. Improved setup slack does not establish a generator
 performance win, and the conditional route checks do not establish board timing.
+
+## HOGE reset distribution correction
+
+NGen revision `8346229` retains reset on validity and cycle/control state while
+allowing arithmetic data registers to update without reset. Clearing every
+valid stage discards all pre-reset work; data contents are unobservable until
+new valid operands have crossed every pipeline stage. This removes unnecessary
+reset fanout without adding cycles, changing arithmetic, or weakening reset
+requirements. All 158 Scala tests pass, including four-state arithmetic pipeline
+checks with bubbles and reset. Complete native and SGen-composed forward/inverse transform oracles pass.
+Both native and composed overlap/gap/reset tests pass 240 frames at interval
+32. All seven generic designs remain byte-identical under the corrected
+revision ([preservation evidence](measured-evidence/timing-feedback/valid-reset-generic-preservation.json)).
+Fresh hardware measurements are in progress. Earlier buffered-route failure remains
+separate from this RTL revision.
