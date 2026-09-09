@@ -1,0 +1,152 @@
+{
+  "aggregate": {
+    "llm": {
+      "execution_timeout_trials": 0,
+      "max_frontier_recall": 0.75,
+      "mean_frontier_recall": 0.75,
+      "min_frontier_recall": 0.75,
+      "queue_timeout_trials": 0,
+      "repetitions": 3
+    }
+  },
+  "campaign": {
+    "budget": {
+      "functional": 64,
+      "hours": 12,
+      "route": 4,
+      "synthesis": 12
+    },
+    "resource_limits": {
+      "bram": 8,
+      "dsp": 50,
+      "ff": 6000,
+      "lut": 10000
+    },
+    "space": {
+      "pe": [
+        1,
+        2,
+        4
+      ],
+      "radix": [
+        2
+      ],
+      "reductions": [
+        "montgomery"
+      ],
+      "stage_groups": [
+        1,
+        2
+      ]
+    },
+    "stages": [
+      "simulation",
+      "synthesis"
+    ],
+    "target": {
+      "clock_period_ns": 4.0,
+      "clock_source": "BUFGCE_X0Y0",
+      "io_delays_ns": {
+        "input_max": 1.0,
+        "input_min": 0.5,
+        "output_max": 1.0,
+        "output_min": 0.0
+      },
+      "io_reference_pin": "input_full_reg/C",
+      "part": "xcu280-fsvh2892-2L-e",
+      "tool_version": "2023.2"
+    },
+    "workload": {
+      "direction": "forward",
+      "kind": "generic",
+      "lanes": 4,
+      "n": 128,
+      "negacyclic": true,
+      "psi": "2141337746",
+      "q": "2147484161",
+      "root": "2023476074"
+    }
+  },
+  "inputs": {
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/candidates/33f9817e844e81308eaea73024b99105333a006208c7725a2e62ded6b489e90f/record.json": "c0cfa1fa1fcf77e408fba5b87d5f1102fe9622b5a788e37117d09437d183e49c",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/candidates/57bcaf4d1eb932b096275accd8b4ded0e1ed8894e98d57b9b8ca4a9452128744/record.json": "45cbbe3c1b439175659f5593dd27ee7f9c7e53ecbba9c8d303fff1a756575b66",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/candidates/5ef283d98ab63af37ce4234b59a30de67476385d17a66490c0353ba726ba7e91/record.json": "fa0a882623193076b0481c7705be4e14c5e8efb5e4ffc367baa2f10c972e7e04",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/candidates/b25a941f39796df1874e8ea55b309a8fa290f8eb3f6c99ed805686cf80287ba2/record.json": "2a68248dfe72f380ddccfb513b6688d57325be9e898fad89a317321d14d28c44",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/candidates/d4e71987ab460f037ed5be6fc10bb8521e363aabfa20f473faf294f8aae6c720/record.json": "f9b90a60a754f7cec75067b2662ba9490832fccd1a3027e9d9d3589962befaf7",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/candidates/e94f2d9cdc7b9691b06d34958ae4172d47b7e09ffc7d08351971297606faf16c/record.json": "a09142a67be0bf1f71ab17430347d1e81bd1458f2a8977d2a0529779d7b2089a",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/candidates/776f30f9acd8eae6020a096bc4e809975aa1997791d2cd47df38eab5df4f3c8a/record.json": "23d6a7334d588cf29cc78d12e91f08dfe70fa76623932a83684bd7b51f34b4c5",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/candidates/89470dd0a79383909b10318a59fb5666e9fadddda7ec744f909e72626e640462/record.json": "2652efb7e982f550d5dc56e4a6632d829038daa0c70e5e3259ba75efa67e00eb",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/candidates/e263f09f130455c880e45d700ff47e174e8793c998bd3ea598eb28d0f5940611/record.json": "7c8e0965fa769b1c28a680ebe720e277564d6a6f6e1f7d4b0a0e6f2dfc05ceec",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/manifest.json": "3f932b48fc158aef76bfbf66ad7bd348e77070cc5ac17d0a649abc957e83a3a2",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/results.json": "182232d7a77209d18d389fe161ded87811486088c0d38c4435aa1dacee6bed0f",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/policy128-reference-current/manifest.json": "f2b5582e8fa60ca56d539ba75e57e362eeb5004475750575034d4318c28a07cb",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/policy128-reference-current/report.json": "d6e0ffafb6cb11ad29595df11f9d6dcc37746d435a7da142157abf2e9395a788"
+  },
+  "limitations": "Same-workload synthesis experiment. Queue contention confounds wall time and frontier recovery when evaluation budgets expire. Unknown queue duration remains null. Seeds control random/cost selection, not LLM backend randomness. Repetitions do not establish general policy superiority. Fresh measurement differences remain visible.",
+  "schema": "ntt-live-policy-comparison-v1",
+  "trials": [
+    {
+      "best_feasible_transforms_per_second": 950570.3422053232,
+      "elapsed_seconds": 278.5239476580173,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 3,
+      "frontier_recall": 0.75,
+      "known_queue_seconds": 0.0010708430781960487,
+      "measurement_differences": [],
+      "policy": "llm",
+      "queue_seconds": 0.0010708430781960487,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "3b3886e743619f070835ab2a5565923e2537eeab702876326ada8779af14af41",
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141",
+        "a32b000dd51bfcad1384e317ffb4efb7e0d37deb76472eee0135cce502ac2c93"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 2
+    },
+    {
+      "best_feasible_transforms_per_second": 950570.3422053232,
+      "elapsed_seconds": 248.12608990911394,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 3,
+      "frontier_recall": 0.75,
+      "known_queue_seconds": 0.001306277234107256,
+      "measurement_differences": [],
+      "policy": "llm",
+      "queue_seconds": 0.001306277234107256,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "3b3886e743619f070835ab2a5565923e2537eeab702876326ada8779af14af41",
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141",
+        "a32b000dd51bfcad1384e317ffb4efb7e0d37deb76472eee0135cce502ac2c93"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 3
+    },
+    {
+      "best_feasible_transforms_per_second": 950570.3422053232,
+      "elapsed_seconds": 254.2455031448044,
+      "evaluations": 3,
+      "failed_evaluations": 0,
+      "failure_categories": {},
+      "feasible_discoveries": 3,
+      "frontier_recall": 0.75,
+      "known_queue_seconds": 0.0013128588907420635,
+      "measurement_differences": [],
+      "policy": "llm",
+      "queue_seconds": 0.0013128588907420635,
+      "queue_time_complete": true,
+      "recovered_reference_ids": [
+        "3b3886e743619f070835ab2a5565923e2537eeab702876326ada8779af14af41",
+        "4a586b57344d9467c1e36a1e9078a9834b4c310dce97008bbda9fcc6685a1141",
+        "a32b000dd51bfcad1384e317ffb4efb7e0d37deb76472eee0135cce502ac2c93"
+      ],
+      "reference_frontier_size": 4,
+      "seed": 4
+    }
+  ]
+}

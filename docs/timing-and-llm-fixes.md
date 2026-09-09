@@ -5,7 +5,9 @@ the stated 4 ns out-of-context fabric contract. The LLM policy now uses measured
 resource feasibility when choosing its next experiment. The
 [final timing evidence](measured-evidence/timing-feedback/final-report.md)
 retains the intermediate failures, matched synthesis comparisons, and artifact
-integrity results. Fresh live LLM trials are running; their result is still pending.
+integrity results. [Fresh live LLM trials](measured-evidence/timing-feedback/live-summary.json)
+now confirm 75% frontier recovery in all three repetitions, up from the prior
+25%, with all nine fresh evaluations passing.
 
 ## Final timing results
 
@@ -109,12 +111,41 @@ possible with three evaluations. The old clean live LLM study recovered 25%.
 The [N=256 replay](measured-evidence/timing-feedback/replay256.json) recovers both
 reference-frontier designs in three evaluations, also matching enumeration.
 
-Fresh live confirmation uses nine evaluations: three repetitions of three
-experiments, the original N=128 campaign and exactly the original generator
-executable, in isolated framework `0a5912e` / NGen `997122d` checkouts. It starts
-after all timing experiments terminate. Earlier replay is not substituted for
-this hardware result. Zero-temperature repetitions are not independent random
-seeds, and a finite-pool result does not establish general LLM superiority.
+Fresh live confirmation completes all nine evaluations: three repetitions of
+three experiments, the original N=128 campaign and exactly the original
+generator executable, in isolated framework `0a5912e` / NGen `997122d` checkouts.
+The study started after the timing experiments terminated and exited successfully.
+Strict scoring verifies the complete trial set, exact campaign and generator
+binary equality, matching RTL, and matched hardware targets. All measured
+objective metrics agree with the reference. Total recorded queue wait is
+0.003690 seconds; there are no acquisition, correctness, implementation or
+timeout failures.
+
+| Policy / study | Frontier recovery in each repetition | Feasible discoveries per 3 evaluations | Best feasible transforms/s |
+| --- | ---: | ---: | ---: |
+| Previous live LLM | 25% | 1 | 350140 |
+| Fresh resource-aware LLM | 75% | 3 | 950570 |
+| Earlier matched enumeration control | 75% | 3 | 592417 |
+
+All three fresh repetitions select `(PE, stage groups)` = `(1,1)`, `(2,1)`,
+then `(2,2)`. Each selected design is within LUT/FF/DSP/BRAM caps. The third
+is the fastest feasible architecture in this six-design pool, at the cost of
+more resources than enumeration's fastest selection. These rates are synthesis
+estimates at the specified clock, not board measurements.
+
+The model is `unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS` at the supplied endpoint,
+with temperature zero and thinking disabled. The
+[published live summary](measured-evidence/timing-feedback/live-summary.json)
+and [all nine acquisition request/response traces](measured-evidence/timing-feedback/live-acquisition-traces.json)
+retain choices, observations, model settings and input hashes. The original
+[control study](policy-uncontended-study.md) remains separate: controls were not
+rerun for this follow-up. The generator binary SHA-256 is
+`09cd14ec9038ec86e8e5e5becab5a6c2d8c724ad40f428ca11472d4f1d7395ec`.
+
+This confirms the acquisition fix on the matched measured pool. Frontier recall
+matches enumeration, and zero-temperature repetitions are not independent random
+seeds. The result does not establish general LLM superiority; the N=256 result
+above remains replay validation only.
 
 ## Regression evidence and reproduction
 
@@ -140,6 +171,7 @@ and generator-executable equality checks remain strict.
 ```sh
 python3 scripts/summarize_ntt_evidence.py --index campaigns/timing-feedback-evidence.json --output-dir build/fresh-timing-snapshot
 python3 scripts/replay_search_policies.py --report build/policy128-reference-current/report.json --campaign campaigns/live-policy128.json --output-dir build/fresh-feedback-replay --budget 3 --seeds 2 3 4 --sequential-llm
+python3 scripts/summarize_live_policy_trials.py --reference-dir build/policy128-reference-current --trials-dir build/llm-feedback-live-trials --output build/fresh-live-summary.json
 ```
 
 Published [machine-readable timing results](measured-evidence/timing-feedback/final-report.json)

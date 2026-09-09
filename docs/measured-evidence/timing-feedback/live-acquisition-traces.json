@@ -1,0 +1,957 @@
+{
+  "schema": "ntt-feedback-live-acquisition-v1",
+  "generator_binary_sha256": "09cd14ec9038ec86e8e5e5becab5a6c2d8c724ad40f428ca11472d4f1d7395ec",
+  "framework_source": {
+    "revision": "0a5912e2c5731a037338d69249c1bd8ce5f4b096",
+    "source_hash": "76d2d48f92de22ce4f58ee2b7ca4cc913ced1e370975c8a3f0f057f558b16d00"
+  },
+  "ngen_source": {
+    "revision": "997122d6dd1a24160d4f0b259765171e02a7206a",
+    "source_hash": "6ba741dbf37e00bb05463e9c3fb2bf5939a674f7018e9a24a2c5ad0339733b5d"
+  },
+  "frozen_inputs_verified": true,
+  "trials": [
+    {
+      "repetition": 2,
+      "step": 1,
+      "configuration": {
+        "backend": "streamed",
+        "boundary": "registered-ready-valid",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 1,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1,
+        "transpose": "indexed"
+      },
+      "observation": {
+        "configuration": {
+          "backend": "streamed",
+          "boundary": "registered-ready-valid",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 1,
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1,
+          "transpose": "indexed"
+        },
+        "correct": true,
+        "implementation_passed": true,
+        "metrics": {
+          "bandwidth_capped_transforms_per_second": 350140.05602240894,
+          "bram": 4,
+          "dsp": 11,
+          "ff": 1143,
+          "hold_slack_ns": 0.038,
+          "latency_ns": 2740.0,
+          "lut": 2956,
+          "transforms_per_second": 350140.05602240894,
+          "uram": 0,
+          "wns_ns": 0.599
+        },
+        "timing_passed": true
+      },
+      "queue_seconds": 0.0003230203874409199,
+      "selection_seconds": 8.505003697238863,
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in \"order\". Never invent configurations or report predicted metrics as measurements.",
+            "role": "system"
+          },
+          {
+            "content": "{\"bandwidth\":{},\"candidate_advice\":{\"8076501b3713a5ed\":{\"physical_pe_count\":2,\"resource_estimates\":{}},\"86e7fa10a60d91a2\":{\"physical_pe_count\":4,\"resource_estimates\":{}},\"892d244b3b603e7f\":{\"physical_pe_count\":4,\"resource_estimates\":{}},\"97db1261316e4fc4\":{\"physical_pe_count\":2,\"resource_estimates\":{}},\"d8d49321bbb58187\":{\"physical_pe_count\":8,\"resource_estimates\":{}},\"f13cf7872b3fd05f\":{\"physical_pe_count\":1,\"resource_estimates\":{}}},\"candidates\":{\"8076501b3713a5ed\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"86e7fa10a60d91a2\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"892d244b3b603e7f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"97db1261316e4fc4\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"d8d49321bbb58187\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"f13cf7872b3fd05f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"}},\"estimate_limitation\":\"Advisory extrapolations from this trial only, not measurements or safe pruning bounds. Unknown does not mean zero. All legal candidates remain available.\",\"evaluations_remaining\":3,\"objectives\":{\"bram\":\"min\",\"dsp\":\"min\",\"ff\":\"min\",\"latency_ns\":\"min\",\"lut\":\"min\",\"transforms_per_second\":\"max\"},\"observations\":[],\"requirements\":{},\"resource_limits\":{\"bram\":8,\"dsp\":50,\"ff\":6000,\"lut\":10000},\"target\":{\"clock_period_ns\":4.0,\"clock_source\":\"BUFGCE_X0Y0\",\"io_delays_ns\":{\"input_max\":1.0,\"input_min\":0.5,\"output_max\":1.0,\"output_min\":0.0},\"io_reference_pin\":\"input_full_reg/C\",\"part\":\"xcu280-fsvh2892-2L-e\",\"tool_version\":\"2023.2\"},\"workload\":{\"direction\":\"forward\",\"kind\":\"generic\",\"lanes\":4,\"n\":128,\"negacyclic\":true,\"psi\":\"2141337746\",\"q\":\"2147484161\",\"root\":\"2023476074\"}}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "temperature": 0
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"order\": [\n    \"f13cf7872b3fd05f\",\n    \"8076501b3713a5ed\",\n    \"97db1261316e4fc4\",\n    \"86e7fa10a60d91a2\",\n    \"892d244b3b603e7f\",\n    \"d8d49321bbb58187\"\n  ]\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1788932876,
+        "id": "chatcmpl-CJCgWpZgNXIg9BQT8GXzXgBGTcyQkMAX",
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "object": "chat.completion",
+        "system_fingerprint": "b10858-64e9bceb2",
+        "timings": {
+          "cache_n": 141,
+          "predicted_ms": 5534.48,
+          "predicted_n": 125,
+          "predicted_per_second": 22.404995591275064,
+          "predicted_per_token_ms": 44.63290322580645,
+          "prompt_ms": 2685.008,
+          "prompt_n": 845,
+          "prompt_per_second": 314.7104217194139,
+          "prompt_per_token_ms": 3.1775242603550296
+        },
+        "usage": {
+          "completion_tokens": 125,
+          "prompt_tokens": 986,
+          "prompt_tokens_details": {
+            "cached_tokens": 141
+          },
+          "total_tokens": 1111
+        }
+      }
+    },
+    {
+      "repetition": 2,
+      "step": 2,
+      "configuration": {
+        "backend": "streamed",
+        "boundary": "registered-ready-valid",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1,
+        "transpose": "indexed"
+      },
+      "observation": {
+        "configuration": {
+          "backend": "streamed",
+          "boundary": "registered-ready-valid",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 2,
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1,
+          "transpose": "indexed"
+        },
+        "correct": true,
+        "implementation_passed": true,
+        "metrics": {
+          "bandwidth_capped_transforms_per_second": 585480.093676815,
+          "bram": 4,
+          "dsp": 18,
+          "ff": 1866,
+          "hold_slack_ns": 0.038,
+          "latency_ns": 1592.0,
+          "lut": 4601,
+          "transforms_per_second": 585480.093676815,
+          "uram": 0,
+          "wns_ns": 0.599
+        },
+        "timing_passed": true
+      },
+      "queue_seconds": 0.00031910277903079987,
+      "selection_seconds": 9.532753074076027,
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in \"order\". Never invent configurations or report predicted metrics as measurements.",
+            "role": "system"
+          },
+          {
+            "content": "{\"bandwidth\":{},\"candidate_advice\":{\"8076501b3713a5ed\":{\"physical_pe_count\":2,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":22.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":2286.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":5912.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"86e7fa10a60d91a2\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":44.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":4572.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":11824.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"892d244b3b603e7f\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":44.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":4572.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":11824.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"97db1261316e4fc4\":{\"physical_pe_count\":2,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":22.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":2286.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":5912.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"d8d49321bbb58187\":{\"physical_pe_count\":8,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":88.0,\"estimated_over_limit\":true,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":9144.0,\"estimated_over_limit\":true,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":23648.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}}},\"candidates\":{\"8076501b3713a5ed\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"86e7fa10a60d91a2\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"892d244b3b603e7f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"97db1261316e4fc4\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"d8d49321bbb58187\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"}},\"estimate_limitation\":\"Advisory extrapolations from this trial only, not measurements or safe pruning bounds. Unknown does not mean zero. All legal candidates remain available.\",\"evaluations_remaining\":2,\"objectives\":{\"bram\":\"min\",\"dsp\":\"min\",\"ff\":\"min\",\"latency_ns\":\"min\",\"lut\":\"min\",\"transforms_per_second\":\"max\"},\"observations\":[{\"configuration\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"correct\":true,\"exceeded_limits\":{},\"implementation_passed\":true,\"metrics\":{\"bandwidth_capped_transforms_per_second\":350140.05602240894,\"bram\":4,\"dsp\":11,\"ff\":1143,\"hold_slack_ns\":0.038,\"latency_ns\":2740.0,\"lut\":2956,\"transforms_per_second\":350140.05602240894,\"uram\":0,\"wns_ns\":0.599},\"missing_resource_metrics\":[],\"resource_feasible\":true,\"timing_passed\":true}],\"requirements\":{},\"resource_limits\":{\"bram\":8,\"dsp\":50,\"ff\":6000,\"lut\":10000},\"target\":{\"clock_period_ns\":4.0,\"clock_source\":\"BUFGCE_X0Y0\",\"io_delays_ns\":{\"input_max\":1.0,\"input_min\":0.5,\"output_max\":1.0,\"output_min\":0.0},\"io_reference_pin\":\"input_full_reg/C\",\"part\":\"xcu280-fsvh2892-2L-e\",\"tool_version\":\"2023.2\"},\"workload\":{\"direction\":\"forward\",\"kind\":\"generic\",\"lanes\":4,\"n\":128,\"negacyclic\":true,\"psi\":\"2141337746\",\"q\":\"2147484161\",\"root\":\"2023476074\"}}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "temperature": 0
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"order\": [\n    \"97db1261316e4fc4\",\n    \"8076501b3713a5ed\",\n    \"86e7fa10a60d91a2\",\n    \"892d244b3b603e7f\",\n    \"d8d49321bbb58187\"\n  ]\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1788932977,
+        "id": "chatcmpl-QkXzhHNtlDBke4knQ1N53wPzqC5eLz3P",
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "object": "chat.completion",
+        "system_fingerprint": "b10858-64e9bceb2",
+        "timings": {
+          "cache_n": 141,
+          "predicted_ms": 4738.364,
+          "predicted_n": 107,
+          "predicted_per_second": 22.37059035565862,
+          "predicted_per_token_ms": 44.70154716981132,
+          "prompt_ms": 4529.389,
+          "prompt_n": 1499,
+          "prompt_per_second": 330.9497152927249,
+          "prompt_per_token_ms": 3.0216070713809207
+        },
+        "usage": {
+          "completion_tokens": 107,
+          "prompt_tokens": 1640,
+          "prompt_tokens_details": {
+            "cached_tokens": 141
+          },
+          "total_tokens": 1747
+        }
+      }
+    },
+    {
+      "repetition": 2,
+      "step": 3,
+      "configuration": {
+        "backend": "streamed",
+        "boundary": "registered-ready-valid",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 2,
+        "transpose": "indexed"
+      },
+      "observation": {
+        "configuration": {
+          "backend": "streamed",
+          "boundary": "registered-ready-valid",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 2,
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 2,
+          "transpose": "indexed"
+        },
+        "correct": true,
+        "implementation_passed": true,
+        "metrics": {
+          "bandwidth_capped_transforms_per_second": 950570.3422053232,
+          "bram": 8,
+          "dsp": 44,
+          "ff": 3120,
+          "hold_slack_ns": 0.038,
+          "latency_ns": 1860.0,
+          "lut": 8398,
+          "transforms_per_second": 950570.3422053232,
+          "uram": 0,
+          "wns_ns": 0.599
+        },
+        "timing_passed": true
+      },
+      "queue_seconds": 0.000428719911724329,
+      "selection_seconds": 8.70150940772146,
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in \"order\". Never invent configurations or report predicted metrics as measurements.",
+            "role": "system"
+          },
+          {
+            "content": "{\"bandwidth\":{},\"candidate_advice\":{\"8076501b3713a5ed\":{\"physical_pe_count\":2,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":22.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":2286.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":5912.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}},\"86e7fa10a60d91a2\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":36.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":3732.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":9202.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}},\"892d244b3b603e7f\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":36.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":3732.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":9202.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}},\"d8d49321bbb58187\":{\"physical_pe_count\":8,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":72.0,\"estimated_over_limit\":true,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":7464.0,\"estimated_over_limit\":true,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":18404.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}}},\"candidates\":{\"8076501b3713a5ed\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"86e7fa10a60d91a2\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"892d244b3b603e7f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"d8d49321bbb58187\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"}},\"estimate_limitation\":\"Advisory extrapolations from this trial only, not measurements or safe pruning bounds. Unknown does not mean zero. All legal candidates remain available.\",\"evaluations_remaining\":1,\"objectives\":{\"bram\":\"min\",\"dsp\":\"min\",\"ff\":\"min\",\"latency_ns\":\"min\",\"lut\":\"min\",\"transforms_per_second\":\"max\"},\"observations\":[{\"configuration\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"correct\":true,\"exceeded_limits\":{},\"implementation_passed\":true,\"metrics\":{\"bandwidth_capped_transforms_per_second\":350140.05602240894,\"bram\":4,\"dsp\":11,\"ff\":1143,\"hold_slack_ns\":0.038,\"latency_ns\":2740.0,\"lut\":2956,\"transforms_per_second\":350140.05602240894,\"uram\":0,\"wns_ns\":0.599},\"missing_resource_metrics\":[],\"resource_feasible\":true,\"timing_passed\":true},{\"configuration\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"correct\":true,\"exceeded_limits\":{},\"implementation_passed\":true,\"metrics\":{\"bandwidth_capped_transforms_per_second\":585480.093676815,\"bram\":4,\"dsp\":18,\"ff\":1866,\"hold_slack_ns\":0.038,\"latency_ns\":1592.0,\"lut\":4601,\"transforms_per_second\":585480.093676815,\"uram\":0,\"wns_ns\":0.599},\"missing_resource_metrics\":[],\"resource_feasible\":true,\"timing_passed\":true}],\"requirements\":{},\"resource_limits\":{\"bram\":8,\"dsp\":50,\"ff\":6000,\"lut\":10000},\"target\":{\"clock_period_ns\":4.0,\"clock_source\":\"BUFGCE_X0Y0\",\"io_delays_ns\":{\"input_max\":1.0,\"input_min\":0.5,\"output_max\":1.0,\"output_min\":0.0},\"io_reference_pin\":\"input_full_reg/C\",\"part\":\"xcu280-fsvh2892-2L-e\",\"tool_version\":\"2023.2\"},\"workload\":{\"direction\":\"forward\",\"kind\":\"generic\",\"lanes\":4,\"n\":128,\"negacyclic\":true,\"psi\":\"2141337746\",\"q\":\"2147484161\",\"root\":\"2023476074\"}}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "temperature": 0
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"order\": [\n    \"86e7fa10a60d91a2\",\n    \"892d244b3b603e7f\",\n    \"8076501b3713a5ed\",\n    \"d8d49321bbb58187\"\n  ]\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1788933058,
+        "id": "chatcmpl-a3UGiCaTcVcvFYd43c8JfLJTBJqODRLp",
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "object": "chat.completion",
+        "system_fingerprint": "b10858-64e9bceb2",
+        "timings": {
+          "cache_n": 141,
+          "predicted_ms": 3938.439,
+          "predicted_n": 89,
+          "predicted_per_second": 22.343877866332324,
+          "predicted_per_token_ms": 44.754988636363635,
+          "prompt_ms": 4492.16,
+          "prompt_n": 1489,
+          "prompt_per_second": 331.4663769767773,
+          "prompt_per_token_ms": 3.0168972464741435
+        },
+        "usage": {
+          "completion_tokens": 89,
+          "prompt_tokens": 1630,
+          "prompt_tokens_details": {
+            "cached_tokens": 141
+          },
+          "total_tokens": 1719
+        }
+      }
+    },
+    {
+      "repetition": 3,
+      "step": 1,
+      "configuration": {
+        "backend": "streamed",
+        "boundary": "registered-ready-valid",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 1,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1,
+        "transpose": "indexed"
+      },
+      "observation": {
+        "configuration": {
+          "backend": "streamed",
+          "boundary": "registered-ready-valid",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 1,
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1,
+          "transpose": "indexed"
+        },
+        "correct": true,
+        "implementation_passed": true,
+        "metrics": {
+          "bandwidth_capped_transforms_per_second": 350140.05602240894,
+          "bram": 4,
+          "dsp": 11,
+          "ff": 1143,
+          "hold_slack_ns": 0.038,
+          "latency_ns": 2740.0,
+          "lut": 2956,
+          "transforms_per_second": 350140.05602240894,
+          "uram": 0,
+          "wns_ns": 0.599
+        },
+        "timing_passed": true
+      },
+      "queue_seconds": 0.00044133327901363373,
+      "selection_seconds": 5.939275153912604,
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in \"order\". Never invent configurations or report predicted metrics as measurements.",
+            "role": "system"
+          },
+          {
+            "content": "{\"bandwidth\":{},\"candidate_advice\":{\"8076501b3713a5ed\":{\"physical_pe_count\":2,\"resource_estimates\":{}},\"86e7fa10a60d91a2\":{\"physical_pe_count\":4,\"resource_estimates\":{}},\"892d244b3b603e7f\":{\"physical_pe_count\":4,\"resource_estimates\":{}},\"97db1261316e4fc4\":{\"physical_pe_count\":2,\"resource_estimates\":{}},\"d8d49321bbb58187\":{\"physical_pe_count\":8,\"resource_estimates\":{}},\"f13cf7872b3fd05f\":{\"physical_pe_count\":1,\"resource_estimates\":{}}},\"candidates\":{\"8076501b3713a5ed\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"86e7fa10a60d91a2\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"892d244b3b603e7f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"97db1261316e4fc4\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"d8d49321bbb58187\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"f13cf7872b3fd05f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"}},\"estimate_limitation\":\"Advisory extrapolations from this trial only, not measurements or safe pruning bounds. Unknown does not mean zero. All legal candidates remain available.\",\"evaluations_remaining\":3,\"objectives\":{\"bram\":\"min\",\"dsp\":\"min\",\"ff\":\"min\",\"latency_ns\":\"min\",\"lut\":\"min\",\"transforms_per_second\":\"max\"},\"observations\":[],\"requirements\":{},\"resource_limits\":{\"bram\":8,\"dsp\":50,\"ff\":6000,\"lut\":10000},\"target\":{\"clock_period_ns\":4.0,\"clock_source\":\"BUFGCE_X0Y0\",\"io_delays_ns\":{\"input_max\":1.0,\"input_min\":0.5,\"output_max\":1.0,\"output_min\":0.0},\"io_reference_pin\":\"input_full_reg/C\",\"part\":\"xcu280-fsvh2892-2L-e\",\"tool_version\":\"2023.2\"},\"workload\":{\"direction\":\"forward\",\"kind\":\"generic\",\"lanes\":4,\"n\":128,\"negacyclic\":true,\"psi\":\"2141337746\",\"q\":\"2147484161\",\"root\":\"2023476074\"}}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "temperature": 0
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"order\": [\n    \"f13cf7872b3fd05f\",\n    \"8076501b3713a5ed\",\n    \"97db1261316e4fc4\",\n    \"86e7fa10a60d91a2\",\n    \"892d244b3b603e7f\",\n    \"d8d49321bbb58187\"\n  ]\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1788933152,
+        "id": "chatcmpl-QmxRweCClaMtqpaTFwPkaOWosszjftaF",
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "object": "chat.completion",
+        "system_fingerprint": "b10858-64e9bceb2",
+        "timings": {
+          "cache_n": 982,
+          "predicted_ms": 5538.788,
+          "predicted_n": 125,
+          "predicted_per_second": 22.38756926605604,
+          "predicted_per_token_ms": 44.66764516129032,
+          "prompt_ms": 121.651,
+          "prompt_n": 4,
+          "prompt_per_second": 32.88094631363491,
+          "prompt_per_token_ms": 30.41275
+        },
+        "usage": {
+          "completion_tokens": 125,
+          "prompt_tokens": 986,
+          "prompt_tokens_details": {
+            "cached_tokens": 982
+          },
+          "total_tokens": 1111
+        }
+      }
+    },
+    {
+      "repetition": 3,
+      "step": 2,
+      "configuration": {
+        "backend": "streamed",
+        "boundary": "registered-ready-valid",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1,
+        "transpose": "indexed"
+      },
+      "observation": {
+        "configuration": {
+          "backend": "streamed",
+          "boundary": "registered-ready-valid",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 2,
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1,
+          "transpose": "indexed"
+        },
+        "correct": true,
+        "implementation_passed": true,
+        "metrics": {
+          "bandwidth_capped_transforms_per_second": 585480.093676815,
+          "bram": 4,
+          "dsp": 18,
+          "ff": 1866,
+          "hold_slack_ns": 0.038,
+          "latency_ns": 1592.0,
+          "lut": 4601,
+          "transforms_per_second": 585480.093676815,
+          "uram": 0,
+          "wns_ns": 0.599
+        },
+        "timing_passed": true
+      },
+      "queue_seconds": 0.0004312647506594658,
+      "selection_seconds": 5.064993374980986,
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in \"order\". Never invent configurations or report predicted metrics as measurements.",
+            "role": "system"
+          },
+          {
+            "content": "{\"bandwidth\":{},\"candidate_advice\":{\"8076501b3713a5ed\":{\"physical_pe_count\":2,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":22.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":2286.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":5912.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"86e7fa10a60d91a2\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":44.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":4572.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":11824.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"892d244b3b603e7f\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":44.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":4572.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":11824.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"97db1261316e4fc4\":{\"physical_pe_count\":2,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":22.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":2286.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":5912.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"d8d49321bbb58187\":{\"physical_pe_count\":8,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":88.0,\"estimated_over_limit\":true,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":9144.0,\"estimated_over_limit\":true,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":23648.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}}},\"candidates\":{\"8076501b3713a5ed\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"86e7fa10a60d91a2\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"892d244b3b603e7f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"97db1261316e4fc4\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"d8d49321bbb58187\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"}},\"estimate_limitation\":\"Advisory extrapolations from this trial only, not measurements or safe pruning bounds. Unknown does not mean zero. All legal candidates remain available.\",\"evaluations_remaining\":2,\"objectives\":{\"bram\":\"min\",\"dsp\":\"min\",\"ff\":\"min\",\"latency_ns\":\"min\",\"lut\":\"min\",\"transforms_per_second\":\"max\"},\"observations\":[{\"configuration\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"correct\":true,\"exceeded_limits\":{},\"implementation_passed\":true,\"metrics\":{\"bandwidth_capped_transforms_per_second\":350140.05602240894,\"bram\":4,\"dsp\":11,\"ff\":1143,\"hold_slack_ns\":0.038,\"latency_ns\":2740.0,\"lut\":2956,\"transforms_per_second\":350140.05602240894,\"uram\":0,\"wns_ns\":0.599},\"missing_resource_metrics\":[],\"resource_feasible\":true,\"timing_passed\":true}],\"requirements\":{},\"resource_limits\":{\"bram\":8,\"dsp\":50,\"ff\":6000,\"lut\":10000},\"target\":{\"clock_period_ns\":4.0,\"clock_source\":\"BUFGCE_X0Y0\",\"io_delays_ns\":{\"input_max\":1.0,\"input_min\":0.5,\"output_max\":1.0,\"output_min\":0.0},\"io_reference_pin\":\"input_full_reg/C\",\"part\":\"xcu280-fsvh2892-2L-e\",\"tool_version\":\"2023.2\"},\"workload\":{\"direction\":\"forward\",\"kind\":\"generic\",\"lanes\":4,\"n\":128,\"negacyclic\":true,\"psi\":\"2141337746\",\"q\":\"2147484161\",\"root\":\"2023476074\"}}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "temperature": 0
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"order\": [\n    \"97db1261316e4fc4\",\n    \"8076501b3713a5ed\",\n    \"86e7fa10a60d91a2\",\n    \"892d244b3b603e7f\",\n    \"d8d49321bbb58187\"\n  ]\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1788933230,
+        "id": "chatcmpl-qpFpsP4uR8J3orwP5XG1YxWrDYPueVEQ",
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "object": "chat.completion",
+        "system_fingerprint": "b10858-64e9bceb2",
+        "timings": {
+          "cache_n": 1636,
+          "predicted_ms": 4743.415,
+          "predicted_n": 107,
+          "predicted_per_second": 22.34676915260419,
+          "predicted_per_token_ms": 44.74919811320755,
+          "prompt_ms": 111.45,
+          "prompt_n": 4,
+          "prompt_per_second": 35.89053387169134,
+          "prompt_per_token_ms": 27.8625
+        },
+        "usage": {
+          "completion_tokens": 107,
+          "prompt_tokens": 1640,
+          "prompt_tokens_details": {
+            "cached_tokens": 1636
+          },
+          "total_tokens": 1747
+        }
+      }
+    },
+    {
+      "repetition": 3,
+      "step": 3,
+      "configuration": {
+        "backend": "streamed",
+        "boundary": "registered-ready-valid",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 2,
+        "transpose": "indexed"
+      },
+      "observation": {
+        "configuration": {
+          "backend": "streamed",
+          "boundary": "registered-ready-valid",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 2,
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 2,
+          "transpose": "indexed"
+        },
+        "correct": true,
+        "implementation_passed": true,
+        "metrics": {
+          "bandwidth_capped_transforms_per_second": 950570.3422053232,
+          "bram": 8,
+          "dsp": 44,
+          "ff": 3120,
+          "hold_slack_ns": 0.038,
+          "latency_ns": 1860.0,
+          "lut": 8398,
+          "transforms_per_second": 950570.3422053232,
+          "uram": 0,
+          "wns_ns": 0.599
+        },
+        "timing_passed": true
+      },
+      "queue_seconds": 0.0004336792044341564,
+      "selection_seconds": 4.307118872646242,
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in \"order\". Never invent configurations or report predicted metrics as measurements.",
+            "role": "system"
+          },
+          {
+            "content": "{\"bandwidth\":{},\"candidate_advice\":{\"8076501b3713a5ed\":{\"physical_pe_count\":2,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":22.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":2286.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":5912.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}},\"86e7fa10a60d91a2\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":36.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":3732.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":9202.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}},\"892d244b3b603e7f\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":36.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":3732.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":9202.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}},\"d8d49321bbb58187\":{\"physical_pe_count\":8,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":72.0,\"estimated_over_limit\":true,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":7464.0,\"estimated_over_limit\":true,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":18404.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}}},\"candidates\":{\"8076501b3713a5ed\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"86e7fa10a60d91a2\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"892d244b3b603e7f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"d8d49321bbb58187\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"}},\"estimate_limitation\":\"Advisory extrapolations from this trial only, not measurements or safe pruning bounds. Unknown does not mean zero. All legal candidates remain available.\",\"evaluations_remaining\":1,\"objectives\":{\"bram\":\"min\",\"dsp\":\"min\",\"ff\":\"min\",\"latency_ns\":\"min\",\"lut\":\"min\",\"transforms_per_second\":\"max\"},\"observations\":[{\"configuration\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"correct\":true,\"exceeded_limits\":{},\"implementation_passed\":true,\"metrics\":{\"bandwidth_capped_transforms_per_second\":350140.05602240894,\"bram\":4,\"dsp\":11,\"ff\":1143,\"hold_slack_ns\":0.038,\"latency_ns\":2740.0,\"lut\":2956,\"transforms_per_second\":350140.05602240894,\"uram\":0,\"wns_ns\":0.599},\"missing_resource_metrics\":[],\"resource_feasible\":true,\"timing_passed\":true},{\"configuration\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"correct\":true,\"exceeded_limits\":{},\"implementation_passed\":true,\"metrics\":{\"bandwidth_capped_transforms_per_second\":585480.093676815,\"bram\":4,\"dsp\":18,\"ff\":1866,\"hold_slack_ns\":0.038,\"latency_ns\":1592.0,\"lut\":4601,\"transforms_per_second\":585480.093676815,\"uram\":0,\"wns_ns\":0.599},\"missing_resource_metrics\":[],\"resource_feasible\":true,\"timing_passed\":true}],\"requirements\":{},\"resource_limits\":{\"bram\":8,\"dsp\":50,\"ff\":6000,\"lut\":10000},\"target\":{\"clock_period_ns\":4.0,\"clock_source\":\"BUFGCE_X0Y0\",\"io_delays_ns\":{\"input_max\":1.0,\"input_min\":0.5,\"output_max\":1.0,\"output_min\":0.0},\"io_reference_pin\":\"input_full_reg/C\",\"part\":\"xcu280-fsvh2892-2L-e\",\"tool_version\":\"2023.2\"},\"workload\":{\"direction\":\"forward\",\"kind\":\"generic\",\"lanes\":4,\"n\":128,\"negacyclic\":true,\"psi\":\"2141337746\",\"q\":\"2147484161\",\"root\":\"2023476074\"}}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "temperature": 0
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"order\": [\n    \"86e7fa10a60d91a2\",\n    \"892d244b3b603e7f\",\n    \"8076501b3713a5ed\",\n    \"d8d49321bbb58187\"\n  ]\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1788933307,
+        "id": "chatcmpl-FmzxGO2MDA345jJh7GugoxYpdNK9IF3e",
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "object": "chat.completion",
+        "system_fingerprint": "b10858-64e9bceb2",
+        "timings": {
+          "cache_n": 1626,
+          "predicted_ms": 3945.299,
+          "predicted_n": 89,
+          "predicted_per_second": 22.305026817992758,
+          "predicted_per_token_ms": 44.83294318181818,
+          "prompt_ms": 112.981,
+          "prompt_n": 4,
+          "prompt_per_second": 35.40418300422195,
+          "prompt_per_token_ms": 28.24525
+        },
+        "usage": {
+          "completion_tokens": 89,
+          "prompt_tokens": 1630,
+          "prompt_tokens_details": {
+            "cached_tokens": 1626
+          },
+          "total_tokens": 1719
+        }
+      }
+    },
+    {
+      "repetition": 4,
+      "step": 1,
+      "configuration": {
+        "backend": "streamed",
+        "boundary": "registered-ready-valid",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 1,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1,
+        "transpose": "indexed"
+      },
+      "observation": {
+        "configuration": {
+          "backend": "streamed",
+          "boundary": "registered-ready-valid",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 1,
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1,
+          "transpose": "indexed"
+        },
+        "correct": true,
+        "implementation_passed": true,
+        "metrics": {
+          "bandwidth_capped_transforms_per_second": 350140.05602240894,
+          "bram": 4,
+          "dsp": 11,
+          "ff": 1143,
+          "hold_slack_ns": 0.038,
+          "latency_ns": 2740.0,
+          "lut": 2956,
+          "transforms_per_second": 350140.05602240894,
+          "uram": 0,
+          "wns_ns": 0.599
+        },
+        "timing_passed": true
+      },
+      "queue_seconds": 0.0004128902219235897,
+      "selection_seconds": 5.8978435029275715,
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in \"order\". Never invent configurations or report predicted metrics as measurements.",
+            "role": "system"
+          },
+          {
+            "content": "{\"bandwidth\":{},\"candidate_advice\":{\"8076501b3713a5ed\":{\"physical_pe_count\":2,\"resource_estimates\":{}},\"86e7fa10a60d91a2\":{\"physical_pe_count\":4,\"resource_estimates\":{}},\"892d244b3b603e7f\":{\"physical_pe_count\":4,\"resource_estimates\":{}},\"97db1261316e4fc4\":{\"physical_pe_count\":2,\"resource_estimates\":{}},\"d8d49321bbb58187\":{\"physical_pe_count\":8,\"resource_estimates\":{}},\"f13cf7872b3fd05f\":{\"physical_pe_count\":1,\"resource_estimates\":{}}},\"candidates\":{\"8076501b3713a5ed\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"86e7fa10a60d91a2\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"892d244b3b603e7f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"97db1261316e4fc4\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"d8d49321bbb58187\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"f13cf7872b3fd05f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"}},\"estimate_limitation\":\"Advisory extrapolations from this trial only, not measurements or safe pruning bounds. Unknown does not mean zero. All legal candidates remain available.\",\"evaluations_remaining\":3,\"objectives\":{\"bram\":\"min\",\"dsp\":\"min\",\"ff\":\"min\",\"latency_ns\":\"min\",\"lut\":\"min\",\"transforms_per_second\":\"max\"},\"observations\":[],\"requirements\":{},\"resource_limits\":{\"bram\":8,\"dsp\":50,\"ff\":6000,\"lut\":10000},\"target\":{\"clock_period_ns\":4.0,\"clock_source\":\"BUFGCE_X0Y0\",\"io_delays_ns\":{\"input_max\":1.0,\"input_min\":0.5,\"output_max\":1.0,\"output_min\":0.0},\"io_reference_pin\":\"input_full_reg/C\",\"part\":\"xcu280-fsvh2892-2L-e\",\"tool_version\":\"2023.2\"},\"workload\":{\"direction\":\"forward\",\"kind\":\"generic\",\"lanes\":4,\"n\":128,\"negacyclic\":true,\"psi\":\"2141337746\",\"q\":\"2147484161\",\"root\":\"2023476074\"}}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "temperature": 0
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"order\": [\n    \"f13cf7872b3fd05f\",\n    \"8076501b3713a5ed\",\n    \"97db1261316e4fc4\",\n    \"86e7fa10a60d91a2\",\n    \"892d244b3b603e7f\",\n    \"d8d49321bbb58187\"\n  ]\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1788933400,
+        "id": "chatcmpl-GIpBXAM2YcSBzL7uY8dKudZydjkaU009",
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "object": "chat.completion",
+        "system_fingerprint": "b10858-64e9bceb2",
+        "timings": {
+          "cache_n": 982,
+          "predicted_ms": 5541.272,
+          "predicted_n": 125,
+          "predicted_per_second": 22.377533533816784,
+          "predicted_per_token_ms": 44.68767741935484,
+          "prompt_ms": 111.74,
+          "prompt_n": 4,
+          "prompt_per_second": 35.79738679076428,
+          "prompt_per_token_ms": 27.935
+        },
+        "usage": {
+          "completion_tokens": 125,
+          "prompt_tokens": 986,
+          "prompt_tokens_details": {
+            "cached_tokens": 982
+          },
+          "total_tokens": 1111
+        }
+      }
+    },
+    {
+      "repetition": 4,
+      "step": 2,
+      "configuration": {
+        "backend": "streamed",
+        "boundary": "registered-ready-valid",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1,
+        "transpose": "indexed"
+      },
+      "observation": {
+        "configuration": {
+          "backend": "streamed",
+          "boundary": "registered-ready-valid",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 2,
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1,
+          "transpose": "indexed"
+        },
+        "correct": true,
+        "implementation_passed": true,
+        "metrics": {
+          "bandwidth_capped_transforms_per_second": 585480.093676815,
+          "bram": 4,
+          "dsp": 18,
+          "ff": 1866,
+          "hold_slack_ns": 0.038,
+          "latency_ns": 1592.0,
+          "lut": 4601,
+          "transforms_per_second": 585480.093676815,
+          "uram": 0,
+          "wns_ns": 0.599
+        },
+        "timing_passed": true
+      },
+      "queue_seconds": 0.0004665008746087551,
+      "selection_seconds": 5.062588770873845,
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in \"order\". Never invent configurations or report predicted metrics as measurements.",
+            "role": "system"
+          },
+          {
+            "content": "{\"bandwidth\":{},\"candidate_advice\":{\"8076501b3713a5ed\":{\"physical_pe_count\":2,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":22.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":2286.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":5912.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"86e7fa10a60d91a2\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":44.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":4572.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":11824.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"892d244b3b603e7f\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":44.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":4572.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":11824.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"97db1261316e4fc4\":{\"physical_pe_count\":2,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":22.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":2286.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":5912.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}},\"d8d49321bbb58187\":{\"physical_pe_count\":8,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":88.0,\"estimated_over_limit\":true,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":1},\"ff\":{\"available\":true,\"estimate\":9144.0,\"estimated_over_limit\":true,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":1},\"lut\":{\"available\":true,\"estimate\":23648.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":1}}}},\"candidates\":{\"8076501b3713a5ed\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"86e7fa10a60d91a2\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"892d244b3b603e7f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"97db1261316e4fc4\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"d8d49321bbb58187\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"}},\"estimate_limitation\":\"Advisory extrapolations from this trial only, not measurements or safe pruning bounds. Unknown does not mean zero. All legal candidates remain available.\",\"evaluations_remaining\":2,\"objectives\":{\"bram\":\"min\",\"dsp\":\"min\",\"ff\":\"min\",\"latency_ns\":\"min\",\"lut\":\"min\",\"transforms_per_second\":\"max\"},\"observations\":[{\"configuration\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"correct\":true,\"exceeded_limits\":{},\"implementation_passed\":true,\"metrics\":{\"bandwidth_capped_transforms_per_second\":350140.05602240894,\"bram\":4,\"dsp\":11,\"ff\":1143,\"hold_slack_ns\":0.038,\"latency_ns\":2740.0,\"lut\":2956,\"transforms_per_second\":350140.05602240894,\"uram\":0,\"wns_ns\":0.599},\"missing_resource_metrics\":[],\"resource_feasible\":true,\"timing_passed\":true}],\"requirements\":{},\"resource_limits\":{\"bram\":8,\"dsp\":50,\"ff\":6000,\"lut\":10000},\"target\":{\"clock_period_ns\":4.0,\"clock_source\":\"BUFGCE_X0Y0\",\"io_delays_ns\":{\"input_max\":1.0,\"input_min\":0.5,\"output_max\":1.0,\"output_min\":0.0},\"io_reference_pin\":\"input_full_reg/C\",\"part\":\"xcu280-fsvh2892-2L-e\",\"tool_version\":\"2023.2\"},\"workload\":{\"direction\":\"forward\",\"kind\":\"generic\",\"lanes\":4,\"n\":128,\"negacyclic\":true,\"psi\":\"2141337746\",\"q\":\"2147484161\",\"root\":\"2023476074\"}}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "temperature": 0
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"order\": [\n    \"97db1261316e4fc4\",\n    \"8076501b3713a5ed\",\n    \"86e7fa10a60d91a2\",\n    \"892d244b3b603e7f\",\n    \"d8d49321bbb58187\"\n  ]\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1788933479,
+        "id": "chatcmpl-rWprHLmXu236U6XhAs996RWDDtxCTm2V",
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "object": "chat.completion",
+        "system_fingerprint": "b10858-64e9bceb2",
+        "timings": {
+          "cache_n": 1636,
+          "predicted_ms": 4744.809,
+          "predicted_n": 107,
+          "predicted_per_second": 22.340203789025015,
+          "predicted_per_token_ms": 44.762349056603774,
+          "prompt_ms": 114.425,
+          "prompt_n": 4,
+          "prompt_per_second": 34.95739567402229,
+          "prompt_per_token_ms": 28.60625
+        },
+        "usage": {
+          "completion_tokens": 107,
+          "prompt_tokens": 1640,
+          "prompt_tokens_details": {
+            "cached_tokens": 1636
+          },
+          "total_tokens": 1747
+        }
+      }
+    },
+    {
+      "repetition": 4,
+      "step": 3,
+      "configuration": {
+        "backend": "streamed",
+        "boundary": "registered-ready-valid",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 2,
+        "transpose": "indexed"
+      },
+      "observation": {
+        "configuration": {
+          "backend": "streamed",
+          "boundary": "registered-ready-valid",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 2,
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 2,
+          "transpose": "indexed"
+        },
+        "correct": true,
+        "implementation_passed": true,
+        "metrics": {
+          "bandwidth_capped_transforms_per_second": 950570.3422053232,
+          "bram": 8,
+          "dsp": 44,
+          "ff": 3120,
+          "hold_slack_ns": 0.038,
+          "latency_ns": 1860.0,
+          "lut": 8398,
+          "transforms_per_second": 950570.3422053232,
+          "uram": 0,
+          "wns_ns": 0.599
+        },
+        "timing_passed": true
+      },
+      "queue_seconds": 0.0004334677942097187,
+      "selection_seconds": 4.300814426038414,
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "max_tokens": 1024,
+        "messages": [
+          {
+            "content": "Rank legal FPGA NTT configurations to discover resource-feasible Pareto tradeoffs within the remaining evaluation budget. Resource caps are mandatory for a useful discovery: correctness and timing alone are insufficient. Prioritize likely feasible designs before speculative high-parallelism designs. With no observations, establish a small implementation as a calibration anchor. With observations, expand gradually using measured resource headroom, exceeded-limit feedback and advisory estimates; do not repeat a failed resource strategy just to maximize throughput. PE and stage_groups multiply physical replication. Estimates are uncertain and must not prune candidates. Return only a JSON object with an ordered list of candidate IDs in \"order\". Never invent configurations or report predicted metrics as measurements.",
+            "role": "system"
+          },
+          {
+            "content": "{\"bandwidth\":{},\"candidate_advice\":{\"8076501b3713a5ed\":{\"physical_pe_count\":2,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":22.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":2286.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":5912.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}},\"86e7fa10a60d91a2\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":36.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":3732.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":9202.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}},\"892d244b3b603e7f\":{\"physical_pe_count\":4,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":36.0,\"estimated_over_limit\":false,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":3732.0,\"estimated_over_limit\":false,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":9202.0,\"estimated_over_limit\":false,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}},\"d8d49321bbb58187\":{\"physical_pe_count\":8,\"resource_estimates\":{\"dsp\":{\"available\":true,\"estimate\":72.0,\"estimated_over_limit\":true,\"limit\":50,\"method\":\"replication heuristic\",\"samples\":2},\"ff\":{\"available\":true,\"estimate\":7464.0,\"estimated_over_limit\":true,\"limit\":6000,\"method\":\"replication heuristic\",\"samples\":2},\"lut\":{\"available\":true,\"estimate\":18404.0,\"estimated_over_limit\":true,\"limit\":10000,\"method\":\"replication heuristic\",\"samples\":2}}}},\"candidates\":{\"8076501b3713a5ed\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"86e7fa10a60d91a2\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"},\"892d244b3b603e7f\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"d8d49321bbb58187\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":4,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":2,\"transpose\":\"indexed\"}},\"estimate_limitation\":\"Advisory extrapolations from this trial only, not measurements or safe pruning bounds. Unknown does not mean zero. All legal candidates remain available.\",\"evaluations_remaining\":1,\"objectives\":{\"bram\":\"min\",\"dsp\":\"min\",\"ff\":\"min\",\"latency_ns\":\"min\",\"lut\":\"min\",\"transforms_per_second\":\"max\"},\"observations\":[{\"configuration\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":1,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"correct\":true,\"exceeded_limits\":{},\"implementation_passed\":true,\"metrics\":{\"bandwidth_capped_transforms_per_second\":350140.05602240894,\"bram\":4,\"dsp\":11,\"ff\":1143,\"hold_slack_ns\":0.038,\"latency_ns\":2740.0,\"lut\":2956,\"transforms_per_second\":350140.05602240894,\"uram\":0,\"wns_ns\":0.599},\"missing_resource_metrics\":[],\"resource_feasible\":true,\"timing_passed\":true},{\"configuration\":{\"backend\":\"streamed\",\"boundary\":\"registered-ready-valid\",\"generator\":\"ngen\",\"lanes\":4,\"pe\":2,\"profile\":\"baseline\",\"radix\":2,\"reduction\":\"montgomery\",\"stage_groups\":1,\"transpose\":\"indexed\"},\"correct\":true,\"exceeded_limits\":{},\"implementation_passed\":true,\"metrics\":{\"bandwidth_capped_transforms_per_second\":585480.093676815,\"bram\":4,\"dsp\":18,\"ff\":1866,\"hold_slack_ns\":0.038,\"latency_ns\":1592.0,\"lut\":4601,\"transforms_per_second\":585480.093676815,\"uram\":0,\"wns_ns\":0.599},\"missing_resource_metrics\":[],\"resource_feasible\":true,\"timing_passed\":true}],\"requirements\":{},\"resource_limits\":{\"bram\":8,\"dsp\":50,\"ff\":6000,\"lut\":10000},\"target\":{\"clock_period_ns\":4.0,\"clock_source\":\"BUFGCE_X0Y0\",\"io_delays_ns\":{\"input_max\":1.0,\"input_min\":0.5,\"output_max\":1.0,\"output_min\":0.0},\"io_reference_pin\":\"input_full_reg/C\",\"part\":\"xcu280-fsvh2892-2L-e\",\"tool_version\":\"2023.2\"},\"workload\":{\"direction\":\"forward\",\"kind\":\"generic\",\"lanes\":4,\"n\":128,\"negacyclic\":true,\"psi\":\"2141337746\",\"q\":\"2147484161\",\"root\":\"2023476074\"}}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "temperature": 0
+      },
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"order\": [\n    \"86e7fa10a60d91a2\",\n    \"892d244b3b603e7f\",\n    \"8076501b3713a5ed\",\n    \"d8d49321bbb58187\"\n  ]\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1788933560,
+        "id": "chatcmpl-Z3mUeDey8QqDJsiIdLfx8zX30fAhhRZf",
+        "model": "unsloth/Qwen3.8-Flash-Next-GGUF:UD-IQ4_XS",
+        "object": "chat.completion",
+        "system_fingerprint": "b10858-64e9bceb2",
+        "timings": {
+          "cache_n": 1626,
+          "predicted_ms": 3946.212,
+          "predicted_n": 89,
+          "predicted_per_second": 22.299866302165213,
+          "predicted_per_token_ms": 44.843318181818184,
+          "prompt_ms": 115.228,
+          "prompt_n": 4,
+          "prompt_per_second": 34.71378484396154,
+          "prompt_per_token_ms": 28.807
+        },
+        "usage": {
+          "completion_tokens": 89,
+          "prompt_tokens": 1630,
+          "prompt_tokens_details": {
+            "cached_tokens": 1626
+          },
+          "total_tokens": 1719
+        }
+      }
+    }
+  ],
+  "inputs": {
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-summary.json": "10f22fd131fff877bcb0f4b4451bb738b313edc5b5cf24b8f46b02868a7cdd22",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/docs/measured-evidence/policy-uncontended.json": "79c537939dac210c1374c0b7963421bec1844809ac30ef7ea358a631c7990bbc",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/manifest.json": "3f932b48fc158aef76bfbf66ad7bd348e77070cc5ac17d0a649abc957e83a3a2",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/step-1/llm-request.json": "ddeb9bf98c1f4256aed58295c0bb54d9793580839a8b32d66c01d9f18a48a739",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/step-1/llm-response.json": "aa2289f2a9aad3153a66a89eb41c4efee77568322692b73cf36da69615fcec43",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/candidates/57bcaf4d1eb932b096275accd8b4ded0e1ed8894e98d57b9b8ca4a9452128744/record.json": "45cbbe3c1b439175659f5593dd27ee7f9c7e53ecbba9c8d303fff1a756575b66",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/step-2/llm-request.json": "5614b71465376d430f902be494455462bc0c5a5d50c6de51fe8dd0f6fd2bcee2",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/step-2/llm-response.json": "0c0b8aabc5d92c04ccbef7fdbc10c70a69dd668200d9c3c9250699b4d14ee9e1",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/candidates/33f9817e844e81308eaea73024b99105333a006208c7725a2e62ded6b489e90f/record.json": "c0cfa1fa1fcf77e408fba5b87d5f1102fe9622b5a788e37117d09437d183e49c",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/step-3/llm-request.json": "ce1eee31b7fe9225c601abb38884da38cb95876c37fa1121edd72f4daafd05eb",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/step-3/llm-response.json": "350b63ab47fe718a1845c44af492261ebad49f276e9793c5a00cbcf734db32bd",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-2/candidates/5ef283d98ab63af37ce4234b59a30de67476385d17a66490c0353ba726ba7e91/record.json": "fa0a882623193076b0481c7705be4e14c5e8efb5e4ffc367baa2f10c972e7e04",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/step-1/llm-request.json": "ddeb9bf98c1f4256aed58295c0bb54d9793580839a8b32d66c01d9f18a48a739",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/step-1/llm-response.json": "6845c95b184879c96b9e12ae0dfe7a0a3a8acbf53e4971a17f27863c285fe24b",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/candidates/d4e71987ab460f037ed5be6fc10bb8521e363aabfa20f473faf294f8aae6c720/record.json": "f9b90a60a754f7cec75067b2662ba9490832fccd1a3027e9d9d3589962befaf7",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/step-2/llm-request.json": "5614b71465376d430f902be494455462bc0c5a5d50c6de51fe8dd0f6fd2bcee2",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/step-2/llm-response.json": "f714c67a5c9179343082cbbdcb4ce93ff85790d705ce3e6d3c941043e770604f",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/candidates/b25a941f39796df1874e8ea55b309a8fa290f8eb3f6c99ed805686cf80287ba2/record.json": "2a68248dfe72f380ddccfb513b6688d57325be9e898fad89a317321d14d28c44",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/step-3/llm-request.json": "ce1eee31b7fe9225c601abb38884da38cb95876c37fa1121edd72f4daafd05eb",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/step-3/llm-response.json": "d7afda7a0588da44b2edaa0a1c27382a82c77d317b00014c151dca4da01603ab",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-3/candidates/e94f2d9cdc7b9691b06d34958ae4172d47b7e09ffc7d08351971297606faf16c/record.json": "a09142a67be0bf1f71ab17430347d1e81bd1458f2a8977d2a0529779d7b2089a",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/step-1/llm-request.json": "ddeb9bf98c1f4256aed58295c0bb54d9793580839a8b32d66c01d9f18a48a739",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/step-1/llm-response.json": "b4280aef90db511bc4643ce82a733350d526dc5db91fad65f218e2a456fa18c6",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/candidates/89470dd0a79383909b10318a59fb5666e9fadddda7ec744f909e72626e640462/record.json": "2652efb7e982f550d5dc56e4a6632d829038daa0c70e5e3259ba75efa67e00eb",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/step-2/llm-request.json": "5614b71465376d430f902be494455462bc0c5a5d50c6de51fe8dd0f6fd2bcee2",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/step-2/llm-response.json": "049a59efa3ddf50bb85a3873205396b1be06c8f76d4f73158360a9338f0f5a54",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/candidates/776f30f9acd8eae6020a096bc4e809975aa1997791d2cd47df38eab5df4f3c8a/record.json": "23d6a7334d588cf29cc78d12e91f08dfe70fa76623932a83684bd7b51f34b4c5",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/step-3/llm-request.json": "ce1eee31b7fe9225c601abb38884da38cb95876c37fa1121edd72f4daafd05eb",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/step-3/llm-response.json": "894a386fbb372484b32a6b446ff947d2a8f53dcd82d04cb74bc9fe7d5d0bf8fb",
+    "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-feedback-live-trials/llm-4/candidates/e263f09f130455c880e45d700ff47e174e8793c998bd3ea598eb28d0f5940611/record.json": "7c8e0965fa769b1c28a680ebe720e277564d6a6f6e1f7d4b0a0e6f2dfc05ceec"
+  },
+  "comparison_scope": "Fresh LLM runs versus earlier matched controls; identical generator executable and campaign. Repetitions at temperature zero, not independent random seeds. No unseen outcomes passed to acquisition."
+}

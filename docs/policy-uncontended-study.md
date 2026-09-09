@@ -1,5 +1,9 @@
 # Completed policy replication
 
+Follow-up: the [resource-aware LLM fix](timing-and-llm-fixes.md) now has nine fresh
+passing evaluations and 75% frontier recovery in each repetition. The original
+measurements and controls below remain unchanged.
+
 The fresh N=128 replication completed all 36 evaluations: four policies, three repetitions (seeds 2/3/4), and three evaluations per trial within a 12-hour total budget. Every evaluation passed correctness and synthesis timing; all objective metrics match the six-architecture reference pool. Four reference designs meet the resource caps and lie on the frontier, so the three-evaluation budget limits recall to 75%.
 
 | Policy | Mean frontier recall | Range | Feasible discoveries / 9 |
