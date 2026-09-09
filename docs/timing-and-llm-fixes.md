@@ -10,8 +10,8 @@ The [synthesis measurements](measured-evidence/timing-feedback/synthesis-report.
 [128-point replay](measured-evidence/timing-feedback/replay128.json),
 [256-point replay](measured-evidence/timing-feedback/replay256.json), and
 [generic RTL preservation check](measured-evidence/timing-feedback/generic-preservation.json)
-are published with their original records. Routed and fresh live validation
-remain in progress.
+are published with their original records. [YATA now closes routed timing](measured-evidence/timing-feedback/yata-closed-report.md).
+HOGE routed validation and fresh live policy trials remain in progress.
 
 ## Resource-aware LLM feedback
 
@@ -118,7 +118,11 @@ clock connectivity, transform latency and the I/O delay window. Connectivity
 and argument-validation tests pass. The first buffered HOGE route closes hold
 at +0.010 ns, but fails setup at −0.858 ns, with 214738 LUT, 273312 FF and
 1024 DSP. Its worst setup path runs from reset to an arithmetic data register.
-YATA's buffered route is still running. No failed
+YATA's buffered route passes both setup (+0.067 ns) and hold (+0.010 ns),
+with 52863 LUT, 16882 FF, 80 DSP and completed routing. Transaction latency
+remains 513 cycles. This qualifies under the stated conditional fabric contract.
+All three YATA sizes regenerate byte-identical RTL and metadata on NGen
+`8346229` ([preservation evidence](measured-evidence/timing-feedback/valid-reset-yata-preservation.json)). No failed
 checkpoint, report or timing constraint is overwritten.
 
 This is the same conditional neighboring-fabric modeling approach as the

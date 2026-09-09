@@ -29,6 +29,18 @@
       "directory": "build/yata8x8-output-pipeline-route-evidence",
       "stage": "route",
       "notes": "Completed routing and positive setup, but negative hold. Conditional neighboring-fabric contract; no board timing or matched reference route claim. The prior exact-RTL arithmetic oracle is reused without changing its target."
+    },
+    {
+      "name": "HOGE input buffering before reset correction",
+      "directory": "build/hoge-radix-pipeline-forward-input-route-evidence",
+      "stage": "route",
+      "notes": "Same 4 ns conditional neighboring-fabric I/O window; two physical identity LUT stages per input and output. Full arithmetic oracle reused for identical RTL. No board or extracted-reference route claim."
+    },
+    {
+      "name": "YATA with repaired input boundaries",
+      "directory": "build/yata8x8-output-pipeline-input-route-evidence",
+      "stage": "route",
+      "notes": "Same 4 ns conditional neighboring-fabric I/O window; two physical identity LUT stages per input and output. Full arithmetic oracle reused for identical RTL. No board or extracted-reference route claim."
     }
   ]
 }

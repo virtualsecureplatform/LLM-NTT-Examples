@@ -1,0 +1,127 @@
+{
+  "checks": [
+    {
+      "name": "yata8-output-pipeline",
+      "process": {
+        "command": [
+          "bash",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "-preset",
+          "yata8",
+          "-k",
+          "3",
+          "-r",
+          "3",
+          "-preset-backend",
+          "microcoded",
+          "-profile",
+          "f300",
+          "-transpose",
+          "switch",
+          "-o",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/valid-reset-yata-preservation/yata8-output-pipeline/SmallYata8RainttP27Rtl.sv",
+          "raintt"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/valid-reset-yata-preservation/yata8-output-pipeline/generation.log",
+        "ngen_build": {
+          "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "binary_sha256": "2e19de30f07f7c1b2708ca836925ad5641af013052fc54f4b6cd4e1f0f499e6b",
+          "changed_inputs": [],
+          "manifest_sha256": "f07c9b1a814a4da8ee28bef92993e0b32ef829e1af0e288ebf5521f8e2a64951",
+          "source_files": 70,
+          "verified": true
+        },
+        "returncode": 0,
+        "seconds": 0.6092581781558692,
+        "timed_out": false
+      },
+      "rtl_sha256": "3d5da15de650ca0a369da12682ea75ca02a3fbca2c33811b901e244137111548",
+      "source_report": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8-output-pipeline/report.json",
+      "source_report_sha256": "abac266c85b0c9c2d70c518c60203b992e24349b9e2cdf800e0e2b3f05f9046d"
+    },
+    {
+      "name": "yata8x8-output-pipeline",
+      "process": {
+        "command": [
+          "bash",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "-preset",
+          "yata64",
+          "-k",
+          "3",
+          "-r",
+          "3",
+          "-preset-backend",
+          "microcoded",
+          "-profile",
+          "f300",
+          "-transpose",
+          "switch",
+          "-o",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/valid-reset-yata-preservation/yata8x8-output-pipeline/SmallYata8x8RainttP27Rtl.sv",
+          "raintt"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/valid-reset-yata-preservation/yata8x8-output-pipeline/generation.log",
+        "ngen_build": {
+          "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "binary_sha256": "2e19de30f07f7c1b2708ca836925ad5641af013052fc54f4b6cd4e1f0f499e6b",
+          "changed_inputs": [],
+          "manifest_sha256": "f07c9b1a814a4da8ee28bef92993e0b32ef829e1af0e288ebf5521f8e2a64951",
+          "source_files": 70,
+          "verified": true
+        },
+        "returncode": 0,
+        "seconds": 0.5550821530632675,
+        "timed_out": false
+      },
+      "rtl_sha256": "8245bca775096642b2af60371228e78dbb185fe30ac90c5de70c8e98cc993237",
+      "source_report": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata8x8-output-pipeline/report.json",
+      "source_report_sha256": "30280be1f9b132b3344b143a16baba744a8b1c26857eb47147044e0bb835ff33"
+    },
+    {
+      "name": "yata512-output-pipeline",
+      "process": {
+        "command": [
+          "bash",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "-preset",
+          "yata512",
+          "-k",
+          "6",
+          "-r",
+          "3",
+          "-preset-backend",
+          "microcoded",
+          "-profile",
+          "f300",
+          "-transpose",
+          "switch",
+          "-o",
+          "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/valid-reset-yata-preservation/yata512-output-pipeline/YataRainttTop.v",
+          "raintt"
+        ],
+        "log": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/valid-reset-yata-preservation/yata512-output-pipeline/generation.log",
+        "ngen_build": {
+          "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/NGen/ngen.bat",
+          "binary_sha256": "2e19de30f07f7c1b2708ca836925ad5641af013052fc54f4b6cd4e1f0f499e6b",
+          "changed_inputs": [],
+          "manifest_sha256": "f07c9b1a814a4da8ee28bef92993e0b32ef829e1af0e288ebf5521f8e2a64951",
+          "source_files": 70,
+          "verified": true
+        },
+        "returncode": 0,
+        "seconds": 0.6420074580237269,
+        "timed_out": false
+      },
+      "rtl_sha256": "6708418e20e3769859eb24ee21794c61e9a6505046c10158fad5c09642b7a72a",
+      "source_report": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/yata512-output-pipeline/report.json",
+      "source_report_sha256": "136a51e2e282d313ec77df446dff69ee49071f9353319590d624881908badbc0"
+    }
+  ],
+  "correct": true,
+  "generator_source": {
+    "revision": "8346229e42206933d88f6650b2ef06d9b976be67",
+    "source_hash": "d0d562566180870eefcb43e2a1b3823c62ccda41fda6cc5faf0d7946f0b1042b"
+  },
+  "script_sha256": "6c015a5c7ac050b538f8c07e852cdd019c1e4d3f5f4196795016e47333b521f5"
+}
