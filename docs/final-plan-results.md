@@ -1,5 +1,9 @@
 # Integrated generator and architecture-search results
 
+See the newer [timing and LLM acquisition follow-up](timing-and-llm-fixes.md)
+for the pipeline repairs and resource-aware policy results. The measurements
+below retain the original milestone revisions.
+
 The four acceptance milestones in the [roadmap](ngen-sgen-search-roadmap.md)
 are implemented, tested and measured. NGen main `d59d87a` integrates registered
 memory issue, effective architecture metadata and HOGE constant specialization.

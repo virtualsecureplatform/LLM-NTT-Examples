@@ -1,5 +1,9 @@
 # Reproducible measurement snapshot
 
+See the newer [timing and LLM acquisition follow-up](timing-and-llm-fixes.md)
+for the pipeline repairs and resource-aware policy results. The measurements
+below retain the original milestone revisions.
+
 [Measured comparison tables](measured-evidence/report.md) and their
 [machine-readable evidence snapshot](measured-evidence/report.json) consolidate
 six comparison groups, including the HOGE inverse reference measurement and

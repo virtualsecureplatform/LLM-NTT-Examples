@@ -17,6 +17,18 @@
       "directory": "build/yata8x8-timing-fix-comparison",
       "stage": "synthesis",
       "notes": "Matched workload and synthesis target. Preserves intermediate failures. Positive synthesis setup slack does not establish routed closure; transaction latency and area tradeoffs remain."
+    },
+    {
+      "name": "HOGE forward first route (hold failure)",
+      "directory": "build/hoge-radix-pipeline-forward-route-evidence",
+      "stage": "route",
+      "notes": "Completed routing and positive setup, but negative hold. Conditional neighboring-fabric contract; no board timing or matched reference route claim. The prior exact-RTL arithmetic oracle is reused without changing its target."
+    },
+    {
+      "name": "YATA first route (hold failure)",
+      "directory": "build/yata8x8-output-pipeline-route-evidence",
+      "stage": "route",
+      "notes": "Completed routing and positive setup, but negative hold. Conditional neighboring-fabric contract; no board timing or matched reference route claim. The prior exact-RTL arithmetic oracle is reused without changing its target."
     }
   ]
 }
