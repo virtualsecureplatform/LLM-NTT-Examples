@@ -73,7 +73,7 @@ explicitly counted. Cycle tags and valid signals follow the same boundaries.
 All 192 exponents are checked against independent modular exponentiation with
 bubbles and reset; both complete transform oracles pass. Forward/inverse
 transaction counts are 202/169, and the forward overlap test still passes 240
-frames at interval 32. Forward synthesis now passes setup at +1.770 ns, using 209171 LUT, 273241 FF and 1024 DSP. Estimated hold slack is −0.075 ns, so this is not routed closure. Inverse synthesis also passes at +1.770 ns, using 171422 LUT, 241803 FF and 512 DSP; estimated hold is −0.112 ns. The first separate forward route completes with +0.280 ns setup slack but −0.680 ns hold slack (211201 LUT, 273327 FF, 1024 DSP). It fails timing qualification. A hold-path diagnostic is in progress; the failed measurement is retained.
+frames at interval 32. Forward synthesis now passes setup at +1.770 ns, using 209171 LUT, 273241 FF and 1024 DSP. Estimated hold slack is −0.075 ns, so this is not routed closure. Inverse synthesis also passes at +1.770 ns, using 171422 LUT, 241803 FF and 512 DSP; estimated hold is −0.112 ns. The first separate forward route completes with +0.280 ns setup slack but −0.680 ns hold slack (211201 LUT, 273327 FF, 1024 DSP). It fails timing qualification. The worst hold path is a primary input directly reaching a first-stage register (0.012 ns data delay), with clock skew and inter-SLR compensation. The failed measurement is retained.
 
 ## YATA arithmetic and conversion
 
@@ -99,7 +99,7 @@ The 8-, 64- and 512-point arithmetic-lane implementations pass complete oracles.
 The 512-point registered implementation needs 2609 inverse wait cycles. Its
 watchdog is raised from 2000 to 4096; arithmetic comparisons and measured cycle
 counts are unchanged. This admits a slower correct architecture without claiming
-that it is faster. The 64- and 512-point output-pipeline oracles pass, as do 26 mid-operation reset checks followed by a complete transform in the opposite direction. Final synthesis passes setup at +1.282 ns, using 52340 LUT, 16403 FF and 80 DSP, with unchanged 513 worst-case transaction cycles. Estimated hold slack is −0.042 ns; the separate routed check remains pending.
+that it is faster. The 64- and 512-point output-pipeline oracles pass, as do 26 mid-operation reset checks followed by a complete transform in the opposite direction. Final synthesis passes setup at +1.282 ns, using 52340 LUT, 16403 FF and 80 DSP, with unchanged 513 worst-case transaction cycles. Estimated hold slack is −0.042 ns; the first route completes with +0.149 ns setup and −0.020 ns hold (52252 LUT, 16804 FF, 80 DSP), so it does not qualify.
 
 
 ## Routed confirmation contract
@@ -111,6 +111,13 @@ cycle counter clock (`input_cycle_reg[0]/C`) for HOGE and the execution-state
 clock (`core/executing_reg/C`) for YATA. All non-clock inputs, including reset,
 and all outputs are constrained. The physical buffers count in utilization.
 
+Both first routes fail hold on direct primary-input paths. A follow-up adds two
+preserved identity LUTs per non-clock input, including reset, giving the router
+a real internal path for hold repair. It preserves all original consumers,
+clock connectivity, transform latency and the I/O delay window. Connectivity
+and argument-validation tests pass; both fresh routes are running. No failed
+checkpoint, report or timing constraint is overwritten.
+
 This is the same conditional neighboring-fabric modeling approach as the
 [generic timing contract](fabric-timing-contract.md), using each native preset's
 existing clock reference. It is not a board-shell measurement or a matched
@@ -120,7 +127,7 @@ before either new route can qualify.
 
 ## Functional regression and scope
 
-NGen revision `64e2f9a` passes 158 Scala tests; the framework passes 138 Python
+NGen revision `64e2f9a` passes 158 Scala tests; the framework passes 140 Python
 tests. Native and SGen-composed HOGE pipelines both pass complete forward and
 inverse arithmetic checks, plus 240-frame forward overlap/gap/reset checks.
 The seven previously measured generic designs regenerate byte-identical RTL

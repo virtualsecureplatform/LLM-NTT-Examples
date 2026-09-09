@@ -30,11 +30,13 @@ Path(a[6],'route_status.rpt').write_text('# of routable nets.... : 10 :\\n# of f
             self.assertEqual(result['metrics']['vitis_lut'],1112)
             self.assertEqual(result['metrics']['vitis_ff'],442)
             from architecture_search.hardware import _evaluate
-            measured=_evaluate(rtl,'top',{'vivado':str(fake),'output_hold_buffer_stages':2}, {},d/'snapshot-build','route',10)
+            measured=_evaluate(rtl,'top',{'vivado':str(fake),'output_hold_buffer_stages':2,'input_hold_buffer_stages':2}, {},d/'snapshot-build','route',10)
             self.assertTrue(measured['implementation_passed'])
             self.assertTrue(measured['passed'])
             measured_command=measured['process']['command']
             self.assertEqual(measured_command[measured_command.index('--output-hold-buffer-stages')+1],'2')
+            self.assertEqual(measured_command[measured_command.index('--input-hold-buffer-stages')+1],'2')
+            self.assertTrue((d/'snapshot-build-driver/scripts/insert_input_hold_buffers.tcl').is_file())
             self.assertTrue((d/'snapshot-build-driver/scripts/vitis_synth_rtl.sh').is_file())
             fake.write_text(fake.read_text().replace('fully routed nets.... : 10','fully routed nets.... : 9'))
             self.assertNotEqual(subprocess.run(command,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT).returncode,0)

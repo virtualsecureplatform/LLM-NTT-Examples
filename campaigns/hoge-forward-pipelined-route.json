@@ -12,7 +12,8 @@
     "io_reference_pin": "input_cycle_reg[0]/C",
     "output_hold_buffer_stages": 2,
     "part": "xcu280-fsvh2892-2L-e",
-    "tool_version": "2023.2"
+    "tool_version": "2023.2",
+    "input_hold_buffer_stages": 2
   },
   "budget": {
     "hours": 12,

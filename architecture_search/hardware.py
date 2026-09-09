@@ -26,7 +26,7 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
     # workspace script across that call; snapshot its helper alongside it.
     driver=directory.parent/(directory.name+'-driver')/'scripts'
     driver.mkdir(parents=True,exist_ok=True)
-    for name in ('vitis_synth_rtl.sh','insert_output_hold_buffers.tcl'):
+    for name in ('vitis_synth_rtl.sh','insert_output_hold_buffers.tcl','insert_input_hold_buffers.tcl'):
         shutil.copyfile(root/'scripts'/name,driver/name)
     command=['bash',str(driver/'vitis_synth_rtl.sh'),'--stage',stage,'--top',top,
              '--verilog-file',str(rtl),'--part',target.get('part','xcu280-fsvh2892-2L-e'),
@@ -38,6 +38,10 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
         if not isinstance(stages,int) or isinstance(stages,bool) or not 1<=stages<=4:raise ValueError('output hold buffer stages must be 1..4')
         command+=['--output-hold-buffer-stages',str(stages)]
     elif target.get('output_hold_buffers'):command+=['--output-hold-buffers']
+    if 'input_hold_buffer_stages' in target:
+        stages=target['input_hold_buffer_stages']
+        if not isinstance(stages,int) or isinstance(stages,bool) or not 1<=stages<=4:raise ValueError('input hold buffer stages must be 1..4')
+        command+=['--input-hold-buffer-stages',str(stages)]
     if target.get('io_reference_pin'):command+=['--io-reference-pin',target['io_reference_pin']]
     if target.get('clock_source'):command+=['--clock-source',target['clock_source']]
     for prefix in ('input','output'):

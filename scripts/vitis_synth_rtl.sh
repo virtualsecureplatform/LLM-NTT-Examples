@@ -23,6 +23,7 @@ Options:
                          4.0, matching AutoNTT examples.
   --output-hold-buffers  Insert one identity LUT on each output bit.
   --output-hold-buffer-stages N  Insert 1..4 identity LUT stages per output bit.
+  --input-hold-buffer-stages N  Insert 1..4 identity LUT stages per non-clock input bit.
   --io-reference-pin PIN Fabric clock pin used as the I/O timing reference.
   --include-dir DIR      Additional Verilog header search directory; repeatable.
   --clock-source SITE    Optional OOC clock source site (HD.CLK_SRC).
@@ -44,6 +45,7 @@ EOF
 }
 
 output_hold_buffers=0
+input_hold_buffers=0
 io_reference_pin=""
 include_dirs=()
 clock_source=""
@@ -106,6 +108,10 @@ while [[ $# -gt 0 ]]; do
     --output-hold-buffer-stages)
       output_hold_buffers="${2:-}"
       if [[ ! "$output_hold_buffers" =~ ^[1-4]$ ]]; then echo "Output hold buffer stages must be 1..4" >&2; exit 2; fi
+      shift 2 ;;
+    --input-hold-buffer-stages)
+      input_hold_buffers="${2:-}"
+      if [[ ! "$input_hold_buffers" =~ ^[1-4]$ ]]; then echo "Input hold buffer stages must be 1..4" >&2; exit 2; fi
       shift 2 ;;
     --io-reference-pin) io_reference_pin="${2:-}"; shift 2 ;;
     --include-dir) include_dirs+=("${2:-}"); shift 2 ;;
@@ -271,6 +277,7 @@ fi
   printf 'read_xdc $xdc_file\n'
   printf 'synth_design -top $top_module -part $part_name -mode out_of_context -flatten_hierarchy rebuilt\n'
   printf 'if {[lindex $argv 19]} {source [lindex $argv 20]}\n'
+  printf 'if {[lindex $argv 21]} {source [lindex $argv 22]}\n'
   printf 'set io_reference_args {}\n'
   printf 'if {[lindex $argv 18] ne ""} {set reference [get_pins [lindex $argv 18]]; if {[llength $reference] != 1} {error "Expected exactly one I/O reference pin"}; set io_reference_args [list -reference_pin $reference]}\n'
   printf 'if {$clock_source ne ""} {if {[llength [get_sites -quiet $clock_source]] != 1} {error "Invalid clock source site"}; set_property HD.CLK_SRC $clock_source [get_ports $clock_port]}\n'
@@ -328,7 +335,7 @@ vivado_cmd=(
   "${source_list}" "${top_module}" "${part}" "${clock_port}" "${clock_period}"
   "${jobs}" "${build_dir}" "${xdc_file}" "${utilization_rpt}" "${timing_rpt}"
   "${timing_props}" "${checkpoint_file}"
-  "$clock_source" "$input_delay_min" "$input_delay_max" "$output_delay_min" "$output_delay_max" "${build_dir}/includes.txt" "$io_reference_pin" "$output_hold_buffers" "${repo_root}/scripts/insert_output_hold_buffers.tcl"
+  "$clock_source" "$input_delay_min" "$input_delay_max" "$output_delay_min" "$output_delay_max" "${build_dir}/includes.txt" "$io_reference_pin" "$output_hold_buffers" "${repo_root}/scripts/insert_output_hold_buffers.tcl" "$input_hold_buffers" "${repo_root}/scripts/insert_input_hold_buffers.tcl"
 )
 
 set +e
