@@ -8,6 +8,28 @@ import unittest
 ROOT=Path(__file__).resolve().parents[2]
 
 class PresetReportMerge(unittest.TestCase):
+    def test_only_simulation_accepts_omitted_default_clock_port(self):
+        for stage,port,success in [('simulation','clock',True),
+                                   ('simulation','other_clock',False),
+                                   ('synthesis','clock',False)]:
+            with self.subTest(stage=stage,port=port), tempfile.TemporaryDirectory() as tmp:
+                d=Path(tmp)
+                target={'part':'fixture','clock_period_ns':4}
+                campaign={'workload':{'kind':'preset','task':'fixture'},
+                          'target':{**target,'clock_port':port}}
+                record={'id':'fixture','configuration':{},'correct':False,'status':'incorrect',
+                        'evidence':{stage:{'passed':False,'target':target,'metrics':{}}}}
+                (d/'campaign.json').write_text(json.dumps(campaign))
+                (d/'report.json').write_text(json.dumps({'workload':campaign['workload'],'candidates':[record]}))
+                process=subprocess.run([sys.executable,str(ROOT/'scripts/compare_preset_runs.py'),
+                    '--campaign',str(d/'campaign.json'),'--reports',str(d/'report.json'),
+                    '--output-dir',str(d/'out')],capture_output=True,text=True)
+                self.assertEqual(process.returncode==0,success,process.stderr)
+                if success:
+                    merged=json.loads((d/'out/report.json').read_text())
+                    self.assertEqual(merged['candidates'][0]['evidence'][stage]['target'],target)
+                else:self.assertIn('target mismatch',process.stderr)
+
     def check(self,change=None):
         with tempfile.TemporaryDirectory() as tmp:
             d=Path(tmp);rtl=d/'top.v';rtl.write_text('module top;endmodule\n')

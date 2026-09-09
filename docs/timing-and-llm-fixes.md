@@ -134,7 +134,7 @@ before either new route can qualify.
 
 ## Functional regression and scope
 
-NGen revision `64e2f9a` passes 158 Scala tests; the framework passes 140 Python
+NGen revision `64e2f9a` passes 158 Scala tests; the framework passes 141 Python
 tests. Native and SGen-composed HOGE pipelines both pass complete forward and
 inverse arithmetic checks, plus 240-frame forward overlap/gap/reset checks.
 The seven previously measured generic designs regenerate byte-identical RTL
@@ -160,3 +160,27 @@ Both native and composed overlap/gap/reset tests pass 240 frames at interval
 revision ([preservation evidence](measured-evidence/timing-feedback/valid-reset-generic-preservation.json)).
 Fresh hardware measurements are in progress. Earlier buffered-route failure remains
 separate from this RTL revision.
+
+## Transpose delay reset correction
+
+The arithmetic-only reset correction retains a routed setup failure of
+−0.427 ns and hold of −0.020 ns. The worst setup path is still reset, now to a
+transpose delay register, with roughly 20,743 sinks on the shared reset net.
+NGen `e6bffa0` also removes reset from HOGE's square-transpose data delay
+registers. Phase and validity still reset. Other users of the square-transpose
+emitter retain their original default, including byte-identical generic and
+YATA designs ([generic](measured-evidence/timing-feedback/control-reset-generic-preservation.json),
+[YATA](measured-evidence/timing-feedback/control-reset-yata-preservation.json)).
+
+All 159 Scala tests pass. A new four-state test compares resettable and
+validity-only delay implementations over 1,200 cycles at widths 2, 8 and 32,
+including gaps and aborted frames. Native and SGen-composed complete forward
+and inverse oracles pass. Overlap checks and fresh hardware measurements are
+in progress; previous failed runs remain separate.
+
+Preset-report import accepts an omitted simulation clock-port name as the
+existing default `clock`, without changing the saved record. Every hardware
+comparison still requires exact target equality, including clock period and
+all physical I/O constraints. Non-default clock names and hardware mismatches
+remain rejected. The fresh live-study binary/campaign equality checks are
+unchanged.

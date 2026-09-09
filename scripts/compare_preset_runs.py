@@ -37,8 +37,16 @@ for source in a.reports:
             rtl=rtl.resolve()
             record['rtl_path']=str(rtl)
             artifacts[str(rtl)]=record['rtl_hash']
-        for evidence in record.get('evidence',{}).values():
-            if evidence.get('target')!=c['target']:p.error('target mismatch')
+        for stage,evidence in record.get('evidence',{}).items():
+            measured_target=evidence.get('target')
+            matched=measured_target==c['target']
+            # Functional campaigns may omit the default clock-port spelling.
+            # Preserve their original record; every hardware target still
+            # requires exact equality, including all physical constraints.
+            if stage=='simulation' and isinstance(measured_target,dict):
+                matched=({**measured_target,'clock_port':measured_target.get('clock_port','clock')} ==
+                         {**c['target'],'clock_port':c['target'].get('clock_port','clock')})
+            if not matched:p.error('target mismatch')
             for name,path in evidence.get('reports',{}).items():
                 if not path or name=='build_dir':continue
                 artifact=Path(path)
