@@ -68,7 +68,7 @@ def _evaluate(rtl: Path, top: str, target: dict, metrics: dict, directory: Path,
         mapped['transaction_ns']=metrics['transaction_cycles']*period
     ii=metrics.get('initiation_interval_cycles')
     if metric_number(ii) and ii>0:
-        mapped['transforms_per_second']=1e9/(period*ii)
+        mapped['products_per_second' if 'completed_products' in metrics else 'transforms_per_second']=1e9/(period*ii)
     timing_clean=metric_number(mapped.get('wns_ns')) and mapped['wns_ns']>=0
     if stage=='route':
         timing_clean=timing_clean and metric_number(mapped.get('hold_slack_ns')) and mapped['hold_slack_ns']>=0

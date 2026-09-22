@@ -17,6 +17,9 @@ def preset_tasks(ngen: Path) -> dict:
 
 
 def candidates(workload: dict, ngen: Path, space: dict | None = None) -> list[dict]:
+    if workload['kind']=='polynomial_product':
+        from .products import candidates as product_candidates
+        return product_candidates(workload,space)
     space = space or {}
     result = []
     if workload['kind'] == 'preset':
@@ -50,9 +53,11 @@ def candidates(workload: dict, ngen: Path, space: dict | None = None) -> list[di
         n, lanes = int(workload['n']), int(workload.get('lanes', 4))
         if lanes < 1 or lanes & (lanes - 1) or n % lanes:
             raise ValueError('lanes must be a power of two dividing N')
-        for pe, radix, reduction, groups in itertools.product(space.get('pe', [1,2,4,8]),
-                space.get('radix', [2,4,8]), space.get('reductions', ['barrett','montgomery','shoup']), space.get('stage_groups',[1])):
-            if not isinstance(pe, int) or pe < 1 or radix not in (2,4,8) or reduction not in ('barrett','montgomery','shoup'):
+        for backend in space.get('backends',['streamed']):
+            if backend not in ('streamed','stage-parallel','fully-parallel'):raise ValueError('unsupported generic backend')
+        for pe, radix, reduction, groups, profile in itertools.product(space.get('pe', [1,2,4,8]),
+                space.get('radix', [2,4,8]), space.get('reductions', ['barrett','montgomery','shoup']), space.get('stage_groups',[1]),space.get('profiles',['baseline'])):
+            if not isinstance(pe, int) or pe < 1 or radix not in (2,4,8) or reduction not in ('barrett','montgomery','shoup','auto') or profile not in ('baseline','f300'):
                 raise ValueError('invalid generic search option')
             if not isinstance(groups,int) or not 1 <= groups <= n.bit_length()-1:
                 raise ValueError('invalid stage group count')
@@ -60,8 +65,16 @@ def candidates(workload: dict, ngen: Path, space: dict | None = None) -> list[di
                 continue
             if (n.bit_length()-1) % (radix.bit_length()-1) or pe > n // radix:
                 continue
-            result.append(dict(generator='ngen', backend='streamed', profile='baseline', transpose='indexed',
+            if 'streamed' not in space.get('backends',['streamed']):continue
+            result.append(dict(generator='ngen', backend='streamed', profile=profile, transpose='indexed',
                                lanes=lanes, pe=pe, radix=radix, reduction=reduction, stage_groups=groups, boundary='registered-ready-valid'))
+        for backend in space.get('backends',['streamed']):
+            if backend=='streamed':continue
+            reductions=['barrett'] if backend=='fully-parallel' else space.get('reductions',['barrett','montgomery','shoup'])
+            for profile,reduction in itertools.product(space.get('profiles',['baseline']),reductions):
+                if profile not in ('baseline','f300') or reduction not in ('barrett','montgomery','shoup','auto'):raise ValueError('invalid generic option')
+                result.append(dict(generator='ngen',backend=backend,profile=profile,transpose='indexed',lanes=lanes,
+                    core_lanes=n if backend=='fully-parallel' else lanes,radix=2,reduction=reduction,stage_groups=1,boundary='frame-buffered-ready-valid'))
     else:
         raise ValueError('workload kind must be preset or generic')
     permutations=space.get('permutations',['ngen'])
@@ -77,6 +90,7 @@ def candidates(workload: dict, ngen: Path, space: dict | None = None) -> list[di
 def generate(workload: dict, config: dict, ngen: Path, directory: Path, timeout: float, executable: Path | None = None, sgen_executable: Path | None = None) -> tuple[dict, Path]:
     build=verify(ngen,executable)
     if not build['verified']:raise ValueError('NGen build verification failed; run sbt assembly: '+str(build))
+    directory=directory.resolve()
     directory.mkdir(parents=True, exist_ok=True)
     if workload['kind'] == 'preset':
         base, filename = preset_tasks(ngen)[workload['task']]
@@ -85,10 +99,12 @@ def generate(workload: dict, config: dict, ngen: Path, directory: Path, timeout:
     else:
         filename = 'SearchTop.sv'
         args = ['-n', str(int(workload['n']).bit_length()-1), '-q', str(workload['q']),
-                '-root', str(workload['root']), '-k', str(config['lanes'].bit_length()-1),
-                '-pe', str(config['pe']), '-r', str(config['radix'].bit_length()-1),
+                '-root', str(workload['root']), '-k', str(config.get('core_lanes',config['lanes']).bit_length()-1),
+                '-r', str(config['radix'].bit_length()-1),
                 '-architecture', config['backend'], '-reduction', config['reduction'],
-                '-protocol', 'ready-valid', '-top', 'SearchTop', '-stage-groups', str(config.get('stage_groups',1))]
+                '-protocol', 'ready-valid' if config['backend']=='streamed' else 'next',
+                '-top', 'SearchTop' if config['backend']=='streamed' else 'GenericCore']
+        if config['backend']=='streamed':args+=['-pe',str(config['pe']),'-stage-groups',str(config.get('stage_groups',1))]
         if workload.get('negacyclic'):
             args += ['-psi', str(workload['psi'])]
         terminal = 'intt' if workload.get('direction') == 'inverse' else 'ntt'
@@ -98,8 +114,19 @@ def generate(workload: dict, config: dict, ngen: Path, directory: Path, timeout:
     if verify(ngen,executable)!=build:raise ValueError('NGen build inputs or executable changed during generation')
     process['ngen_build']=build
     if process['returncode']==0 and workload['kind']=='generic':
-        rtl.write_text(registered_ready_valid(rtl.read_text(),config['lanes'],int(workload['q']).bit_length()))
-        process['boundary']={'kind':'registered-ready-valid','elastic_register_stages':2,'included_in_measurements':True}
+        if config['backend']=='streamed':
+            rtl.write_text(registered_ready_valid(rtl.read_text(),config['lanes'],int(workload['q']).bit_length()))
+        else:
+            import json
+            from .product_rtl import frame_engine
+            meta=json.loads(rtl.with_suffix('.json').read_text());meta['has_ready']=config['backend']=='stage-parallel'
+            lanes=config['lanes'];width=int(workload['q']).bit_length()
+            engine=frame_engine('GenericFrame','GenericCore',meta,width,external_lanes=lanes)
+            ports=','.join(f'input [{width-1}:0] i{j},output [{width-1}:0] o{j}' for j in range(lanes))
+            inputs=','.join(f'i{j}' for j in reversed(range(lanes)));outputs=','.join(f'o{j}' for j in reversed(range(lanes)))
+            wrapper=f'module SearchTop(input clock,reset,in_valid,output in_ready,out_valid,input out_ready,{ports}); GenericFrame frame(clock,reset,in_valid,in_ready,{{{inputs}}},out_valid,out_ready,{{{outputs}}}); endmodule'
+            rtl.write_text(rtl.read_text()+'\n'+engine+'\n'+wrapper)
+        process['boundary']={'kind':config.get('boundary','registered-ready-valid'),'included_in_measurements':True}
     if process['returncode']==0 and config['generator'] in ('ngen-sgen','ngen-sgen-linear'):
         if sgen_executable is None:raise ValueError('SGen executable required')
         component=(compose_linear if config['generator']=='ngen-sgen-linear' else compose)(rtl,sgen_executable,directory,timeout-process['seconds'])

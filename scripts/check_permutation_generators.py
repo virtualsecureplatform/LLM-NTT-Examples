@@ -9,7 +9,7 @@ from architecture_search.model import run, source_identity, write_json
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    root=Path(__file__).resolve().parents[2]
+    root=Path(__file__).resolve().parents[1]/'third_party'
     p.add_argument('--ngen-root',type=Path,default=root/'NGen')
     p.add_argument('--sgen-root',type=Path,default=root/'SGen')
     p.add_argument('--output-dir',type=Path,required=True)

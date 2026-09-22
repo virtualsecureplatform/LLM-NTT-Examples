@@ -20,3 +20,8 @@ public domain via CC0: <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 TFHEpp is included as a git submodule at `third_party/TFHEpp` from
 `https://github.com/virtualsecureplatform/TFHEpp.git`.
+
+NGen and SGen are included as Git submodules at `third_party/NGen` and
+`third_party/SGen`, from the corresponding `virtualsecureplatform` repositories.
+Their source headers and license files govern those projects and their derived
+material; consult each submodule before distributing generated hardware.

@@ -4,6 +4,7 @@ from pathlib import Path
 import unittest
 
 from architecture_search import oracle
+from architecture_search.paths import NGEN
 from architecture_search.model import frontier, run
 from architecture_search.adapters import candidates
 
@@ -82,14 +83,14 @@ if __name__=='__main__':unittest.main()
 
 class SearchExtensionTests(unittest.TestCase):
     def test_sgen_composition_is_limited_to_real_switches(self):
-        root=Path(__file__).resolve().parents[3]/'NGen'
+        root=NGEN
         configs=candidates({'kind':'preset','task':'small_yata8x8_raintt_p27'},root,
                            {'backends':['microcoded'],'profiles':['baseline'],'transposes':['indexed','switch'],'permutations':['ngen','sgen']})
         self.assertEqual(len(configs),3)
         self.assertTrue(all(c['transpose']=='switch' for c in configs if c['generator']=='ngen-sgen'))
 
     def test_linear_composition_is_bounded_to_verified_task_contract(self):
-        root=Path(__file__).resolve().parents[3]/'NGen'
+        root=NGEN
         space={'backends':['microcoded'],'profiles':['baseline'],'transposes':['switch'],'permutations':['sgen-linear']}
         configs=candidates({'kind':'preset','task':'small_yata8x8_raintt_p27'},root,space)
         self.assertEqual(len(configs),1)
@@ -113,7 +114,7 @@ class SearchExtensionTests(unittest.TestCase):
 
 class KyberArchitectureTests(unittest.TestCase):
     def test_compact_backend_declares_its_host_schedule(self):
-        root=Path(__file__).resolve().parents[3]/'NGen'
+        root=NGEN
         configs=candidates({'kind':'preset','task':'kyber_ntt_256_p12_pe1'},root,{'backends':['microcoded','compact'],'profiles':['baseline'],'transposes':['indexed']})
         self.assertEqual({c['backend'] for c in configs},{'microcoded','compact'})
         compact=next(c for c in configs if c['backend']=='compact')

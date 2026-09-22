@@ -3,8 +3,39 @@ import math
 from .model import metric_number
 
 
+def product_bandwidth(workload, bandwidth):
+    from .products import output_width
+    allowed={'input_bits_per_second','output_bits_per_second','shared_bits_per_second'}
+    if not bandwidth or set(bandwidth)-allowed:raise ValueError('invalid product bandwidth constraint')
+    n=workload['n']; terms=[]
+    for key,bits in [('input_bits_per_second',8*n),('output_bits_per_second',output_width(workload)*n),
+                     ('shared_bits_per_second',(8+output_width(workload))*n)]:
+        if key not in bandwidth:continue
+        rate=bandwidth[key]
+        if not metric_number(rate) or rate<=0:raise ValueError('bandwidth must be finite and positive')
+        terms.append(dict(constraint=key,bits_per_product=bits,upper_products_per_second=rate/bits))
+    return dict(upper_products_per_second=min(t['upper_products_per_second'] for t in terms),terms=terms)
+
+
+def product_bound(w,c,target,bandwidth,requirements):
+    requirements=requirements or {}
+    if set(requirements)-{'min_products_per_second'}:raise ValueError('unknown product requirement')
+    minimum=requirements.get('min_products_per_second')
+    if minimum is not None and (not metric_number(minimum) or minimum<=0):raise ValueError('invalid minimum product rate')
+    period=target.get('clock_period_ns',4.0)
+    if not metric_number(period) or period<=0:raise ValueError('invalid clock period')
+    upper=1e9/period/(w['n']/2)
+    transport=product_bandwidth(w,bandwidth) if bandwidth else None
+    if transport:upper=min(upper,transport['upper_products_per_second'])
+    return dict(schema='product-throughput-bound-v1',upper_products_per_second=upper,
+                required_products_per_second=minimum,pruned=minimum is not None and upper<minimum,
+                transport=transport,limitation='Port/bandwidth necessary condition only; not a measured operating rate.')
+
+
 def bandwidth_bound(workload, bandwidth):
     if not bandwidth:return None
+    if workload.get('kind')=='polynomial_product':
+        return product_bandwidth(workload,bandwidth)
     if workload.get('kind')!='generic':raise ValueError('bandwidth constraints currently require a generic workload')
     allowed={'input_bits_per_second','output_bits_per_second','shared_bits_per_second','coefficient_bits'}
     if set(bandwidth)-allowed:raise ValueError('unknown bandwidth constraint')
@@ -21,6 +52,8 @@ def bandwidth_bound(workload, bandwidth):
 
 
 def analyze(workload, configuration, target, bandwidth=None, requirements=None):
+    if workload.get('kind')=='polynomial_product':
+        return product_bound(workload,configuration,target,bandwidth,requirements)
     requirements=requirements or {}
     if set(requirements)-{'min_transforms_per_second'}:raise ValueError('unknown search requirement')
     minimum=requirements.get('min_transforms_per_second')

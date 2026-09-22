@@ -8,6 +8,7 @@ import sys
 import time
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from architecture_search import acquisition,adapters,constraints,oracle,policy
+from architecture_search.paths import NGEN
 from architecture_search.model import canonical,file_hash,run,source_identity,write_json
 from architecture_search.search import report
 
@@ -19,7 +20,7 @@ p.add_argument('--policies',nargs='+',choices=['enumerate','random','cost','llm'
 p.add_argument('--seeds',nargs='+',type=int,default=[1])
 p.add_argument('--evaluations',type=int,default=2)
 p.add_argument('--hours',type=float,default=12)
-p.add_argument('--ngen-root',type=Path,default=ROOT.parent/'NGen')
+p.add_argument('--ngen-root',type=Path,default=NGEN)
 a=p.parse_args();campaign=json.loads(a.campaign.read_text());out=a.output_dir.resolve();ngen=a.ngen_root.resolve()
 if campaign['workload'].get('kind')!='generic':p.error('live trials currently require a generic workload')
 oracle.validate(campaign['workload'])

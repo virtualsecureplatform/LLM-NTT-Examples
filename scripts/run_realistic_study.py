@@ -13,6 +13,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from architecture_search import build_identity, constraints, hardware
+from architecture_search.paths import NGEN
 from architecture_search.model import (canonical, evidence_integrity, file_hash,
                                        metric_number, run, source_identity, write_json)
 
@@ -324,7 +325,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', choices=['prepare', 'run', 'summarize'])
     parser.add_argument('--output-dir', type=Path, required=True)
-    parser.add_argument('--ngen-root', type=Path, default=ROOT.parent / 'NGen')
+    parser.add_argument('--ngen-root', type=Path, default=NGEN)
     args = parser.parse_args()
     out = args.output_dir.resolve()
     if args.action == 'prepare':

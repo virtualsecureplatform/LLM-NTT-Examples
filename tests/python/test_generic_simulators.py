@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT))
 from architecture_search import adapters,oracle
+from architecture_search.paths import NGEN
 from architecture_search.evaluate import evaluate_generic,generic_simulator
 from architecture_search.model import file_hash
 
@@ -18,7 +19,7 @@ class GenericSimulators(unittest.TestCase):
         with self.assertRaises(ValueError):generic_simulator({'n':256},'unknown')
 
     def test_both_simulators_pass_full_oracle_without_changing_hardware_rtl(self):
-        ngen=ROOT.parent/'NGen'
+        ngen=NGEN
         if not (ngen/'ngen.bat').exists() or any(not shutil.which(tool) for tool in ('iverilog','vvp','verilator')):
             self.skipTest('built NGen, Icarus and Verilator required')
         w={'kind':'generic',**oracle.field(32,16),'direction':'forward','negacyclic':True,'lanes':4}

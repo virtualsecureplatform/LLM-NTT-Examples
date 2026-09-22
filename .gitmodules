@@ -1,3 +1,9 @@
 [submodule "third_party/TFHEpp"]
 	path = third_party/TFHEpp
 	url = https://github.com/virtualsecureplatform/TFHEpp.git
+[submodule "third_party/NGen"]
+	path = third_party/NGen
+	url = https://github.com/virtualsecureplatform/NGen.git
+[submodule "third_party/SGen"]
+	path = third_party/SGen
+	url = https://github.com/virtualsecureplatform/SGen.git

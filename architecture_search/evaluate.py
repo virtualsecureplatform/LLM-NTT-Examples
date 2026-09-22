@@ -133,7 +133,7 @@ def evaluate_generic(workload: dict, config: dict, rtl: Path, directory: Path, t
         build_command=['iverilog','-g2012','-s','test','-o','simulation',str(simulation_rtl),'test.sv']
         test_command=['vvp','simulation']
     else:
-        build_command=['verilator','--binary','--timing','--top-module','test','-Wno-fatal','--output-split','10000','--output-split-cfuncs','1000','-j','4',str(simulation_rtl),'test.sv']
+        build_command=['verilator','--binary','--timing','-CFLAGS','-std=c++20','--top-module','test','-Wno-fatal','--output-split','10000','--output-split-cfuncs','1000','-j','4',str(simulation_rtl),'test.sv']
         test_command=[str((directory/'obj_dir/Vtest').resolve())]
     build=run(build_command,directory,directory/'build.log',max(0,timeout-(time.monotonic()-started)))
     test=run(test_command,directory,directory/'test.log',max(0,timeout-(time.monotonic()-started))) if build['returncode']==0 else {}

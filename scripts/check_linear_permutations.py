@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from architecture_search.paths import SGEN
 from architecture_search.model import file_hash,run,source_identity,write_json
 
 
@@ -56,7 +57,7 @@ end endmodule
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--sgen-root',type=Path,default=Path(__file__).resolve().parents[2]/'SGen')
+    p.add_argument('--sgen-root',type=Path,default=SGEN)
     p.add_argument('--output-dir',type=Path,required=True)
     a=p.parse_args();repo=a.sgen_root.resolve();out=a.output_dir.resolve()
     if out.exists() and any(out.iterdir()):p.error('output directory must be empty')

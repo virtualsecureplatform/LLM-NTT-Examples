@@ -1,0 +1,81 @@
+{
+  "workload": {
+    "kind": "polynomial_product",
+    "version": 1,
+    "n": 16,
+    "ring": "negacyclic",
+    "coefficient_bound": 7,
+    "lanes": 2,
+    "correctness": "certified-exact",
+    "operands": "fresh"
+  },
+  "space": {
+    "configurations": [
+      {
+        "generator": "ngen",
+        "backend": "streamed",
+        "profile": "baseline",
+        "lanes": 2,
+        "pe": 1,
+        "radix": 2,
+        "reduction": "barrett",
+        "stage_groups": 1
+      },
+      {
+        "generator": "ngen",
+        "backend": "streamed",
+        "profile": "baseline",
+        "lanes": 2,
+        "pe": 2,
+        "radix": 2,
+        "reduction": "barrett",
+        "stage_groups": 1
+      },
+      {
+        "generator": "ngen",
+        "backend": "stage-parallel",
+        "profile": "baseline",
+        "lanes": 2,
+        "radix": 2,
+        "reduction": "barrett",
+        "stage_groups": 1
+      },
+      {
+        "generator": "ngen",
+        "backend": "fully-parallel",
+        "profile": "baseline",
+        "lanes": 16,
+        "radix": 2,
+        "reduction": "barrett",
+        "stage_groups": 1
+      },
+      {
+        "generator": "sgen",
+        "backend": "full-throughput",
+        "lanes": 2,
+        "radix": 2,
+        "fractional_bits": 24,
+        "integer_bits": 24,
+        "guard_bits": 0
+      },
+      {
+        "generator": "sgen",
+        "backend": "compact",
+        "lanes": 2,
+        "radix": 2,
+        "fractional_bits": 24,
+        "integer_bits": 24,
+        "guard_bits": 0
+      }
+    ]
+  },
+  "budget": {
+    "hours": 2,
+    "functional": 6,
+    "synthesis": 0,
+    "route": 0
+  },
+  "stages": [
+    "simulation"
+  ]
+}

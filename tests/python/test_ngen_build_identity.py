@@ -38,6 +38,8 @@ class BuildIdentity(unittest.TestCase):
             root=Path(tmp)
             with zipfile.ZipFile(root/'ngen.bat','w') as jar:jar.writestr('legacy','old')
             output=root/'campaign-output'
+            import json
+            (root/'unused.json').write_text(json.dumps({'workload':{'kind':'generic','n':16,'q':'17','root':'3','lanes':2}}))
             launcher=Path(__file__).resolve().parents[2]/'scripts/search_architectures.py'
             result=subprocess.run([sys.executable,str(launcher),'--mode','run','--ngen-root',str(root),
                                    '--output-dir',str(output),'--campaign',str(root/'unused.json')],capture_output=True,text=True)

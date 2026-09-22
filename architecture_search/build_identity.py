@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the assembled NGen source manifest against its current checkout."""
+"""Verify an assembled generator source manifest against its current checkout."""
 import argparse
 import hashlib
 import json
@@ -19,11 +19,11 @@ def source_files(root):
     return {p.relative_to(root).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
 
 
-def verify(root, binary=None):
-    root=Path(root).resolve();binary=Path(binary) if binary else root/'ngen.bat'
+def verify(root, binary=None, generator="ngen"):
+    root=Path(root).resolve();binary=Path(binary) if binary else root/f'{generator}.bat'
     try:
         with zipfile.ZipFile(binary) as jar:
-            entries=jar.read(RESOURCE).decode().splitlines()
+            entries=jar.read(f"META-INF/{generator}/source-inputs.sha256").decode().splitlines()
         expected={}
         for row in entries:
             value,name=row.split('\t')
@@ -38,5 +38,5 @@ def verify(root, binary=None):
                 'changed_inputs':changed,'manifest_sha256':hashlib.sha256(('\n'.join(entries)+'\n').encode()).hexdigest()}
     except (OSError,KeyError,ValueError,zipfile.BadZipFile) as error:
         return {'verified':False,'binary':str(binary.resolve()),'error':str(error),
-                'action':'Run sbt assembly in this NGen checkout; legacy binaries have no verifiable build manifest.'}
+                'action':f'Run sbt assembly in this {generator} checkout; legacy binaries have no verifiable build manifest.'}
 

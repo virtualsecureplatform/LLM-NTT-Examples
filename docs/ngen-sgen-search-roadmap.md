@@ -1,5 +1,11 @@
 # NGen/SGen architecture search roadmap
 
+This is the original NTT/permutation roadmap. See the
+[acceptance map](roadmap-acceptance.md) for implementation evidence and the
+[NTT/FFT DSE plan](ntt-fft-dse-plan.md) for the next research phase covering
+broader NGen capabilities and SGen FFT polynomial multiplication. The
+"current" gaps below describe the original review, not the latest source.
+
 The objective is to make **NGen a competitive NTT hardware generator** and
 **LLM-NTT-Examples the architecture search and evaluation framework using NGen
 and SGen**. AutoNTT, NTTGen, Proteus, and the conflict-free NTT methodology are
