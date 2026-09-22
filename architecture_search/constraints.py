@@ -4,12 +4,14 @@ from .model import metric_number
 
 
 def product_bandwidth(workload, bandwidth):
-    from .products import output_width
+    from .products import output_width,input_width,output_count
     allowed={'input_bits_per_second','output_bits_per_second','shared_bits_per_second'}
     if not bandwidth or set(bandwidth)-allowed:raise ValueError('invalid product bandwidth constraint')
     n=workload['n']; terms=[]
-    for key,bits in [('input_bits_per_second',8*n),('output_bits_per_second',output_width(workload)*n),
-                     ('shared_bits_per_second',(8+output_width(workload))*n)]:
+    incoming=(input_width(workload,'a')+input_width(workload,'b'))*n
+    outgoing=output_width(workload)*2*((output_count(workload)+1)//2)
+    for key,bits in [('input_bits_per_second',incoming),('output_bits_per_second',outgoing),
+                     ('shared_bits_per_second',incoming+outgoing)]:
         if key not in bandwidth:continue
         rate=bandwidth[key]
         if not metric_number(rate) or rate<=0:raise ValueError('bandwidth must be finite and positive')

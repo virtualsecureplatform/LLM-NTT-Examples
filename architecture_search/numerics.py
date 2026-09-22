@@ -71,7 +71,19 @@ def twiddle_error(meta):
 
 
 def certify(w, forward, inverse, paths=None):
-    validate(w); length=2*w['n']; reasons=[]
+    if w.get('version')==2:
+        from . import wide_products
+        wide_products.validate(w)
+        input_bound=max(wide_products.magnitude(w,'a'),wide_products.magnitude(w,'b'))
+    else:
+        validate(w);input_bound=w['coefficient_bound']
+    length=2*w['n']; reasons=[]
+    audits=[]
+    if any('operation_contract' in m for m in (forward,inverse)):
+        from .operation_contract import audit
+        if not paths or not all('operation_contract' in m for m in (forward,inverse)):
+            raise ValueError('lowered operation contracts require both emitted RTL files')
+        audits=[audit(m,p) for m,p in zip((forward,inverse),paths)]
     required={'schema':'sgen-search-v1','numeric_model':'sgen-radix2-v1','radix':2,'scaling':'1',
               'ram_control':'Dual','complex_packing':'imag-high-real-low',
               'multiply_rounding':'signed-floor-after-each-real-product','addition':'fixed-width-wrap'}
@@ -103,7 +115,7 @@ def certify(w, forward, inverse, paths=None):
             magnitude*=2
             check_range(magnitude+error)
         return magnitude,error
-    mf,ef=transform(Q(w['coefficient_bound']),Q(0),deltas[0])
+    mf,ef=transform(Q(input_bound),Q(0),deltas[0])
     check_range(2*(mf+ef)**2+4*eps)
     mp=mf*mf; ep=upward(2*mf*ef+ef*ef+4*eps)
     mi,ei=transform(mp,ep,deltas[1])
@@ -118,6 +130,10 @@ def certify(w, forward, inverse, paths=None):
               representable_maximum=rational(limit),twiddle_error_bounds=list(map(rational,deltas)),
               qualification='conservative-arithmetic-bound-plus-rtl-tests',rounding='nearest-ties-even',
               limitation='Arithmetic-model certificate; hardware equivalence requires the independent RTL checks.')
+    if audits:
+        body.update(schema='fft-arithmetic-certificate-v2',operation_audits=audits,
+                    qualification='rtl-operation-audited-arithmetic-bound',
+                    limitation='Lowered arithmetic audited against RTL; primitive proofs and independent factorization/protocol tests are separate evidence.')
     return {**body,'certificate_sha256':digest(body)}
 
 

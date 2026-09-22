@@ -8,7 +8,7 @@ From: ubuntu:22.04
     TAPA_BAZEL_VERSION=8.4.2
     TAPA_BUILD_JOBS=2
     TAPA_INSTALL_DIR=/opt/rapidstream-tapa
-    LIBTINFO5_DEB_URL=https://archive.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
+    LIBTINFO5_DEB_URL=https://archive.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.3_amd64.deb
     XILINX_TOOL_PATH=/home/opt/xilinx
     XILINX_TOOL_VERSION=2023.2
     XILINX_TOOL_LEGACY_PATH=/home/opt/xilinx
@@ -91,9 +91,13 @@ From: ubuntu:22.04
         tapa==0.0.20240825.1
 
     if ! ldconfig -p | grep -q 'libtinfo.so.5'; then
-        curl -fsSL "{{ LIBTINFO5_DEB_URL }}" -o /tmp/libtinfo5.deb
-        apt-get install -y /tmp/libtinfo5.deb
-        rm -f /tmp/libtinfo5.deb
+        # Use the base distribution's package index before a pinned fallback URL.
+        # Ubuntu removes superseded security-update .debs from its pool.
+        if ! apt-get install -y libtinfo5; then
+            curl -fsSL "{{ LIBTINFO5_DEB_URL }}" -o /tmp/libtinfo5.deb
+            apt-get install -y /tmp/libtinfo5.deb
+            rm -f /tmp/libtinfo5.deb
+        fi
     fi
 
     if [ "{{ WITH_TAPA_RUNTIME }}" = "1" ]; then

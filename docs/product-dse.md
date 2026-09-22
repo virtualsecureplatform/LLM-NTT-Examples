@@ -178,3 +178,7 @@ These are routed FPGA-fabric measurements, not board measurements, CPU-to-FPGA
 throughput, or a demonstration of superiority over AutoNTT. Publication-scale
 comparisons, analytical-search baselines and broader numerical workloads remain
 in the research roadmap.
+
+The staged extension, version-2 arithmetic contracts, assurance requirements,
+and runnable research commands are documented in
+[Product research implementation](product-research-implementation.md).

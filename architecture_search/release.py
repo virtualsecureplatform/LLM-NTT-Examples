@@ -68,6 +68,6 @@ def accept(report,campaign):
     routed={r['configuration']['generator'] for r in valid
             if _routed(r, campaign.get('target',{}))}
     ok=accounted and not bad and families>=required
-    if 'route' in campaign['stages']:ok=ok and routed=={'ngen','sgen'}
+    if 'route' in campaign['stages']:ok=ok and routed=={c['generator'] for c in expected}
     return dict(passed=ok,accounted=accounted,required_candidates=len(expected),recorded_candidates=len(records),
                 missing_families=sorted(required-families),failed_candidates=bad,routed_backends=sorted(routed))

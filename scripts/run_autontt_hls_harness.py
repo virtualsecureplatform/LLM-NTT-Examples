@@ -26,7 +26,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_AUTONTT_ROOT = REPO_ROOT.parent / "AutoNTT" / "automation_framework"
+DEFAULT_AUTONTT_ROOT = REPO_ROOT / "third_party" / "AutoNTT" / "automation_framework"
 HOGE_CUSTOM_KERNEL = (
     REPO_ROOT / "examples" / "autontt" / "custom_reductions" / "hoge_p64" / "custom_red_kernel.txt"
 )

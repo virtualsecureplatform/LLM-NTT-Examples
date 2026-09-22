@@ -32,7 +32,7 @@ Options:
                        8.4.2.
   --tapa-build-jobs N Bazel jobs for TAPA build. Defaults to 2.
   --libtinfo5-deb-url URL
-                       Legacy libtinfo5 .deb used by TAPA's downloaded LLVM.
+                       Fallback libtinfo5 .deb used by TAPA's downloaded LLVM.
   --xilinx-tool-path DIR
                        Xilinx root used by the TAPA source build. Defaults to
                        /home/opt/xilinx.
@@ -61,7 +61,7 @@ tapa_repo="https://github.com/rapidstream-org/rapidstream-tapa.git"
 tapa_ref="main"
 tapa_bazel_version="8.4.2"
 tapa_build_jobs="2"
-libtinfo5_deb_url="https://archive.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb"
+libtinfo5_deb_url="https://archive.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.3_amd64.deb"
 xilinx_tool_path="/home/opt/xilinx"
 xilinx_tool_version="2023.2"
 declare -a build_binds=()

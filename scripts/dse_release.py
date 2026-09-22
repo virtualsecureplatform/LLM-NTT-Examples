@@ -8,7 +8,7 @@ import subprocess
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from architecture_search.paths import ROOT,NGEN,SGEN,require_checkout
-from architecture_search import release
+from architecture_search import release, research
 from architecture_search.build_identity import verify
 from architecture_search.model import run,write_json
 from architecture_search.search import main as search_main,report as search_report,tool_identity
@@ -18,7 +18,7 @@ def check(hardware=False):
     for root,name in ((NGEN,'NGen'),(SGEN,'SGen')):require_checkout(root,name)
     commands={'java':['java','-version'],'sbt':['sbt','--script-version'],
               'python3':['python3','--version'],'iverilog':['iverilog','-V'],
-              'vvp':['vvp','-V'],'verilator':['verilator','--version']}
+              'vvp':['vvp','-V'],'verilator':['verilator','--version'],'yosys':['yosys','-V']}
     tools={name:tool_identity(command) for name,command in commands.items()}
     # Native preset requirements are reported separately; product campaigns do
     # not use TFHEpp or Clang. Full regression reports retain any skipped tests.
@@ -50,7 +50,7 @@ def build(out):
     return {'passed':True,'ngen':verify(NGEN),'sgen':verify(SGEN,generator='sgen'),'legacy_rtl':baseline,'regression':result}
 
 
-def execute_campaign(out,name,campaign,resume):
+def execute_campaign(out,name,campaign,resume,assurance=False):
     path=out/'campaigns'/f'{name}.json';path.parent.mkdir(parents=True,exist_ok=True)
     if path.exists() and json.loads(path.read_text())!=campaign:raise ValueError('saved release campaign differs: '+name)
     write_json(path,campaign)
@@ -58,7 +58,7 @@ def execute_campaign(out,name,campaign,resume):
     mode='resume' if resume and (directory/'manifest.json').exists() else 'run'
     code=search_main(['--campaign',str(path),'--output-dir',str(directory),'--mode',mode])
     data=json.loads((directory/'report.json').read_text()) if (directory/'report.json').exists() else {}
-    acceptance=release.accept(data,campaign)
+    acceptance=research.assurance_accept(data,campaign) if assurance else release.accept(data,campaign)
     return dict(passed=acceptance['passed'],exit_code=code,acceptance=acceptance,report=str(directory/'report.json'),campaign=str(path))
 
 
@@ -83,7 +83,8 @@ def summarize(out):
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--stage',choices=['check','build','smoke','matrix','hardware','report','all'],required=True)
+    parser.add_argument('--stage',choices=['check','build','smoke','matrix','hardware','report','all','assurance','scaled-hardware','freeze-search','timing-repair'],required=True)
+    parser.add_argument('--sizes',type=int,nargs='+',default=[16,64,256],help='sizes for scaled-hardware')
     parser.add_argument('--output-dir',type=Path,default=ROOT/'build/dse-v1')
     parser.add_argument('--resume',action='store_true')
     args=parser.parse_args(argv);out=args.output_dir.resolve()
@@ -96,6 +97,38 @@ def main(argv=None):
             if not result['passed']:return 1
             if args.stage=='check':return 0
         out.mkdir(parents=True,exist_ok=True)
+        if args.stage=='freeze-search':
+            print(json.dumps(research.freeze_search(out),indent=2));return 0
+        if args.stage=='timing-repair':
+            result=execute_campaign(out,'timing-repair',research.timing_repair_campaign(),args.resume)
+            from architecture_search.model import evidence_integrity
+            data=json.loads(Path(result['report']).read_text())
+            result['experiment_complete']=(len(data['candidates'])==2 and all(r.get('correct') and all(
+                r.get('evidence',{}).get(stage,{}).get('implementation_passed') is True and
+                evidence_integrity(r['evidence'][stage])=='verified' for stage in ('synthesis','route')) for r in data['candidates']))
+            write_json(out/'timing-repair.json',result);return 0 if result['experiment_complete'] else 1
+        if args.stage=='assurance':
+            results={}
+            for n in (8,16,32,64,256):
+                results[str(n)]=execute_campaign(out,f'assurance-{n}',release.campaign(n,matrix=True),args.resume,assurance=True)
+                write_json(out/'assurance.json',{'complete':len(results)==5 and all(r['passed'] for r in results.values()),'sizes':results})
+                if not results[str(n)]['passed']:return 1
+            return 0
+        if args.stage=='scaled-hardware':
+            index=out/'scaled-hardware.json'
+            results=json.loads(index.read_text()).get('campaigns',{}) if index.exists() else {}
+            for n in args.sizes:
+                if n==256:
+                    if not (out/'search-freeze.json').exists():raise ValueError('freeze search settings before held-out N=256 hardware')
+                    research.freeze_search(out)
+                qualified=False
+                for period in (8,16):
+                    name=f'scaled-{n}-{period}ns'
+                    results[name]=execute_campaign(out,name,research.hardware_campaign(n,period),args.resume,assurance=True)
+                    write_json(out/'scaled-hardware.json',{'campaigns':results})
+                    if results[name]['passed']:qualified=True;break
+                if not qualified:return 1
+            return 0
         if args.stage in ('build','all'):write_json(out/'build.json',build(out))
         if args.stage in ('smoke','all'):
             result=execute_campaign(out,'smoke',release.campaign(),args.resume)

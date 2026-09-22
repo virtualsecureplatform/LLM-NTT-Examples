@@ -3,19 +3,32 @@ import json
 import re
 import time
 from pathlib import Path
-from . import products, numerics, product_rtl
+from . import products, numerics, product_rtl, primitive_proofs
 from .build_identity import verify
 from .model import run, file_hash, write_json, digest
 
 
 def qualification_valid(w, declared, rtl):
     """Recheck the certificate and the complete generated artifact, including adapters."""
+    if w.get('version')==2:
+        from .wide_backend import qualification_valid as wide_valid
+        return wide_valid(w,declared,rtl)
     try:
         if declared['workload']!=w or declared['rtl_sha256']!=file_hash(rtl):return False
         files=[Path(p) for p in declared['core_files']]
         if any(file_hash(p)!=declared['core_files'][str(p)] for p in files):return False
         if declared['configuration']['generator']=='sgen':
             by_name={p.stem:p for p in files}
+            if 'operation_contract' in declared['forward']:
+                proofs=declared['primitive_proofs']
+                if len(proofs)!=2 or not all(primitive_proofs.valid(proof,meta,path) for proof,meta,path in
+                        zip(proofs,[declared['forward'],declared['inverse']],
+                            [by_name['ProductForward'],by_name['ProductInverse']])):return False
+                c=declared['configuration'];scalar=c['integer_bits']+c['fractional_bits']
+                expected=[product_rtl.multiply_module(2*scalar,True,c['fractional_bits']),
+                          product_rtl.fold_module(w['n'],scalar,c['fractional_bits'],products.output_width(w))]
+                if len(declared['adapter_proofs'])!=2 or not all(primitive_proofs.adapter_valid(p,e)
+                        for p,e in zip(declared['adapter_proofs'],expected)):return False
             return declared['certificate']['qualified'] and numerics.certificate_valid(
                 declared['certificate'],w,[declared['forward'],declared['inverse']],
                 [by_name['ProductForward'],by_name['ProductInverse']])
@@ -26,6 +39,9 @@ def qualification_valid(w, declared, rtl):
 
 
 def generate(w,c,ngen,sgen,directory,timeout,executables=None):
+    if w.get('version')==2:
+        from .wide_backend import generate as wide_generate
+        return wide_generate(w,c,ngen,sgen,directory,timeout,executables)
     directory=directory.resolve(); directory.mkdir(parents=True,exist_ok=True)
     generator=c['generator']; root=ngen if generator=='ngen' else sgen
     executable=(executables or {}).get(generator,root/f'{generator}.bat')
@@ -64,6 +80,14 @@ def generate(w,c,ngen,sgen,directory,timeout,executables=None):
     certificate=numerics.certify(w,*metas,files) if generator=='sgen' else {
         'schema':'ntt-integer-range-v1','qualified':True,'field':products.field(w),
         'coefficient_bound':n*w['coefficient_bound']**2,'workload_sha256':digest(w)}
+    proofs=[];adapter_proofs=[]
+    if generator=='sgen' and certificate['qualified'] and 'operation_contract' in metas[0]:
+        for meta,path in zip(metas,files):
+            proofs.append(primitive_proofs.prove(meta,path,directory/(path.stem+'-proofs'),
+                                                timeout=max(1,min(60,timeout-(time.monotonic()-started)))))
+        scalar=c['integer_bits']+c['fractional_bits']
+        adapter_proofs=[primitive_proofs.prove_pointwise(scalar,c['fractional_bits'],directory/'pointwise-proof'),
+                        primitive_proofs.prove_rounding(n,scalar,c['fractional_bits'],products.output_width(w),directory/'rounding-proof')]
     adapter=product_rtl.compose(w,c,*metas)
     rtl=directory/'SearchTop.sv'
     rtl.write_text('\n'.join(p.read_text() for p in files)+'\n'+adapter)
@@ -71,6 +95,8 @@ def generate(w,c,ngen,sgen,directory,timeout,executables=None):
               'forward':metas[0],'inverse':metas[1],'certificate':certificate,
               'core_files':{str(p):file_hash(p) for p in files},'rtl_sha256':file_hash(rtl),
               'adapter_sha256':digest(adapter),'execution_boundary':'buffered-three-engine-product'}
+    if proofs:declared.update(primitive_proofs=proofs,adapter_proofs=adapter_proofs)
     write_json(rtl.with_suffix('.json'),declared)
     return {'returncode':0,'processes':processes,'generator_build':identity,'numerically_qualified':certificate['qualified'],
+            'assurance_passed':all(p['passed'] for p in proofs+adapter_proofs),
             'seconds':time.monotonic()-started},rtl

@@ -105,8 +105,9 @@ def main(argv=None) -> int:
     parser.add_argument('--sgen-root',type=Path,default=SGEN)
     parser.add_argument('--output-dir',type=Path,required=True)
     parser.add_argument('--mode',choices=['plan','run','resume','report'],default='plan')
-    parser.add_argument('--policy',choices=['enumerate','random','llm','cost'],default='enumerate')
+    parser.add_argument('--policy',choices=['enumerate','random','llm','cost','analytical'],default='enumerate')
     parser.add_argument('--cost-model',type=Path)
+    parser.add_argument('--cache-dir',type=Path,help='opt-in verified product hardware measurement cache; fresh policy trials omit this')
     parser.add_argument('--seed',type=int,default=1)
     parser.add_argument('--configuration-json',type=Path,help='evaluate exactly one configuration, which must belong to the declared legal space')
     args=parser.parse_args(argv)
@@ -124,12 +125,14 @@ def main(argv=None) -> int:
     is_product=workload['kind']=='polynomial_product'
     if is_product:
         products.validate(workload)
-        if args.policy not in ('enumerate','random'):parser.error('product campaigns support enumerate/random policies')
+        if args.policy=='llm':parser.error('LLM product search is not qualified')
+        if args.cost_model is not None:parser.error('product cost search learns sequentially from this campaign; external transform models are incompatible')
     elif workload['kind']=='generic':
         oracle.validate(workload)
     else:
         task_config=json.loads((ROOT/'tasks'/f"{workload['task']}.json").read_text())
         campaign['target'].setdefault('clock_port',task_config.get('ports',{}).get('clock','clock'))
+    if args.policy=='analytical' and not is_product:parser.error('analytical policy requires a product workload')
     evaluation_options=campaign.get('evaluation',{})
     if not isinstance(evaluation_options,dict) or set(evaluation_options)-{'simulator','timeout_seconds'}:
         parser.error('evaluation supports only simulator and timeout_seconds')
@@ -152,7 +155,7 @@ def main(argv=None) -> int:
     if args.policy=='random':
         random.Random(args.seed).shuffle(configurations)
     fitted=None
-    if args.policy=='cost':
+    if args.policy=='cost' and not is_product:
         if args.cost_model is None:parser.error('--policy cost requires --cost-model')
         fitted=json.loads(args.cost_model.read_text())
         if fitted['workload']!=workload or fitted['target']!=campaign.get('target',{}):parser.error('cost model workload/target mismatch')
@@ -170,6 +173,7 @@ def main(argv=None) -> int:
     if any(s not in ('simulation','synthesis','route') for s in stages):
         parser.error('unknown evaluation stage')
     plan={'schema':'ntt-search-plan-v1','campaign':campaign,'policy':args.policy,'seed':args.seed,'configurations':configurations,'cost_model':fitted,'throughput_bounds':bounds,'storage_bounds':storage_bounds}
+    if args.cache_dir is not None:plan['measurement_cache']=str(args.cache_dir.resolve())
     if args.mode=='plan':
         print(json.dumps(plan,indent=2));return 0
     if args.mode=='report':
@@ -193,6 +197,8 @@ def main(argv=None) -> int:
     if any(s in stages for s in ('synthesis','route')):
         target=campaign.get('target',{})
         identity['tools']['vivado']=tool_identity([target.get('vivado',f"/home/opt/xilinx/Vivado/{target.get('tool_version','2023.2')}/bin/vivado"),'-version'])
+    if is_product and uses_sgen:
+        identity['tools']['yosys']=tool_identity(['yosys','-V'])
     manifest={**plan,'identity':identity}
     manifest_path=directory/'manifest.json'
     if args.mode=='resume':
@@ -257,6 +263,11 @@ def main(argv=None) -> int:
                 record['rtl_hash']=file_hash(rtl)
                 metadata=rtl.with_suffix('.json')
                 record['declared']=json.loads(metadata.read_text()) if metadata.exists() else {}
+                if is_product and generation.get('assurance_passed') is False:
+                    record['status']='assurance_failed'
+                    write_json(path,record);checkpoint()
+                    print(f"{key[:12]} assurance_failed",flush=True)
+                    continue
                 if is_product and not generation['numerically_qualified']:
                     record['status']='numerically_unqualified'
                     write_json(path,record);checkpoint()
@@ -315,7 +326,7 @@ def main(argv=None) -> int:
             qualified.sort(key=lambda r:(not r.get('evidence',{}).get('synthesis',{}).get('timing_clean',False),
                 -r.get('evidence',{}).get('synthesis',{}).get('metrics',{}).get('wns_ns',-1e9)))
         shortlisted=qualified
-        if is_product and stage=='route':
+        if is_product and stage=='route' and campaign.get('route_selection')!='all':
             shortlisted=[]
             for generator in ('ngen','sgen'):
                 pool=[r for r in qualified if r['configuration']['generator']==generator and r.get('evidence',{}).get('synthesis',{}).get('implementation_passed')]
@@ -323,9 +334,19 @@ def main(argv=None) -> int:
                     if pool:
                         best=min(pool,key=lambda r:(r['evidence'][source]['metrics'].get(metric,float('inf')),r['id']))
                         if best not in shortlisted:shortlisted.append(best)
-        for record in shortlisted:
-            if stage in record['evidence']:continue
+        pending=[r for r in shortlisted if stage not in r['evidence']]
+        while pending:
             if remaining()<=0 or state[stage]>=limits[stage]:break
+            acquisition=None
+            if is_product and stage=='synthesis':
+                from .product_search import choose
+                observed=[r for r in records if stage in r.get('evidence',{})]
+                record,acquisition=choose(workload,pending,observed,args.policy,args.seed,state[stage])
+            else:record=pending[0]
+            pending.remove(record)
+            if acquisition is not None:
+                record['acquisition']={'policy':args.policy,'step':state[stage],'prediction':acquisition,
+                                       'observed':[r['id'] for r in observed]}
             work=directory/'candidates'/record['id'];path=work/'record.json'
             rtl=Path(record['rtl_path'])
             extras=[]
@@ -334,7 +355,18 @@ def main(argv=None) -> int:
             top='SearchTop' if workload['kind'] in ('generic','polynomial_product') else json.loads((ROOT/'tasks'/f"{workload['task']}.json").read_text())['top_module']
             state[stage]+=1;checkpoint()
             try:
-                record['evidence'][stage]=hardware.evaluate(rtl,top,campaign.get('target',{}),record['evaluation']['metrics'],work/stage,stage,min(5400 if stage=='synthesis' else 10800,remaining()),extra_sources=extras)
+                cached=None;cache_key=None
+                if is_product and args.cache_dir is not None:
+                    from . import product_cache
+                    cache_key=product_cache.key(identity,workload,record['configuration'],record['rtl_hash'],campaign['target'],stage,
+                                                record['evaluation']['metrics'],{k:campaign.get(k) for k in ('resource_limits','requirements','bandwidth')})
+                    cached=product_cache.get(args.cache_dir,cache_key)
+                if cached is not None:
+                    record['evidence'][stage]=cached
+                    record.setdefault('cache_hits',{})[stage]=digest(cache_key)
+                else:
+                    record['evidence'][stage]=hardware.evaluate(rtl,top,campaign.get('target',{}),record['evaluation']['metrics'],work/stage,stage,min(5400 if stage=='synthesis' else 10800,remaining()),extra_sources=extras)
+                    if cache_key is not None:product_cache.put(args.cache_dir,cache_key,record['evidence'][stage])
             except (ValueError,KeyError,OSError) as error:
                 record['evidence'][stage]={'passed':False,'error':str(error)}
             record['status']='complete' if all(e.get('passed') for e in record['evidence'].values()) else 'hardware_failed'

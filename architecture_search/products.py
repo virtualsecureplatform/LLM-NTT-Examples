@@ -11,6 +11,9 @@ def workload(n=16):
 
 
 def validate(w):
+    if w.get('version')==2:
+        from .wide_products import validate as validate_wide
+        return validate_wide(w)
     if set(w) != set(workload()):
         raise ValueError('product workload requires exactly '+', '.join(workload()))
     if w['kind']!='polynomial_product' or type(w['version']) is not int or w['version']!=1:
@@ -24,7 +27,21 @@ def validate(w):
 
 
 def output_width(w):
+    if w.get('version')==2:
+        from .wide_products import output_width as wide_width
+        return wide_width(w)
     return (w['n'] * w['coefficient_bound']**2).bit_length()+1
+
+
+def input_width(w,key):
+    if w.get('version')==2:
+        from .wide_products import input_width as wide_width
+        return wide_width(w,key)
+    return 4
+
+
+def output_count(w):
+    return 2*w['n']-1 if w.get('ring')=='linear' else w['n']
 
 
 def field(w):
@@ -41,6 +58,9 @@ def integer_bits(w, guard=0):
 
 
 def candidates(w, space=None):
+    if w.get('version')==2:
+        from .wide_products import candidates as wide_candidates
+        return wide_candidates(w,space)
     validate(w); space=space or {}; n=w['n']; result=[]
     allowed={'generators','ngen_backends','lanes','pe','radix','stage_groups','reductions','profiles',
              'sgen_backends','fractional_bits','guard_bits','configurations'}
@@ -50,7 +70,7 @@ def candidates(w, space=None):
         'ngen_backends':(['streamed','stage-parallel','fully-parallel'],['streamed','stage-parallel','fully-parallel']),
         'lanes':([2,4],[2,4]),'pe':([1,2],[1,2]),'radix':([2,4,8],[2,4,8]),
         'stage_groups':([1,2],[1,2]),'reductions':(['barrett'],['barrett','montgomery','shoup','auto']),
-        'profiles':(['baseline'],['baseline','f300']),
+        'profiles':(['baseline'],['baseline','f300','split-barrett']),
         'sgen_backends':(['full-throughput','compact'],['full-throughput','compact']),
         'fractional_bits':([16,24,32],[16,24,32]),'guard_bits':([0],[0,2])}
     values={}
@@ -60,6 +80,7 @@ def candidates(w, space=None):
             raise ValueError('invalid product search axis: '+key)
     if 'ngen' in values['generators']:
         for backend,profile in itertools.product(values['ngen_backends'],values['profiles']):
+            if profile=='split-barrett' and backend!='fully-parallel':continue
             if backend=='fully-parallel':
                 result.append(dict(generator='ngen',backend=backend,profile=profile,lanes=n,radix=2,reduction='barrett',stage_groups=1))
             elif backend=='stage-parallel':
@@ -89,6 +110,9 @@ def schoolbook(a,b):
 
 
 def vectors(w, random_count=256, seed=1):
+    if w.get('version')==2:
+        from .wide_products import vectors as wide_vectors
+        return wide_vectors(w,min(random_count,64),seed)
     validate(w); n=w['n']; b=w['coefficient_bound']; rng=random.Random(seed)
     special=[[0]*n,[1]+[0]*(n-1),[0]*(n-1)+[b],[b]*n,[-b]*n,
              [b if i%2 else -b for i in range(n)],[1 if i%3==0 else 0 for i in range(n)]]
