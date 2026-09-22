@@ -8,7 +8,7 @@ from architecture_search.model import write_json,artifact_manifest
 ROOT=Path(__file__).resolve().parents[1]
 
 def main(argv=None):
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--stage',choices=['probe','trace','prepare-ngen','compare'],required=True)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--stage',choices=['probe','field','trace','prepare-ngen','compare'],required=True)
     p.add_argument('--output-dir',required=True,type=Path);p.add_argument('--design',type=Path)
     p.add_argument('--architecture',choices=['I','D','H']);p.add_argument('--trace',type=Path)
     p.add_argument('--left',type=Path);p.add_argument('--right',type=Path);a=p.parse_args(argv)
@@ -23,10 +23,29 @@ def main(argv=None):
                     '--arch-type',arch,'--output-root',str(directory)]
                 with (directory/'driver.log').open('w') as log:
                     code=subprocess.run(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,timeout=21600).returncode
-                results.append(dict(n=n,architecture=arch,returncode=code,directory=str(directory)))
+                results.append(dict(n=n,architecture=arch,returncode=code,directory=str(directory),
+                                    log=str(directory/'driver.log'),summaries=[str(p) for p in directory.glob('*/summary.json')]))
                 write_json(out/'probes.json',dict(complete=len(results)==6 and all(r['returncode']==0 for r in results),runs=results,
                     scope='Code generation and custom BU probe; whole-kernel matched measurements remain separate.'))
         return int(any(r['returncode'] for r in results))
+    if a.stage=='field':
+        if a.design is None:p.error('--design required')
+        shutil.copyfile(a.design/'ntt.h',out/'ntt.h')
+        source=out/'parameters.cpp';source.write_text(study.parameter_source((a.design/'ntt_test.cpp').read_text()))
+        with (out/'build.log').open('w') as log:
+            subprocess.run(['g++','-std=c++17','-O2','-I/home/opt/xilinx/Vitis_HLS/2023.2/include',str(source),'-o',str(out/'parameters')],stdout=log,stderr=subprocess.STDOUT,check=True,timeout=120)
+        with (out/'parameters.log').open('w') as log:subprocess.run([str(out/'parameters')],stdout=log,stderr=subprocess.STDOUT,check=True,timeout=600)
+        fields=[]
+        from architecture_search import oracle
+        for line in (out/'parameters.log').read_text().splitlines():
+            if line.startswith('LLMNTT field '):
+                n,q,root,limb=map(int,line.split()[2:]);w=dict(n=n,q=str(q),root=str(root),negacyclic=False)
+                oracle.validate(w);fields.append(w);write_json(out/f'field-{limb}.json',w)
+        if not fields:raise ValueError('no captured parameters')
+        write_json(out/'field-capture.json',dict(schema='autontt-host-field-v1',fields=fields,autontt_revision=study.PIN,
+            scope='Generated host parameters only; no AutoNTT kernel or timing qualification.',
+            artifacts=artifact_manifest([source,out/'ntt.h',out/'parameters.log',a.design/'ntt_test.cpp'])))
+        return 0
     if a.stage=='trace':
         if a.design is None or a.architecture is None:p.error('--design and --architecture required')
         d=out/'csim'

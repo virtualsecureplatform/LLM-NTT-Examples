@@ -5,7 +5,7 @@ release. Milestones are complete only when their evidence gates pass.
 
 | Milestone | Implementation | Required evidence | Status |
 | --- | --- | --- | --- |
-| M1 assurance | Lowered SGen operation contracts, independent RTL/contract audit, primitive proofs, qualification binding | Mutation rejection, actual-width proofs, complete product regression | In progress |
+| M1 assurance | Lowered SGen operation contracts, independent RTL/contract audit, primitive proofs, qualification binding | Mutation rejection, actual-width proofs, complete product regression | Passed: 130 points |
 | M2 scale | Matched N=16/64/256 U280 campaigns at 8 ns, separate 16 ns fallback; diagnose fully parallel timing | Six syntheses/four routes per size/period; qualified pair per size | Pending |
 | M3 search | Analytical and product cost policies, integrity-checked reuse, replay and fresh trials | Freeze on N=16/64 before N=256 hardware; no observation leakage | Pending |
 | M4 arithmetic | Version-2 integer/modular linear/cyclic/negacyclic products, CRT and FFT splitting, exact TFHEpp adapter | Independent exact checks including N=1024 modulo 2^32 | Pending |
@@ -175,13 +175,14 @@ incomplete, including the full matched AutoNTT adapter gate.
 
 ## Validation record (2026-09-22, still in progress)
 
-- SGen: 148 generator tests passed; exported lowered full/compact graphs audited.
+- SGen: all 3,461 generator tests passed on the pinned exporter commit;
+  exported lowered full/compact graphs audited.
 - NGen: 162 generator tests passed, including direct DFT comparison of split
   Barrett forward/inverse RTL with bubbles and reset.
-- Framework: 191 tests passed; targeted checks also passed after subsequent
-  comparison-provenance and cache-input validation tightening.
-- M1 matrix: N=8/16/32/64 passed; N=256 still running in immutable snapshot
-  `2f21969`. Deliberately insufficient FFT precision is rejected and accounted.
+- Framework: 192 tests passed, including independent transform checks and
+  streamed/stage-parallel preloaded RTL with reset recovery.
+- M1 matrix: all 130 points at N=8/16/32/64/256 passed in immutable snapshot
+  `2f21969`. The six-point smoke also passed in clean checkout `3c96837`. Deliberately insufficient FFT precision is rejected and accounted.
 - Wide functional checks: both generators passed all three rings at N=8/bound
   127, direct linear N=16/bound 7, and multi-prime N=16/bound 32767.
 - Exact TFHEpp/Python: all 100 N=1024 corpus products agreed. NGen RTL passed;
@@ -201,4 +202,42 @@ path in the earlier 8 ns run. The old profile inserted delay registers after a
 combinational product/reciprocal-product/quotient-product/correction expression.
 The new `split-barrett` profile physically separates these operations across five
 scheduled stages and is restricted to the custom fully parallel Barrett backend.
-Routed improvement must be established by the two-point timing-repair campaign.
+The split variant passes 8 ns routing with setup slack +1.991 ns and hold slack
++0.019 ns, using 63,942 LUTs, 46,122 registers, and 462 DSPs. Product latency is
+704 ns; measured fabric interval is eight clocks (15.625 million products/s).
+The baseline also completed routing but failed setup timing at -1.823 ns
+(hold +0.042 ns). Synthesis comparison shows the cost of the repair: baseline setup slack -1.443 ns versus +4.679 ns for the split variant,
+with LUTs increasing from 53,951 to 64,416 and DSPs from 367 to 462. These are
+N=16 fabric measurements, not board measurements or results at larger sizes.
+
+
+## Preloaded NGen transforms
+
+`preloaded_ngen.py` builds two fixed-direction NGen cores behind shared packed
+operand/result memories, start/direction control, and a cycle counter. All of
+these elements are in the synthesized top. The independent testbench checks
+both directions and every readback coefficient; the small regression also
+checks reset recovery for streamed and stage-parallel cores. Load and readback
+are outside measured computation, and their transaction counts are recorded.
+
+```sh
+python3 scripts/autontt_research.py --stage field --design PATH_TO_GENERATED_DESIGN \
+  --output-dir build/research/autontt-field
+python3 scripts/preloaded_ngen.py --workload build/research/autontt-field/field-0.json \
+  --backend streamed --pe 2 --lanes 4 --reduction barrett \
+  --output-dir build/research/preloaded-ngen --hardware route
+```
+
+The field-only helper executes the generated host's actual parameter functions
+and validates the resulting prime/root independently. It does not qualify the
+AutoNTT kernel. Captured fields are N=1024, q=18446744069414584321,
+root=11353340290879379826; and N=16384, q=9007199255019521,
+root=7097928521595677. The N=1024 NGen wrapper passed 22 forward/inverse cases;
+its streamed PE=2, four-lane compute latency was 3,394 clocks forward and 3,912 clocks inverse
+in this functional check. No achieved clock or throughput is inferred from that cycle count.
+
+The N=16384 wrapper also passed all 22 cases and reset recovery, with 69,722
+clocks forward and 77,920 clocks inverse for the same PE/lane configuration.
+Memory fixtures keep the testbench compact at the larger size. Both large-field
+checks are functional evidence; routed comparisons still require the AutoNTT
+adapter and matching complete implementation evidence.

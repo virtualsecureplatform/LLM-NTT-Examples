@@ -14,4 +14,6 @@ class AutoNTTResearchTests(unittest.TestCase):
     def test_unrecognized_hosts_and_approximate_comparisons_rejected(self):
         with self.assertRaises(ValueError):study.instrument_host('int main(){}')
         with self.assertRaises(ValueError):study.compare(dict(correct=True,boundary='off-chip'),{})
+        with self.assertRaisesRegex(ValueError,'one NGen and one AutoNTT'):
+            study.compare(dict(generator='ngen'),dict(generator='ngen'))
         with self.assertRaises(ValueError):study.matched_campaign(study.verify_trace(self.trace('I'),'I'),'forward')

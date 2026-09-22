@@ -4,7 +4,7 @@ import argparse,json,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from architecture_search import wide_products,release
-from architecture_search.model import write_json
+from architecture_search.model import write_json,evidence_integrity
 from architecture_search.search import main as search_main,report as search_report
 from scripts.verify_tfhe_product import main as verify_tfhe
 
@@ -41,12 +41,16 @@ def main(argv=None):
         code=search_main(['--campaign',str(path),'--output-dir',str(directory),'--mode',mode])
         r=search_report(directory,c);records=r['candidates']
         accounted=len(records)==len(c['space']['configurations'])
-        allowed={'complete','duplicate','numerically_unqualified'}
+        allowed={'complete','duplicate','numerically_unqualified','hardware_failed'}
         functional=accounted and all(x['status'] in allowed for x in records)
-        families={x['configuration']['generator'] for x in records if x.get('correct') and x['status']=='complete'}
-        synthesis=(a.stage!='tfhe' or all(x.get('evidence',{}).get('synthesis',{}).get('implementation_passed') for x in records if x.get('correct')))
-        passed=functional and families=={'ngen','sgen'} and synthesis
-        result[name]=dict(passed=passed,exit_code=code,report=str(directory/'report.json'))
+        families={x['configuration']['generator'] for x in records if x.get('correct')}
+        synthesis=(a.stage!='tfhe' or all(x.get('evidence',{}).get('synthesis',{}).get('implementation_passed') and evidence_integrity(x['evidence']['synthesis'])=='verified' for x in records if x.get('correct')))
+        corpus_matched=True
+        if a.stage=='tfhe':
+            oracle=json.loads((out/'tfhe-oracle/verification.json').read_text())
+            corpus_matched=all(x.get('evaluation',{}).get('corpus_sha256')==oracle['corpus_sha256'] for x in records if x.get('correct'))
+        passed=functional and families=={'ngen','sgen'} and synthesis and corpus_matched
+        result[name]=dict(passed=passed,corpus_matched=corpus_matched,exit_code=code,report=str(directory/'report.json'))
         write_json(out/(a.stage+'.json'),dict(complete=len(result)==len(definitions) and all(x['passed'] for x in result.values()),campaigns=result))
         if not passed:return 1
     return 0

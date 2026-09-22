@@ -2,7 +2,7 @@
 from pathlib import Path
 import time
 from . import products
-from .model import run, file_hash, write_json
+from .model import run, file_hash, write_json, digest
 from .evaluate import parse_metrics
 
 
@@ -131,6 +131,6 @@ def evaluate(w,c,rtl,directory,timeout,simulator='iverilog'):
     unchanged=all(file_hash(Path(p))==value for p,value in hashes.items())
     result=dict(correct=unchanged and build['returncode']==0 and test.get('returncode')==0 and 'PASS polynomial product' in text,
                 mode='functional',metrics=parse_metrics(text),build=build,test=test,verification=hashes,inputs_unchanged=unchanged,
-                oracle='independent-python-integer-schoolbook',random_pairs=64 if w.get('version')==2 else 256,seed=1)
+                oracle='independent-python-integer-schoolbook',corpus_sha256=digest(corpus),random_pairs=64 if w.get('version')==2 else 256,seed=1)
     write_json(directory/'results.json',result)
     return result

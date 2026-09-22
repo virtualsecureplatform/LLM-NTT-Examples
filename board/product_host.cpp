@@ -56,6 +56,7 @@ int main(int argc,char**argv) try {
             report<<"{\"batch\":"<<batch<<",\"repeat\":"<<repeat<<",\"warmup\":"<<(repeat<2?"true":"false")
                   <<",\"seed\":"<<seed<<",\"checked_coefficients\":"<<batch*64<<",\"kernel_cycles\":"<<counters[0]
                   <<",\"kernel_seconds\":"<<counters[0]/(mhz*1e6)<<",\"transfer_inclusive_seconds\":"<<std::chrono::duration<double>(end-start).count()
+                  <<",\"accepted_products\":"<<counters[1]<<",\"completed_products\":"<<counters[2]
                   <<",\"input_stall_cycles\":"<<counters[3]<<",\"output_stall_cycles\":"<<counters[4]
                   <<",\"host_to_device_bytes\":"<<2*beats<<",\"device_to_host_bytes\":"<<8*(beats+5)<<'}';
             report.flush();

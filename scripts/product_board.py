@@ -3,6 +3,7 @@
 import argparse
 import json
 import shutil
+import statistics
 import subprocess
 import sys
 from pathlib import Path
@@ -84,8 +85,16 @@ def main(argv=None):
             run(['./host','product.xclbin','measurements.json',products.output_width(report['workload']),mhz],d,'host.log',21600)
             measured=json.loads((d/'measurements.json').read_text())
             if not measured.get('passed') or len(measured['trials'])!=48:raise ValueError('incomplete board measurement')
+            batches={}
+            for batch in (1,16,256,4096):
+                trials=[t for t in measured['trials'] if t['batch']==batch and not t['warmup']]
+                if len(trials)!=10:raise ValueError('incomplete measured batch')
+                values={key:[t[key] for t in trials] for key in ('kernel_seconds','transfer_inclusive_seconds')}
+                batches[str(batch)]={key:dict(median=statistics.median(v),mean=statistics.mean(v),minimum=min(v),maximum=max(v),
+                                      median_products_per_second=batch/statistics.median(v)) for key,v in values.items()}
+            write_json(d/'summary.json',dict(schema='product-board-summary-v1',candidate=r['id'],batches=batches))
             write_json(d/'evidence.json',dict(passed=True,candidate=r['id'],selection=selection,
-                      artifacts=artifact_manifest([d/'product.xclbin',d/'measurements.json',d/'host.log',d/'host'])))
+                      artifacts=artifact_manifest([d/'product.xclbin',d/'measurements.json',d/'summary.json',d/'host.log',d/'host'])))
     return 0
 
 if __name__=='__main__':raise SystemExit(main())

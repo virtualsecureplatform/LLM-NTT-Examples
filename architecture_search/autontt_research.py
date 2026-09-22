@@ -70,6 +70,8 @@ def matched_campaign(trace,direction):
 
 def compare(left,right):
     """Reject approximate BU assumptions, boundary mismatch and unsealed metrics."""
+    if {left.get('generator'),right.get('generator')}!={'ngen','autontt'}:
+        raise ValueError('comparison requires one NGen and one AutoNTT implementation')
     for r in (left,right):
         if r.get('correct') is not True or r.get('boundary')!=BOUNDARY:raise ValueError('unverified or unmatched compute boundary')
         if r.get('initialization_measured_separately') is not True:raise ValueError('initialization accounting missing')
@@ -85,3 +87,34 @@ def compare(left,right):
     return dict(schema='matched-transform-comparison-v1',boundary=copy.deepcopy(BOUNDARY),workload=left['workload'],
                 measurements=[{k:r[k] for k in ('generator','architecture','evidence')} for r in (left,right)],
                 scope='Measured compute boundary only; excludes off-chip and polynomial-product comparisons.')
+
+
+def parameter_source(host):
+    """Execute the generated host's parameter code without requiring its runtime.
+
+    This is only field capture, never evidence that the AutoNTT kernel works.
+    The full trace path remains required for matched kernel qualification.
+    """
+    start=host.index('WORD myPow(');last=host.index('void generate_NTT_variables(')
+    opening=host.index('{',last);depth=1;end=opening+1
+    while depth:
+        depth+=(host[end]=='{')-(host[end]=='}');end+=1
+    helpers=host[start:end]
+    main=host[host.index('int main('):]
+    first=main.index('// Calculate working modulus');last=main.index('// Print parameter summary')
+    setup=main[first:last]
+    return '''#include <iostream>
+#include <vector>
+#include <cmath>
+#include <cstdlib>
+#include "ntt.h"
+using std::vector;
+'''+helpers+'''
+int main(){
+ VAR_TYPE_64 minMod=(((VAR_TYPE_64)1U)<<(WORD_SIZE-1))+1;
+ VAR_TYPE_32 size=N;
+'''+setup+'''
+ for(unsigned limb=0;limb<PARA_LIMBS;++limb)
+  std::cout<<"LLMNTT field "<<N<<" "<<workingModulus_arr[limb].to_uint64()<<" "<<root_arr[limb].to_uint64()<<" "<<limb<<"\\n";
+}
+'''

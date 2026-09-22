@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from architecture_search import release,research,product_study
-from architecture_search.model import write_json,file_hash
+from architecture_search.model import write_json,file_hash,evidence_integrity
 from architecture_search.search import main as search_main,report as search_report
 
 
@@ -51,8 +51,9 @@ def main(argv=None):
         measured=sum('synthesis' in x.get('evidence',{}) for x in r['candidates'])
         expected=(sum(x.get('correct') and x.get('status')!='duplicate' for x in r['candidates'])
                   if a.stage=='characterize' else 4)
-        complete=measured==expected and expected>0 and release.accept(r,c)['passed']
-        results[name]=dict(complete=complete,exit_code=code,measured=measured,required=expected,report=str(directory/'report.json'))
+        verified=sum(evidence_integrity(x.get('evidence',{}).get('synthesis',{}))=='verified' for x in r['candidates'])
+        complete=measured==verified==expected and expected>0 and release.accept(r,c)['passed']
+        results[name]=dict(complete=complete,exit_code=code,measured=measured,verified=verified,required=expected,report=str(directory/'report.json'))
         required=({f'pool-{n}' for n in (16,64,256)} if a.stage=='characterize' else
                   {f'fresh-{policy}-{seed}' for policy in ('enumerate','random','analytical','cost') for seed in range(3)})
         write_json(index,dict(complete=required<=set(results) and all(results[name]['complete'] for name in required),campaigns=results))
