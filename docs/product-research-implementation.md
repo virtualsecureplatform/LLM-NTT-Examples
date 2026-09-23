@@ -187,9 +187,11 @@ incomplete, including the full matched AutoNTT adapter gate.
   127, direct linear N=16/bound 7, and multi-prime N=16/bound 32767.
 - Exact TFHEpp/Python: all 100 N=1024 corpus products agreed. NGen RTL passed;
   the first SGen split-product RTL run reached its four-hour simulation limit
-  without a mismatch. The exact 100-product corpus is retained in the next run;
-  only repeated protocol passes are shortened to eight/two/two frames for
-  N=1024, and that run has an 18-hour simulation limit.
+  without a mismatch. The next run retains the exact 100-product corpus in ten
+  independent simulator shards and checks eight/two/two protocol/reset frames
+  in a separate shard. Every shard records its own fixtures, RTL hash, result,
+  and timeout; the aggregate passes only when all eleven checks pass. The
+  eight-hour limit is a per-shard failsafe, not a claimed runtime.
 - Board wrapper: backpressure, three consecutive batches, trailer ordering,
   output stability, and counters passed Icarus. XRT host compiled; RTL XO
   packaging and both HLS memory-mover compile smoke checks succeeded. A

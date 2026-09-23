@@ -1,4 +1,5 @@
 """Independent exact-integer product scoreboard and transaction protocol stress."""
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import time
 from . import products
@@ -6,12 +7,13 @@ from .model import run, file_hash, write_json, digest
 from .evaluate import parse_metrics
 
 
-def testbench(w,frames,watchdog, scalar=0):
+def testbench(w,frames,watchdog, scalar=0, first_pass=0, end_pass=4):
     n=w['n']; ow=products.output_width(w)
     # The exact v2 corpus is checked in full on pass 0. For N=1024 each
     # split-FFT frame reuses its leaf for dozens of digit products, so the
     # later protocol/reset passes use shorter, still nonempty prefixes.
     bubble_frames,stall_frames=(8,2) if w.get('version')==2 and n>=1024 else (64,8)
+    progress='$display("CHECKED pass=%0d frame=%0d",pass,received/OB);$fflush();' if w.get('version')==2 and n>=1024 else ''
     aw=products.input_width(w,'a');bw=products.input_width(w,'b');ob=(products.output_count(w)+1)//2
     ap=w.get('a_range',[0,7])[1]&((1<<aw)-1);bp=w.get('b_range',[0,7])[1]&((1<<bw)-1)
     declarations=loads=checks=resets=''
@@ -36,7 +38,7 @@ always #5 clock=~clock;
 initial begin
  {loads}
  $readmemh("a.mem",aa);$readmemh("b.mem",bb);$readmemh("expected.mem",expected);
- for(pass=0;pass<4;pass=pass+1)begin
+ for(pass={first_pass};pass<{end_pass};pass=pass+1)begin
   reset=1;in_valid=0;out_ready=0;repeat(3)@(negedge clock);reset=0;
   target_frames=pass==0?F:(pass==1?{bubble_frames}:{stall_frames});
   {resets}
@@ -63,6 +65,7 @@ initial begin
     if(received==OB-1)last_output=cycle;
     if(received%OB==OB-1 && cycle-starts[received/OB]>loaded)loaded=cycle-starts[received/OB];
     received=received+1;
+    if(received%OB==0)begin {progress} end
    end
    @(negedge clock);
   end
@@ -97,9 +100,51 @@ endmodule
 '''
 
 
-def evaluate(w,c,rtl,directory,timeout,simulator='iverilog'):
+def _parallel_large_fft(w,c,rtl,directory,timeout,simulator):
+    """Check the full exact corpus in independent bounded simulator processes."""
+    started=time.monotonic()
+    corpus=products.vectors(w)
+    chunks=[corpus[i:i+10] for i in range(0,len(corpus),10)]
+    if len(corpus)<8:raise ValueError('large FFT stress corpus is too small')
+    tasks=[(f'corpus-{i:02d}',chunk,0,1) for i,chunk in enumerate(chunks)]
+    tasks.append(('protocol',corpus[:8],1,4))
+    def check(task):
+        name,vectors,first,last=task
+        return name,evaluate(w,c,rtl,directory/name,timeout,simulator,
+                             _corpus=vectors,_first_pass=first,_end_pass=last)
+    with ThreadPoolExecutor(max_workers=min(11,len(tasks))) as pool:
+        checked=list(pool.map(check,tasks))
+    pieces=dict(checked)
+    exact=[pieces[name] for name,_,_,_ in tasks[:-1]]
+    all_results=[result for _,result in checked]
+    unchanged=all(r['inputs_unchanged'] for r in all_results)
+    correct=unchanged and all(r['correct'] for r in all_results)
+    metrics={key:max(r['metrics'][key] for r in exact if key in r['metrics'])
+             for key in exact[0]['metrics']}
+    metrics['completed_products']=len(corpus) if correct else sum(
+        len(chunk) for (_,chunk,_,_),r in zip(tasks[:-1],exact) if r['correct'])
+    verification={path:value for r in all_results for path,value in r['verification'].items()}
+    result=dict(correct=correct,mode='functional',metrics=metrics,
+                build=dict(returncode=0 if all(r['build']['returncode']==0 for r in all_results) else 1,
+                           mode='parallel-shards'),
+                test=dict(returncode=0 if correct else 1,timed_out=any(r['test'].get('timed_out',False) for r in all_results),
+                          mode='parallel-shards'),
+                shards={name:dict(correct=r['correct'],corpus_sha256=r['corpus_sha256'],
+                                  build=r['build'],test=r['test'],metrics=r['metrics']) for name,r in checked},
+                parallel_wall_seconds=time.monotonic()-started,verification=verification,
+                inputs_unchanged=unchanged,oracle='independent-python-integer-schoolbook',
+                corpus_sha256=digest(corpus),random_pairs=64,seed=1)
+    write_json(directory/'results.json',result)
+    return result
+
+
+def evaluate(w,c,rtl,directory,timeout,simulator='iverilog',*,_corpus=None,_first_pass=0,_end_pass=4):
     started=time.monotonic(); directory=directory.resolve();directory.mkdir(parents=True,exist_ok=True)
-    corpus=products.vectors(w); width=products.output_width(w)
+    if (_corpus is None and w.get('version')==2 and w['n']>=1024 and
+            c['generator']=='sgen' and simulator=='verilator'):
+        return _parallel_large_fft(w,c,rtl,directory,timeout,simulator)
+    corpus=products.vectors(w) if _corpus is None else _corpus
+    width=products.output_width(w)
     def packed(values,bits):
         if len(values)%2:values=list(values)+[0]
         return ''.join(f'{(values[i]&((1<<bits)-1))|((values[i+1]&((1<<bits)-1))<<bits):x}\n' for i in range(0,len(values),2))
@@ -121,18 +166,21 @@ def evaluate(w,c,rtl,directory,timeout,simulator='iverilog'):
                 dest.append(packed([(r&mask)|((i&mask)<<scalar) for r,i in values],2*scalar))
         for name,values in zip(('fa','fb','mul','inv'),outputs):
             path=directory/f'{name}.mem';path.write_text(''.join(values));model_files.append(path)
-    (directory/'test.sv').write_text(testbench(w,len(corpus),watchdog,scalar))
+    (directory/'test.sv').write_text(testbench(w,len(corpus),watchdog,scalar,_first_pass,_end_pass))
     files=[rtl,directory/'a.mem',directory/'b.mem',directory/'expected.mem',directory/'test.sv',*model_files]
     hashes={str(p):file_hash(p) for p in files}
     if simulator in ('auto','iverilog'):
         build_cmd=['iverilog','-g2012','-s','test','-o','simulation',str(rtl),'test.sv'];test_cmd=['vvp','simulation']
     elif simulator=='verilator':
-        build_cmd=['verilator','--binary','--timing','-CFLAGS','-std=c++20','--top-module','test','-Wno-fatal','-j','4',str(rtl),'test.sv'];test_cmd=[str(directory/'obj_dir/Vtest')]
+        flags='-std=c++20 -O3' if w.get('version')==2 and w['n']>=1024 else '-std=c++20'
+        build_cmd=['verilator','--binary','--timing','-CFLAGS',flags,'--top-module','test','-Wno-fatal','-j','4',str(rtl),'test.sv'];test_cmd=[str(directory/'obj_dir/Vtest')]
     else:raise ValueError('unsupported product simulator')
     build=run(build_cmd,directory,directory/'build.log',max(0,timeout-(time.monotonic()-started)))
     test=run(test_cmd,directory,directory/'test.log',max(0,timeout-(time.monotonic()-started))) if build['returncode']==0 else {}
     text=(directory/'test.log').read_text() if (directory/'test.log').exists() else ''
     unchanged=all(file_hash(Path(p))==value for p,value in hashes.items())
+    for path in (directory/'build.log',directory/'test.log'):
+        if path.is_file():hashes[str(path)]=file_hash(path)
     result=dict(correct=unchanged and build['returncode']==0 and test.get('returncode')==0 and 'PASS polynomial product' in text,
                 mode='functional',metrics=parse_metrics(text),build=build,test=test,verification=hashes,inputs_unchanged=unchanged,
                 oracle='independent-python-integer-schoolbook',corpus_sha256=digest(corpus),random_pairs=64 if w.get('version')==2 else 256,seed=1)
