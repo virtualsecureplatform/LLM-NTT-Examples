@@ -23,7 +23,8 @@ def campaigns(stage):
         configurations=wide_products.candidates(w,space);space['configurations']=configurations
         result[name]=dict(workload=w,space=space,target={**release.TARGET,'clock_period_ns':8,'input_hold_buffer_stages':1},
             stages=['simulation','synthesis'] if stage=='tfhe' else ['simulation'],
-            evaluation=dict(simulator='verilator' if w['n']>=64 else 'iverilog',timeout_seconds=14400 if w['n']>=64 else 1800),
+            evaluation=dict(simulator='verilator' if w['n']>=64 else 'iverilog',
+                            timeout_seconds=64800 if stage=='tfhe' else (14400 if w['n']>=64 else 1800)),
             budget=dict(hours=24 if stage=='tfhe' else 8,functional=len(configurations),synthesis=len(configurations) if stage=='tfhe' else 0,route=0))
     return result
 

@@ -8,6 +8,10 @@ from .evaluate import parse_metrics
 
 def testbench(w,frames,watchdog, scalar=0):
     n=w['n']; ow=products.output_width(w)
+    # The exact v2 corpus is checked in full on pass 0. For N=1024 each
+    # split-FFT frame reuses its leaf for dozens of digit products, so the
+    # later protocol/reset passes use shorter, still nonempty prefixes.
+    bubble_frames,stall_frames=(8,2) if w.get('version')==2 and n>=1024 else (64,8)
     aw=products.input_width(w,'a');bw=products.input_width(w,'b');ob=(products.output_count(w)+1)//2
     ap=w.get('a_range',[0,7])[1]&((1<<aw)-1);bp=w.get('b_range',[0,7])[1]&((1<<bw)-1)
     declarations=loads=checks=resets=''
@@ -34,7 +38,7 @@ initial begin
  $readmemh("a.mem",aa);$readmemh("b.mem",bb);$readmemh("expected.mem",expected);
  for(pass=0;pass<4;pass=pass+1)begin
   reset=1;in_valid=0;out_ready=0;repeat(3)@(negedge clock);reset=0;
-  target_frames=pass==0?F:(pass==1?64:8);
+  target_frames=pass==0?F:(pass==1?{bubble_frames}:{stall_frames});
   {resets}
   sent=0;received=0;stalled=0;source_stalled=0;first_output=-1;last_output=-1;last_start=-1;max_interval=0;loaded=0;
   for(cycle=0;cycle<WATCHDOG && received<OB*target_frames;cycle=cycle+1)begin

@@ -289,9 +289,11 @@ fi
 
 if [[ "${skip_check}" -eq 0 ]]; then
   check_args=(--image-only)
+  check_binds=()
   if [[ "${with_tapa_runtime}" -eq 1 ]]; then
     printf '\nRunning AutoNTT HLS TAPA-runtime dependency check:\n'
-    check_args=(--no-require-vitis)
+    check_args=()
+    check_binds+=(--bind "${xilinx_tool_path}:${xilinx_tool_path}:ro")
   else
     printf '\nRunning image-only AutoNTT HLS dependency check:\n'
   fi
@@ -299,6 +301,7 @@ if [[ "${skip_check}" -eq 0 ]]; then
     --no-home \
     --pwd /work \
     --bind "${repo_root}:/work" \
+    "${check_binds[@]}" \
     "${output}" \
     scripts/check_autontt_hls_deps.sh "${check_args[@]}"
 fi

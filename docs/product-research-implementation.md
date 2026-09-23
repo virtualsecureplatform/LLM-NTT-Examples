@@ -173,7 +173,7 @@ Use `python3 scripts/product_research_status.py --output-dir build/research`
 to summarize milestone acceptance artifacts. Missing measurements remain
 incomplete, including the full matched AutoNTT adapter gate.
 
-## Validation record (2026-09-22, still in progress)
+## Validation record (updated 2026-09-23, still in progress)
 
 - SGen: all 3,461 generator tests passed on the pinned exporter commit;
   exported lowered full/compact graphs audited.
@@ -186,16 +186,24 @@ incomplete, including the full matched AutoNTT adapter gate.
 - Wide functional checks: both generators passed all three rings at N=8/bound
   127, direct linear N=16/bound 7, and multi-prime N=16/bound 32767.
 - Exact TFHEpp/Python: all 100 N=1024 corpus products agreed. NGen RTL passed;
-  the SGen split-product RTL simulation is still running.
+  the first SGen split-product RTL run reached its four-hour simulation limit
+  without a mismatch. The exact 100-product corpus is retained in the next run;
+  only repeated protocol passes are shortened to eight/two/two frames for
+  N=1024, and that run has an 18-hour simulation limit.
 - Board wrapper: backpressure, three consecutive batches, trailer ordering,
   output stability, and counters passed Icarus. XRT host compiled; RTL XO
-  packaging and both HLS memory-mover compile smoke checks succeeded. Full
-  board linking and measurements require the qualified N=64 pair.
+  packaging and both HLS memory-mover compile smoke checks succeeded. A
+  qualified N=64 pair exists at 16 ns, but full board linking and measurements
+  have not yet been completed.
 - AutoNTT: N=16384/54-bit Barrett I/D/H source generation succeeded. All custom
-  Goldilocks measured-BU probes failed in C simulation. Dependency checks found
-  missing `tapac`, `tapacc`, `tapa`, `tapa.h`, `libtapa`/`libfrt`, gflags/glog,
-  nlohmann-json, tinyxml2, and yaml-cpp development dependencies. No AutoNTT
-  performance claim or successful preloaded-adapter result is recorded.
+  Goldilocks measured-BU probes originally failed before the TAPA runtime was
+  available. The built container now passes the full TAPA/Vitis dependency and
+  C-simulation link check when the host Xilinx tree is bound. The generated
+  N=16384 I/D/H kernels passed independent forward and inverse checks for
+  32,768 coefficients each. Their trace driver links TAPA dependencies and uses
+  split-stack support required by the packaged runtime. These are functional
+  C-simulation results. Measured BU results, the Goldilocks custom probes, and
+  the preloaded AutoNTT hardware adapter remain outstanding.
 
 The fully parallel N=16 timing diagnosis identified a 9.803 ns, 37-level data
 path in the earlier 8 ns run. The old profile inserted delay registers after a
@@ -241,3 +249,9 @@ clocks forward and 77,920 clocks inverse for the same PE/lane configuration.
 Memory fixtures keep the testbench compact at the larger size. Both large-field
 checks are functional evidence; routed comparisons still require the AutoNTT
 adapter and matching complete implementation evidence.
+
+The current immutable `1b540fe` checkout is characterizing N=16 and N=64
+covering pools with Vivado. N=256 hardware remains gated on the N=16/64 search
+freeze. The earlier scaled snapshot qualified N=16 at 8 ns and N=64 at 16 ns;
+its N=64 SGen route missed 8 ns by 0.077 ns. These snapshots use distinct
+recorded source pins and are not merged as one uniform hardware campaign.

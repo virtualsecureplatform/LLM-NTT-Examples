@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Prepare pinned AutoNTT traces and field-matched NGen campaigns."""
-import argparse,json,shutil,subprocess,sys
+import argparse,json,os,shutil,subprocess,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from architecture_search import autontt_research as study
@@ -52,8 +52,24 @@ def main(argv=None):
         if d.exists():raise ValueError('existing C-simulation directory')
         shutil.copytree(a.design,d)
         host=d/'ntt_test.cpp';host.write_text(study.instrument_host(host.read_text()))
+        # The pinned generated Makefile omits transitive libraries needed by
+        # the current TAPA C++ runtime. Link the unmodified generated kernel
+        # and instrumented host with the dependency set checked by
+        # check_autontt_hls_deps.sh.
+        # The packaged runtime contains split-stack objects. Apply the same
+        # compiler mode to the generated host so libgcc initializes their
+        # stack allocator before TAPA starts its software tasks.
+        link=['g++','-fsplit-stack','ntt_kernel.cpp','ntt_test.cpp','-o','ntt',
+              '-I/home/opt/xilinx/Vitis_HLS/2023.2/include','-O2']
+        tapa_home=os.environ.get('TAPA_HOME') or os.environ.get('RAPIDSTREAM_INSTALL_DIR')
+        if tapa_home:
+            libdir=next((p for p in (Path(tapa_home)/'usr/lib',Path(tapa_home)/'lib') if p.is_dir()),None)
+            if libdir:link.extend([f'-L{libdir}',f'-Wl,-rpath,{libdir}'])
+        link.extend(['-ltapa','-lfrt','-lglog','-lgflags','-lOpenCL',
+                     '-lyaml-cpp','-ltinyxml2','-lthread','-lcontext','-pthread',
+                     '-std=c++17','-DBU_BUF_FIFO_DEPTH=1024'])
         with (d/'build.log').open('w') as log:
-            subprocess.run(['make','csim_compile','XILINX_HLS=/home/opt/xilinx/Vitis_HLS/2023.2'],cwd=d,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=1200)
+            subprocess.run(link,cwd=d,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=1200)
         with (d/'trace.log').open('w') as log:subprocess.run(['./ntt'],cwd=d,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=3600)
         result=study.verify_trace((d/'trace.log').read_text(),a.architecture)
         result['artifacts']=artifact_manifest([host,d/'ntt_kernel.cpp',d/'ntt.h',d/'trace.log'])
