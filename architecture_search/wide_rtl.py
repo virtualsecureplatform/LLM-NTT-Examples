@@ -18,16 +18,17 @@ def fft_fold(w,scalar,frac):
     pieces=[f'''module WideFold(input clock,reset,in_valid,output in_ready,input [{4*scalar-1}:0] in_data,
 output out_valid,input out_ready,output [{2*ow-1}:0] out_data);
 localparam N={n},W={scalar},OW={integer_width},SHIFT={shift};
-reg signed [W-1:0] raw[0:2*N-1];reg full;integer capture,drain,j;
+reg signed [W-1:0] raw_even[0:N-1],raw_odd[0:N-1];reg full;integer capture,drain;
 assign in_ready=!full;assign out_valid=full;
 {rounded}
 ''']
     for lane in range(2):
         index=f'(2*drain+{lane})'
-        lower=f'$signed({{raw[{index}][W-1],raw[{index}]}})'
+        bank=f'raw_{"even" if lane==0 else "odd"}'
+        lower=f'$signed({{{bank}[drain][W-1],{bank}[drain]}})'
         if w['ring']=='linear':expression=lower
         else:
-            upper=f'$signed({{raw[{index}+N][W-1],raw[{index}+N]}})'
+            upper=f'$signed({{{bank}[drain+N/2][W-1],{bank}[drain+N/2]}})'
             expression=lower+(' - ' if w['ring']=='negacyclic' else ' + ')+upper
         pieces.append(f'wire signed [OW-1:0] value{lane}=rounded({expression});')
         if w['modulus']:
@@ -40,7 +41,8 @@ assign in_ready=!full;assign out_valid=full;
 if(reset)begin full<=0;capture<=0;drain<=0;end
 else begin
  if(in_valid && in_ready)begin
-  for(j=0;j<2;j=j+1)raw[2*capture+j]<=in_data[j*2*W +: W];
+  raw_even[capture]<=in_data[0 +: W];
+  raw_odd[capture]<=in_data[2*W +: W];
   if(capture==N-1)begin capture<=0;full<=1;end else capture<=capture+1;
  end
  if(out_valid && out_ready)begin

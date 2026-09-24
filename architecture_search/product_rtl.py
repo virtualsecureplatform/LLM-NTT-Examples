@@ -14,7 +14,39 @@ def frame_engine(name, core, meta, width, input_n=None, external_lanes=2):
     ready=meta.get('has_ready',False)
     offset=meta.get('next_offset',0); data_at=max(0,-offset); token_at=max(0,offset)
     ii=meta['initiation_interval']; warmup=(meta['latency']+t+abs(offset)+4) if meta.get('schema')=='sgen-search-v1' else 0; depth=max(2,math.ceil((meta['latency']+t)/ii)+1)
-    declarations='\n'.join(f'wire [{width-1}:0] ci{j},co{j}; assign ci{j}=input_mem[read_bank*N+(feed_age-DATA_AT)*K+{j}];' for j in range(k))
+    e=external_lanes
+    # Each two-lane memory has one write per physical bank and cycle. The
+    # former interleaved array presented two writes to Vivado, which prevented
+    # RAM inference once the frame grew beyond the register-dissolve limit.
+    banked=k==e==2
+    if banked:
+        memories='reg [W-1:0] input_even[0:N-1],input_odd[0:N-1],output_even[0:DEPTH*N/2-1],output_odd[0:DEPTH*N/2-1];'
+        declarations='\n'.join(
+            f'wire [{width-1}:0] ci{j},co{j}; assign ci{j}=input_{"even" if j==0 else "odd"}[read_bank*(N/2)+(feed_age-DATA_AT)];'
+            for j in range(2))
+        capture='\n'.join(f'output_{"even" if j==0 else "odd"}[capture_bank*(N/2)+capture_index]<=co{j};' for j in range(2))
+        capture_input='\n'.join(f'input_{"even" if j==0 else "odd"}[write_bank*(N/2)+input_beat]<=in_data[{j*width} +: {width}];' for j in range(2))
+        output_pack='output_odd[output_bank*(N/2)+output_beat],output_even[output_bank*(N/2)+output_beat]'
+        input_done=('padding<=1;input_beat<=input_beat+1;' if input_n<n else
+                    'input_full[write_bank]<=1;write_bank<=1-write_bank;input_beat<=0;')
+        padding_logic=('''if(padding) begin
+   input_even[write_bank*(N/2)+input_beat]<=0;
+   input_odd[write_bank*(N/2)+input_beat]<=0;
+   if(input_beat==N/2-1) begin
+    padding<=0;input_full[write_bank]<=1;write_bank<=1-write_bank;input_beat<=0;
+   end else input_beat<=input_beat+1;
+  end''' if input_n<n else '')
+        padding_reset='padding<=0;'
+        padding_decl='reg padding;'
+        ready_condition=' && !padding'
+    else:
+        memories='reg [W-1:0] input_mem[0:2*N-1],output_mem[0:DEPTH*N-1];'
+        declarations='\n'.join(f'wire [{width-1}:0] ci{j},co{j}; assign ci{j}=input_mem[read_bank*N+(feed_age-DATA_AT)*K+{j}];' for j in range(k))
+        capture='\n'.join(f'output_mem[capture_bank*N+capture_index*K+{j}]<=co{j};' for j in range(k))
+        capture_input='\n'.join(f'input_mem[write_bank*N+input_beat*{e}+{j}]<=in_data[{j*width} +: {width}];' for j in range(e))
+        output_pack=','.join(f'output_mem[output_bank*N+output_beat*{e}+{j}]' for j in reversed(range(e)))
+        input_done='for(j=IN_N;j<N;j=j+1)input_mem[write_bank*N+j]<=0; input_full[write_bank]<=1;write_bank<=1-write_bank;input_beat<=0;'
+        padding_logic=padding_reset=padding_decl=ready_condition=''
     ports=','.join(f'.i{j}(ci{j}),.o{j}(co{j})' for j in range(k))
     if rv:
         control='.in_valid(feed_data),.in_ready(core_ready),.out_valid(core_out),.out_ready(1\'b1)'
@@ -23,18 +55,15 @@ def frame_engine(name, core, meta, width, input_n=None, external_lanes=2):
         control='.next(feed_token),.next_out(core_out)'+(',.ready(core_ready)' if ready else '')
         capture_condition='core_out || capturing'; capture_index='(core_out ? 0 : capture_beat)'
     clock='clk' if meta.get('schema')=='sgen-search-v1' else 'clock'
-    capture='\n'.join(f'output_mem[capture_bank*N+capture_index*K+{j}]<=co{j};' for j in range(k))
-    e=external_lanes
-    capture_input='\n'.join(f'input_mem[write_bank*N+input_beat*{e}+{j}]<=in_data[{j*width} +: {width}];' for j in range(e))
-    output_pack=','.join(f'output_mem[output_bank*N+output_beat*{e}+{j}]' for j in reversed(range(e)))
     return f'''
 module {name}(input clock,reset,input in_valid,output in_ready,input [{e*width-1}:0] in_data,
 output out_valid,input out_ready,output [{e*width-1}:0] out_data);
 localparam N={n}, IN_N={input_n}, K={k}, T={t}, W={width}, DEPTH={depth}, DATA_AT={data_at}, TOKEN_AT={token_at};
-reg [W-1:0] input_mem[0:2*N-1],output_mem[0:DEPTH*N-1];
+{memories}
 reg [1:0] input_full; reg [DEPTH-1:0] output_full;
 integer write_bank,read_bank,input_beat,output_bank,output_beat,capture_bank,capture_beat;
 integer reservations,cooldown,feed_age,j,initializing;
+{padding_decl}
 wire core_reset=reset || initializing>0;
 reg feeding,capturing;
 wire core_ready,core_out;
@@ -45,7 +74,7 @@ wire launch=!feeding && input_full[read_bank] && reservations<DEPTH && cooldown=
 wire drain=out_valid && out_ready && output_beat==N/{e}-1;
 wire capture_event={capture_condition};
 wire [31:0] capture_index={capture_index};
-assign in_ready=!input_full[write_bank] && initializing==0;
+assign in_ready=!input_full[write_bank] && initializing==0{ready_condition};
 assign out_valid=output_full[output_bank];
 assign out_data={{{output_pack}}};
 {declarations}
@@ -53,16 +82,16 @@ assign out_data={{{output_pack}}};
 always @(posedge clock) begin
  if(reset) begin
   input_full<=0;output_full<=0;write_bank<=0;read_bank<=0;input_beat<=0;output_bank<=0;output_beat<=0;
-  capture_bank<=0;capture_beat<=0;reservations<=0;cooldown<=0;feed_age<=0;feeding<=0;capturing<=0;initializing<={warmup};
+  capture_bank<=0;capture_beat<=0;reservations<=0;cooldown<=0;feed_age<=0;feeding<=0;capturing<=0;initializing<={warmup};{padding_reset}
  end else if(initializing>0)begin initializing<=initializing-1;end
  else begin
   if(cooldown>0)cooldown<=cooldown-1;
   case ({{launch,drain}}) 2'b10:reservations<=reservations+1;2'b01:reservations<=reservations-1;default:;endcase
+  {padding_logic}
   if(in_valid && in_ready) begin
    {capture_input}
    if(input_beat==IN_N/{e}-1) begin
-    for(j=IN_N;j<N;j=j+1)input_mem[write_bank*N+j]<=0;
-    input_full[write_bank]<=1;write_bank<=1-write_bank;input_beat<=0;
+    {input_done}
    end else input_beat<=input_beat+1;
   end
   if(launch) begin feeding<=1;feed_age<=0;cooldown<={ii-1};end
@@ -137,8 +166,9 @@ def fold_module(n, scalar, frac, outwidth):
 module ProductFold(input clock,reset,input in_valid,output in_ready,input [{4*scalar-1}:0] in_data,
 output out_valid,input out_ready,output [{2*outwidth-1}:0] out_data);
 localparam N={n},W={scalar},OW={outwidth},SHIFT={shift};
-reg signed [W-1:0] low[0:N-1];reg [OW-1:0] result[0:2*N-1];
-reg [1:0] full;integer write_bank,read_bank,beat,outbeat,j;
+reg signed [W-1:0] low_even[0:N/2-1],low_odd[0:N/2-1];
+reg [OW-1:0] result_even[0:N-1],result_odd[0:N-1];
+reg [1:0] full;integer write_bank,read_bank,beat,outbeat;
 function automatic [OW-1:0] rounded(input signed [W:0] v);
  reg signed [W:0] base;reg [SHIFT-1:0] rem;
  begin base=v>>>SHIFT;rem=v[SHIFT-1:0];
@@ -146,14 +176,16 @@ function automatic [OW-1:0] rounded(input signed [W:0] v);
  rounded=base[OW-1:0];end
 endfunction
 assign in_ready=!full[write_bank];assign out_valid=full[read_bank];
-assign out_data={{result[read_bank*N+outbeat*2+1],result[read_bank*N+outbeat*2]}};
+assign out_data={{result_odd[read_bank*(N/2)+outbeat],result_even[read_bank*(N/2)+outbeat]}};
 always @(posedge clock)begin
  if(reset)begin full<=0;write_bank<=0;read_bank<=0;beat<=0;outbeat<=0;end
  else begin
   if(in_valid && in_ready)begin
-   for(j=0;j<2;j=j+1)begin
-    if(beat<N/2)low[beat*2+j]<=in_data[j*2*W +: W];
-    else result[write_bank*N+(beat-N/2)*2+j]<=rounded($signed({{low[(beat-N/2)*2+j][W-1],low[(beat-N/2)*2+j]}})-$signed({{in_data[j*2*W+W-1],in_data[j*2*W +: W]}}));
+   if(beat<N/2)begin
+    low_even[beat]<=in_data[0 +: W];low_odd[beat]<=in_data[2*W +: W];
+   end else begin
+    result_even[write_bank*(N/2)+(beat-N/2)]<=rounded($signed({{low_even[beat-N/2][W-1],low_even[beat-N/2]}})-$signed({{in_data[W-1],in_data[0 +: W]}}));
+    result_odd[write_bank*(N/2)+(beat-N/2)]<=rounded($signed({{low_odd[beat-N/2][W-1],low_odd[beat-N/2]}})-$signed({{in_data[3*W-1],in_data[2*W +: W]}}));
    end
    if(beat==N-1)begin beat<=0;full[write_bank]<=1;write_bank<=1-write_bank;end
    else beat<=beat+1;
