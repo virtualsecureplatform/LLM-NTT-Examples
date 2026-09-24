@@ -179,19 +179,21 @@ incomplete, including the full matched AutoNTT adapter gate.
   exported lowered full/compact graphs audited.
 - NGen: 162 generator tests passed, including direct DFT comparison of split
   Barrett forward/inverse RTL with bubbles and reset.
-- Framework: 192 tests passed, including independent transform checks and
+- Framework: 193 tests passed, including independent transform checks and
   streamed/stage-parallel preloaded RTL with reset recovery.
 - M1 matrix: all 130 points at N=8/16/32/64/256 passed in immutable snapshot
   `2f21969`. The six-point smoke also passed in clean checkout `3c96837`. Deliberately insufficient FFT precision is rejected and accounted.
 - Wide functional checks: both generators passed all three rings at N=8/bound
   127, direct linear N=16/bound 7, and multi-prime N=16/bound 32767.
 - Exact TFHEpp/Python: all 100 N=1024 corpus products agreed. NGen RTL passed;
-  the first SGen split-product RTL run reached its four-hour simulation limit
-  without a mismatch. The next run retains the exact 100-product corpus in ten
-  independent simulator shards and checks eight/two/two protocol/reset frames
-  in a separate shard. Every shard records its own fixtures, RTL hash, result,
-  and timeout; the aggregate passes only when all eleven checks pass. The
-  eight-hour limit is a per-shard failsafe, not a claimed runtime.
+  SGen RTL subsequently passed all 100 products in ten independent simulator
+  shards and the eight/two/two protocol/reset passes in an eleventh shard.
+  Every shard records its own fixtures, RTL hash, result, and timeout. Both
+  original RTL products failed Vivado synthesis because their large frame
+  memories had unsupported multi-write patterns. Commit `8480457` banks the
+  two-lane memories and replaces parallel forward padding with a counted fill.
+  The repaired SGen design passed its first exact N=1024 product; the complete
+  repaired corpus and synthesis checks are running separately.
 - Board wrapper: backpressure, three consecutive batches, trailer ordering,
   output stability, and counters passed Icarus. XRT host compiled; RTL XO
   packaging and both HLS memory-mover compile smoke checks succeeded. A
@@ -252,8 +254,14 @@ Memory fixtures keep the testbench compact at the larger size. Both large-field
 checks are functional evidence; routed comparisons still require the AutoNTT
 adapter and matching complete implementation evidence.
 
-The current immutable `1b540fe` checkout is characterizing N=16 and N=64
-covering pools with Vivado. N=256 hardware remains gated on the N=16/64 search
-freeze. The earlier scaled snapshot qualified N=16 at 8 ns and N=64 at 16 ns;
-its N=64 SGen route missed 8 ns by 0.077 ns. These snapshots use distinct
-recorded source pins and are not merged as one uniform hardware campaign.
+The immutable `1b540fe` checkout completed its N=16 and N=64 covering pools
+with 22 and 23 integrity-verified synthesis measurements, respectively. Replay,
+ablations, and search freeze `213f5a02` were saved before N=256. Its N=256
+hardware campaign routed NGen but failed SGen synthesis because the large frame
+memories could not be inferred. The repair at `8480457` passes the complete 305
+vector N=256 SGen product test and exploratory matched 16 ns routes for both
+SGen and NGen, with setup slack +6.228 and +8.277 ns, respectively. A fresh
+six-candidate campaign at `8480457` is running to produce integrity-checked
+matched evidence. The earlier scaled snapshot qualified N=16 at 8 ns and N=64
+at 16 ns; its N=64 SGen route missed 8 ns by 0.077 ns. These snapshots use
+distinct recorded source pins and are not merged as one uniform campaign.
