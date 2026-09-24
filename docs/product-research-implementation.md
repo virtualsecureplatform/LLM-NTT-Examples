@@ -192,8 +192,12 @@ incomplete, including the full matched AutoNTT adapter gate.
   original RTL products failed Vivado synthesis because their large frame
   memories had unsupported multi-write patterns. Commit `8480457` banks the
   two-lane memories and replaces parallel forward padding with a counted fill.
-  The repaired SGen design passed its first exact N=1024 product; the complete
-  repaired corpus and synthesis checks are running separately.
+  The repaired SGen design passed its first exact N=1024 product; its complete
+  repaired corpus is running in the sealed shard layout. Repaired NGen passed
+  all 100 RTL products and 16 ns synthesis with setup slack +6.996 ns and hold
+  slack +0.049 ns. Repaired SGen completed 8 ns synthesis with setup slack
+  +2.907 ns but hold slack -0.042 ns, so it is not a timing-qualified route.
+  A fresh pinned TFHE campaign is queued after the repaired SGen corpus check.
 - Board wrapper: backpressure, three consecutive batches, trailer ordering,
   output stability, and counters passed Icarus. XRT host compiled; RTL XO
   packaging and both HLS memory-mover compile smoke checks succeeded. A
