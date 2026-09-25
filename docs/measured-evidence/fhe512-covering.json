@@ -26,6 +26,7 @@
       "yosys_cells": 1849587,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 47.66291015600291,
       "yosys_timed_out": false
     },
     {
@@ -53,6 +54,7 @@
       "yosys_cells": 1849590,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 49.010072858996864,
       "yosys_timed_out": false
     },
     {
@@ -80,6 +82,7 @@
       "yosys_cells": 1849587,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 49.060159052001836,
       "yosys_timed_out": false
     },
     {
@@ -107,6 +110,7 @@
       "yosys_cells": 1849884,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 49.41007072599314,
       "yosys_timed_out": false
     },
     {
@@ -134,6 +138,7 @@
       "yosys_cells": 1849887,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 49.009151273996395,
       "yosys_timed_out": false
     },
     {
@@ -161,6 +166,7 @@
       "yosys_cells": 1849578,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 47.107565165999404,
       "yosys_timed_out": false
     },
     {
@@ -188,6 +194,7 @@
       "yosys_cells": 2363622,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 46.10328151500289,
       "yosys_timed_out": false
     },
     {
@@ -215,6 +222,7 @@
       "yosys_cells": 1998420,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 82.67094615800306,
       "yosys_timed_out": false
     },
     {
@@ -242,6 +250,7 @@
       "yosys_cells": 1875903,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 54.61384296599863,
       "yosys_timed_out": false
     },
     {
@@ -269,6 +278,7 @@
       "yosys_cells": 2667480,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 243.5482493429954,
       "yosys_timed_out": false
     },
     {
@@ -296,6 +306,7 @@
       "yosys_cells": 4642020,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 79.61070364199986,
       "yosys_timed_out": false
     },
     {
@@ -323,6 +334,7 @@
       "yosys_cells": 4642020,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 79.60834988100396,
       "yosys_timed_out": false
     },
     {
@@ -350,6 +362,7 @@
       "yosys_cells": 4642317,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 78.41121975599526,
       "yosys_timed_out": false
     },
     {
@@ -377,6 +390,7 @@
       "yosys_cells": 4642011,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 78.46531351799786,
       "yosys_timed_out": false
     },
     {
@@ -404,6 +418,7 @@
       "yosys_cells": 5191758,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 83.82168537999678,
       "yosys_timed_out": false
     },
     {
@@ -431,6 +446,7 @@
       "yosys_cells": 4796388,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 116.72840018800343,
       "yosys_timed_out": false
     },
     {
@@ -458,6 +474,7 @@
       "yosys_cells": 4650453,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 81.81342126199888,
       "yosys_timed_out": false
     },
     {
@@ -485,6 +502,7 @@
       "yosys_cells": 5535234,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 285.5723576829987,
       "yosys_timed_out": false
     },
     {
@@ -512,6 +530,7 @@
       "yosys_cells": 5535237,
       "yosys_passed": true,
       "yosys_returncode": 0,
+      "yosys_seconds": 323.70634180100024,
       "yosys_timed_out": false
     },
     {
@@ -538,6 +557,7 @@
       "yosys_cells": null,
       "yosys_passed": false,
       "yosys_returncode": 124,
+      "yosys_seconds": 900.3227972199966,
       "yosys_timed_out": true
     },
     {
@@ -564,6 +584,7 @@
       "yosys_cells": null,
       "yosys_passed": false,
       "yosys_returncode": 124,
+      "yosys_seconds": 900.3266002529999,
       "yosys_timed_out": true
     },
     {
@@ -590,6 +611,7 @@
       "yosys_cells": null,
       "yosys_passed": false,
       "yosys_returncode": -15,
+      "yosys_seconds": 21.616799931995047,
       "yosys_timed_out": false
     }
   ],

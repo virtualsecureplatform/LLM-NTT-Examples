@@ -123,9 +123,33 @@ def markdown(result, summary, directory):
     return '\n'.join(lines)+'\n'
 
 
+def evidence_snapshot(result, summary, directory, existing_schema=None):
+    keep = ('name', 'configuration', 'quant_bits', 'max_abs_error', 'observed_max_abs_error',
+            'yosys_cells', 'latency_cycles', 'initiation_interval_cycles',
+            'throughput_products_per_1000_cycles', 'simulation_passed', 'yosys_passed',
+            'passed', 'rtl_sha256')
+    points = []
+    for point in result['points']:
+        row = {key: point[key] for key in keep if key in point}
+        if 'quant_bits' in point:
+            path = directory/configuration_name(point['configuration'])/('q'+str(point['quant_bits']))/'yosys'/'result.json'
+            if path.is_file():
+                process = json.loads(path.read_text()).get('process', {})
+                row.update(yosys_returncode=process.get('returncode'),
+                           yosys_timed_out=process.get('timed_out'),
+                           yosys_seconds=process.get('seconds'))
+        points.append(row)
+    return dict(schema=existing_schema or 'fhe512-preroute-evidence-v1',
+                workload=result['manifest']['workload'], summary=summary, points=points,
+                limitation=result.get('limitations',
+                                      'Yosys generic cells and cycle counts only; no U280 resources or clock'))
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output-dir', type=Path, required=True)
+    parser.add_argument('--evidence-file', type=Path,
+                        help='write a compact, reproducible snapshot of every measured point')
     args = parser.parse_args(argv); directory = args.output_dir.resolve()
     result = json.loads((directory/'results.json').read_text())
     summary = summarize(result, directory)
@@ -137,6 +161,10 @@ def main(argv=None):
                                 lineterminator='\n')
         writer.writeheader()
         writer.writerows(rows)
+    if args.evidence_file:
+        existing = json.loads(args.evidence_file.read_text()) if args.evidence_file.is_file() else {}
+        write_json(args.evidence_file, evidence_snapshot(result, summary, directory,
+                                                       existing.get('schema')))
     print(directory/'summary.md')
     return 0 if summary['complete'] else 1
 

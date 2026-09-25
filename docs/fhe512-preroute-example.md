@@ -25,7 +25,8 @@ search, run the 22-point covering grid in a separate directory:
 scripts/run_fhe512_preroute.sh --grid covering \
   --output-dir build/fhe512-covering
 # If interrupted, repeat with --resume and the same image, sources, and options.
-python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-covering
+python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-covering \
+  --evidence-file docs/measured-evidence/fhe512-covering.json
 ```
 
 The checked-in 22-point campaign uses indexed stream boundaries. To compare
@@ -163,30 +164,63 @@ shortlist.
 
 ## Rectangular switch-transpose comparison
 
-An additional N=512 Apptainer run measured the exact 2-lane Barrett streamed
-smoke designs with the new `switch` boundary. This is a rate-preserving,
-frame-buffered 256-cycle × 2-lane rectangular transpose at each NTT input and
-output, not the lower-latency recursive network used for square streams. All
-four rows below passed the same 12-frame exact-product RTL check and completed
-coarse Yosys screening. The [switch report](measured-evidence/fhe512-switch-smoke.md),
-[CSV](measured-evidence/fhe512-switch-smoke.csv), and
-[evidence snapshot](measured-evidence/fhe512-switch-smoke.json) preserve both new points.
+The exact radix-2 Barrett baseline comparison now covers streamed PE=1/2 and
+stage-parallel at both 2 and 4 lanes, with indexed and switch boundaries. The
+`switch` boundary uses rate-preserving rectangular frame buffers at each NTT
+input and output, not the lower-latency recursive network used for square
+streams. All 12 points passed the same 12-frame exact-product RTL check; eight
+completed coarse Yosys screening. The [full 12-point matrix](measured-evidence/fhe512-transpose-matrix.md)
+and [sortable CSV](measured-evidence/fhe512-transpose-matrix.csv) combine the
+[indexed covering evidence](measured-evidence/fhe512-covering.json),
+[2-lane switch evidence](measured-evidence/fhe512-switch-smoke.json), and
+[4-lane/stage-parallel switch evidence](measured-evidence/fhe512-switch-extension.json).
 
 ```bash
 scripts/run_fhe512_preroute.sh --grid smoke --transposes switch \
   --quant-bits 0 --output-dir build/fhe512-switch-512
-python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-switch-512
+python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-switch-512 \
+  --evidence-file docs/measured-evidence/fhe512-switch-smoke.json
 ```
 
-| PE | Boundary | Coarse Yosys cells | Product latency cycles | Frame interval cycles | Products / 1,000 cycles |
-| ---: | --- | ---: | ---: | ---: | ---: |
-| 1 | indexed | 1,849,587 | 8,067 | 3,390 | 0.295 |
-| 1 | switch | 3,941,550 | 8,585 | 3,906 | 0.256 |
-| 2 | indexed | 1,875,903 | 5,252 | 1,983 | 0.504 |
-| 2 | switch | 3,967,110 | 5,770 | 2,499 | 0.400 |
+The four additional switch points use the following command. The selected
+configurations and tool hashes are recorded in
+`build/fhe512-switch-extension/manifest.json` when run locally.
 
-Here the buffered rectangular transpose increases both generic-cell count and
-frame interval. It establishes a functional comparison point, not a claim that
-switch transpose is inherently worse: an FPGA memory implementation, a more
-overlapped wrapper, and routed timing may change the trade-off. Stage-parallel
-switch variants are now legal but have not been screened at N=512.
+```bash
+scripts/run_fhe512_preroute.sh --grid covering --transposes switch \
+  --quant-bits 0 --timeout 240 --output-dir build/fhe512-switch-extension \
+  --configuration-names \
+  ngen-streamed-l4-pe1-r2-s1-barrett-baseline-switch \
+  ngen-streamed-l4-pe2-r2-s1-barrett-baseline-switch \
+  ngen-stage-parallel-l2-pe1-r2-s1-barrett-baseline-switch \
+  ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline-switch
+python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-switch-extension \
+  --evidence-file docs/measured-evidence/fhe512-switch-extension.json
+python3 scripts/report_fhe512_transpose_matrix.py \
+  docs/measured-evidence/fhe512-covering.json \
+  docs/measured-evidence/fhe512-switch-smoke.json \
+  docs/measured-evidence/fhe512-switch-extension.json \
+  --output-md docs/measured-evidence/fhe512-transpose-matrix.md \
+  --output-csv docs/measured-evidence/fhe512-transpose-matrix.csv
+```
+
+| Backend | Lanes | PE | Boundary | Error bound | Coarse Yosys cells | Latency cycles | Frame interval cycles | Products / 1,000 cycles | Status |
+| --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| streamed | 2 | 1 | indexed | 0 | 1,849,587 | 8,067 | 3,390 | 0.295 | screened |
+| streamed | 2 | 1 | switch | 0 | 3,941,550 | 8,585 | 3,906 | 0.256 | screened |
+| streamed | 2 | 2 | indexed | 0 | 1,875,903 | 5,252 | 1,983 | 0.504 | screened |
+| streamed | 2 | 2 | switch | 0 | 3,967,110 | 5,770 | 2,499 | 0.400 | screened |
+| streamed | 4 | 1 | indexed | 0 | 4,642,020 | 7,299 | 3,134 | 0.319 | screened |
+| streamed | 4 | 1 | switch | 0 | 8,803,581 | 7,561 | 3,394 | 0.295 | screened |
+| streamed | 4 | 2 | indexed | 0 | 4,650,453 | 4,484 | 1,727 | 0.579 | screened |
+| streamed | 4 | 2 | switch | 0 | 8,812,014 | 4,746 | 1,987 | 0.503 | screened |
+| stage-parallel | 2 | — | indexed | 0 | — | 1,818 | 521 | 1.919 | Yosys timeout (900 s) |
+| stage-parallel | 2 | — | switch | 0 | — | 2,846 | 1,037 | 0.964 | Yosys timeout (240 s) |
+| stage-parallel | 4 | — | indexed | 0 | — | 1,306 | 256 | 3.906 | Yosys timeout (900 s) |
+| stage-parallel | 4 | — | switch | 0 | — | 1,822 | 525 | 1.905 | Yosys timeout (240 s) |
+
+The buffered rectangular transpose increases both generic-cell count and frame
+interval for the streamed points. Stage-parallel resource usage remains
+unmeasured: Yosys timed out for the indexed points after 900 seconds and for
+the switch points after 240 seconds. An FPGA memory implementation, a more
+overlapped wrapper, and routed timing may change these trade-offs.

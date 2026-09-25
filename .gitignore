@@ -24,3 +24,4 @@ variants/*/chisel/project/project/
 !campaigns/*.json
 !docs/measured-evidence/fhe512-covering.json
 !docs/measured-evidence/fhe512-switch-smoke.json
+!docs/measured-evidence/fhe512-switch-extension.json

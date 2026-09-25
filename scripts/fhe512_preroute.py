@@ -160,6 +160,8 @@ def main(argv=None):
                    help='covering selects 18 NGen architectures and four error variants')
     p.add_argument('--transposes', nargs='+', choices=['indexed', 'switch'], default=['indexed'],
                    help='NGen boundary transpose choices; switch uses a rectangular buffered adapter at N=512')
+    p.add_argument('--configuration-names', nargs='+',
+                   help='run only these exact architecture names from the selected grid')
     p.add_argument('--resume', action='store_true', help='reuse verified results from the same manifest')
     p.add_argument('--timeout', type=int, default=7200, help='seconds per generation, simulation, or Yosys call')
     a = p.parse_args(argv)
@@ -180,6 +182,13 @@ def main(argv=None):
     vectors = wide.vectors(w, random_count=4, seed=512)
     corpus = vectors[:8] + vectors[-4:]
     configs = configurations(w, a.include_sgen, a.grid, a.transposes)
+    if a.configuration_names:
+        wanted = set(a.configuration_names)
+        available = {configuration_name(c) for c in configs}
+        if len(wanted) != len(a.configuration_names) or wanted - available:
+            p.error('configuration names must be unique members of the selected grid: '
+                    + ', '.join(sorted(wanted - available)))
+        configs = [c for c in configs if configuration_name(c) in wanted]
     manifest = dict(schema='fhe512-preroute-example-v2', workload=w, configurations=configs, grid=a.grid,
                     quant_bits=sorted(set(a.quant_bits)), error_limit=a.error_limit,
                     corpus_sha256=digest(corpus), image_sha256=os.environ.get('FHE512_IMAGE_SHA256'),
