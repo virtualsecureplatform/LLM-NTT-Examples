@@ -49,7 +49,8 @@ def generate(w,c,ngen,sgen,directory,timeout,executables=None):
                 args=['-n',str(length.bit_length()-1),'-k',str(c['lanes'].bit_length()-1),
                       '-r',str(c['radix'].bit_length()-1),'-q',str(field['q']),'-root',str(field['root']),
                       '-architecture',c['backend'],'-reduction',c['reduction'],'-profile',c['profile'],
-                      '-protocol','ready-valid' if c['backend']=='streamed' else 'next','-top',top]
+                      '-protocol','ready-valid' if c['backend']=='streamed' and c.get('transpose','indexed')=='indexed' else 'next',
+                      '-transpose',c.get('transpose','indexed'),'-top',top]
                 if field['psi'] is not None:args+=['-psi',str(field['psi'])]
                 if c['backend']=='streamed':args+=['-pe',str(c['pe']),'-stage-groups',str(c['stage_groups'])]
                 terminal='intt' if inverse else 'ntt'
@@ -63,7 +64,7 @@ def generate(w,c,ngen,sgen,directory,timeout,executables=None):
             if process['returncode']:return dict(returncode=process['returncode'],processes=processes),directory/'SearchTop.sv'
             meta=json.loads(path.with_suffix('.json').read_text())
             if gen=='ngen':
-                meta['has_ready']=c['backend']=='stage-parallel';text=path.read_text()
+                meta['has_ready']=c['backend']=='stage-parallel' or c.get('transpose')=='switch';text=path.read_text()
                 for name in sorted(re.findall(r'^module\s+(\w+)',text,re.M),key=len,reverse=True):
                     if name!=top:text=re.sub(r'\b'+re.escape(name)+r'\b',top+'_'+name,text)
                 path.write_text(text)

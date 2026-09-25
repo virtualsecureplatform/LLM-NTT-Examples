@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        bash ca-certificates coreutils g++ git iverilog openjdk-17-jre-headless \
+        python3 python3-pip yosys
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export LANG=C.UTF-8
+
+%labels
+    Author LLM-NTT-Examples
+    Purpose N512 pre-route NGen/SGen grid with Icarus and Yosys

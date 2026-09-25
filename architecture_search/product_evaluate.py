@@ -138,9 +138,10 @@ def _parallel_large_fft(w,c,rtl,directory,timeout,simulator):
     return result
 
 
-def evaluate(w,c,rtl,directory,timeout,simulator='iverilog',*,_corpus=None,_first_pass=0,_end_pass=4):
+def evaluate(w,c,rtl,directory,timeout,simulator='iverilog',*,_corpus=None,_first_pass=0,_end_pass=4,
+             _output_map=None):
     started=time.monotonic(); directory=directory.resolve();directory.mkdir(parents=True,exist_ok=True)
-    if (_corpus is None and w.get('version')==2 and w['n']>=1024 and
+    if (_corpus is None and _output_map is None and w.get('version')==2 and w['n']>=1024 and
             c['generator']=='sgen' and simulator=='verilator'):
         return _parallel_large_fft(w,c,rtl,directory,timeout,simulator)
     corpus=products.vectors(w) if _corpus is None else _corpus
@@ -152,7 +153,8 @@ def evaluate(w,c,rtl,directory,timeout,simulator='iverilog',*,_corpus=None,_firs
         (directory/f'{name}.mem').write_text(''.join(packed(pair[index],products.input_width(w,name)) for pair in corpus))
     from .wide_products import schoolbook as wide_schoolbook
     oracle=(lambda a,b:wide_schoolbook(w,a,b)) if w.get('version')==2 else products.schoolbook
-    (directory/'expected.mem').write_text(''.join(packed(oracle(*pair),width) for pair in corpus))
+    (directory/'expected.mem').write_text(''.join(packed(
+        _output_map(oracle(*pair)) if _output_map is not None else oracle(*pair),width) for pair in corpus))
     watchdog=max(100000,len(corpus)*w['n']*w['n'].bit_length()*128)
     scalar=0;model_files=[]
     if c['generator']=='sgen' and w.get('version')==1:

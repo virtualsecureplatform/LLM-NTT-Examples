@@ -1,0 +1,23 @@
+name,backend,transpose,lanes,pe,radix,stage_groups,reduction,profile,quant_bits,error_bound,observed_max_abs_error,yosys_cells,latency_cycles,initiation_interval_cycles,throughput_products_per_1000_cycles,simulation_passed,yosys_passed,status
+ngen-streamed-l2-pe1-r2-s1-barrett-baseline-q0,streamed,indexed,2,1,2,1,barrett,baseline,0,0,0,1849587,8067,3390,0.2949852507374631,True,True,screened
+ngen-streamed-l2-pe1-r2-s1-barrett-baseline-q4,streamed,indexed,2,1,2,1,barrett,baseline,4,8,8,1849590,8067,3390,0.2949852507374631,True,True,screened
+ngen-streamed-l2-pe1-r2-s1-barrett-f300-q0,streamed,indexed,2,1,2,1,barrett,f300,0,0,0,1849587,8067,3390,0.2949852507374631,True,True,screened
+ngen-streamed-l2-pe1-r2-s1-montgomery-baseline-q0,streamed,indexed,2,1,2,1,montgomery,baseline,0,0,0,1849884,8147,3430,0.2915451895043732,True,True,screened
+ngen-streamed-l2-pe1-r2-s1-montgomery-baseline-q4,streamed,indexed,2,1,2,1,montgomery,baseline,4,8,8,1849887,8147,3430,0.2915451895043732,True,True,screened
+ngen-streamed-l2-pe1-r2-s1-shoup-baseline-q0,streamed,indexed,2,1,2,1,shoup,baseline,0,0,0,1849578,8067,3390,0.2949852507374631,True,True,screened
+ngen-streamed-l2-pe1-r2-s2-barrett-baseline-q0,streamed,indexed,2,1,2,2,barrett,baseline,0,0,0,2363622,9097,2080,0.4807692307692308,True,True,screened
+ngen-streamed-l2-pe1-r8-s1-barrett-baseline-q0,streamed,indexed,2,1,8,1,barrett,baseline,0,0,0,1998420,7686,4219,0.23702299123014933,True,True,screened
+ngen-streamed-l2-pe2-r2-s1-barrett-baseline-q0,streamed,indexed,2,2,2,1,barrett,baseline,0,0,0,1875903,5252,1983,0.5042864346949067,True,True,screened
+ngen-streamed-l2-pe2-r8-s1-barrett-baseline-q0,streamed,indexed,2,2,8,1,barrett,baseline,0,0,0,2667480,5004,2113,0.47326076668244205,True,True,screened
+ngen-streamed-l4-pe1-r2-s1-barrett-baseline-q0,streamed,indexed,4,1,2,1,barrett,baseline,0,0,0,4642020,7299,3134,0.3190810465858328,True,True,screened
+ngen-streamed-l4-pe1-r2-s1-barrett-f300-q0,streamed,indexed,4,1,2,1,barrett,f300,0,0,0,4642020,7299,3134,0.3190810465858328,True,True,screened
+ngen-streamed-l4-pe1-r2-s1-montgomery-baseline-q0,streamed,indexed,4,1,2,1,montgomery,baseline,0,0,0,4642317,7379,3174,0.315059861373661,True,True,screened
+ngen-streamed-l4-pe1-r2-s1-shoup-baseline-q0,streamed,indexed,4,1,2,1,shoup,baseline,0,0,0,4642011,7299,3134,0.3190810465858328,True,True,screened
+ngen-streamed-l4-pe1-r2-s2-barrett-baseline-q0,streamed,indexed,4,1,2,2,barrett,baseline,0,0,0,5191758,7817,1824,0.5482456140350878,True,True,screened
+ngen-streamed-l4-pe1-r8-s1-barrett-baseline-q0,streamed,indexed,4,1,8,1,barrett,baseline,0,0,0,4796388,6918,4219,0.23702299123014933,True,True,screened
+ngen-streamed-l4-pe2-r2-s1-barrett-baseline-q0,streamed,indexed,4,2,2,1,barrett,baseline,0,0,0,4650453,4484,1727,0.5790387955993052,True,True,screened
+ngen-streamed-l4-pe2-r8-s1-barrett-baseline-q0,streamed,indexed,4,2,8,1,barrett,baseline,0,0,0,5535234,4236,2113,0.47326076668244205,True,True,screened
+ngen-streamed-l4-pe2-r8-s1-barrett-baseline-q4,streamed,indexed,4,2,8,1,barrett,baseline,4,8,8,5535237,4236,2113,0.47326076668244205,True,True,screened
+ngen-stage-parallel-l2-pe1-r2-s1-barrett-baseline-q0,stage-parallel,indexed,2,1,2,1,barrett,baseline,0,0,0,,1818,521,1.9193857965451055,True,False,Yosys timeout
+ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline-q0,stage-parallel,indexed,4,1,2,1,barrett,baseline,0,0,0,,1306,256,3.90625,True,False,Yosys timeout
+ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline-q4,stage-parallel,indexed,4,1,2,1,barrett,baseline,4,8,8,,1306,256,3.90625,True,False,Yosys budget stop

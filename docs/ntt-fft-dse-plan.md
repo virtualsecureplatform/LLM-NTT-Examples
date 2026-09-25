@@ -113,11 +113,80 @@ Approximate workloads get separate frontiers. They cannot compete with exact
 workloads merely because their outputs are close. Likewise, a transform-only
 candidate cannot compete with a complete product.
 
+### N=512 bounded-error FHE-style pilot
+
+The next product campaign uses fresh-operand multiplication in
+`Z/2^w Z[x]/(x^512+1)`, with `w=32` first and `w=64` as a separately
+implemented and evaluated extension. The output is the low `w` bits of each
+coefficient. This is a FHE-style numerical study, not a claim that N=512 is a
+parameter of the pinned TFHEpp `lvl1` profile (which uses N=1024). Define
+operand ranges or distributions and the operation consuming the product before
+interpreting any error threshold as an FHE noise allowance. The current exact
+TFHEpp polynomial adapter and its exact regression remain a zero-error baseline.
+
+For each output, compare with an independent arbitrary-precision negacyclic
+product reduced modulo `2^w`. Report the centered modular difference
+`e_i = centered_mod(approx_i - exact_i, 2^w)` in integer torus units. Record
+`max |e_i|`, RMS error, signed bias, and tail counts at declared thresholds,
+for both adversarial vectors and a reproducible sample of the specified operand
+distribution. Record deterministic or analytical bounds separately from sampled
+results: a sample maximum is not a worst-case bound. Reject malformed outputs,
+protocol failures, overflow outside the declared arithmetic model, and
+violations of a declared hard error bound before resource ranking. When a
+concrete FHE operation is available, propagate arithmetic error through its
+decomposition, accumulation, and decryption test; set the accepted error budget
+from that operation's margin and target failure probability. Until then, report
+a sweep of *exploratory* bounds and do not label a candidate FHE-qualified.
+
+Use exact NGen/CRT products as the zero-error reference and evaluate any
+approximate NGen truncation or SGen fixed-point construction under the same
+input/output contract. Removing a CRT prime by itself does not establish a
+small modular error; each approximation needs an explicit numerical argument
+or measured error qualification. Keep 32-bit and 64-bit workloads, and
+different error budgets, in separate comparisons.
+
+Screen the larger configuration grid in stages:
+
+1. Generate each distinct complete product RTL and preserve the realized
+   architecture, hashes, tool versions, and numerical format. Validate its
+   arithmetic model and frame protocol; measure isolated latency and saturated
+   initiation interval in cycles using the same traffic pattern for both
+   generators.
+2. Run Yosys on the verified product top and retain normalized structural
+   counts (cells, registers, memory bits, multipliers) plus run time. Label
+   these as *Yosys estimates*, not U280 LUT/DSP/BRAM utilization or timing.
+   Calibrate their ranking against a small, deliberately diverse set of Vivado
+   synthesis results; preserve misses and generator failures.
+3. Construct a screening frontier over arithmetic error, estimated resource
+   cost, latency cycles, and initiation interval cycles. Enforce the declared
+   error bound and resource caps first. Use the full resource vector where
+   possible; if a scalar score is needed for acquisition, publish its weights
+   and retain the underlying counts. Route the nondominated set plus a bounded
+   near-front and architecture-diverse sample, because Yosys estimates and
+   unrouted cycle counts can misorder U280 implementations.
+4. Run U280 place and route only for that shortlist. Recompute the final
+   frontier from routed LUT/FF/DSP/BRAM/URAM, routed latency, and completed
+   products per second at a timing-qualified clock period. Report the
+   qualification and measurement stage of every point; an unrouted point may
+   appear on the screening frontier but cannot be a routed winner.
+
+The implementation units are an approximate workload/error schema, independent
+error and protocol measurements, a reproducible Yosys product stage, and
+budgeted multi-objective route selection/reporting. The current version-2
+product validator admits only `certified-exact` 32-bit contracts; its exact
+behavior should remain intact while this new contract is added. The existing
+product runner's `synthesis` stage is Vivado synthesis, and its current route
+selection uses minimum LUT and minimum frame interval per generator. Neither
+stage should silently acquire a new meaning when adding Yosys screening.
+The first runnable pre-route pilot and its limits are documented in
+[the N=512 example](fhe512-preroute-example.md).
+
 Use independent arbitrary-precision schoolbook convolution for small cases,
 with cyclic/negacyclic folding. For larger workloads use an independent exact
 convolution implementation cross-checked against schoolbook on smaller sizes;
 never import generated twiddle tables as the reference. Application-specific
-TFHE/torus error contracts are a later extension, not an inferred tolerance.
+TFHE/torus error limits must come from the selected operation and parameters,
+not from the generic polynomial-product test alone.
 
 ## Candidate architecture and generator coverage
 

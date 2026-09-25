@@ -1,0 +1,128 @@
+{
+  "limitation": "Yosys generic cells and cycle counts only; no U280 resources, clock, or FHE noise qualification",
+  "points": [
+    {
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "barrett",
+        "stage_groups": 1,
+        "transpose": "switch"
+      },
+      "initiation_interval_cycles": 3906,
+      "latency_cycles": 8585,
+      "max_abs_error": 0,
+      "name": "ngen-streamed-l2-pe1-r2-s1-barrett-baseline-switch-q0",
+      "observed_max_abs_error": 0,
+      "passed": true,
+      "quant_bits": 0,
+      "rtl_sha256": "ec67b110988dcaed179c04060ecf234f3954143f40bd24b2249390e467efffb8",
+      "simulation_passed": true,
+      "throughput_products_per_1000_cycles": 0.2560163850486431,
+      "yosys_cells": 3941550,
+      "yosys_passed": true,
+      "yosys_returncode": 0,
+      "yosys_timed_out": false
+    },
+    {
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 2,
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "barrett",
+        "stage_groups": 1,
+        "transpose": "switch"
+      },
+      "initiation_interval_cycles": 2499,
+      "latency_cycles": 5770,
+      "max_abs_error": 0,
+      "name": "ngen-streamed-l2-pe2-r2-s1-barrett-baseline-switch-q0",
+      "observed_max_abs_error": 0,
+      "passed": true,
+      "quant_bits": 0,
+      "rtl_sha256": "772e028cee028d2f3faf63958a85544ca1477ec4e8dbe1b14593d95447ef1c99",
+      "simulation_passed": true,
+      "throughput_products_per_1000_cycles": 0.4001600640256102,
+      "yosys_cells": 3967110,
+      "yosys_passed": true,
+      "yosys_returncode": 0,
+      "yosys_timed_out": false
+    }
+  ],
+  "schema": "fhe512-switch-smoke-evidence-v1",
+  "summary": {
+    "axis_values": {
+      "backend": [
+        "streamed"
+      ],
+      "lanes": [
+        "2"
+      ],
+      "pe": [
+        "1",
+        "2"
+      ],
+      "profile": [
+        "baseline"
+      ],
+      "radix": [
+        "2"
+      ],
+      "reduction": [
+        "barrett"
+      ],
+      "stage_groups": [
+        "1"
+      ],
+      "transpose": [
+        "switch"
+      ]
+    },
+    "complete": true,
+    "exact_points": 2,
+    "failed_points": 0,
+    "frontier": [
+      "ngen-streamed-l2-pe1-r2-s1-barrett-baseline-switch-q0",
+      "ngen-streamed-l2-pe2-r2-s1-barrett-baseline-switch-q0"
+    ],
+    "grid": "smoke",
+    "image_sha256": "032846f89000e20dbe6dadeb7ecbcfcd2eb484bef6db5581776baf62711a1e7a",
+    "passed_points": 2,
+    "planned_architectures": 2,
+    "planned_points": 2,
+    "recorded_points": 2,
+    "schema": "fhe512-preroute-summary-v1",
+    "simulation_passed": 2,
+    "unique_rtl_hashes": 2,
+    "verified_rtl_hashes": 2,
+    "yosys_passed": 2,
+    "yosys_sha256": "a19f19c0514127cfe1ad98952813d7057db80dd0373a8f777ddb446b78bcbeff"
+  },
+  "workload": {
+    "a_range": [
+      -2147483647,
+      2147483647
+    ],
+    "b_range": [
+      -2147483647,
+      2147483647
+    ],
+    "correctness": "certified-exact",
+    "kind": "polynomial_product",
+    "lanes": 2,
+    "modulus": 4294967296,
+    "n": 512,
+    "operands": "fresh",
+    "ring": "negacyclic",
+    "version": 2
+  }
+}

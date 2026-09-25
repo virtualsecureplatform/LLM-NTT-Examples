@@ -1,0 +1,3 @@
+name,backend,transpose,lanes,pe,radix,stage_groups,reduction,profile,quant_bits,error_bound,observed_max_abs_error,yosys_cells,latency_cycles,initiation_interval_cycles,throughput_products_per_1000_cycles,simulation_passed,yosys_passed,status
+ngen-streamed-l2-pe1-r2-s1-barrett-baseline-switch-q0,streamed,switch,2,1,2,1,barrett,baseline,0,0,0,3941550,8585,3906,0.2560163850486431,True,True,screened
+ngen-streamed-l2-pe2-r2-s1-barrett-baseline-switch-q0,streamed,switch,2,2,2,1,barrett,baseline,0,0,0,3967110,5770,2499,0.4001600640256102,True,True,screened
