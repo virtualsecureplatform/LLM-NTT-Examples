@@ -39,7 +39,8 @@ def rows(paths):
             elif point['yosys_passed']:
                 status = 'screened'
             elif point.get('yosys_timed_out'):
-                status = f"Yosys timeout ({point['yosys_seconds']:.0f}s)"
+                elapsed_minutes = round(point['yosys_seconds'] / 60)
+                status = f'Yosys timeout (~{elapsed_minutes * 60}s)'
             elif point.get('yosys_returncode') == -15:
                 status = 'Yosys budget stop'
             else:

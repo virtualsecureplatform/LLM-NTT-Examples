@@ -154,9 +154,10 @@ point. Five exact NGen designs form the resource-qualified frontier:
 The four output-rounded variants did not enter the frontier. Both exact
 stage-parallel products passed simulation: the 2-lane point measured a
 521-cycle interval, and the 4-lane point measured 1,306 latency cycles and
-a 256-cycle interval. Their Yosys passes timed out after 900 seconds before
-producing cell counts, so they cannot be compared for resource-constrained
-selection. The rounded 4-lane stage-parallel Yosys pass was stopped after
+a 256-cycle interval. Their initial Yosys passes timed out after 900 seconds;
+a second pass with a 3,600-second limit also timed out before producing cell
+counts, so they cannot be compared for resource-constrained selection. The
+rounded 4-lane stage-parallel Yosys pass was stopped after
 the matching exact core timed out. This budget stop is recorded separately
 from a tool failure. These results motivate a more scalable resource
 estimator for stage-parallel hardware before promoting it into a routed
@@ -204,6 +205,33 @@ python3 scripts/report_fhe512_transpose_matrix.py \
   --output-csv docs/measured-evidence/fhe512-transpose-matrix.csv
 ```
 
+To extend Yosys screening for the four simulated stage-parallel points without
+repeating generation or RTL simulation, use the pinned Apptainer image and the
+existing campaign directories:
+
+```bash
+apptainer exec --cleanenv --no-home --pwd "$(pwd)" --bind "$(pwd):$(pwd)" \
+  build/research-tools.sif python3 scripts/refresh_fhe512_yosys.py \
+  --output-dir build/fhe512-covering --timeout 3600 --configuration-names \
+  ngen-stage-parallel-l2-pe1-r2-s1-barrett-baseline \
+  ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline
+apptainer exec --cleanenv --no-home --pwd "$(pwd)" --bind "$(pwd):$(pwd)" \
+  build/research-tools.sif python3 scripts/refresh_fhe512_yosys.py \
+  --output-dir build/fhe512-switch-extension --timeout 3600 --configuration-names \
+  ngen-stage-parallel-l2-pe1-r2-s1-barrett-baseline-switch \
+  ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline-switch
+python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-covering \
+  --evidence-file docs/measured-evidence/fhe512-covering.json
+python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-switch-extension \
+  --evidence-file docs/measured-evidence/fhe512-switch-extension.json
+python3 scripts/report_fhe512_transpose_matrix.py \
+  docs/measured-evidence/fhe512-covering.json \
+  docs/measured-evidence/fhe512-switch-smoke.json \
+  docs/measured-evidence/fhe512-switch-extension.json \
+  --output-md docs/measured-evidence/fhe512-transpose-matrix.md \
+  --output-csv docs/measured-evidence/fhe512-transpose-matrix.csv
+```
+
 | Backend | Lanes | PE | Boundary | Error bound | Coarse Yosys cells | Latency cycles | Frame interval cycles | Products / 1,000 cycles | Status |
 | --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | streamed | 2 | 1 | indexed | 0 | 1,849,587 | 8,067 | 3,390 | 0.295 | screened |
@@ -214,13 +242,15 @@ python3 scripts/report_fhe512_transpose_matrix.py \
 | streamed | 4 | 1 | switch | 0 | 8,803,581 | 7,561 | 3,394 | 0.295 | screened |
 | streamed | 4 | 2 | indexed | 0 | 4,650,453 | 4,484 | 1,727 | 0.579 | screened |
 | streamed | 4 | 2 | switch | 0 | 8,812,014 | 4,746 | 1,987 | 0.503 | screened |
-| stage-parallel | 2 | — | indexed | 0 | — | 1,818 | 521 | 1.919 | Yosys timeout (900 s) |
-| stage-parallel | 2 | — | switch | 0 | — | 2,846 | 1,037 | 0.964 | Yosys timeout (240 s) |
-| stage-parallel | 4 | — | indexed | 0 | — | 1,306 | 256 | 3.906 | Yosys timeout (900 s) |
-| stage-parallel | 4 | — | switch | 0 | — | 1,822 | 525 | 1.905 | Yosys timeout (240 s) |
+| stage-parallel | 2 | — | indexed | 0 | — | 1,818 | 521 | 1.919 | Yosys timeout (3,600 s) |
+| stage-parallel | 2 | — | switch | 0 | — | 2,846 | 1,037 | 0.964 | Yosys timeout (3,600 s) |
+| stage-parallel | 4 | — | indexed | 0 | — | 1,306 | 256 | 3.906 | Yosys timeout (3,600 s) |
+| stage-parallel | 4 | — | switch | 0 | — | 1,822 | 525 | 1.905 | Yosys timeout (3,600 s) |
 
 The buffered rectangular transpose increases both generic-cell count and frame
 interval for the streamed points. Stage-parallel resource usage remains
-unmeasured: Yosys timed out for the indexed points after 900 seconds and for
-the switch points after 240 seconds. An FPGA memory implementation, a more
+unmeasured: all four full-product Yosys runs timed out with a 3,600-second
+limit while still translating generated RTL for the third CRT prime. The
+stage-parallel RTL needs a more scalable synthesis representation before these
+rows can be ranked by resource usage. An FPGA memory implementation, a more
 overlapped wrapper, and routed timing may change these trade-offs.

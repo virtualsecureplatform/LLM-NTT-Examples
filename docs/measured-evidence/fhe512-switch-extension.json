@@ -84,7 +84,7 @@
       "yosys_cells": null,
       "yosys_passed": false,
       "yosys_returncode": 124,
-      "yosys_seconds": 240.12735280499328,
+      "yosys_seconds": 3601.0815611599974,
       "yosys_timed_out": true
     },
     {
@@ -112,7 +112,7 @@
       "yosys_cells": null,
       "yosys_passed": false,
       "yosys_returncode": 124,
-      "yosys_seconds": 240.17687412899977,
+      "yosys_seconds": 3600.9313301270013,
       "yosys_timed_out": true
     }
   ],
