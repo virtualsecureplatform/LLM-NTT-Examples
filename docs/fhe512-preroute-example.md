@@ -157,12 +157,11 @@ stage-parallel products passed simulation: the 2-lane point measured a
 a 256-cycle interval. Their initial Yosys passes timed out after 900 seconds;
 a second pass with a 3,600-second limit also timed out. A third pass with a
 7,200-second limit completed RTL translation but timed out during Yosys
-process expansion before producing cell counts, so they cannot be compared
-for resource-constrained selection. The rounded 4-lane stage-parallel Yosys
+process expansion before producing cell counts. These measurements used the
+earlier procedural Barrett lowering; the structural rerun below now provides
+counts for the exact points. The rounded 4-lane stage-parallel Yosys
 pass was stopped after the matching exact core timed out. This budget stop
-is recorded separately from a tool failure. These results motivate a more
-scalable resource estimator for stage-parallel hardware before promoting it
-into a routed shortlist.
+is recorded separately from a tool failure.
 
 ## Rectangular switch-transpose comparison
 
@@ -170,12 +169,16 @@ The exact radix-2 Barrett baseline comparison now covers streamed PE=1/2 and
 stage-parallel at both 2 and 4 lanes, with indexed and switch boundaries. The
 `switch` boundary uses rate-preserving rectangular frame buffers at each NTT
 input and output, not the lower-latency recursive network used for square
-streams. All 12 points passed the same 12-frame exact-product RTL check; eight
-completed coarse Yosys screening. The [full 12-point matrix](measured-evidence/fhe512-transpose-matrix.md)
+streams. All 12 points passed the same 12-frame exact-product RTL check and
+completed coarse Yosys screening after the Barrett lowering was revised. The
+[full 12-point matrix](measured-evidence/fhe512-transpose-matrix.md)
 and [sortable CSV](measured-evidence/fhe512-transpose-matrix.csv) combine the
 [indexed covering evidence](measured-evidence/fhe512-covering.json),
 [2-lane switch evidence](measured-evidence/fhe512-switch-smoke.json), and
-[4-lane/stage-parallel switch evidence](measured-evidence/fhe512-switch-extension.json).
+[4-lane/stage-parallel switch evidence](measured-evidence/fhe512-switch-extension.json),
+plus the four structural rerun snapshots linked below. Streamed rows use the
+earlier NGen RTL; stage-parallel rows use NGen commit `0f630fa`. The workload
+and Yosys 0.50 coarse-memory-lowered script are the same.
 
 ```bash
 scripts/run_fhe512_preroute.sh --grid smoke --transposes switch \
@@ -184,9 +187,10 @@ python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-switch-512 \
   --evidence-file docs/measured-evidence/fhe512-switch-smoke.json
 ```
 
-The four additional switch points use the following command. The selected
-configurations and tool hashes are recorded in
-`build/fhe512-switch-extension/manifest.json` when run locally.
+The original switch extension used the following command with NGen commit
+`5b04b94`. Its stage-parallel rows are superseded by the structural rerun
+below; the selected configurations and tool hashes remain in the original
+evidence snapshot.
 
 ```bash
 scripts/run_fhe512_preroute.sh --grid covering --transposes switch \
@@ -198,40 +202,46 @@ scripts/run_fhe512_preroute.sh --grid covering --transposes switch \
   ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline-switch
 python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-switch-extension \
   --evidence-file docs/measured-evidence/fhe512-switch-extension.json
-python3 scripts/report_fhe512_transpose_matrix.py \
-  docs/measured-evidence/fhe512-covering.json \
-  docs/measured-evidence/fhe512-switch-smoke.json \
-  docs/measured-evidence/fhe512-switch-extension.json \
-  --output-md docs/measured-evidence/fhe512-transpose-matrix.md \
-  --output-csv docs/measured-evidence/fhe512-transpose-matrix.csv
 ```
 
-To extend Yosys screening for the four simulated stage-parallel points without
-repeating generation or RTL simulation, use the pinned Apptainer image and the
-existing campaign directories:
+NGen commit `0f630fa` emits structural Barrett butterflies and shares capture
+and output multipliers per lane. The four exact stage-parallel configurations
+then completed the same full-product Yosys script in 334–481 seconds. Run them
+from a checkout with that NGen submodule commit using the pinned Apptainer
+launcher:
 
 ```bash
-apptainer exec --cleanenv --no-home --pwd "$(pwd)" --bind "$(pwd):$(pwd)" \
-  build/research-tools.sif python3 scripts/refresh_fhe512_yosys.py \
-  --output-dir build/fhe512-covering --timeout 7200 --configuration-names \
-  ngen-stage-parallel-l2-pe1-r2-s1-barrett-baseline \
-  ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline
-apptainer exec --cleanenv --no-home --pwd "$(pwd)" --bind "$(pwd):$(pwd)" \
-  build/research-tools.sif python3 scripts/refresh_fhe512_yosys.py \
-  --output-dir build/fhe512-switch-extension --timeout 7200 --configuration-names \
-  ngen-stage-parallel-l2-pe1-r2-s1-barrett-baseline-switch \
-  ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline-switch
-python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-covering \
-  --evidence-file docs/measured-evidence/fhe512-covering.json
-python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-switch-extension \
-  --evidence-file docs/measured-evidence/fhe512-switch-extension.json
+for lanes in 2 4; do
+  for transpose in indexed switch; do
+    suffix=
+    if [ "$transpose" = switch ]; then suffix=-switch; fi
+    name="ngen-stage-parallel-l${lanes}-pe1-r2-s1-barrett-baseline${suffix}"
+    output="build/fhe512-structural-v3-l${lanes}-${transpose}"
+    scripts/run_fhe512_preroute.sh --grid covering --n 512 \
+      --transposes "$transpose" --quant-bits 0 --timeout 1200 \
+      --output-dir "$output" --configuration-names "$name"
+    python3 scripts/report_fhe512_preroute.py --output-dir "$output" \
+      --evidence-file "docs/measured-evidence/fhe512-structural-l${lanes}-${transpose}.json"
+  done
+done
 python3 scripts/report_fhe512_transpose_matrix.py \
   docs/measured-evidence/fhe512-covering.json \
   docs/measured-evidence/fhe512-switch-smoke.json \
   docs/measured-evidence/fhe512-switch-extension.json \
+  docs/measured-evidence/fhe512-structural-l2-indexed.json \
+  docs/measured-evidence/fhe512-structural-l2-switch.json \
+  docs/measured-evidence/fhe512-structural-l4-indexed.json \
+  docs/measured-evidence/fhe512-structural-l4-switch.json \
+  --prefer-later \
   --output-md docs/measured-evidence/fhe512-transpose-matrix.md \
   --output-csv docs/measured-evidence/fhe512-transpose-matrix.csv
 ```
+
+The four new snapshots are
+[2-lane indexed](measured-evidence/fhe512-structural-l2-indexed.json),
+[2-lane switch](measured-evidence/fhe512-structural-l2-switch.json),
+[4-lane indexed](measured-evidence/fhe512-structural-l4-indexed.json), and
+[4-lane switch](measured-evidence/fhe512-structural-l4-switch.json).
 
 | Backend | Lanes | PE | Boundary | Error bound | Coarse Yosys cells | Latency cycles | Frame interval cycles | Products / 1,000 cycles | Status |
 | --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |
@@ -243,15 +253,15 @@ python3 scripts/report_fhe512_transpose_matrix.py \
 | streamed | 4 | 1 | switch | 0 | 8,803,581 | 7,561 | 3,394 | 0.295 | screened |
 | streamed | 4 | 2 | indexed | 0 | 4,650,453 | 4,484 | 1,727 | 0.579 | screened |
 | streamed | 4 | 2 | switch | 0 | 8,812,014 | 4,746 | 1,987 | 0.503 | screened |
-| stage-parallel | 2 | — | indexed | 0 | — | 1,818 | 521 | 1.919 | Yosys timeout (7,200 s) |
-| stage-parallel | 2 | — | switch | 0 | — | 2,846 | 1,037 | 0.964 | Yosys timeout (7,200 s) |
-| stage-parallel | 4 | — | indexed | 0 | — | 1,306 | 256 | 3.906 | Yosys timeout (7,200 s) |
-| stage-parallel | 4 | — | switch | 0 | — | 1,822 | 525 | 1.905 | Yosys timeout (7,200 s) |
+| stage-parallel | 2 | — | indexed | 0 | 1,943,319 | 1,818 | 521 | 1.919 | screened |
+| stage-parallel | 2 | — | switch | 0 | 4,036,146 | 2,846 | 1,037 | 0.964 | screened |
+| stage-parallel | 4 | — | indexed | 0 | 4,701,051 | 1,306 | 256 | 3.906 | screened |
+| stage-parallel | 4 | — | switch | 0 | 8,866,410 | 1,822 | 525 | 1.905 | screened |
 
 The buffered rectangular transpose increases both generic-cell count and frame
-interval for the streamed points. Stage-parallel resource usage remains
-unmeasured: all four full-product Yosys runs timed out with a 7,200-second
-limit during process expansion after RTL translation. The stage-parallel RTL
-needs a more scalable synthesis representation before these rows can be ranked
-by resource usage. An FPGA memory implementation, a more overlapped wrapper,
-and routed timing may change these trade-offs.
+interval. The revised stage-parallel RTL now gives a complete coarse screening
+comparison: the two indexed stage-parallel points cost about 94,000 and 51,000
+more generic cells than the corresponding streamed PE=1 and PE=2 points,
+respectively, while producing frames much more often. Generic Yosys cells are
+not FPGA LUTs, DSPs, or BRAMs. An FPGA memory implementation, a more overlapped
+wrapper, and routed timing may change these trade-offs.

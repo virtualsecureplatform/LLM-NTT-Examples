@@ -13,7 +13,7 @@ EXPECTED = {(backend, lanes, pe, transpose)
             for transpose in ('indexed', 'switch')}
 
 
-def rows(paths):
+def rows(paths, prefer_later=False):
     found = {}
     for path in paths:
         evidence = json.loads(path.read_text())
@@ -32,7 +32,7 @@ def rows(paths):
                    c.get('transpose', 'indexed'))
             if key not in EXPECTED:
                 continue
-            if key in found:
+            if key in found and not prefer_later:
                 raise ValueError(f'duplicate configuration {key}')
             if not point['simulation_passed']:
                 status = 'simulation failed'
@@ -83,10 +83,12 @@ def markdown(points):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('evidence', type=Path, nargs='+')
+    parser.add_argument('--prefer-later', action='store_true',
+                        help='replace duplicate configurations with later evidence files')
     parser.add_argument('--output-md', type=Path, required=True)
     parser.add_argument('--output-csv', type=Path, required=True)
     args = parser.parse_args()
-    points = rows(args.evidence)
+    points = rows(args.evidence, prefer_later=args.prefer_later)
     args.output_md.write_text(markdown(points))
     with args.output_csv.open('w', newline='') as output:
         writer = csv.DictWriter(output, fieldnames=list(points[0]), lineterminator='\n')

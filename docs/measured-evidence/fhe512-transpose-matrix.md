@@ -12,7 +12,7 @@ All rows are exact 32-bit-torus negacyclic polynomial products with radix 2, Bar
 | streamed | 4 | 1 | switch | 0 | 0 | 8,803,581 | 7,561 | 3,394 | 0.295 | screened |
 | streamed | 4 | 2 | indexed | 0 | 0 | 4,650,453 | 4,484 | 1,727 | 0.579 | screened |
 | streamed | 4 | 2 | switch | 0 | 0 | 8,812,014 | 4,746 | 1,987 | 0.503 | screened |
-| stage-parallel | 2 | — | indexed | 0 | 0 | — | 1,818 | 521 | 1.919 | Yosys timeout (~7200s) |
-| stage-parallel | 2 | — | switch | 0 | 0 | — | 2,846 | 1,037 | 0.964 | Yosys timeout (~7200s) |
-| stage-parallel | 4 | — | indexed | 0 | 0 | — | 1,306 | 256 | 3.906 | Yosys timeout (~7200s) |
-| stage-parallel | 4 | — | switch | 0 | 0 | — | 1,822 | 525 | 1.905 | Yosys timeout (~7200s) |
+| stage-parallel | 2 | — | indexed | 0 | 0 | 1,943,319 | 1,818 | 521 | 1.919 | screened |
+| stage-parallel | 2 | — | switch | 0 | 0 | 4,036,146 | 2,846 | 1,037 | 0.964 | screened |
+| stage-parallel | 4 | — | indexed | 0 | 0 | 4,701,051 | 1,306 | 256 | 3.906 | screened |
+| stage-parallel | 4 | — | switch | 0 | 0 | 8,866,410 | 1,822 | 525 | 1.905 | screened |
