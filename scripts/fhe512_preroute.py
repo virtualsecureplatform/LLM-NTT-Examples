@@ -110,7 +110,7 @@ def configurations(w, include_sgen, grid='smoke', transposes=('indexed',)):
                                        reductions=['barrett', 'montgomery', 'shoup'], profiles=['baseline', 'f300']))
         def selected(c):
             if c['backend'] == 'stage-parallel':
-                return c['reduction'] == 'barrett' and c['profile'] == 'baseline'
+                return c['reduction'] in ('barrett', 'montgomery', 'shoup') and c['profile'] == 'baseline'
             standard = c['reduction'] == 'barrett' and c['profile'] == 'baseline' and c['stage_groups'] == 1
             reduction = (c['reduction'] in ('montgomery', 'shoup') and c['profile'] == 'baseline'
                          and c['stage_groups'] == 1 and c['pe'] == 1 and c['radix'] == 2)
@@ -157,7 +157,7 @@ def main(argv=None):
     p.add_argument('--quant-bits', type=int, nargs='+', default=[0, 4], help='output quantization grid')
     p.add_argument('--include-sgen', action='store_true', help='add exact split-FFT baseline; may be costly')
     p.add_argument('--grid', choices=['smoke', 'covering'], default='smoke',
-                   help='covering selects 18 NGen architectures and four error variants')
+                   help='covering selects 22 NGen architectures and six error variants')
     p.add_argument('--transposes', nargs='+', choices=['indexed', 'switch'], default=['indexed'],
                    help='NGen boundary transpose choices; switch uses a rectangular buffered adapter at N=512')
     p.add_argument('--configuration-names', nargs='+',

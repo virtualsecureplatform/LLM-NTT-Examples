@@ -34,10 +34,16 @@ def test_quantized_wrapper_has_two_lanes():
 def test_covering_grid_is_distinct_and_budgeted():
     w = wide.workload(512, 2147483647, 'negacyclic', 1 << 32)
     configs = configurations(w, False, 'covering')
-    assert len(configs) == len(set(map(configuration_name, configs))) == 18
-    assert sum(quantization_points(c, 4, 'covering') for c in configs) == 4
+    assert len(configs) == len(set(map(configuration_name, configs))) == 22
+    assert sum(quantization_points(c, 4, 'covering') for c in configs) == 6
     assert {c['backend'] for c in configs} == {'streamed', 'stage-parallel'}
     assert {c['reduction'] for c in configs} == {'barrett', 'montgomery', 'shoup'}
+    assert {c['reduction'] for c in configs if c['backend'] == 'stage-parallel'} == {'barrett', 'montgomery', 'shoup'}
+    both = configurations(w, False, 'covering', ('indexed', 'switch'))
+    assert len(both) == 2 * len(configs)
+    assert {(c['reduction'], c.get('transpose', 'indexed')) for c in both if c['backend'] == 'stage-parallel'} == {
+        (reduction, transpose) for reduction in ('barrett', 'montgomery', 'shoup')
+        for transpose in ('indexed', 'switch')}
 
 
 def test_switch_transpose_is_a_distinct_search_axis():

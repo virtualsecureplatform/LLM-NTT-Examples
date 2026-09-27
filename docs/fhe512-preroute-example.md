@@ -19,7 +19,7 @@ scripts/run_fhe512_preroute.sh --output-dir build/fhe512-preroute
 ```
 
 The four-point command is a toolchain smoke campaign. For a broader pre-route
-search, run the 22-point covering grid in a separate directory:
+search, run the current 28-point covering grid in a separate directory:
 
 ```bash
 scripts/run_fhe512_preroute.sh --grid covering \
@@ -29,7 +29,7 @@ python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-covering \
   --evidence-file docs/measured-evidence/fhe512-covering.json
 ```
 
-The checked-in 22-point campaign uses indexed stream boundaries. To compare
+The earlier checked-in 22-point campaign uses indexed stream boundaries. To compare
 the rectangular switch-transpose boundary against the same NGen architectures,
 select `--transposes indexed switch` in a new output directory. The switch
 choice adds rate-preserving input and output tensor-buffer adapters and has a
@@ -42,10 +42,10 @@ scripts/run_fhe512_preroute.sh --grid smoke --quant-bits 0 \
 python3 scripts/report_fhe512_preroute.py --output-dir build/fhe512-transpose-smoke
 ```
 
-The covering grid contains 18 NGen configurations: streamed and
+The current covering grid contains 22 NGen configurations: streamed and
 stage-parallel backends, two lane counts, PE=1/2, radix 2/8, stage grouping
 1/2, Barrett/Montgomery/Shoup reductions, and baseline/f300 profiles.
-Four representative architectures also receive the bounded-error output
+Six representative architectures also receive the bounded-error output
 variant. This is a documented subset of the 112 configurations admitted by
 the current N=512 planner, not an exhaustive sweep. The runner preserves
 generator or verification failures and records RTL hashes so distinct emitted
@@ -265,3 +265,76 @@ more generic cells than the corresponding streamed PE=1 and PE=2 points,
 respectively, while producing frames much more often. Generic Yosys cells are
 not FPGA LUTs, DSPs, or BRAMs. An FPGA memory implementation, a more overlapped
 wrapper, and routed timing may change these trade-offs.
+
+## Reduction and boundary-transpose comparison
+
+Reduction and boundary transpose are independent NGen choices. The expanded
+exact-product matrix crosses Barrett, Montgomery, and Shoup with indexed and
+switch boundaries for both 2 and 4 lanes. It includes streamed PE=1 for every
+reduction, streamed PE=2 for Barrett, and stage-parallel for every reduction:
+28 configurations in total. Every row uses the same N=512, 32-bit-torus
+negacyclic workload and radix-2 baseline profile. The
+[full reduction matrix](measured-evidence/fhe512-reduction-matrix.md) and
+[sortable CSV](measured-evidence/fhe512-reduction-matrix.csv) give per-configuration
+arithmetic error, coarse Yosys cells, latency, frame interval, and throughput
+in products per 1,000 cycles. The matrix combines the earlier Barrett and
+indexed streamed-reduction snapshots with the twelve new full-product runs.
+All 28 rows passed the 12-frame RTL check and Yosys screening, had zero
+observed error, and emitted distinct RTL hashes. The new stage-parallel
+Montgomery and Shoup rows are measured with the updated structural lowering;
+the earlier Barrett stage-parallel rows use NGen commit `0f630fa` and the
+streamed rows come from the earlier covering and switch campaigns.
+
+At 2 lanes with an indexed boundary, stage-parallel Montgomery uses 1,818,831
+coarse cells and emits a product every 521 cycles; Shoup uses 1,833,987 cells
+at the same interval, and Barrett uses 1,943,319. At 4 lanes, the corresponding
+indexed counts are 4,576,491, 4,591,443, and 4,701,051, each with a 256-cycle
+interval. Switching the 4-lane stage-parallel boundary adds about 4.17 million
+coarse cells and changes the interval to 525 cycles for all three reductions.
+The reduction choice changes the arithmetic resource estimate but not that
+stage-parallel schedule; the buffered boundary changes both resources and
+rate. These counts are screening estimates, not a prediction of routed U280
+area or clock frequency.
+
+From a checkout with the updated NGen submodule, reproduce the new runs in
+the pinned Apptainer image and regenerate the table with:
+
+```bash
+for reduction in montgomery shoup; do
+  for lanes in 2 4; do
+    for transpose in indexed switch; do
+      suffix=
+      if [ "$transpose" = switch ]; then suffix=-switch; fi
+      name="ngen-stage-parallel-l${lanes}-pe1-r2-s1-${reduction}-baseline${suffix}"
+      output="build/fhe512-reduction-stage-${reduction}-l${lanes}-${transpose}"
+      scripts/run_fhe512_preroute.sh --grid covering --n 512 \
+        --transposes "$transpose" --quant-bits 0 --timeout 1200 \
+        --output-dir "$output" --configuration-names "$name"
+      python3 scripts/report_fhe512_preroute.py --output-dir "$output" \
+        --evidence-file "docs/measured-evidence/fhe512-reduction-stage-${reduction}-l${lanes}-${transpose}.json"
+    done
+    name="ngen-streamed-l${lanes}-pe1-r2-s1-${reduction}-baseline-switch"
+    output="build/fhe512-reduction-streamed-${reduction}-l${lanes}-switch"
+    scripts/run_fhe512_preroute.sh --grid covering --n 512 \
+      --transposes switch --quant-bits 0 --timeout 1200 \
+      --output-dir "$output" --configuration-names "$name"
+    python3 scripts/report_fhe512_preroute.py --output-dir "$output" \
+      --evidence-file "docs/measured-evidence/fhe512-reduction-streamed-${reduction}-l${lanes}-switch.json"
+  done
+done
+python3 scripts/report_fhe512_transpose_matrix.py \
+  docs/measured-evidence/fhe512-covering.json \
+  docs/measured-evidence/fhe512-switch-smoke.json \
+  docs/measured-evidence/fhe512-switch-extension.json \
+  docs/measured-evidence/fhe512-structural-l{2,4}-{indexed,switch}.json \
+  docs/measured-evidence/fhe512-reduction-*.json \
+  --prefer-later --reductions barrett montgomery shoup \
+  --output-md docs/measured-evidence/fhe512-reduction-matrix.md \
+  --output-csv docs/measured-evidence/fhe512-reduction-matrix.csv
+```
+
+Montgomery and Shoup stage-parallel NTTs use structural butterfly arithmetic
+and shared per-lane boundary multipliers so that the full product can pass
+Yosys process lowering. The matrix is a coarse pre-route comparison; its cell
+counts are not U280 resources and its cycle rates cannot be converted to
+products per second without timing-qualified implementation.
