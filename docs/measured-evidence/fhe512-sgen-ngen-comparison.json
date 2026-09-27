@@ -1,0 +1,45 @@
+{
+  "points": [
+    {
+      "counts": {
+        "cells": 18963,
+        "memory_bits": 3192708,
+        "memory_blocks": 81,
+        "multipliers": 111,
+        "operators": 17734,
+        "register_bits": 28128
+      },
+      "initiation_interval_cycles": 3390,
+      "latency_cycles": 8067,
+      "name": "ngen-streamed-l2-pe1-r2-s1-shoup-baseline-q0",
+      "rtl_sha256": "a1b24d2600ffd96487cf0cdb4f1379e088e467e107930d7a0bf76e059f19c5cf",
+      "source_campaign": "build/fhe512-covering/all-points.csv",
+      "throughput_products_per_1000_cycles": 0.2949852507374631,
+      "yosys_netlist_sha256": "247b337359671cdb06528942dd4c36194dfd7c4491a432fc018b4873cc999386",
+      "yosys_script_sha256": "876750e9397cdda95f66e7b51ecad70dbada2807b7a08f68020d68e7dc531189",
+      "yosys_sha256": "a19f19c0514127cfe1ad98952813d7057db80dd0373a8f777ddb446b78bcbeff"
+    },
+    {
+      "counts": {
+        "cells": 656424,
+        "memory_bits": 591360,
+        "memory_blocks": 36,
+        "multipliers": 62454,
+        "operators": 651370,
+        "register_bits": 128985
+      },
+      "initiation_interval_cycles": 521,
+      "latency_cycles": 1818,
+      "name": "ngen-stage-parallel-l2-pe1-r2-s1-montgomery-baseline-q0",
+      "rtl_sha256": "58367c1c99d623c28e041c7a03523809540b3d351a26cf7eda83810fdd50de33",
+      "source_campaign": "build/fhe512-reduction-stage-montgomery-l2-indexed/all-points.csv",
+      "throughput_products_per_1000_cycles": 1.9193857965451055,
+      "yosys_netlist_sha256": "472f806c95de7d51672a4f985454533aa68bf510d0a5a8639c28093ffa3cea4e",
+      "yosys_script_sha256": "998f2101382e5145cae3f4ef452b256bbd34768abc564c5f33cea78bda3df765",
+      "yosys_sha256": "a19f19c0514127cfe1ad98952813d7057db80dd0373a8f777ddb446b78bcbeff"
+    }
+  ],
+  "schema": "fhe512-sgen-ngen-coarse-comparison-v1",
+  "synthesis_level": "proc; flatten; memory_collect; stat",
+  "workload": "N=512 negacyclic, signed 32-bit near-full-range inputs, modulo-2^32 outputs"
+}

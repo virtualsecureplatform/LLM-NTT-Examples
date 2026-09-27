@@ -1,6 +1,6 @@
 import unittest
 import random
-from architecture_search import wide_products as wide
+from architecture_search import wide_products as wide, wide_rtl
 
 
 class WideProductContracts(unittest.TestCase):
@@ -27,6 +27,31 @@ class WideProductContracts(unittest.TestCase):
             for value in (lo,hi,0,lo//2,hi//2):
                 actual=sum(wide.digit(value,i,bits,lo<0)<<(4*i) for i in range((bits+3)//4))
                 self.assertEqual(actual,value)
+
+    def test_omitted_low_digit_products_have_a_conservative_error_bound(self):
+        rng=random.Random(7)
+        for n in (8,16):
+            w=wide.workload(n,2147483647,'negacyclic',1<<32)
+            self.assertEqual(wide.omission_error_bound(w,1),n*225)
+            self.assertEqual(wide.omission_error_bound(w,2),n*225*33)
+            for count in (0,1,2):
+                for _ in range(3):
+                    a=[rng.randint(*w['a_range']) for _ in range(n)]
+                    b=[rng.randint(*w['b_range']) for _ in range(n)]
+                    exact=wide.schoolbook(w,a,b)
+                    actual=wide.omitted_product(w,a,b,count)
+                    errors=[(x-y+(1<<31))%(1<<32)-(1<<31) for x,y in zip(actual,exact)]
+                    self.assertLessEqual(max(map(abs,errors)),wide.omission_error_bound(w,count))
+
+    def test_low_diagonal_omission_changes_the_serial_fft_schedule(self):
+        w=wide.workload(512,2147483647,'negacyclic',1<<32)
+        leaf=wide.workload(512,15,'negacyclic')
+        rtl0=wide_rtl.split_fft(w,leaf,0)
+        rtl1=wide_rtl.split_fft(w,leaf,1)
+        rtl2=wide_rtl.split_fft(w,leaf,2)
+        self.assertIn('if(pair_index==35)',rtl0)
+        self.assertIn('if(pair_index==34)',rtl1)
+        self.assertIn('if(pair_index==32)',rtl2)
 
     def test_reject_unsupported_encodings(self):
         for patch in ({'a_range':[-1,1<<31]},{'modulus':1},{'n':4096},{'n':True},{'a_range':[True,7]}):

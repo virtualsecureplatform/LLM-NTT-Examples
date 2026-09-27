@@ -5,8 +5,9 @@ From: ubuntu:22.04
     export DEBIAN_FRONTEND=noninteractive
     apt-get update
     apt-get install -y --no-install-recommends \
-        bash ca-certificates coreutils g++ git iverilog openjdk-17-jre-headless \
+        bash ca-certificates coreutils g++ git iverilog make openjdk-17-jre-headless \
         python3 python3-pip yosys
+    python3 -m pip install --no-cache-dir verilator==5.38.0
     apt-get clean
     rm -rf /var/lib/apt/lists/*
 
@@ -15,4 +16,4 @@ From: ubuntu:22.04
 
 %labels
     Author LLM-NTT-Examples
-    Purpose N512 pre-route NGen/SGen grid with Icarus and Yosys
+    Purpose N512 pre-route NGen/SGen grid with Icarus, Verilator, and Yosys

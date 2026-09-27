@@ -106,15 +106,48 @@ def digit(value,index,bits,signed):
     return result
 
 
+def omitted_digit_pairs(w, count):
+    """Low-weight radix-16 products excluded from a torus reconstruction."""
+    validate(w)
+    if w['ring']!='negacyclic' or w['modulus']!=1<<32 or type(count) is not int or not 0<=count<=2:
+        raise ValueError('low-diagonal omission requires a 32-bit negacyclic torus and count 0..2')
+    da=(input_width(w,'a')+3)//4; db=(input_width(w,'b')+3)//4
+    return [(i,j) for i in range(da) for j in range(db) if i+j<count]
+
+
+def omission_error_bound(w,count):
+    # Every output coefficient has at most N products per omitted digit pair.
+    # Magnitudes of all unsigned low nibbles are at most 15; this also safely
+    # bounds the signed top nibble if a smaller-width workload is selected.
+    return w['n']*sum(225 << (4*(i+j)) for i,j in omitted_digit_pairs(w,count))
+
+
+def omitted_product(w,a,b,count):
+    """Independent integer oracle for the omitted-low-diagonal RTL variant."""
+    result=schoolbook(w,a,b)
+    n=w['n']; aw=input_width(w,'a');bw=input_width(w,'b')
+    for i,j in omitted_digit_pairs(w,count):
+        aa=[digit(x,i,aw,w['a_range'][0]<0) for x in a]
+        bb=[digit(x,j,bw,w['b_range'][0]<0) for x in b]
+        scale=1 << (4*(i+j))
+        for x,av in enumerate(aa):
+            for y,bv in enumerate(bb):
+                k=x+y
+                result[k%n]=(result[k%n]-(-scale if k>=n else scale)*av*bv) & 0xffffffff
+    return result
+
+
 def candidates(w,space=None):
     validate(w);space=space or {}
     axes={'generators':['ngen','sgen'],'ngen_backends':['streamed'],'sgen_backends':['compact'],
           'lanes':[2],'pe':[1],'radix':[2],'stage_groups':[1],'reductions':['barrett'],
-          'profiles':['baseline'],'fractional_bits':[32,48],'guard_bits':[0]}
+          'profiles':['baseline'],'fractional_bits':[32,48],'guard_bits':[0],
+          'omit_low_diagonals':[0]}
     legal={'generators':['ngen','sgen'],'ngen_backends':['streamed','stage-parallel','fully-parallel'],
            'sgen_backends':['compact','full-throughput'],'lanes':[2,4],'pe':[1,2],
            'radix':[2,4,8],'stage_groups':[1,2],'reductions':['barrett','montgomery','shoup','auto'],
-           'profiles':['baseline','f300','split-barrett'],'fractional_bits':[24,32,40,48],'guard_bits':[0,2]}
+           'profiles':['baseline','f300','split-barrett'],'fractional_bits':[24,28,29,30,32,40,48],
+           'guard_bits':[0,2],'omit_low_diagonals':[0,1,2]}
     if set(space)-set(axes)-{'configurations'}:raise ValueError('unknown version-2 search axis')
     for key in axes:
         if key in space:
@@ -138,12 +171,16 @@ def candidates(w,space=None):
     if 'sgen' in axes['generators']:
         split=max(magnitude(w,'a'),magnitude(w,'b'))>15
         magnitude_bound=15 if split else max(magnitude(w,'a'),magnitude(w,'b'))
-        for backend,lanes,frac,guard in itertools.product(axes['sgen_backends'],axes['lanes'],axes['fractional_bits'],axes['guard_bits']):
+        for backend,lanes,frac,guard,omit in itertools.product(
+                axes['sgen_backends'],axes['lanes'],axes['fractional_bits'],axes['guard_bits'],axes['omit_low_diagonals']):
             if w['n']>256 and backend!='compact':continue
-            result.append(dict(generator='sgen',backend=backend,lanes=lanes,radix=2,
-                               fractional_bits=frac,guard_bits=guard,
-                               integer_bits=(4*(2*w['n'])**3*magnitude_bound**2).bit_length()+1+guard,
-                               arithmetic='split-radix16' if split else 'direct'))
+            if omit and (not split or w['ring']!='negacyclic' or w['modulus']!=1<<32):continue
+            candidate=dict(generator='sgen',backend=backend,lanes=lanes,radix=2,
+                           fractional_bits=frac,guard_bits=guard,
+                           integer_bits=(4*(2*w['n'])**3*magnitude_bound**2).bit_length()+1+guard,
+                           arithmetic='split-radix16' if split else 'direct')
+            if omit:candidate['omit_low_diagonals']=omit
+            result.append(candidate)
     if 'configurations' in space:
         selected=space['configurations']
         if not isinstance(selected,list) or not selected or any(c not in result for c in selected):

@@ -103,9 +103,10 @@ Each point has generated RTL, simulation input/output files and logs, Yosys
 script/log, and a compact `point.json`. A failed generation, simulation, or
 Yosys run remains visible and cannot enter the frontier. The frontier uses
 the analytical error bound and all three measured screening objectives; ties
-are kept. The next experiment should replace output rounding with a useful
-approximate arithmetic architecture, then route the screening frontier and
-a bounded near-front sample to measure actual U280 utilization and throughput.
+are kept. The [SGen precision and omitted-digit search](fhe512-sgen-precision.md)
+implements an approximate arithmetic experiment for full-range N=512
+products. Its memory-preserving Yosys resource counts use a different lowering
+level from the NGen counts below.
 
 ## Initial four-point smoke run
 

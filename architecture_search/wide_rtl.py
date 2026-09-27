@@ -77,12 +77,14 @@ endmodule''')
     return '\n'.join(pieces)
 
 
-def split_fft(w,leaf):
+def split_fft(w,leaf,omit_low_diagonals=0):
     n=w['n'];count=wide.output_count(w);ow=wide.output_width(w)
     aw=wide.input_width(w,'a');bw=wide.input_width(w,'b');lw=wide.output_width(leaf)
     accum=wide.bound(w).bit_length()+2;da=(aw+3)//4;db=(bw+3)//4
+    omitted=set(wide.omitted_digit_pairs(w,omit_low_diagonals)) if omit_low_diagonals else set()
     pairs=[(i,j) for i in range(da) for j in range(db)
-           if not(w['modulus']==1<<32 and i+j>=8)]
+           if (i,j) not in omitted and not(w['modulus']==1<<32 and i+j>=8)]
+    if not pairs:raise ValueError('at least one digit product is required')
     pieces=[ports(w),f'''localparam N={n},COUNT={count},AW={aw},BW={bw},LW={lw},ACC={accum};
 reg [AW-1:0] aa[0:N-1];reg [BW-1:0] bb[0:N-1];
 reg signed [ACC-1:0] sums[0:{2*((count+1)//2)-1}];
@@ -125,15 +127,16 @@ else case(state)
  bb[2*capture]<=b[BW-1:0];bb[2*capture+1]<=b[2*BW-1:BW];
  if(capture==N/2-1)begin
   capture<=0;feed<=0;pair_index<=0;state<=1;
-  for(i=0;i<{2*((count+1)//2)};i=i+1)sums[i]<=0;
  end else capture<=capture+1;
 end
 1:if(leaf_ready)begin
  if(feed==N/2-1)begin feed<=0;receive<=0;state<=2;end else feed<=feed+1;
 end
 2:if(leaf_valid)begin
- for(i=0;i<2;i=i+1)
-  sums[2*receive+i]<=sums[2*receive+i]+($signed(leaf_data[i*LW +: LW]) <<< (4*(adigit+bdigit)));
+ for(i=0;i<2;i=i+1)begin
+  if(pair_index==0)sums[2*receive+i]<=($signed(leaf_data[i*LW +: LW]) <<< (4*(adigit+bdigit)));
+  else sums[2*receive+i]<=sums[2*receive+i]+($signed(leaf_data[i*LW +: LW]) <<< (4*(adigit+bdigit)));
+ end
  if(receive=={(count+1)//2-1})begin
   receive<=0;
   if(pair_index=={len(pairs)-1})begin state<=3;drain<=0;end

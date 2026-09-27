@@ -18,13 +18,21 @@ def compose(w,c,metas,fields):
                           for i,f in enumerate(fields)]+[wide_rtl.rns_product(w,fields)])
     leaf=leaf_workload(w,c);text=wide_rtl.fft_leaf(leaf,c,*metas)
     if c['arithmetic']=='split-radix16':
-        text=text.replace('module SearchTop(','module DigitProduct(')+'\n'+wide_rtl.split_fft(w,leaf)
+        text=text.replace('module SearchTop(','module DigitProduct(')+'\n'+wide_rtl.split_fft(
+            w,leaf,c.get('omit_low_diagonals',0))
     return text
 
 
 def certificate(w,c,metas,files):
     if c['generator']=='sgen':
         leaf=leaf_workload(w,c);numeric=numerics.certify(leaf,*metas,files)
+        omitted=c.get('omit_low_diagonals',0)
+        if omitted:
+            error_bound=wide.omission_error_bound(w,omitted)
+            return dict(schema='wide-product-certificate-v1',qualified=False,
+                        bounded_qualified=numeric['qualified'],max_abs_error=error_bound,
+                        workload_sha256=digest(w),leaf_workload=leaf,leaf_certificate=numeric,
+                        reconstruction=f'radix16-accumulation-omit-low-diagonals-{omitted}')
         return dict(schema='wide-product-certificate-v1',qualified=numeric['qualified'],
                     workload_sha256=digest(w),leaf_workload=leaf,leaf_certificate=numeric,
                     reconstruction='exact-radix16-accumulation' if c['arithmetic']=='split-radix16' else 'direct-round-and-reduce')
@@ -71,7 +79,7 @@ def generate(w,c,ngen,sgen,directory,timeout,executables=None):
             metas.append(meta);files.append(path)
     if verify(root,executable,gen)!=identity:raise ValueError('generator changed during generation')
     cert=certificate(w,c,metas,files);proofs=[];adapter_proofs=[]
-    if gen=='sgen' and cert['qualified']:
+    if gen=='sgen' and cert['leaf_certificate']['qualified']:
         if not all('operation_contract' in m for m in metas):raise ValueError('version-2 FFT requires lowered operation contracts')
         proofs=[primitive_proofs.prove(m,p,directory/(p.stem+'-proofs')) for m,p in zip(metas,files)]
         scalar=c['integer_bits']+c['fractional_bits'];leaf=leaf_workload(w,c)
@@ -87,13 +95,14 @@ def generate(w,c,ngen,sgen,directory,timeout,executables=None):
                 assurance_passed=all(p['passed'] for p in proofs+adapter_proofs),seconds=time.monotonic()-started),rtl
 
 
-def qualification_valid(w,declared,rtl):
+def qualification_valid(w,declared,rtl,error_limit=0):
     try:
         wide.validate(w);c=declared['configuration'];files=[Path(p) for p in declared['core_files']];metas=declared['cores']
         if declared['workload']!=w or declared['rtl_sha256']!=file_hash(rtl):return False
         if any(file_hash(p)!=declared['core_files'][str(p)] for p in files):return False
         expected=certificate(w,c,metas,files)
-        if not expected['qualified'] or expected!=declared['certificate']:return False
+        bounded=(expected.get('bounded_qualified') and expected.get('max_abs_error',float('inf'))<=error_limit)
+        if not (expected['qualified'] or bounded) or expected!=declared['certificate']:return False
         # JSON serialization sorts object keys; reconstruct explicit direction order.
         if c['generator']=='ngen':
             files=sorted(files,key=lambda p:(int(re.search(r'Prime(\d+)',p.stem).group(1)),'Inverse' in p.stem))

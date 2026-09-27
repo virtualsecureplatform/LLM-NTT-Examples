@@ -1,0 +1,225 @@
+{
+  "campaign_manifest_sha256": [
+    "0a52425bf7d9f384fcba0d9304f3b77712ddeecdcf8e5b86b25d1e63c6a32e7b",
+    "75dc8ba3d73e5d4d54bc331df313a078f4bbddcd7bd41625dbd010108c493a96",
+    "c1fb80928d92f6cbf3e207375f1705786346627205767cbd7be718aeedbdfc4d",
+    "d6c5a6052bd366c9a5aa29016a90c4e144ab5848f324cbfc009423b37102a03d",
+    "4034c78eac56947c53290814efef42cfda81d64254b7e57fc5aa778b7816017e",
+    "e655df47a2c5c932a927f2ad441e9a6ba8998167c8433d1207dcf0d5ec31946f",
+    "7b27f18eac52c6f113aa7a0ed67db36dd5e507b976936000db8c03bc07ef76a5"
+  ],
+  "frontier": [
+    "sgen-compact-l2-f30-g0",
+    "sgen-compact-l2-f30-g0-omit1",
+    "sgen-compact-l2-f30-g0-omit2"
+  ],
+  "limitation": "Exploratory torus-error bounds and coarse Yosys counts; no FHE noise qualification or U280 timing",
+  "points": [
+    {
+      "digit_products": 36,
+      "fractional_bits": 24,
+      "generation_assurance_passed": true,
+      "leaf_final_error_bound": {
+        "denominator": "604462909807314587353088",
+        "numerator": "18116187749156439309364143"
+      },
+      "max_abs_error": null,
+      "name": "sgen-compact-l2-f24-g0",
+      "omit_low_diagonals": 0,
+      "rtl_sha256": "021098209cd394da0745308f05a16b9d283f2efcffe3ce5b34a5faa76e0e25c0",
+      "simulation_passed": false,
+      "status": "numerical certificate or error limit rejected",
+      "yosys_passed": false
+    },
+    {
+      "digit_products": 36,
+      "fractional_bits": 30,
+      "generation_assurance_passed": true,
+      "initiation_interval_cycles": 505844,
+      "latency_cycles": 511711,
+      "leaf_final_error_bound": {
+        "denominator": "302231454903657293676544",
+        "numerator": "141536739729010139812409"
+      },
+      "max_abs_error": 0,
+      "memory_bits": 2984560,
+      "multipliers": 74,
+      "name": "sgen-compact-l2-f30-g0",
+      "observed_max_abs_error": 0,
+      "omit_low_diagonals": 0,
+      "register_bits": 294915,
+      "rms_error": 0.0,
+      "rtl_sha256": "b82e84676ed221fc2741f1f71d00b635ff4d2aa953a3f9d2bb37af5da15b1dd6",
+      "signed_bias": 0.0,
+      "simulation_passed": true,
+      "status": "screened",
+      "throughput_products_per_1000_cycles": 0.0019768940622009947,
+      "yosys_cells": 48381,
+      "yosys_passed": true
+    },
+    {
+      "digit_products": 35,
+      "fractional_bits": 30,
+      "generation_assurance_passed": true,
+      "initiation_interval_cycles": 491807,
+      "latency_cycles": 497674,
+      "leaf_final_error_bound": {
+        "denominator": "302231454903657293676544",
+        "numerator": "141536739729010139812409"
+      },
+      "max_abs_error": 115200,
+      "memory_bits": 2984560,
+      "multipliers": 74,
+      "name": "sgen-compact-l2-f30-g0-omit1",
+      "observed_max_abs_error": 115200,
+      "omit_low_diagonals": 1,
+      "register_bits": 294915,
+      "rms_error": 42071.99192859596,
+      "rtl_sha256": "0613215f9c437f76d72f17db5593f85eb479a59eb4c71a0cab1cdc864eef2adb",
+      "signed_bias": -27.171875,
+      "simulation_passed": true,
+      "status": "screened",
+      "throughput_products_per_1000_cycles": 0.0020333179478941943,
+      "yosys_cells": 48381,
+      "yosys_passed": true
+    },
+    {
+      "digit_products": 33,
+      "fractional_bits": 30,
+      "generation_assurance_passed": true,
+      "initiation_interval_cycles": 463733,
+      "latency_cycles": 469600,
+      "leaf_final_error_bound": {
+        "denominator": "302231454903657293676544",
+        "numerator": "141536739729010139812409"
+      },
+      "max_abs_error": 3801600,
+      "memory_bits": 2984560,
+      "multipliers": 74,
+      "name": "sgen-compact-l2-f30-g0-omit2",
+      "observed_max_abs_error": 3801600,
+      "omit_low_diagonals": 2,
+      "register_bits": 294915,
+      "rms_error": 1385612.4909261572,
+      "rtl_sha256": "c9018fc35d2409134245010bb0df3119af6522fd0f0170510b832f22fb24bd27",
+      "signed_bias": -12230.463541666666,
+      "simulation_passed": true,
+      "status": "screened",
+      "throughput_products_per_1000_cycles": 0.0021564132809181145,
+      "yosys_cells": 48381,
+      "yosys_passed": true
+    },
+    {
+      "digit_products": 36,
+      "fractional_bits": 32,
+      "generation_assurance_passed": true,
+      "initiation_interval_cycles": 505844,
+      "latency_cycles": 511711,
+      "leaf_final_error_bound": {
+        "denominator": "604462909807314587353088",
+        "numerator": "70774503410989668390091"
+      },
+      "max_abs_error": 0,
+      "memory_bits": 3066480,
+      "multipliers": 74,
+      "name": "sgen-compact-l2-f32-g0",
+      "observed_max_abs_error": 0,
+      "omit_low_diagonals": 0,
+      "register_bits": 295953,
+      "rms_error": 0.0,
+      "rtl_sha256": "1b9865e39cf80415287ce49b372afd4bd2f41d4019aefb23fbb07c036f1d167d",
+      "signed_bias": 0.0,
+      "simulation_passed": true,
+      "status": "screened",
+      "throughput_products_per_1000_cycles": 0.0019768940622009947,
+      "yosys_cells": 48381,
+      "yosys_passed": true
+    },
+    {
+      "digit_products": 35,
+      "fractional_bits": 32,
+      "generation_assurance_passed": true,
+      "initiation_interval_cycles": 491807,
+      "latency_cycles": 497674,
+      "leaf_final_error_bound": {
+        "denominator": "604462909807314587353088",
+        "numerator": "70774503410989668390091"
+      },
+      "max_abs_error": 115200,
+      "memory_bits": 3066480,
+      "multipliers": 74,
+      "name": "sgen-compact-l2-f32-g0-omit1",
+      "observed_max_abs_error": 115200,
+      "omit_low_diagonals": 1,
+      "register_bits": 295953,
+      "rms_error": 42071.99192859596,
+      "rtl_sha256": "c36cfad3bcc5f94f35f774dbe3a3252d2bd9ec77769838b9c61da39cc14e2bd9",
+      "signed_bias": -27.171875,
+      "simulation_passed": true,
+      "status": "screened",
+      "throughput_products_per_1000_cycles": 0.0020333179478941943,
+      "yosys_cells": 48381,
+      "yosys_passed": true
+    },
+    {
+      "digit_products": 33,
+      "fractional_bits": 32,
+      "generation_assurance_passed": true,
+      "initiation_interval_cycles": 463733,
+      "latency_cycles": 469600,
+      "leaf_final_error_bound": {
+        "denominator": "604462909807314587353088",
+        "numerator": "70774503410989668390091"
+      },
+      "max_abs_error": 3801600,
+      "memory_bits": 3066480,
+      "multipliers": 74,
+      "name": "sgen-compact-l2-f32-g0-omit2",
+      "observed_max_abs_error": 3801600,
+      "omit_low_diagonals": 2,
+      "register_bits": 295953,
+      "rms_error": 1385612.4909261572,
+      "rtl_sha256": "d4d6428998ff1d7790177cfba0ec9dc3cbc67a29cda67e0ef20fa0092700628a",
+      "signed_bias": -12230.463541666666,
+      "simulation_passed": true,
+      "status": "screened",
+      "throughput_products_per_1000_cycles": 0.0021564132809181145,
+      "yosys_cells": 48381,
+      "yosys_passed": true
+    }
+  ],
+  "reference": {
+    "corpus_sha256": "c32d1933e665d4a2c8a3e6af48e8102850668eacbd0e6dc317b674f56138fd9f",
+    "error_limit": 4000000,
+    "image_sha256": "8187cb19842daf3217cba03dc5a9ded2431d954f2bd51b215be2aec360a50e06",
+    "simulator": "verilator",
+    "simulator_version": "rev UNKNOWN.REV",
+    "source_sha256": {
+      "architecture_search/product_evaluate.py": "e8cff700587788a3bacb3d71cf60eb688bc79b3c94f7afa3e68eff7a99c4d9ca",
+      "architecture_search/wide_backend.py": "394a2dae00a075fb7056b6b3f9d9858bb8401a0c21e49c5523b3d53bdfa011cf",
+      "architecture_search/wide_products.py": "c60c54e799f0ee6174ec86918e4728cdc85b54246b36357eb5e1f68908b9f421",
+      "architecture_search/wide_rtl.py": "af10c14cd902b47889ba87d6ecb8515723aebc92cf88f4c9298b9219c6bf6089",
+      "scripts/fhe512_sgen_precision.py": "9deb78c46a2d2c55de500c456eebea0693ce25654dfdf2845f06b025a7f233ab"
+    },
+    "workload": {
+      "a_range": [
+        -2147483647,
+        2147483647
+      ],
+      "b_range": [
+        -2147483647,
+        2147483647
+      ],
+      "correctness": "certified-exact",
+      "kind": "polynomial_product",
+      "lanes": 2,
+      "modulus": 4294967296,
+      "n": 512,
+      "operands": "fresh",
+      "ring": "negacyclic",
+      "version": 2
+    },
+    "yosys_sha256": "a19f19c0514127cfe1ad98952813d7057db80dd0373a8f777ddb446b78bcbeff"
+  },
+  "schema": "fhe512-sgen-precision-evidence-v1"
+}

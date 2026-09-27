@@ -94,7 +94,8 @@ def pareto(rows):
 
 def configuration_name(c):
     if c['generator'] == 'sgen':
-        return f"sgen-{c['backend']}-l{c['lanes']}-f{c['fractional_bits']}-g{c['guard_bits']}"
+        return (f"sgen-{c['backend']}-l{c['lanes']}-f{c['fractional_bits']}-g{c['guard_bits']}"
+                + (f"-omit{c['omit_low_diagonals']}" if c.get('omit_low_diagonals',0) else ''))
     return (f"ngen-{c['backend']}-l{c['lanes']}-pe{c.get('pe', 1)}-r{c['radix']}"
             f"-s{c['stage_groups']}-{c['reduction']}-{c['profile']}"
             + ('-switch' if c.get('transpose', 'indexed') == 'switch' else ''))

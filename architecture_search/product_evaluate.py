@@ -54,7 +54,7 @@ initial begin
    if(in_valid && in_ready)begin
     if(sent%B==0)begin
      frame=sent/B;starts[frame]=cycle;
-     if(frame>=8 && last_start>=0 && cycle-last_start>max_interval)max_interval=cycle-last_start;
+     if(frame>={min(8,frames-1)} && last_start>=0 && cycle-last_start>max_interval)max_interval=cycle-last_start;
      last_start=cycle;
     end
     sent=sent+1;
@@ -139,9 +139,9 @@ def _parallel_large_fft(w,c,rtl,directory,timeout,simulator):
 
 
 def evaluate(w,c,rtl,directory,timeout,simulator='iverilog',*,_corpus=None,_first_pass=0,_end_pass=4,
-             _output_map=None):
+             _output_map=None,_output_oracle=None):
     started=time.monotonic(); directory=directory.resolve();directory.mkdir(parents=True,exist_ok=True)
-    if (_corpus is None and _output_map is None and w.get('version')==2 and w['n']>=1024 and
+    if (_corpus is None and _output_map is None and _output_oracle is None and w.get('version')==2 and w['n']>=1024 and
             c['generator']=='sgen' and simulator=='verilator'):
         return _parallel_large_fft(w,c,rtl,directory,timeout,simulator)
     corpus=products.vectors(w) if _corpus is None else _corpus
@@ -153,9 +153,19 @@ def evaluate(w,c,rtl,directory,timeout,simulator='iverilog',*,_corpus=None,_firs
         (directory/f'{name}.mem').write_text(''.join(packed(pair[index],products.input_width(w,name)) for pair in corpus))
     from .wide_products import schoolbook as wide_schoolbook
     oracle=(lambda a,b:wide_schoolbook(w,a,b)) if w.get('version')==2 else products.schoolbook
+    if _output_map is not None and _output_oracle is not None:
+        raise ValueError('choose either an output map or an output oracle')
     (directory/'expected.mem').write_text(''.join(packed(
+        _output_oracle(*pair) if _output_oracle is not None else
         _output_map(oracle(*pair)) if _output_map is not None else oracle(*pair),width) for pair in corpus))
     watchdog=max(100000,len(corpus)*w['n']*w['n'].bit_length()*128)
+    if c['generator']=='sgen' and c.get('arithmetic')=='split-radix16':
+        from .wide_products import input_width
+        da=(input_width(w,'a')+3)//4;db=(input_width(w,'b')+3)//4
+        products_per_frame=sum(i+j>=c.get('omit_low_diagonals',0) and
+                               not(w['modulus']==1<<32 and i+j>=8)
+                               for i in range(da) for j in range(db))
+        watchdog=max(watchdog,len(corpus)*products_per_frame*w['n']*(2*w['n']).bit_length()*8)
     scalar=0;model_files=[]
     if c['generator']=='sgen' and w.get('version')==1:
         import json

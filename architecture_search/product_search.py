@@ -15,7 +15,9 @@ def features(workload, record):
             fields=wide.basis(workload);prime_count=len(fields);width=max(f['q'].bit_length() for f in fields)
         elif c.get('arithmetic')=='split-radix16':
             da=(wide.input_width(workload,'a')+3)//4;db=(wide.input_width(workload,'b')+3)//4
-            digit_products=sum(not(workload['modulus']==1<<32 and i+j>=8) for i in range(da) for j in range(db))
+            digit_products=sum((not(workload['modulus']==1<<32 and i+j>=8)) and
+                               i+j>=c.get('omit_low_diagonals',0)
+                               for i in range(da) for j in range(db))
     lanes=c['lanes'];pe=c.get('pe',1);groups=c.get('stage_groups',1)
     replication=(length//2*bits if c['backend']=='fully-parallel' else
                  lanes//2*bits if c['backend'] in ('stage-parallel','full-throughput') else pe*lanes//2)
