@@ -3,6 +3,7 @@
 import argparse
 import csv
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -12,6 +13,32 @@ from architecture_search.model import file_hash, write_json
 
 OBJECTIVES = ('max_abs_error', 'cells', 'memory_bits', 'register_bits',
               'multipliers', 'latency_cycles', 'initiation_interval_cycles')
+AXES = ('backend', 'lanes', 'pe', 'radix', 'stage_groups', 'reduction',
+        'profile', 'boundary', 'output_quant_bits', 'fractional_bits',
+        'guard_bits', 'omit_low_diagonals')
+NGEN_NAME = re.compile(
+    r'ngen-(streamed|stage-parallel)-l(\d+)-pe(\d+)-r(\d+)-s(\d+)'
+    r'-(barrett|montgomery|shoup)-(baseline|f300)(-switch)?-q(\d+)')
+SGEN_NAME = re.compile(r'sgen-(compact|full-throughput)-l(\d+)-f(\d+)-g(\d+)(?:-omit(\d+))?')
+
+
+def configuration_axes(name):
+    """Expose every encoded search control as a typed evidence field."""
+    ngen = NGEN_NAME.fullmatch(name)
+    if ngen:
+        backend, lanes, pe, radix, groups, reduction, profile, switch, quant = ngen.groups()
+        return dict(backend=backend, lanes=int(lanes), pe=int(pe), radix=int(radix),
+                    stage_groups=int(groups), reduction=reduction, profile=profile,
+                    boundary='switch' if switch else 'indexed', output_quant_bits=int(quant),
+                    fractional_bits=None, guard_bits=None, omit_low_diagonals=None)
+    sgen = SGEN_NAME.fullmatch(name)
+    if sgen:
+        backend, lanes, fractional, guard, omitted = sgen.groups()
+        return dict(backend=backend, lanes=int(lanes), pe=None, radix=None,
+                    stage_groups=None, reduction=None, profile=None, boundary=None,
+                    output_quant_bits=None, fractional_bits=int(fractional),
+                    guard_bits=int(guard), omit_low_diagonals=int(omitted or 0))
+    raise ValueError(f'unrecognized configuration name: {name}')
 
 
 def frontier(points, error_limit=None):
@@ -41,6 +68,7 @@ def combine(ngen_path, sgen_path):
                      observed_max_abs_error=row['observed_max_abs_error'],
                      latency_cycles=row['latency_cycles'],
                      initiation_interval_cycles=row['initiation_interval_cycles'])
+        point.update(configuration_axes(row['name']))
         if row['passed']:
             if row['synthesis_level'] != 'coarse-memory-collected':
                 raise ValueError(f'wrong Yosys pass: {row["name"]}')
@@ -58,13 +86,21 @@ def combine(ngen_path, sgen_path):
                      observed_max_abs_error=row['observed_max_abs_error'],
                      latency_cycles=row['latency_cycles'],
                      initiation_interval_cycles=row['initiation_interval_cycles'])
+        point.update(configuration_axes(row['name']))
+        if (point['fractional_bits'], point['omit_low_diagonals']) != (
+                row['fractional_bits'], row['omit_low_diagonals']):
+            raise ValueError(f'SGen control fields disagree: {row["name"]}')
         if point['passed']:
             point.update(cells=row['yosys_cells'], memory_bits=row['memory_bits'],
                          register_bits=row['register_bits'], multipliers=row['multipliers'])
         points.append(point)
     if len({point['name'] for point in points}) != len(points):
         raise ValueError('duplicate configuration names')
-    return sorted(points, key=lambda point: point['name']), dict(
+    points.sort(key=lambda point: point['name'])
+    for generator, prefix in (('ngen', 'N'), ('sgen', 'S')):
+        for index, point in enumerate((p for p in points if p['generator'] == generator), 1):
+            point['id'] = f'{prefix}{index:02d}'
+    return points, dict(
         ngen_manifest_sha256=file_hash(ngen_path.parent/'manifest.json'),
         ngen_results_sha256=file_hash(ngen_path), sgen_evidence_sha256=file_hash(sgen_path),
         image_sha256=nm['image_sha256'], yosys_sha256=nm['yosys_sha256'],
@@ -87,29 +123,60 @@ def markdown(points, fronts):
              f"Full frontier: **{len(fronts['all'])}** points; exact frontier: "
              f"**{len(fronts['exact'])}** points; error-at-most-8 frontier: "
              f"**{len(fronts['error_le_8'])}** points.", '',
-             '## Full frontier', '',
-             '| Configuration | Error bound | Cells | Memory bits | Register bits | Multipliers | '
-             'Latency | Frame interval | Products / 1,000 cycles |',
-             '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |']
-    def table_row(point):
-        fmt = lambda key: f"{point[key]:,}" if point.get(key) is not None else '—'
-        rate = 1000/point['initiation_interval_cycles'] if point.get('initiation_interval_cycles') else None
-        return (f"| `{point['name']}` | {fmt('max_abs_error')} | {fmt('cells')} | "
-                f"{fmt('memory_bits')} | {fmt('register_bits')} | {fmt('multipliers')} | "
-                f"{fmt('latency_cycles')} | {fmt('initiation_interval_cycles')} | "
-                f"{rate:.6f} |" if rate is not None else f"| `{point['name']}` | — | — | — | — | — | — | — | — |")
-    for name in fronts['all']:
-        lines.append(table_row(by_name[name]))
+             'Configuration controls are separate columns. The short ID links each row '
+             'to the full RTL name and hash in the CSV and JSON evidence. A dash means '
+             'the control does not apply to that generator.', '',
+             '## Full frontier', '']
+
+    def table(rows, generator, include_status=False):
+        if generator == 'ngen':
+            controls = [('id', 'ID'), ('backend', 'Backend'), ('lanes', 'Lanes'),
+                        ('pe', 'PE'), ('radix', 'Radix'), ('stage_groups', 'Stage groups'),
+                        ('reduction', 'Reduction'), ('profile', 'Profile'),
+                        ('boundary', 'Boundary'), ('output_quant_bits', 'Output round bits')]
+        else:
+            controls = [('id', 'ID'), ('backend', 'Backend'), ('lanes', 'Lanes'),
+                        ('fractional_bits', 'FFT fractional bits'), ('guard_bits', 'Guard bits'),
+                        ('omit_low_diagonals', 'Omitted diagonals')]
+        metrics = [('max_abs_error', 'Error bound'), ('cells', 'Cells'),
+                   ('memory_bits', 'Memory bits'), ('register_bits', 'Register bits'),
+                   ('multipliers', 'Multipliers'), ('latency_cycles', 'Latency'),
+                   ('initiation_interval_cycles', 'Frame interval')]
+        headers = [label for _, label in controls + metrics] + ['Products / 1,000 cycles']
+        if include_status:
+            headers.append('Status')
+        result = ['| ' + ' | '.join(headers) + ' |',
+                  '| ' + ' | '.join('---' if i == 0 or header in (
+                      'Backend', 'Reduction', 'Profile', 'Boundary', 'Status') else '---:'
+                      for i, header in enumerate(headers)) + ' |']
+        for point in rows:
+            values = []
+            for key, _ in controls + metrics:
+                value = point.get(key)
+                values.append(f'{value:,}' if isinstance(value, int) else value or '—')
+            interval = point.get('initiation_interval_cycles')
+            values.append(f'{1000/interval:.6f}' if interval else '—')
+            if include_status:
+                values.append('screened' if point['passed'] else 'failed')
+            result.append('| ' + ' | '.join(values) + ' |')
+        return result
+
+    frontier_points = [by_name[name] for name in fronts['all']]
+    for generator, label in (('ngen', 'NGen'), ('sgen', 'SGen')):
+        lines += [f'### {label}', '']
+        lines += table([point for point in frontier_points if point['generator'] == generator],
+                       generator)
+        lines.append('')
     lines += ['', '## All tested configurations', '',
               'Status `screened` means the existing RTL product check and this common Yosys '
               'pass both completed. The SGen 24-bit rejected control is listed in the '
-              '[precision evidence](fhe512-sgen-precision.md), outside the eligible set.', '',
-              '| Configuration | Error bound | Cells | Memory bits | Register bits | Multipliers | '
-              'Latency | Frame interval | Products / 1,000 cycles | Status |',
-              '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |']
-    for point in points:
-        lines.append(table_row(point) + f" {('screened' if point['passed'] else 'failed')} |")
-    return '\n'.join(lines) + '\n'
+              '[precision evidence](fhe512-sgen-precision.md), outside the eligible set.', '']
+    for generator, label in (('ngen', 'NGen'), ('sgen', 'SGen')):
+        lines += [f'### {label}', '']
+        lines += table([point for point in points if point['generator'] == generator],
+                       generator, include_status=True)
+        lines.append('')
+    return '\n'.join(lines).rstrip() + '\n'
 
 
 def main(argv=None):
@@ -124,10 +191,10 @@ def main(argv=None):
     fronts = dict(all=frontier(points), exact=frontier(points, 0),
                   error_le_8=frontier(points, 8))
     args.output_md.write_text(markdown(points, fronts))
-    fields = ('name', 'generator', 'source', 'max_abs_error', 'observed_max_abs_error',
+    fields = ('id', 'generator') + AXES + ('max_abs_error', 'observed_max_abs_error',
               'cells', 'memory_bits', 'register_bits', 'multipliers', 'latency_cycles',
               'initiation_interval_cycles', 'products_per_1000_cycles', 'full_frontier',
-              'exact_frontier', 'passed', 'rtl_sha256')
+              'exact_frontier', 'passed', 'source', 'name', 'rtl_sha256')
     with args.output_csv.open('w', newline='') as stream:
         writer = csv.DictWriter(stream, fieldnames=fields, lineterminator='\n')
         writer.writeheader()
@@ -138,7 +205,7 @@ def main(argv=None):
             row['full_frontier'] = point['name'] in fronts['all']
             row['exact_frontier'] = point['name'] in fronts['exact']
             writer.writerow({key: row.get(key) for key in fields})
-    write_json(args.evidence_file, dict(schema='fhe512-common-frontier-v1',
+    write_json(args.evidence_file, dict(schema='fhe512-common-frontier-v2',
                                         objectives=OBJECTIVES, provenance=provenance,
                                         points=points, frontiers=fronts))
     print(f"{len(points)} points, {len(fronts['all'])} on the full frontier", flush=True)

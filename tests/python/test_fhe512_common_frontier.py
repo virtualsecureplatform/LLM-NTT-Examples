@@ -1,4 +1,4 @@
-from scripts.report_fhe512_common_frontier import frontier
+from scripts.report_fhe512_common_frontier import configuration_axes, frontier
 
 
 def point(name, error=0, cells=10, memory=10, interval=10):
@@ -14,3 +14,17 @@ def test_tradeoffs_ties_and_error_budget():
     assert frontier(rows) == ['exact', 'equal', 'smaller-but-inexact', 'smaller-memory']
     assert frontier(rows, 0) == ['exact', 'equal', 'smaller-memory']
     assert frontier(rows, 7) == frontier(rows, 0)
+
+
+def test_controls_are_separate_fields():
+    ngen = configuration_axes('ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline-switch-q4')
+    assert ngen['backend'] == 'stage-parallel'
+    assert ngen['lanes'] == 4
+    assert ngen['reduction'] == 'barrett'
+    assert ngen['boundary'] == 'switch'
+    assert ngen['output_quant_bits'] == 4
+    sgen = configuration_axes('sgen-compact-l2-f30-g0-omit2')
+    assert sgen['backend'] == 'compact'
+    assert sgen['fractional_bits'] == 30
+    assert sgen['omit_low_diagonals'] == 2
+    assert sgen['reduction'] is None

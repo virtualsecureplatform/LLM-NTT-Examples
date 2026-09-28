@@ -85,6 +85,9 @@ def metric_rows(result, directory):
 
 def markdown(result, summary, directory):
     by_name = {p['name']: p for p in result['points']}
+    by_id = {name: f'N{index:02d}' for index, name in
+             enumerate(sorted(by_name), 1)}
+    rows = {row['name']: row for row in metric_rows(result, directory)}
     lines = [f"# N={result['manifest']['workload']['n']} pre-route screening", '',
              f"Grid: `{summary['grid']}`; {summary['planned_architectures']} architectures; "
              f"{summary['passed_points']}/{summary['planned_points']} planned points completed Yosys screening; "
@@ -92,34 +95,42 @@ def markdown(result, summary, directory):
              'Covered axes: '+', '.join(f"{key}={{{', '.join(values)}}}" for key, values in summary['axis_values'].items())+'.', '',
              'The cell counts are coarse Yosys operators after memory lowering, not U280 LUTs. '
              'Throughput is products per 1,000 cycles; no achieved clock or routed throughput is inferred.', '',
-             '| Frontier point | Error bound | Yosys cells | Latency cycles | Frame interval cycles | Products / 1,000 cycles |',
-             '| --- | ---: | ---: | ---: | ---: | ---: |']
+             'Configuration controls are separate columns. The ID maps to the full '
+             'RTL name in the CSV and result JSON.', '',
+             '| ID | Backend | Lanes | PE | Radix | Stage groups | Reduction | Profile | Boundary | Output round bits | Error bound | Yosys cells | Latency cycles | Frame interval cycles | Products / 1,000 cycles |',
+             '| --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |']
     for name in summary['frontier']:
-        p = by_name[name]
-        lines.append(f"| `{name}` | {p['max_abs_error']} | {p['yosys_cells']:,} | "
-                     f"{p['latency_cycles']:,} | {p['initiation_interval_cycles']:,} | "
-                     f"{p['throughput_products_per_1000_cycles']:.3f} |")
+        row = rows[name]
+        lines.append(f"| {by_id[name]} | {row['backend']} | {row['lanes']} | {row['pe']} | "
+                     f"{row['radix']} | {row['stage_groups']} | {row['reduction']} | "
+                     f"{row['profile']} | {row['transpose']} | {row['quant_bits']} | "
+                     f"{row['error_bound']} | {row['yosys_cells']:,} | "
+                     f"{row['latency_cycles']:,} | {row['initiation_interval_cycles']:,} | "
+                     f"{row['throughput_products_per_1000_cycles']:.3f} |")
     lines += ['', '## All evaluated configurations', '',
-              'Each row is one complete N=512 polynomial product. `q4` rounds output to multiples '
+              f"Each row is one complete N={result['manifest']['workload']['n']} polynomial product. "
+              '`q4` rounds output to multiples '
               'of 16; all other points are exact (`q0`). `—` means no Yosys cell result. '
               f"{summary['simulation_passed']}/{summary['recorded_points']} points passed RTL simulation. "
               'A point is resource-qualified only when '
               'its status is `screened`.', '',
-              '| Configuration | Error bound | Observed error | Yosys cells | Latency cycles | '
-              'Frame interval cycles | Products / 1,000 cycles | Status |',
-              '| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |']
-    for row in metric_rows(result, directory):
+              '| ID | Backend | Lanes | PE | Radix | Stage groups | Reduction | Profile | Boundary | Output round bits | Error bound | Observed error | Yosys cells | Latency cycles | Frame interval cycles | Products / 1,000 cycles | Status |',
+              '| --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |']
+    for row in rows.values():
         fmt = lambda value: f'{value:,}' if isinstance(value, int) else '—'
         rate = row['throughput_products_per_1000_cycles']
         formatted_rate = f'{rate:.3f}' if rate is not None else '—'
-        lines.append(f"| `{row['name']}` | {fmt(row['error_bound'])} | "
+        lines.append(f"| {by_id[row['name']]} | {row['backend']} | {row['lanes']} | "
+                     f"{row['pe']} | {row['radix']} | {row['stage_groups']} | "
+                     f"{row['reduction']} | {row['profile']} | {row['transpose']} | "
+                     f"{fmt(row['quant_bits'])} | {fmt(row['error_bound'])} | "
                      f"{fmt(row['observed_max_abs_error'])} | {fmt(row['yosys_cells'])} | "
                      f"{fmt(row['latency_cycles'])} | {fmt(row['initiation_interval_cycles'])} | "
                      f"{formatted_rate} | {row['status']} |")
     failures = [p for p in result['points'] if not p.get('passed')]
     lines += ['', f"Points without complete screening: {len(failures)}."]
     for p in failures:
-        lines.append(f"- `{p['name']}`: {point_status(p, directory)}")
+        lines.append(f"- {by_id[p['name']]}: {point_status(p, directory)}")
     return '\n'.join(lines)+'\n'
 
 
@@ -156,6 +167,11 @@ def main(argv=None):
     write_json(directory/'summary.json', summary)
     (directory/'summary.md').write_text(markdown(result, summary, directory))
     rows = list(metric_rows(result, directory))
+    by_id = {name: f'N{index:02d}' for index, name in
+             enumerate(sorted(row['name'] for row in rows), 1)}
+    rows = [dict(id=by_id[row['name']],
+                 **{key: value for key, value in row.items() if key != 'name'},
+                 name=row['name']) for row in rows]
     with (directory/'all-points.csv').open('w', newline='') as output:
         writer = csv.DictWriter(output, fieldnames=list(rows[0]) if rows else ['name'],
                                 lineterminator='\n')

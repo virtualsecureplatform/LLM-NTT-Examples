@@ -5,7 +5,7 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 image="${FHE512_SGEN_IMAGE:-${repo_root}/build/fhe512-sgen-precision.sif}"
 if [[ ! -f "$image" ]]; then
   echo "Apptainer image missing: $image" >&2
-  echo "Build it: scripts/build_llm_ntt_sif.sh --definition apptainer/fhe512-preroute.def --output build/fhe512-sgen-precision.sif --skip-check" >&2
+  echo "Build it: scripts/build_fhe512_image.sh --output build/fhe512-sgen-precision.sif" >&2
   exit 2
 fi
 image="$(realpath "$image")"

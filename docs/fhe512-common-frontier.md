@@ -25,9 +25,13 @@ translation. The same rounded configuration is regenerated from the current
 NGen backend and must pass the 12-frame product check before inclusion. Its
 new RTL hash and campaign result are pinned in the synthesis manifest.
 
-From the repository root, after reproducing the NGen campaigns described in
-[the pre-route example](fhe512-preroute-example.md) and building the
-[SGen precision image](fhe512-sgen-precision.md), run:
+The following commands re-screen the historical NGen RTL from the campaigns
+described in [the pre-route example](fhe512-preroute-example.md). They require
+the matching ignored `build/` artifacts: the 28-point matrix RTL, covering
+grid results and RTL, and the SGen precision run. The runner verifies RTL
+hashes rather than accepting a different current-generator emission. Build
+the [SGen precision image](fhe512-sgen-precision.md) first. From the
+repository root, run:
 
 ```bash
 scripts/run_fhe512_preroute.sh --grid covering --n 512 \

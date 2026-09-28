@@ -40,8 +40,8 @@ Build and run the pinned Apptainer workflow from the repository root:
 ```bash
 git submodule update --init --recursive
 scripts/build_assurance_yosys.sh
-scripts/build_llm_ntt_sif.sh --definition apptainer/fhe512-preroute.def \
-  --output build/fhe512-sgen-precision.sif --skip-check
+scripts/build_generators.sh
+scripts/build_fhe512_image.sh --output build/fhe512-sgen-precision.sif
 scripts/run_fhe512_sgen_precision.sh --output-dir build/fhe512-sgen-precision \
   --fractional-bits 30 32 --omit-low-diagonals 0 1 2 --timeout 1800
 scripts/run_fhe512_sgen_precision.sh --output-dir build/fhe512-sgen-f24-control \
@@ -78,26 +78,9 @@ precision uses 81,920 additional memory bits and 1,038 additional register
 bits, so it is dominated at this synthesis level. This sweep finds a
 latency/error tradeoff, not a resource/error tradeoff.
 
-For a like-for-like resource reference, the
-[NGen comparison snapshot](measured-evidence/fhe512-sgen-ngen-comparison.json)
-re-screens two existing exact NGen products using the **same** memory-collected
-Yosys script:
-
-| Generator and architecture | Coarse cells | Retained memory bits | Latency cycles | Frame interval cycles |
-| --- | ---: | ---: | ---: | ---: |
-| NGen streamed, 2 lanes, Shoup | 18,963 | 3,192,708 | 8,067 | 3,390 |
-| NGen stage-parallel, 2 lanes, Montgomery | 656,424 | 591,360 | 1,818 | 521 |
-| SGen compact, 2 lanes, 30-bit exact | 48,381 | 2,984,560 | 511,711 | 505,844 |
-
-The NGen latency and frame intervals come from their earlier verified product
-campaigns; the coarse resource counts above were recomputed from those exact
-RTL files. Generic cells, memory bits, and multipliers are separate screening
-measures, not U280 LUT/DSP/BRAM utilization. The serial SGen candidate is much
-slower than either NGen reference at two lanes. A useful next architecture
-experiment is to evaluate more digit-pair parallelism or a faster FFT backend
-before committing to U280 routing. These results do not provide a
-timing-qualified clock, products per second, or an FHE noise qualification.
-
-The [common-pass NGen/SGen frontier](fhe512-common-frontier.md) extends this
-two-reference comparison to all 40 verified NGen configurations in the
-published pre-route grids.
+For a matched NGen/SGen resource comparison, use the
+[common-pass frontier](fhe512-common-frontier.md). It screens all 40 verified
+NGen points and all six SGen points with the same memory-collected Yosys pass.
+The FFT choices remain much slower in frame interval than the leading NTT
+choices; their value on the coarse Pareto frontier comes from other resource
+tradeoffs. These measures do not establish U280 timing or an FHE noise budget.
