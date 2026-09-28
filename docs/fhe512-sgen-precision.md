@@ -97,3 +97,7 @@ slower than either NGen reference at two lanes. A useful next architecture
 experiment is to evaluate more digit-pair parallelism or a faster FFT backend
 before committing to U280 routing. These results do not provide a
 timing-qualified clock, products per second, or an FHE noise qualification.
+
+The [common-pass NGen/SGen frontier](fhe512-common-frontier.md) extends this
+two-reference comparison to all 40 verified NGen configurations in the
+published pre-route grids.
