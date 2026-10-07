@@ -35,7 +35,9 @@ def family(row):
 
 
 def save(fig, folder, name):
-    fig.savefig(folder / (name + '.svg'), bbox_inches='tight')
+    svg = folder / (name + '.svg')
+    fig.savefig(svg, bbox_inches='tight', metadata={'Date': None})
+    svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines()) + '\n')
     fig.savefig(folder / (name + '.png'), dpi=200, bbox_inches='tight')
     plt.close(fig)
 
@@ -104,7 +106,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--results-dir', type=Path, default=Path('docs/results'))
     args = parser.parse_args()
-    plt.rcParams.update({'font.family': 'DejaVu Sans', 'svg.fonttype': 'none'})
+    plt.rcParams.update({'font.family': 'DejaVu Sans', 'svg.fonttype': 'none',
+                         'svg.hashsalt': 'polynomial-study-v1'})
     for n in (512, 32):
         rows = load(args.results_dir / f'torus{n}-points.csv')
         resource_plot(rows, n, args.results_dir)

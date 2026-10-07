@@ -61,7 +61,7 @@ def export(campaigns, output):
         fields = ['name', 'workload_name', 'status', 'reason', 'design', 'quant_bits',
                   *METRICS, 'prime_count', 'digit_products', 'rtl_sha256', 'pareto', 'configuration_json']
         with (output / csv_name).open('w', newline='') as stream:
-            writer = csv.DictWriter(stream, fields, extrasaction='ignore')
+            writer = csv.DictWriter(stream, fields, extrasaction='ignore', lineterminator='\n')
             writer.writeheader()
             for r in rows:
                 frontier = data['frontiers'][r['workload_name']]['None']
