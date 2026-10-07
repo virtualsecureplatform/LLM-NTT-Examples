@@ -1,0 +1,25 @@
+{
+  "schema": "polynomial-study-v1",
+  "n": 32,
+  "workloads": [
+    {
+      "name": "full-full",
+      "a_range": [-2147483648, 2147483647],
+      "b_range": [-2147483648, 2147483647]
+    }
+  ],
+  "fractional_bits": [24, 30],
+  "omit_low_diagonals": [0, 1, 2],
+  "quant_bits": [0, 4],
+  "error_limits": [8, 7200, 237600],
+  "timeout": 1800,
+  "simulator": "verilator",
+  "ngen_axes": {
+    "ngen_backends": ["streamed"],
+    "lanes": [2],
+    "pe": [1, 2],
+    "radix": [2],
+    "stage_groups": [1],
+    "reductions": ["barrett", "shoup"]
+  }
+}

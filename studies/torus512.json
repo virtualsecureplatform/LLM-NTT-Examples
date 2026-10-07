@@ -1,0 +1,94 @@
+{
+  "schema": "polynomial-study-v1",
+  "n": 512,
+  "workloads": [
+    {
+      "name": "full-full",
+      "a_range": [
+        -2147483648,
+        2147483647
+      ],
+      "b_range": [
+        -2147483648,
+        2147483647
+      ]
+    },
+    {
+      "name": "full-byte",
+      "a_range": [
+        -2147483648,
+        2147483647
+      ],
+      "b_range": [
+        -128,
+        127
+      ]
+    },
+    {
+      "name": "full-ternary",
+      "a_range": [
+        -2147483648,
+        2147483647
+      ],
+      "b_range": [
+        -1,
+        1
+      ]
+    }
+  ],
+  "fractional_bits": [
+    24,
+    28,
+    29,
+    30,
+    32,
+    40,
+    48
+  ],
+  "omit_low_diagonals": [
+    0,
+    1,
+    2
+  ],
+  "quant_bits": [
+    0,
+    4,
+    8
+  ],
+  "error_limits": [
+    8,
+    115200,
+    3801600,
+    4000000
+  ],
+  "timeout": 1800,
+  "simulator": "verilator",
+  "ngen_axes": {
+    "ngen_backends": [
+      "streamed",
+      "stage-parallel"
+    ],
+    "lanes": [
+      2,
+      4
+    ],
+    "pe": [
+      1,
+      2
+    ],
+    "radix": [
+      2,
+      4,
+      8
+    ],
+    "stage_groups": [
+      1,
+      2
+    ],
+    "reductions": [
+      "barrett",
+      "montgomery",
+      "shoup"
+    ]
+  }
+}

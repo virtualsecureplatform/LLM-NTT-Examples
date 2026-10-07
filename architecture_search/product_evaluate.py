@@ -2,6 +2,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import time
+import shutil
 from . import products
 from .model import run, file_hash, write_json, digest
 from .evaluate import parse_metrics
@@ -13,7 +14,7 @@ def testbench(w,frames,watchdog, scalar=0, first_pass=0, end_pass=4):
     # split-FFT frame reuses its leaf for dozens of digit products, so the
     # later protocol/reset passes use shorter, still nonempty prefixes.
     bubble_frames,stall_frames=(8,2) if w.get('version')==2 and n>=1024 else (64,8)
-    progress='$display("CHECKED pass=%0d frame=%0d",pass,received/OB);$fflush();' if w.get('version')==2 and n>=1024 else ''
+    progress='$display("CHECKED pass=%0d frame=%0d",pass,received/OB);$fflush();' if w.get('version')==2 and n>=512 else ''
     aw=products.input_width(w,'a');bw=products.input_width(w,'b');ob=(products.output_count(w)+1)//2
     ap=w.get('a_range',[0,7])[1]&((1<<aw)-1);bp=w.get('b_range',[0,7])[1]&((1<<bw)-1)
     declarations=loads=checks=resets=''
@@ -32,15 +33,29 @@ reg [{2*aw-1}:0] aa[0:B*F-1];reg [{2*bw-1}:0] bb[0:B*F-1];reg [2*OW-1:0] expecte
 reg [2*OW-1:0] held;reg stalled,source_stalled;
 integer target_frames,sent,received,cycle,pass,start_cycle,first_output,last_output,max_interval,last_start,loaded,frame,drain,j;
 integer starts[0:F-1];
+integer frame_limit,steady_limit,bubble_limit,stall_limit,first_pass,end_pass,ignored;
 {declarations}
 SearchTop dut(clock,reset,in_valid,in_ready,a,b,out_valid,out_ready,out_data);
 always #5 clock=~clock;
 initial begin
+ frame_limit=F;first_pass={first_pass};end_pass={end_pass};
+ ignored=$value$plusargs("frames=%d",frame_limit);
+ ignored=$value$plusargs("first_pass=%d",first_pass);
+ ignored=$value$plusargs("end_pass=%d",end_pass);
+ steady_limit=frame_limit;
+ bubble_limit=frame_limit<{bubble_frames}?frame_limit:{bubble_frames};
+ stall_limit=frame_limit<{stall_frames}?frame_limit:{stall_frames};
+ ignored=$value$plusargs("steady_frames=%d",steady_limit);
+ ignored=$value$plusargs("bubble_frames=%d",bubble_limit);
+ ignored=$value$plusargs("stall_frames=%d",stall_limit);
+ if(frame_limit<1 || frame_limit>F || first_pass<0 || first_pass>=end_pass || end_pass>4 ||
+    steady_limit<1 || steady_limit>frame_limit || bubble_limit<1 || bubble_limit>frame_limit ||
+    stall_limit<1 || stall_limit>frame_limit)$fatal(1,"invalid runtime frame/pass limits");
  {loads}
  $readmemh("a.mem",aa);$readmemh("b.mem",bb);$readmemh("expected.mem",expected);
- for(pass={first_pass};pass<{end_pass};pass=pass+1)begin
+ for(pass=first_pass;pass<end_pass;pass=pass+1)begin
   reset=1;in_valid=0;out_ready=0;repeat(3)@(negedge clock);reset=0;
-  target_frames=pass==0?F:(pass==1?{bubble_frames}:{stall_frames});
+  target_frames=pass==0?steady_limit:(pass==1?bubble_limit:stall_limit);
   {resets}
   sent=0;received=0;stalled=0;source_stalled=0;first_output=-1;last_output=-1;last_start=-1;max_interval=0;loaded=0;
   for(cycle=0;cycle<WATCHDOG && received<OB*target_frames;cycle=cycle+1)begin
@@ -75,7 +90,7 @@ initial begin
    $display("METRIC first_output_latency_cycles=%0d",first_output-starts[0]);
    $display("METRIC max_loaded_latency_cycles=%0d",loaded);
    $display("METRIC initiation_interval_cycles=%0d",max_interval);
-   $display("METRIC completed_products=%0d",F);
+   $display("METRIC completed_products=%0d",steady_limit);
   end
   in_valid=0;out_ready=1;
   repeat(4*N+64)begin @(posedge clock);if(out_valid)$fatal(1,"extra product output");@(negedge clock);end
@@ -139,9 +154,10 @@ def _parallel_large_fft(w,c,rtl,directory,timeout,simulator):
 
 
 def evaluate(w,c,rtl,directory,timeout,simulator='iverilog',*,_corpus=None,_first_pass=0,_end_pass=4,
-             _output_map=None,_output_oracle=None):
+             _output_map=None,_output_oracle=None,_compile_only=False,_compiled=None,
+             _optimization=None,_compile_jobs=4,_runtime_args=()):
     started=time.monotonic(); directory=directory.resolve();directory.mkdir(parents=True,exist_ok=True)
-    if (_corpus is None and _output_map is None and _output_oracle is None and w.get('version')==2 and w['n']>=1024 and
+    if (not _compile_only and _compiled is None and _corpus is None and _output_map is None and _output_oracle is None and w.get('version')==2 and w['n']>=1024 and
             c['generator']=='sgen' and simulator=='verilator'):
         return _parallel_large_fft(w,c,rtl,directory,timeout,simulator)
     corpus=products.vectors(w) if _corpus is None else _corpus
@@ -178,23 +194,47 @@ def evaluate(w,c,rtl,directory,timeout,simulator='iverilog',*,_corpus=None,_firs
                 dest.append(packed([(r&mask)|((i&mask)<<scalar) for r,i in values],2*scalar))
         for name,values in zip(('fa','fb','mul','inv'),outputs):
             path=directory/f'{name}.mem';path.write_text(''.join(values));model_files.append(path)
-    (directory/'test.sv').write_text(testbench(w,len(corpus),watchdog,scalar,_first_pass,_end_pass))
+    if not corpus:raise ValueError('empty product corpus')
+    if _compiled:
+        for key,value in [('workload_sha256',digest(w)),('configuration_sha256',digest(c)),
+                          ('rtl_sha256',file_hash(rtl))]:
+            if _compiled.get(key)!=value:raise ValueError('compiled simulator identity differs: '+key)
+        if simulator!='verilator' or len(corpus)>_compiled['max_frames']:
+            raise ValueError('compiled simulator frame capacity or simulator differs')
+        for key in ('testbench','executable'):
+            if file_hash(Path(_compiled[key]))!=_compiled[key+'_sha256']:
+                raise ValueError('compiled simulator artifact changed: '+key)
+        shutil.copyfile(_compiled['testbench'],directory/'test.sv')
+    else:
+        (directory/'test.sv').write_text(testbench(w,len(corpus),watchdog,scalar,_first_pass,_end_pass))
     files=[rtl,directory/'a.mem',directory/'b.mem',directory/'expected.mem',directory/'test.sv',*model_files]
     hashes={str(p):file_hash(p) for p in files}
     if simulator in ('auto','iverilog'):
         build_cmd=['iverilog','-g2012','-s','test','-o','simulation',str(rtl),'test.sv'];test_cmd=['vvp','simulation']
     elif simulator=='verilator':
-        flags='-std=c++20 -O3' if w.get('version')==2 and w['n']>=1024 else '-std=c++20'
-        build_cmd=['verilator','--binary','--timing','-CFLAGS',flags,'--top-module','test','-Wno-fatal','-j','4',str(rtl),'test.sv'];test_cmd=[str(directory/'obj_dir/Vtest')]
+        optimization=_optimization or ('-O3' if w.get('version')==2 and
+            (w['n']>=1024 or (w['n']>=512 and c['generator']=='sgen')) else '-Os')
+        if optimization not in ('-Os','-O3'):raise ValueError('unsupported simulator optimization')
+        if not 1<=_compile_jobs<=32:raise ValueError('invalid simulator compile jobs')
+        flags='-std=c++20 '+optimization
+        build_cmd=['verilator','--binary','--timing','-CFLAGS',flags,'--top-module','test','-Wno-fatal','-j',str(_compile_jobs),str(rtl),'test.sv'];test_cmd=[str(directory/'obj_dir/Vtest')]
     else:raise ValueError('unsupported product simulator')
-    build=run(build_cmd,directory,directory/'build.log',max(0,timeout-(time.monotonic()-started)))
-    test=run(test_cmd,directory,directory/'test.log',max(0,timeout-(time.monotonic()-started))) if build['returncode']==0 else {}
+    if _compiled:
+        test_cmd=[_compiled['executable']]
+        hashes[_compiled['executable']]=_compiled['executable_sha256']
+        build=dict(returncode=0,mode='shared-compiled-simulator',signature=digest(_compiled))
+    else:
+        build=run(build_cmd,directory,directory/'build.log',max(0,timeout-(time.monotonic()-started)))
+    test_cmd += [f'+frames={len(corpus)}',f'+first_pass={_first_pass}',f'+end_pass={_end_pass}',*_runtime_args]
+    test=run(test_cmd,directory,directory/'test.log',max(0,timeout-(time.monotonic()-started))) if build['returncode']==0 and not _compile_only else {}
     text=(directory/'test.log').read_text() if (directory/'test.log').exists() else ''
     unchanged=all(file_hash(Path(p))==value for p,value in hashes.items())
     for path in (directory/'build.log',directory/'test.log'):
         if path.is_file():hashes[str(path)]=file_hash(path)
     result=dict(correct=unchanged and build['returncode']==0 and test.get('returncode')==0 and 'PASS polynomial product' in text,
-                mode='functional',metrics=parse_metrics(text),build=build,test=test,verification=hashes,inputs_unchanged=unchanged,
+                mode='compile-only' if _compile_only else 'functional',metrics=parse_metrics(text),build=build,test=test,verification=hashes,inputs_unchanged=unchanged,
+                compiled_signature=digest(_compiled) if _compiled else None,
+                runtime_args=list(_runtime_args),pass_range=[_first_pass,_end_pass],
                 oracle='independent-python-integer-schoolbook',corpus_sha256=digest(corpus),random_pairs=64 if w.get('version')==2 else 256,seed=1)
     write_json(directory/'results.json',result)
     return result

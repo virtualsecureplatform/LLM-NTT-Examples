@@ -28,6 +28,16 @@ and source campaign identities remain in the machine-readable
 
 Historical experiments and implementations remain recoverable from Git history.
 
+## Complete multiplication study
+
+The [polynomial multiplication studies](docs/polynomial-study.md) expand the comparison
+to full-width, byte, and ternary operands, FFT precision and digit omissions,
+NTT architectures, and separate output-rounding controls. Start with
+`python3 scripts/polynomial_study.py --dry-run`; the default specification is
+`studies/torus512.json`. New evidence is written to ignored build directories.
+For a bounded 12-configuration demonstration with the same validation pipeline,
+run `scripts/run_polynomial_study.sh --spec studies/torus-demo.json --output-dir build/polynomial-study-demo`.
+
 ## Run a new grid
 
 From the repository root, with Apptainer, `sbt`, and native build dependencies:
