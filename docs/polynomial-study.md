@@ -113,6 +113,19 @@ Use the bounded demo above before an expensive full N=512 campaign.
 
 ## Evidence and interpretation
 
+The completed campaign's [tables and tradeoff plots](results/polynomial-results.md)
+are checked in with compact CSV snapshots and source fingerprints. Export tables
+from the local evidence and regenerate SVG/PNG plots from those CSVs:
+
+```bash
+python3 scripts/report_polynomial_study.py \
+  --campaign build/polynomial-study-512-optimized \
+  --campaign build/polynomial-study-demo --output-dir docs/results
+python3 -m venv build/polynomial-report-venv
+build/polynomial-report-venv/bin/python -m pip install -r scripts/polynomial-report-requirements.txt
+build/polynomial-report-venv/bin/python scripts/plot_polynomial_study.py
+```
+
 Each workload uses 36 structured frames, 64 seeded random frames, and a
 wraparound impulse. Width-asymmetric products are regenerated with operands
 swapped and checked against the swapped contract. Timing uses a separate

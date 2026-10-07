@@ -1,0 +1,496 @@
+[
+  {
+    "corpus_sha256": {
+      "full-byte": "d663f3e03df113dfd77b30b5aca10bc3378a0cf62845e86ca67e8083babff4b6",
+      "full-full": "3b938b126683b5ccafc0fe0d5de79090082cd712f566fec78f944231d7b041e7",
+      "full-ternary": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f"
+    },
+    "coverage": {
+      "certificate-rejected": 27,
+      "screened": 171,
+      "timeout": 3,
+      "unsupported": 306
+    },
+    "frontiers": {
+      "full-byte": {
+        "0": [
+          "full-byte-100cccca71d3fe57",
+          "full-byte-0f851e0aae00ef93",
+          "full-byte-9da1956d97e906c6",
+          "full-byte-c79e9fb02ecb051e",
+          "full-byte-855f3dd185f586e6",
+          "full-byte-f496f325adec9dff",
+          "full-byte-5634e496055e1206",
+          "full-byte-dda41e94c0cde429",
+          "full-byte-6a42a74358a7d607",
+          "full-byte-77385461a40f5149",
+          "full-byte-71d6da58bdeaadd5",
+          "full-byte-530dad86b276d3eb"
+        ],
+        "115200": [
+          "full-byte-100cccca71d3fe57",
+          "full-byte-0f851e0aae00ef93",
+          "full-byte-9da1956d97e906c6",
+          "full-byte-c79e9fb02ecb051e",
+          "full-byte-855f3dd185f586e6",
+          "full-byte-f496f325adec9dff",
+          "full-byte-5634e496055e1206",
+          "full-byte-dda41e94c0cde429",
+          "full-byte-6a42a74358a7d607",
+          "full-byte-77385461a40f5149",
+          "full-byte-71d6da58bdeaadd5",
+          "full-byte-530dad86b276d3eb"
+        ],
+        "3801600": [
+          "full-byte-100cccca71d3fe57",
+          "full-byte-0f851e0aae00ef93",
+          "full-byte-9da1956d97e906c6",
+          "full-byte-c79e9fb02ecb051e",
+          "full-byte-855f3dd185f586e6",
+          "full-byte-f496f325adec9dff",
+          "full-byte-5634e496055e1206",
+          "full-byte-dda41e94c0cde429",
+          "full-byte-6a42a74358a7d607",
+          "full-byte-77385461a40f5149",
+          "full-byte-71d6da58bdeaadd5",
+          "full-byte-530dad86b276d3eb"
+        ],
+        "4000000": [
+          "full-byte-100cccca71d3fe57",
+          "full-byte-0f851e0aae00ef93",
+          "full-byte-9da1956d97e906c6",
+          "full-byte-c79e9fb02ecb051e",
+          "full-byte-855f3dd185f586e6",
+          "full-byte-f496f325adec9dff",
+          "full-byte-5634e496055e1206",
+          "full-byte-dda41e94c0cde429",
+          "full-byte-6a42a74358a7d607",
+          "full-byte-77385461a40f5149",
+          "full-byte-71d6da58bdeaadd5",
+          "full-byte-530dad86b276d3eb"
+        ],
+        "8": [
+          "full-byte-100cccca71d3fe57",
+          "full-byte-0f851e0aae00ef93",
+          "full-byte-9da1956d97e906c6",
+          "full-byte-c79e9fb02ecb051e",
+          "full-byte-855f3dd185f586e6",
+          "full-byte-f496f325adec9dff",
+          "full-byte-5634e496055e1206",
+          "full-byte-dda41e94c0cde429",
+          "full-byte-6a42a74358a7d607",
+          "full-byte-77385461a40f5149",
+          "full-byte-71d6da58bdeaadd5",
+          "full-byte-530dad86b276d3eb"
+        ],
+        "None": [
+          "full-byte-100cccca71d3fe57",
+          "full-byte-0f851e0aae00ef93",
+          "full-byte-9da1956d97e906c6",
+          "full-byte-c79e9fb02ecb051e",
+          "full-byte-855f3dd185f586e6",
+          "full-byte-f496f325adec9dff",
+          "full-byte-5634e496055e1206",
+          "full-byte-dda41e94c0cde429",
+          "full-byte-6a42a74358a7d607",
+          "full-byte-77385461a40f5149",
+          "full-byte-71d6da58bdeaadd5",
+          "full-byte-530dad86b276d3eb"
+        ]
+      },
+      "full-full": {
+        "0": [
+          "full-full-38058e160e6b49c5",
+          "full-full-82a27f661fe63183",
+          "full-full-415cb4acee31f79c",
+          "full-full-75838e085b5be33e",
+          "full-full-0eb5909f852501c3",
+          "full-full-98646a6a236a4294",
+          "full-full-ea225328921802ce",
+          "full-full-b3d8f9ec0c4f2b32",
+          "full-full-e0a0977a7604de5e",
+          "full-full-94967427a47778ed",
+          "full-full-ab599516aa9e31e8",
+          "full-full-11335611734ae86a",
+          "full-full-9251d54f54166f86"
+        ],
+        "115200": [
+          "full-full-38058e160e6b49c5",
+          "full-full-5d98ad97006c37bc",
+          "full-full-82a27f661fe63183",
+          "full-full-415cb4acee31f79c",
+          "full-full-75838e085b5be33e",
+          "full-full-0eb5909f852501c3",
+          "full-full-98646a6a236a4294",
+          "full-full-ea225328921802ce",
+          "full-full-b3d8f9ec0c4f2b32",
+          "full-full-e0a0977a7604de5e",
+          "full-full-94967427a47778ed",
+          "full-full-ab599516aa9e31e8",
+          "full-full-11335611734ae86a",
+          "full-full-9251d54f54166f86"
+        ],
+        "3801600": [
+          "full-full-38058e160e6b49c5",
+          "full-full-5d98ad97006c37bc",
+          "full-full-1501cb288a963e43",
+          "full-full-82a27f661fe63183",
+          "full-full-415cb4acee31f79c",
+          "full-full-75838e085b5be33e",
+          "full-full-0eb5909f852501c3",
+          "full-full-98646a6a236a4294",
+          "full-full-ea225328921802ce",
+          "full-full-b3d8f9ec0c4f2b32",
+          "full-full-e0a0977a7604de5e",
+          "full-full-94967427a47778ed",
+          "full-full-ab599516aa9e31e8",
+          "full-full-11335611734ae86a",
+          "full-full-9251d54f54166f86"
+        ],
+        "4000000": [
+          "full-full-38058e160e6b49c5",
+          "full-full-5d98ad97006c37bc",
+          "full-full-1501cb288a963e43",
+          "full-full-82a27f661fe63183",
+          "full-full-415cb4acee31f79c",
+          "full-full-75838e085b5be33e",
+          "full-full-0eb5909f852501c3",
+          "full-full-98646a6a236a4294",
+          "full-full-ea225328921802ce",
+          "full-full-b3d8f9ec0c4f2b32",
+          "full-full-e0a0977a7604de5e",
+          "full-full-94967427a47778ed",
+          "full-full-ab599516aa9e31e8",
+          "full-full-11335611734ae86a",
+          "full-full-9251d54f54166f86"
+        ],
+        "8": [
+          "full-full-38058e160e6b49c5",
+          "full-full-82a27f661fe63183",
+          "full-full-415cb4acee31f79c",
+          "full-full-75838e085b5be33e",
+          "full-full-0eb5909f852501c3",
+          "full-full-98646a6a236a4294",
+          "full-full-ea225328921802ce",
+          "full-full-b3d8f9ec0c4f2b32",
+          "full-full-e0a0977a7604de5e",
+          "full-full-94967427a47778ed",
+          "full-full-ab599516aa9e31e8",
+          "full-full-11335611734ae86a",
+          "full-full-9251d54f54166f86"
+        ],
+        "None": [
+          "full-full-38058e160e6b49c5",
+          "full-full-5d98ad97006c37bc",
+          "full-full-1501cb288a963e43",
+          "full-full-82a27f661fe63183",
+          "full-full-415cb4acee31f79c",
+          "full-full-75838e085b5be33e",
+          "full-full-0eb5909f852501c3",
+          "full-full-98646a6a236a4294",
+          "full-full-ea225328921802ce",
+          "full-full-b3d8f9ec0c4f2b32",
+          "full-full-e0a0977a7604de5e",
+          "full-full-94967427a47778ed",
+          "full-full-ab599516aa9e31e8",
+          "full-full-11335611734ae86a",
+          "full-full-9251d54f54166f86"
+        ]
+      },
+      "full-ternary": {
+        "0": [
+          "full-ternary-225f4b004a692515",
+          "full-ternary-2ada7157f6473f00",
+          "full-ternary-8846cdc2d130f7e5",
+          "full-ternary-7b56a5c346ce28cc",
+          "full-ternary-17c7bd8001105cca",
+          "full-ternary-7a7c73ffcfb0feb2",
+          "full-ternary-2950e53479c1231f",
+          "full-ternary-7c98fb5254501819",
+          "full-ternary-49e4ff51b4a84b3b",
+          "full-ternary-b576c4ea3ab6c098",
+          "full-ternary-e292f7c98acf8123",
+          "full-ternary-8d24c897cf35909f"
+        ],
+        "115200": [
+          "full-ternary-cd41d93a4ac121cc",
+          "full-ternary-225f4b004a692515",
+          "full-ternary-2ada7157f6473f00",
+          "full-ternary-8846cdc2d130f7e5",
+          "full-ternary-7b56a5c346ce28cc",
+          "full-ternary-17c7bd8001105cca",
+          "full-ternary-7a7c73ffcfb0feb2",
+          "full-ternary-2950e53479c1231f",
+          "full-ternary-7c98fb5254501819",
+          "full-ternary-49e4ff51b4a84b3b",
+          "full-ternary-b576c4ea3ab6c098",
+          "full-ternary-e292f7c98acf8123",
+          "full-ternary-8d24c897cf35909f"
+        ],
+        "3801600": [
+          "full-ternary-cd41d93a4ac121cc",
+          "full-ternary-a1dc3d9e01dd3e52",
+          "full-ternary-225f4b004a692515",
+          "full-ternary-2ada7157f6473f00",
+          "full-ternary-8846cdc2d130f7e5",
+          "full-ternary-7b56a5c346ce28cc",
+          "full-ternary-17c7bd8001105cca",
+          "full-ternary-7a7c73ffcfb0feb2",
+          "full-ternary-2950e53479c1231f",
+          "full-ternary-7c98fb5254501819",
+          "full-ternary-49e4ff51b4a84b3b",
+          "full-ternary-b576c4ea3ab6c098",
+          "full-ternary-e292f7c98acf8123",
+          "full-ternary-8d24c897cf35909f"
+        ],
+        "4000000": [
+          "full-ternary-cd41d93a4ac121cc",
+          "full-ternary-a1dc3d9e01dd3e52",
+          "full-ternary-225f4b004a692515",
+          "full-ternary-2ada7157f6473f00",
+          "full-ternary-8846cdc2d130f7e5",
+          "full-ternary-7b56a5c346ce28cc",
+          "full-ternary-17c7bd8001105cca",
+          "full-ternary-7a7c73ffcfb0feb2",
+          "full-ternary-2950e53479c1231f",
+          "full-ternary-7c98fb5254501819",
+          "full-ternary-49e4ff51b4a84b3b",
+          "full-ternary-b576c4ea3ab6c098",
+          "full-ternary-e292f7c98acf8123",
+          "full-ternary-8d24c897cf35909f"
+        ],
+        "8": [
+          "full-ternary-225f4b004a692515",
+          "full-ternary-2ada7157f6473f00",
+          "full-ternary-8846cdc2d130f7e5",
+          "full-ternary-7b56a5c346ce28cc",
+          "full-ternary-17c7bd8001105cca",
+          "full-ternary-7a7c73ffcfb0feb2",
+          "full-ternary-2950e53479c1231f",
+          "full-ternary-7c98fb5254501819",
+          "full-ternary-49e4ff51b4a84b3b",
+          "full-ternary-b576c4ea3ab6c098",
+          "full-ternary-e292f7c98acf8123",
+          "full-ternary-8d24c897cf35909f"
+        ],
+        "None": [
+          "full-ternary-cd41d93a4ac121cc",
+          "full-ternary-a1dc3d9e01dd3e52",
+          "full-ternary-225f4b004a692515",
+          "full-ternary-2ada7157f6473f00",
+          "full-ternary-8846cdc2d130f7e5",
+          "full-ternary-7b56a5c346ce28cc",
+          "full-ternary-17c7bd8001105cca",
+          "full-ternary-7a7c73ffcfb0feb2",
+          "full-ternary-2950e53479c1231f",
+          "full-ternary-7c98fb5254501819",
+          "full-ternary-49e4ff51b4a84b3b",
+          "full-ternary-b576c4ea3ab6c098",
+          "full-ternary-e292f7c98acf8123",
+          "full-ternary-8d24c897cf35909f"
+        ]
+      }
+    },
+    "manifest_sha256": "3431d28df69d003f8f0c196b85ca47d555e46880f1040f08190e944c0e6e72f1",
+    "n": 512,
+    "results_sha256": "771b0c3f06f7446dc92530867815704519ed2fdcdc4626005dc5e7e1b60e42e1",
+    "spec": {
+      "error_limits": [
+        8,
+        115200,
+        3801600,
+        4000000
+      ],
+      "fractional_bits": [
+        24,
+        28,
+        29,
+        30,
+        32,
+        40,
+        48
+      ],
+      "n": 512,
+      "ngen_axes": {
+        "lanes": [
+          2,
+          4
+        ],
+        "ngen_backends": [
+          "streamed",
+          "stage-parallel"
+        ],
+        "pe": [
+          1,
+          2
+        ],
+        "radix": [
+          2,
+          4,
+          8
+        ],
+        "reductions": [
+          "barrett",
+          "montgomery",
+          "shoup"
+        ],
+        "stage_groups": [
+          1,
+          2
+        ]
+      },
+      "omit_low_diagonals": [
+        0,
+        1,
+        2
+      ],
+      "quant_bits": [
+        0,
+        4,
+        8
+      ],
+      "schema": "polynomial-study-v1",
+      "simulator": "verilator",
+      "timeout": 1800,
+      "workloads": [
+        {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -2147483648,
+            2147483647
+          ],
+          "name": "full-full"
+        },
+        {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -128,
+            127
+          ],
+          "name": "full-byte"
+        },
+        {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -1,
+            1
+          ],
+          "name": "full-ternary"
+        }
+      ]
+    }
+  },
+  {
+    "corpus_sha256": {
+      "full-full": "d877d9f392cd6fb4228e2f1aa45719a40654bd36136e2783733c64028ad5eb7f"
+    },
+    "coverage": {
+      "screened": 12
+    },
+    "frontiers": {
+      "full-full": {
+        "0": [
+          "full-full-f37f5d1f96977419",
+          "full-full-fd39329346adde02",
+          "full-full-85fc94b3f8cbbdd0"
+        ],
+        "237600": [
+          "full-full-f37f5d1f96977419",
+          "full-full-192cd18041624194",
+          "full-full-005a93db428c63cd",
+          "full-full-fd39329346adde02",
+          "full-full-85fc94b3f8cbbdd0"
+        ],
+        "7200": [
+          "full-full-f37f5d1f96977419",
+          "full-full-192cd18041624194",
+          "full-full-fd39329346adde02",
+          "full-full-85fc94b3f8cbbdd0"
+        ],
+        "8": [
+          "full-full-f37f5d1f96977419",
+          "full-full-fd39329346adde02",
+          "full-full-85fc94b3f8cbbdd0"
+        ],
+        "None": [
+          "full-full-f37f5d1f96977419",
+          "full-full-192cd18041624194",
+          "full-full-005a93db428c63cd",
+          "full-full-fd39329346adde02",
+          "full-full-85fc94b3f8cbbdd0"
+        ]
+      }
+    },
+    "manifest_sha256": "7f274cd1cad482db5562c5616d6d2d13ec2a9f6a8b87786723e25d4dd13c7dd0",
+    "n": 32,
+    "results_sha256": "ffdf6f1278f2d60c657cd247a7612831ab26300f291555e5998cb4529668ff75",
+    "spec": {
+      "error_limits": [
+        8,
+        7200,
+        237600
+      ],
+      "fractional_bits": [
+        24,
+        30
+      ],
+      "n": 32,
+      "ngen_axes": {
+        "lanes": [
+          2
+        ],
+        "ngen_backends": [
+          "streamed"
+        ],
+        "pe": [
+          1,
+          2
+        ],
+        "radix": [
+          2
+        ],
+        "reductions": [
+          "barrett",
+          "shoup"
+        ],
+        "stage_groups": [
+          1
+        ]
+      },
+      "omit_low_diagonals": [
+        0,
+        1,
+        2
+      ],
+      "quant_bits": [
+        0,
+        4
+      ],
+      "schema": "polynomial-study-v1",
+      "simulator": "verilator",
+      "timeout": 1800,
+      "workloads": [
+        {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -2147483648,
+            2147483647
+          ],
+          "name": "full-full"
+        }
+      ]
+    }
+  }
+]

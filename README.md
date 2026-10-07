@@ -37,6 +37,8 @@ NTT architectures, and separate output-rounding controls. Start with
 `studies/torus512.json`. New evidence is written to ignored build directories.
 For a bounded 12-configuration demonstration with the same validation pipeline,
 run `scripts/run_polynomial_study.sh --spec studies/torus-demo.json --output-dir build/polynomial-study-demo`.
+The completed [results tables and tradeoff plots](docs/results/polynomial-results.md)
+include all 171 qualified N=512 designs and all 12 demo designs, with CSV snapshots.
 
 ## Run a new grid
 
