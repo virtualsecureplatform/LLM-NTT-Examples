@@ -47,6 +47,36 @@ runner supplies the grid and evidence; an LLM proposal policy is future work.
 
 ## Full N=512 reference grid
 
+The original reference grid fixes FFT architecture to compact, two lanes, and
+zero guard bits while sweeping NTT architectures. The
+[full-throughput FFT extension](../studies/torus512-full-fft.json) adds 36 FFT
+configurations: full-throughput at two/four lanes, fractional precision 30/32,
+and omission depths zero/one/two, across all three operand workloads. Three
+NTT baselines also run to check agreement with the original campaign. This
+extension fixes guard bits at zero and does not add output-rounding variants.
+The runner now exposes `sgen_axes` (`sgen_backends`, `lanes`, `guard_bits`),
+and dependent rounding, when requested, preserves backend, lanes, and guard
+bits when selecting the lowest certified exact precision. Full-throughput
+candidate generation is enabled through N=512; N=1024 remains outside that
+qualification scope.
+
+Qualify one exact full-throughput configuration first, then import its verified
+evidence into the full extension with the same specification:
+
+```bash
+scripts/run_polynomial_study.sh --spec studies/torus512-full-fft.json \
+  --output-dir build/polynomial-study-512-full-fft-qualification \
+  --configuration-names full-full-ddcf2ae56dd04ce0
+scripts/run_polynomial_study.sh --spec studies/torus512-full-fft.json \
+  --output-dir build/polynomial-study-512-full-fft \
+  --reuse-from build/polynomial-study-512-full-fft-qualification/results.json
+```
+
+The campaigns remain separate so the original evidence is preserved. Merge
+their report snapshots with repeated `--campaign` arguments below. The report
+checks corpus and workload identity, deduplicates repeated NTT baselines, and
+recomputes Pareto membership over the union of qualified configurations.
+
 The study compares complete negacyclic products modulo `2^32` with fresh
 operands and the same two-coefficient ready/valid interface. The checked-in
 [specification](../studies/torus512.json) distinguishes full signed 32-bit ×
@@ -120,6 +150,7 @@ from the local evidence and regenerate SVG/PNG plots from those CSVs:
 ```bash
 python3 scripts/report_polynomial_study.py \
   --campaign build/polynomial-study-512-optimized \
+  --campaign build/polynomial-study-512-full-fft \
   --campaign build/polynomial-study-demo --output-dir docs/results
 python3 -m venv build/polynomial-report-venv
 build/polynomial-report-venv/bin/python -m pip install -r scripts/polynomial-report-requirements.txt
@@ -178,7 +209,9 @@ Import requires matching workload specification, corpus, tools, generator
 assemblies, runtime image, and arithmetic/generator sources. Only the study
 runner and simulator evaluation sources may differ. Every reused point retains
 its original evidence directory and source manifest/results hashes; old failures
-are retried. No previous results or RTL are overwritten.
+are retried. Selection may expand from a qualification subset to the full
+identical specification; each imported point still requires matching requested
+configuration, contract, and artifact hashes. No previous results or RTL are overwritten.
 
 The paired compiler benchmark accepts an existing qualified point and uses the
 same complete-product RTL and seeded random frame for `-Os` and `-O3`:

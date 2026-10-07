@@ -38,6 +38,26 @@ class PolynomialStudyTests(unittest.TestCase):
             for x in (-wide.bound(w), -1, 0, wide.bound(w)):
                 self.assertEqual(wide.reconstruct([x % f['q'] for f in fields], [f['q'] for f in fields]), x)
 
+    def test_fft_axes_and_rounding_parent_preserve_architecture(self):
+        self.spec['workloads'] = self.spec['workloads'][:1]
+        self.spec['sgen_axes'] = dict(sgen_backends=['compact','full-throughput'],lanes=[2,4],guard_bits=[0,2])
+        self.spec['fractional_bits'] = [24,30]
+        rows = study.enumerate_points(self.spec)
+        self.assertEqual(len({r['name'] for r in rows}),len(rows))
+        for r in rows:
+            if r.get('configuration',{}).get('generator') == 'sgen':
+                r['base_qualified'] = r['configuration']['fractional_bits'] == (24 if r['configuration']['backend']=='compact' else 30)
+        dependencies = [r for r in rows if r.get('dependency')]
+        self.assertEqual(len(dependencies),16)
+        for r in dependencies:
+            parent = study.fft_rounding_parent(rows,r)
+            self.assertIsNotNone(parent)
+            for k,v in r['fft_selector'].items():
+                self.assertEqual(parent['configuration'][k],v)
+            self.assertEqual(parent['configuration']['fractional_bits'],24 if r['fft_selector']['backend']=='compact' else 30)
+        self.spec['sgen_axes']['bogus'] = [1]
+        with self.assertRaises(ValueError): study.enumerate_points(self.spec)
+
     def test_approximation_and_commutativity(self):
         for w in study.workloads(self.spec).values():
             w = {**w, 'n': 8}
@@ -176,10 +196,10 @@ class PolynomialStudyTests(unittest.TestCase):
     def test_cross_campaign_reuse_preserves_provenance_and_rejects_arithmetic_change(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d); rtl = root / 'rtl.sv'; rtl.write_text('original')
-            old = dict(schema='test', spec={}, selected=None, tools={}, generators={}, corpora={},
+            old = dict(schema='test', spec={}, selected=['pass'], tools={}, generators={}, corpora={},
                        image_sha256=None, sources={'architecture_search/wide_products.py': 'same',
                                                   'architecture_search/product_evaluate.py': 'old'})
-            new = {**old, 'sources': {**old['sources'], 'architecture_search/product_evaluate.py': 'new',
+            new = {**old, 'selected': None, 'sources': {**old['sources'], 'architecture_search/product_evaluate.py': 'new',
                                     'architecture_search/product_simulation.py': 'added'}}
             study.write_json(root / 'manifest.json', old)
             study.write_json(root / 'results.json', {'points': [dict(name='pass', passed=True,

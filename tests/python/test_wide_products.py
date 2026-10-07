@@ -4,6 +4,16 @@ from architecture_search import wide_products as wide, wide_rtl
 
 
 class WideProductContracts(unittest.TestCase):
+    def test_full_throughput_fft_candidates_at_512(self):
+        w = wide.workload(512,2147483647,'negacyclic',1<<32)
+        rows = wide.candidates(w, dict(generators=['sgen'], sgen_backends=['full-throughput'],
+                                      lanes=[2,4], fractional_bits=[30], guard_bits=[0,2]))
+        self.assertEqual(len(rows),4)
+        self.assertEqual({r['backend'] for r in rows},{'full-throughput'})
+        self.assertEqual({r['integer_bits'] for r in rows},{41,43})
+        self.assertEqual(wide.candidates({**w,'n':1024},dict(generators=['sgen'],
+                         sgen_backends=['full-throughput'])),[])
+
     def test_rings_moduli_and_bounds(self):
         for ring in ('linear','cyclic','negacyclic'):
             w=wide.workload(8,127,ring);a=[0]*8;b=[0]*8;a[-1]=127;b[1]=-127

@@ -173,7 +173,7 @@ def candidates(w,space=None):
         magnitude_bound=15 if split else max(magnitude(w,'a'),magnitude(w,'b'))
         for backend,lanes,frac,guard,omit in itertools.product(
                 axes['sgen_backends'],axes['lanes'],axes['fractional_bits'],axes['guard_bits'],axes['omit_low_diagonals']):
-            if w['n']>256 and backend!='compact':continue
+            if w['n']>512 and backend!='compact':continue
             if omit and (not split or w['ring']!='negacyclic' or w['modulus']!=1<<32):continue
             candidate=dict(generator='sgen',backend=backend,lanes=lanes,radix=2,
                            fractional_bits=frac,guard_bits=guard,

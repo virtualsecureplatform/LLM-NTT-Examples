@@ -39,6 +39,8 @@ For a bounded 12-configuration demonstration with the same validation pipeline,
 run `scripts/run_polynomial_study.sh --spec studies/torus-demo.json --output-dir build/polynomial-study-demo`.
 The completed [results tables and tradeoff plots](docs/results/polynomial-results.md)
 include all 171 qualified N=512 designs and all 12 demo designs, with CSV snapshots.
+The [full-throughput FFT extension](studies/torus512-full-fft.json) adds two/four-lane
+FFT designs at N=512; its separate campaign and merged reporting are described in the study guide.
 
 ## Run a new grid
 

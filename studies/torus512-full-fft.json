@@ -1,0 +1,91 @@
+{
+  "schema": "polynomial-study-v1",
+  "n": 512,
+  "workloads": [
+    {
+      "name": "full-full",
+      "a_range": [
+        -2147483648,
+        2147483647
+      ],
+      "b_range": [
+        -2147483648,
+        2147483647
+      ]
+    },
+    {
+      "name": "full-byte",
+      "a_range": [
+        -2147483648,
+        2147483647
+      ],
+      "b_range": [
+        -128,
+        127
+      ]
+    },
+    {
+      "name": "full-ternary",
+      "a_range": [
+        -2147483648,
+        2147483647
+      ],
+      "b_range": [
+        -1,
+        1
+      ]
+    }
+  ],
+  "fractional_bits": [
+    30,
+    32
+  ],
+  "omit_low_diagonals": [
+    0,
+    1,
+    2
+  ],
+  "quant_bits": [
+    0
+  ],
+  "error_limits": [
+    8,
+    115200,
+    3801600,
+    4000000
+  ],
+  "timeout": 3600,
+  "simulator": "verilator",
+  "ngen_axes": {
+    "ngen_backends": [
+      "streamed"
+    ],
+    "lanes": [
+      2
+    ],
+    "pe": [
+      1
+    ],
+    "radix": [
+      2
+    ],
+    "stage_groups": [
+      1
+    ],
+    "reductions": [
+      "barrett"
+    ]
+  },
+  "sgen_axes": {
+    "sgen_backends": [
+      "full-throughput"
+    ],
+    "lanes": [
+      2,
+      4
+    ],
+    "guard_bits": [
+      0
+    ]
+  }
+}

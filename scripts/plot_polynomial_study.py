@@ -14,7 +14,8 @@ from matplotlib.ticker import FuncFormatter
 
 STYLES = {'NTT streamed': ('#0072B2', 'o'),
           'NTT stage-parallel': ('#D55E00', 's'),
-          'FFT compact': ('#009E73', '^')}
+          'FFT compact': ('#009E73', '^'),
+          'FFT full-throughput': ('#CC79A7', 'D')}
 WORKLOADS = ('full-full', 'full-byte', 'full-ternary')
 
 
@@ -65,40 +66,43 @@ def resource_plot(rows, n, output):
                           linestyle='none', label='Seven-objective Pareto point'))
     title = f'N={n}: resource / throughput tradeoff'
     fig.suptitle(title + ('\nLower and left are better' if n == 32 else ' — lower and left are better'), fontsize=13)
-    fig.legend(handles=handles, loc='lower center', ncol=2 if n == 32 else 4, frameon=False, fontsize=9)
+    fig.legend(handles=handles, loc='lower center', ncol=2 if n == 32 else len(handles), frameon=False, fontsize=9)
     fig.tight_layout(rect=(0, .14 if n == 32 else .10, 1, .92))
     save(fig, output, f'torus{n}-resource-throughput')
 
 
 def omission_plot(rows, output):
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.6))
+    legend = {}
     for ax, workload in zip(axes, WORKLOADS):
         points = [r for r in rows if r['workload_name'] == workload
                   and r['configuration']['generator'] == 'sgen'
                   and r['configuration']['fractional_bits'] == 30 and r['quant_bits'] == 0]
-        points.sort(key=lambda r: r['configuration'].get('omit_low_diagonals', 0))
-        ax.plot([r['max_abs_error'] for r in points],
-                [r['initiation_interval_cycles'] for r in points],
-                color='#009E73', marker='o', linewidth=1.5)
+        groups = {}
         for r in points:
-            depth = r['configuration'].get('omit_low_diagonals', 0)
-            ax.annotate(f"omit {depth}\n{r['initiation_interval_cycles']:,} cycles",
-                        (r['max_abs_error'], r['initiation_interval_cycles']),
-                        xytext=(-8 if depth == 2 else 5, -30 if depth == 2 else 10), textcoords='offset points',
-                        ha='right' if depth == 2 else 'left', fontsize=8)
+            c = r['configuration']
+            groups.setdefault((c['backend'],c['lanes'],c['guard_bits']),[]).append(r)
+        for (backend, lanes, guard), group in groups.items():
+            group.sort(key=lambda r:r['configuration'].get('omit_low_diagonals',0))
+            color, marker = STYLES['FFT ' + backend]
+            label = f'{backend}, L{lanes}, g{guard}'
+            line, = ax.plot([r['max_abs_error'] for r in group],
+                            [r['initiation_interval_cycles'] for r in group],
+                            color=color, marker=marker, linestyle='--' if lanes==4 else '-', linewidth=1.5)
+            legend[label] = line
+        ax.set_yscale('log')
         ax.set_xscale('symlog', linthresh=8)
         ax.set_xticks([0, 1e2, 1e4, 1e6], ['0', r'$10^2$', r'$10^4$', r'$10^6$'])
         ax.set(title=workload, xlabel='Analytical error bound (torus units; symlog)',
-               ylabel='Cycles per product')
+               ylabel='Cycles per product (log scale)')
         ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f'{x:,.0f}'))
         ax.set_ylim(min(r['initiation_interval_cycles'] for r in points) * .92,
                     max(r['initiation_interval_cycles'] for r in points) * 1.12)
         ax.set_xlim(-1, max(r['max_abs_error'] for r in points) * 25)
         ax.grid(True, which='both', linewidth=.5, alpha=.25)
     fig.suptitle('N=512 FFT, f30: accepting bounded error reduces product interval', fontsize=13)
-    fig.text(.5, .01, 'Only digit omission varies. Lines connect omission depths 0, 1, and 2; they do not imply intermediate configurations.',
-             ha='center', fontsize=9)
-    fig.tight_layout(rect=(0, .07, 1, .92))
+    fig.legend(list(legend.values()),list(legend),loc='lower center',ncol=len(legend),frameon=False,fontsize=9)
+    fig.tight_layout(rect=(0, .10, 1, .92))
     save(fig, output, 'torus512-error-throughput')
 
 

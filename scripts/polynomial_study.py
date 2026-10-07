@@ -31,10 +31,12 @@ def workloads(spec):
     if spec.get('schema') != 'polynomial-study-v1':
         raise ValueError('expected polynomial-study-v1')
     if set(spec) - {'schema', 'n', 'workloads', 'fractional_bits', 'omit_low_diagonals',
-                    'quant_bits', 'error_limits', 'timeout', 'simulator', 'ngen_axes'}:
+                    'quant_bits', 'error_limits', 'timeout', 'simulator', 'ngen_axes', 'sgen_axes'}:
         raise ValueError('unknown study field')
     if set(spec.get('ngen_axes', {})) - set(AXES):
         raise ValueError('unknown NTT architecture axis')
+    if set(spec.get('sgen_axes', {})) - {'sgen_backends', 'lanes', 'guard_bits'}:
+        raise ValueError('unknown FFT architecture axis')
     result = {}
     for p in spec['workloads']:
         name = p['name']
@@ -69,13 +71,15 @@ def point(name, w, c, phase, bits=0, **extra):
 def enumerate_points(spec):
     points = []
     axes = {**AXES, **spec.get('ngen_axes', {})}
+    fft_axes = dict(sgen_backends=['compact'], lanes=[2], guard_bits=[0])
+    fft_axes.update(spec.get('sgen_axes', {}))
     for name, w in workloads(spec).items():
         points.append(point(name, w, BASE.copy(), 'arithmetic'))
         for bits in spec['quant_bits']:
             if bits:
                 points.append(point(name, w, BASE.copy(), 'rounding', bits))
-        for c in wide.candidates(w, dict(generators=['sgen'], sgen_backends=['compact'],
-                 lanes=[2], fractional_bits=spec['fractional_bits'], guard_bits=[0],
+        for c in wide.candidates(w, dict(generators=['sgen'], **fft_axes,
+                 fractional_bits=spec['fractional_bits'],
                  omit_low_diagonals=spec['omit_low_diagonals'])):
             points.append(point(name, w, c, 'arithmetic'))
         # Record the requested Cartesian grid, including combinations rejected by backend rules.
@@ -96,12 +100,23 @@ def enumerate_points(spec):
                 continue
             points.append(r)
         # Precision is chosen from stage-one evidence, not guessed during enumeration.
-        for bits in spec['quant_bits']:
-            if bits:
-                points.append(dict(name=name + '-fft-round-q' + str(bits), workload_name=name,
-                                   workload=w, phase='rounding', quant_bits=bits,
-                                   status='pending', dependency='lowest-certified-exact-fft'))
+        for backend, lanes, guard in itertools.product(fft_axes['sgen_backends'], fft_axes['lanes'], fft_axes['guard_bits']):
+            selector = dict(backend=backend, lanes=lanes, guard_bits=guard)
+            suffix = '' if selector == dict(backend='compact', lanes=2, guard_bits=0) else f'-{backend}-l{lanes}-g{guard}'
+            for bits in spec['quant_bits']:
+                if bits:
+                    points.append(dict(name=name + '-fft' + suffix + '-round-q' + str(bits), workload_name=name,
+                                       workload=w, phase='rounding', quant_bits=bits, fft_selector=selector,
+                                       status='pending', dependency='lowest-certified-exact-fft'))
     return points
+
+
+def fft_rounding_parent(rows, dependent):
+    exact = [p for p in rows if p['workload_name'] == dependent['workload_name'] and
+             p.get('base_qualified') and p.get('configuration', {}).get('generator') == 'sgen'
+             and not p['configuration'].get('omit_low_diagonals', 0) and not p['quant_bits']
+             and all(p['configuration'].get(k) == v for k, v in dependent['fft_selector'].items())]
+    return min(exact, key=lambda p: p['configuration']['fractional_bits']) if exact else None
 
 
 def corpus(w):
@@ -327,7 +342,9 @@ def import_results(results_file, manifest):
     source_root = results_file.parent
     source_manifest_file = source_root / 'manifest.json'
     source_manifest = json.loads(source_manifest_file.read_text())
-    for key in ('schema', 'spec', 'selected', 'tools', 'generators', 'corpora', 'image_sha256'):
+    # Selection may grow from qualification to the complete identical study.
+    # Point identity and artifact hashes are checked before any imported reuse.
+    for key in ('schema', 'spec', 'tools', 'generators', 'corpora', 'image_sha256'):
         if source_manifest.get(key) != manifest.get(key):
             raise ValueError('reuse manifest differs: ' + key)
     old_sources, new_sources = source_manifest['sources'], manifest['sources']
@@ -417,12 +434,10 @@ def main(argv=None):
         for index, r in enumerate(rows):
             if r['status'] != 'pending': continue
             if r.get('dependency'):
-                exact = [p for p in rows if p['workload_name'] == r['workload_name'] and
-                         p.get('base_qualified') and p.get('configuration', {}).get('generator') == 'sgen'
-                         and not p['configuration'].get('omit_low_diagonals', 0) and not p['quant_bits']]
-                if not exact:
+                parent = fft_rounding_parent(rows, r)
+                if parent is None:
                     r.update(status='dependency-rejected', reason='no certified exact FFT baseline'); save(out, spec, rows); continue
-                c = min(exact, key=lambda p: p['configuration']['fractional_bits'])['configuration']
+                c = parent['configuration']
                 rows[index] = r = {**r, 'configuration': c.copy()}
             prior = previous.get(r['name'])
             if prior and reusable(prior, out, r): rows[index] = prior
