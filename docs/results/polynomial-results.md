@@ -4,7 +4,7 @@ Measured negacyclic products modulo `2^32`, with fresh operands and a two-coeffi
 
 Cells and multiplier operators are coarse Yosys counts with inferred memories retained; they are not FPGA LUTs or DSP counts. Latency and interval are measured in cycles; interval is the spacing between products in an uninterrupted 12-frame run. No clock frequency or physical implementation is assumed. Error bounds are analytical; observed errors cover the 101-frame corpus and do not establish FHE decryption reliability.
 
-Pareto membership uses all seven objectives: error bound, cells, memory bits, register bits, multiplier operators, latency, and interval. It is computed separately for each workload over qualified points. Certification rejections and timeouts are excluded. L = internal lanes, R = radix, G = stage groups, PE = processing elements, f = fractional bits, omit = omitted low digit diagonals, and round = output rounding bits.
+Pareto membership uses all seven objectives: error bound, cells, memory bits, register bits, multiplier operators, latency, and interval. It is computed separately for each workload over qualified points. Certification rejections and timeouts are excluded. L = internal lanes, R = radix, G = stage groups, PE = processing elements, f = fractional bits, g = guard bits, omit = omitted low digit diagonals, and round = output rounding bits.
 
 ## N=512
 
@@ -14,23 +14,29 @@ All requested points, readable designs, status, point IDs, and metrics: [torus51
 
 Both axes use logarithmic scales. Overlapping points are retained without jitter. Black rings mark the seven-objective Pareto points; this is a projection, so they need not form a two-dimensional frontier. [PNG](torus512-resource-throughput.png) · [SVG](torus512-resource-throughput.svg)
 
-| Workload | Qualified | Certificate rejected | Timeout | Unsupported | Pending |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| full-byte | 58 | 9 | 0 | 102 | 0 |
-| full-full | 55 | 9 | 3 | 102 | 0 |
-| full-ternary | 58 | 9 | 0 | 102 | 0 |
+| Workload | Qualified | Certificate rejected | Timeout | Unsupported | Pending | Other |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| full-byte | 70 | 9 | 0 | 102 | 0 | 0 |
+| full-full | 67 | 9 | 3 | 102 | 0 | 0 |
+| full-ternary | 70 | 9 | 0 | 102 | 0 | 0 |
 
 ### full-byte
 
-Representative designs: minimum-cell exact, minimum-interval exact (ties use cells, memory, then point ID), and the lowest qualified FFT precision with its omission variants. These single-objective selections are not unique overall winners.
+Representative designs: minimum-cell exact, minimum-interval exact (ties use cells, memory, then point ID), and the lowest qualified FFT precision for each backend/lane/guard combination with its omission variants. These single-objective selections are not unique overall winners.
 
 | Design | Error bound | Observed max error | Cells | Memory bits | Register bits | Multiplier operators | Latency cycles | Interval cycles | Pareto |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | NTT streamed, L2, R2, G1, shoup, PE1 | 0 | 0 | 12,652 | 2,368,104 | 20,601 | 74 | 8,067 | 3,390 | yes |
 | NTT stage-parallel, L4, R2, G1, montgomery | 0 | 0 | 438,352 | 460,800 | 101,241 | 41,840 | 1,306 | 256 | yes |
-| FFT compact, L2, f30, omit0 | 0 | 0 | 48,381 | 2,957,424 | 294,635 | 74 | 216,934 | 211,067 | no |
-| FFT compact, L2, f30, omit1 | 115,200 | 115,200 | 48,381 | 2,957,424 | 294,635 | 74 | 202,897 | 197,030 | no |
-| FFT compact, L2, f30, omit2 | 3,801,600 | 2,818,560 | 48,381 | 2,957,424 | 294,635 | 74 | 174,823 | 168,956 | no |
+| FFT compact, L2, f30, g0, omit0 | 0 | 0 | 48,381 | 2,957,424 | 294,635 | 74 | 216,934 | 211,067 | no |
+| FFT compact, L2, f30, g0, omit1 | 115,200 | 115,200 | 48,381 | 2,957,424 | 294,635 | 74 | 202,897 | 197,030 | no |
+| FFT compact, L2, f30, g0, omit2 | 3,801,600 | 2,818,560 | 48,381 | 2,957,424 | 294,635 | 74 | 174,823 | 168,956 | no |
+| FFT full-throughput, L2, f30, g0, omit0 | 0 | 0 | 58,152 | 5,349,408 | 373,364 | 170 | 84,905 | 83,297 | no |
+| FFT full-throughput, L2, f30, g0, omit1 | 115,200 | 115,200 | 58,152 | 5,349,408 | 373,364 | 170 | 79,386 | 77,778 | no |
+| FFT full-throughput, L2, f30, g0, omit2 | 3,801,600 | 2,818,560 | 58,152 | 5,349,408 | 373,364 | 170 | 68,348 | 66,740 | no |
+| FFT full-throughput, L4, f30, g0, omit0 | 0 | 0 | 59,400 | 5,341,632 | 538,607 | 1,328 | 53,630 | 52,907 | no |
+| FFT full-throughput, L4, f30, g0, omit1 | 115,200 | 115,200 | 59,400 | 5,341,632 | 538,607 | 1,328 | 50,137 | 49,414 | no |
+| FFT full-throughput, L4, f30, g0, omit2 | 3,801,600 | 2,818,560 | 59,400 | 5,341,632 | 538,607 | 1,328 | 43,151 | 42,428 | no |
 
 <details>
 <summary>All Pareto designs across error levels</summary>
@@ -54,24 +60,30 @@ Representative designs: minimum-cell exact, minimum-interval exact (ties use cel
 
 ### full-full
 
-Representative designs: minimum-cell exact, minimum-interval exact (ties use cells, memory, then point ID), and the lowest qualified FFT precision with its omission variants. These single-objective selections are not unique overall winners.
+Representative designs: minimum-cell exact, minimum-interval exact (ties use cells, memory, then point ID), and the lowest qualified FFT precision for each backend/lane/guard combination with its omission variants. These single-objective selections are not unique overall winners.
 
 | Design | Error bound | Observed max error | Cells | Memory bits | Register bits | Multiplier operators | Latency cycles | Interval cycles | Pareto |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | NTT streamed, L2, R2, G1, shoup, PE1 | 0 | 0 | 18,963 | 3,192,708 | 28,128 | 111 | 8,067 | 3,390 | yes |
 | NTT stage-parallel, L4, R2, G1, montgomery | 0 | 0 | 657,513 | 591,360 | 131,226 | 62,760 | 1,306 | 256 | yes |
-| FFT compact, L2, f30, omit0 | 0 | 0 | 48,381 | 2,985,072 | 294,923 | 74 | 511,711 | 505,844 | yes |
-| FFT compact, L2, f30, omit1 | 115,200 | 115,200 | 48,381 | 2,985,072 | 294,923 | 74 | 497,674 | 491,807 | yes |
-| FFT compact, L2, f30, omit2 | 3,801,600 | 3,801,600 | 48,381 | 2,985,072 | 294,923 | 74 | 469,600 | 463,733 | yes |
+| FFT compact, L2, f30, g0, omit0 | 0 | 0 | 48,381 | 2,985,072 | 294,923 | 74 | 511,711 | 505,844 | yes |
+| FFT compact, L2, f30, g0, omit1 | 115,200 | 115,200 | 48,381 | 2,985,072 | 294,923 | 74 | 497,674 | 491,807 | yes |
+| FFT compact, L2, f30, g0, omit2 | 3,801,600 | 3,801,600 | 48,381 | 2,985,072 | 294,923 | 74 | 469,600 | 463,733 | yes |
+| FFT full-throughput, L2, f30, g0, omit0 | 0 | 0 | 58,152 | 5,377,056 | 373,652 | 170 | 200,804 | 199,196 | no |
+| FFT full-throughput, L2, f30, g0, omit1 | 115,200 | 115,200 | 58,152 | 5,377,056 | 373,652 | 170 | 195,285 | 193,677 | no |
+| FFT full-throughput, L2, f30, g0, omit2 | 3,801,600 | 3,801,600 | 58,152 | 5,377,056 | 373,652 | 170 | 184,247 | 182,639 | no |
+| FFT full-throughput, L4, f30, g0, omit0 | 0 | 0 | 59,400 | 5,369,280 | 538,895 | 1,328 | 126,983 | 126,260 | no |
+| FFT full-throughput, L4, f30, g0, omit1 | 115,200 | 115,200 | 59,400 | 5,369,280 | 538,895 | 1,328 | 123,490 | 122,767 | no |
+| FFT full-throughput, L4, f30, g0, omit2 | 3,801,600 | 3,801,600 | 59,400 | 5,369,280 | 538,895 | 1,328 | 116,504 | 115,781 | no |
 
 <details>
 <summary>All Pareto designs across error levels</summary>
 
 | Design | Error bound | Observed max error | Cells | Memory bits | Register bits | Multiplier operators | Latency cycles | Interval cycles | Pareto |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| FFT compact, L2, f30, omit0 | 0 | 0 | 48,381 | 2,985,072 | 294,923 | 74 | 511,711 | 505,844 | yes |
-| FFT compact, L2, f30, omit1 | 115,200 | 115,200 | 48,381 | 2,985,072 | 294,923 | 74 | 497,674 | 491,807 | yes |
-| FFT compact, L2, f30, omit2 | 3,801,600 | 3,801,600 | 48,381 | 2,985,072 | 294,923 | 74 | 469,600 | 463,733 | yes |
+| FFT compact, L2, f30, g0, omit0 | 0 | 0 | 48,381 | 2,985,072 | 294,923 | 74 | 511,711 | 505,844 | yes |
+| FFT compact, L2, f30, g0, omit1 | 115,200 | 115,200 | 48,381 | 2,985,072 | 294,923 | 74 | 497,674 | 491,807 | yes |
+| FFT compact, L2, f30, g0, omit2 | 3,801,600 | 3,801,600 | 48,381 | 2,985,072 | 294,923 | 74 | 469,600 | 463,733 | yes |
 | NTT streamed, L2, R2, G1, shoup, PE1 | 0 | 0 | 18,963 | 3,192,708 | 28,128 | 111 | 8,067 | 3,390 | yes |
 | NTT streamed, L2, R2, G2, shoup, PE1 | 0 | 0 | 34,488 | 3,429,252 | 47,472 | 138 | 9,097 | 2,080 | yes |
 | NTT streamed, L2, R2, G1, shoup, PE2 | 0 | 0 | 44,802 | 3,193,344 | 45,237 | 138 | 5,252 | 1,983 | yes |
@@ -89,23 +101,29 @@ Representative designs: minimum-cell exact, minimum-interval exact (ties use cel
 
 ### full-ternary
 
-Representative designs: minimum-cell exact, minimum-interval exact (ties use cells, memory, then point ID), and the lowest qualified FFT precision with its omission variants. These single-objective selections are not unique overall winners.
+Representative designs: minimum-cell exact, minimum-interval exact (ties use cells, memory, then point ID), and the lowest qualified FFT precision for each backend/lane/guard combination with its omission variants. These single-objective selections are not unique overall winners.
 
 | Design | Error bound | Observed max error | Cells | Memory bits | Register bits | Multiplier operators | Latency cycles | Interval cycles | Pareto |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | NTT streamed, L2, R2, G1, shoup, PE1 | 0 | 0 | 12,652 | 1,981,012 | 17,479 | 74 | 8,067 | 3,390 | yes |
 | NTT stage-parallel, L4, R2, G1, montgomery | 0 | 0 | 438,352 | 353,280 | 78,883 | 41,840 | 1,306 | 256 | yes |
-| FFT compact, L2, f30, omit0 | 0 | 0 | 48,381 | 2,950,256 | 294,555 | 74 | 118,675 | 112,808 | no |
-| FFT compact, L2, f30, omit1 | 115,200 | 7,680 | 48,378 | 2,949,744 | 294,555 | 72 | 104,638 | 98,771 | yes |
-| FFT compact, L2, f30, omit2 | 1,958,400 | 130,560 | 48,377 | 2,949,744 | 294,555 | 72 | 90,601 | 84,734 | yes |
+| FFT compact, L2, f30, g0, omit0 | 0 | 0 | 48,381 | 2,950,256 | 294,555 | 74 | 118,675 | 112,808 | no |
+| FFT compact, L2, f30, g0, omit1 | 115,200 | 7,680 | 48,378 | 2,949,744 | 294,555 | 72 | 104,638 | 98,771 | yes |
+| FFT compact, L2, f30, g0, omit2 | 1,958,400 | 130,560 | 48,377 | 2,949,744 | 294,555 | 72 | 90,601 | 84,734 | yes |
+| FFT full-throughput, L2, f30, g0, omit0 | 0 | 0 | 58,152 | 5,342,240 | 373,284 | 170 | 46,272 | 44,664 | no |
+| FFT full-throughput, L2, f30, g0, omit1 | 115,200 | 7,680 | 58,149 | 5,341,728 | 373,284 | 168 | 40,753 | 39,145 | no |
+| FFT full-throughput, L2, f30, g0, omit2 | 1,958,400 | 130,560 | 58,148 | 5,341,728 | 373,284 | 168 | 35,234 | 33,626 | no |
+| FFT full-throughput, L4, f30, g0, omit0 | 0 | 0 | 59,400 | 5,334,464 | 538,527 | 1,328 | 29,179 | 28,456 | no |
+| FFT full-throughput, L4, f30, g0, omit1 | 115,200 | 7,680 | 59,397 | 5,333,952 | 538,527 | 1,326 | 25,686 | 24,963 | no |
+| FFT full-throughput, L4, f30, g0, omit2 | 1,958,400 | 130,560 | 59,396 | 5,333,952 | 538,527 | 1,326 | 22,193 | 21,470 | no |
 
 <details>
 <summary>All Pareto designs across error levels</summary>
 
 | Design | Error bound | Observed max error | Cells | Memory bits | Register bits | Multiplier operators | Latency cycles | Interval cycles | Pareto |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| FFT compact, L2, f30, omit1 | 115,200 | 7,680 | 48,378 | 2,949,744 | 294,555 | 72 | 104,638 | 98,771 | yes |
-| FFT compact, L2, f30, omit2 | 1,958,400 | 130,560 | 48,377 | 2,949,744 | 294,555 | 72 | 90,601 | 84,734 | yes |
+| FFT compact, L2, f30, g0, omit1 | 115,200 | 7,680 | 48,378 | 2,949,744 | 294,555 | 72 | 104,638 | 98,771 | yes |
+| FFT compact, L2, f30, g0, omit2 | 1,958,400 | 130,560 | 48,377 | 2,949,744 | 294,555 | 72 | 90,601 | 84,734 | yes |
 | NTT streamed, L2, R2, G1, shoup, PE1 | 0 | 0 | 12,652 | 1,981,012 | 17,479 | 74 | 8,067 | 3,390 | yes |
 | NTT streamed, L2, R2, G2, shoup, PE1 | 0 | 0 | 23,002 | 2,122,324 | 29,383 | 92 | 9,097 | 2,080 | yes |
 | NTT streamed, L2, R2, G1, shoup, PE2 | 0 | 0 | 29,878 | 1,981,440 | 27,925 | 92 | 5,252 | 1,983 | yes |
@@ -125,15 +143,15 @@ Timeouts (measurement incomplete; not an arithmetic failure):
 
 | Workload | Design | Stage |
 | --- | --- | --- |
-| full-full | FFT compact, L2, f32, omit0 | timing |
-| full-full | FFT compact, L2, f40, omit0 | timing |
-| full-full | FFT compact, L2, f48, omit0 | timing |
+| full-full | FFT compact, L2, f32, g0, omit0 | timing |
+| full-full | FFT compact, L2, f40, g0, omit0 | timing |
+| full-full | FFT compact, L2, f48, g0, omit0 | timing |
 
 ### FFT error / throughput tradeoff
 
 ![N=512 FFT error bound versus cycles per product](torus512-error-throughput.svg)
 
-The horizontal scale is symmetric logarithmic so exact (zero-error) products remain visible. Each curve fixes FFT fractional precision at 30 and varies omission depth. Bounds apply to the polynomial product contract; observed maxima are listed in the tables. [PNG](torus512-error-throughput.png) · [SVG](torus512-error-throughput.svg)
+The horizontal scale is symmetric logarithmic so exact (zero-error) products remain visible. Each curve fixes FFT backend, lanes, guard bits, and fractional precision at 30, then varies omission depth. Bounds apply to the polynomial product contract; observed maxima are listed in the tables. [PNG](torus512-error-throughput.png) · [SVG](torus512-error-throughput.svg)
 
 ## N=32
 
@@ -143,9 +161,9 @@ All requested points, readable designs, status, point IDs, and metrics: [torus32
 
 Both axes use logarithmic scales. Overlapping points are retained without jitter. Black rings mark the seven-objective Pareto points; this is a projection, so they need not form a two-dimensional frontier. [PNG](torus32-resource-throughput.png) · [SVG](torus32-resource-throughput.svg)
 
-| Workload | Qualified | Certificate rejected | Timeout | Unsupported | Pending |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| full-full | 12 | 0 | 0 | 0 | 0 |
+| Workload | Qualified | Certificate rejected | Timeout | Unsupported | Pending | Other |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| full-full | 12 | 0 | 0 | 0 | 0 | 0 |
 
 ### full-full
 
@@ -155,15 +173,15 @@ All qualified demo configurations:
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | NTT streamed, L2, R2, G1, barrett, PE1 | 0 | 0 | 18,315 | 129,232 | 25,944 | 111 | 439 | 176 | no |
 | NTT streamed, L2, R2, G1, barrett, PE1, round4 | 8 | 8 | 18,318 | 129,232 | 25,944 | 111 | 439 | 176 | no |
-| FFT compact, L2, f24, omit0 | 0 | 0 | 4,020 | 144,544 | 23,397 | 74 | 24,671 | 24,404 | yes |
-| FFT compact, L2, f24, omit1 | 7,200 | 7,200 | 4,020 | 144,544 | 23,397 | 74 | 23,994 | 23,727 | yes |
-| FFT compact, L2, f24, omit2 | 237,600 | 237,600 | 4,020 | 144,544 | 23,397 | 74 | 22,640 | 22,373 | yes |
-| FFT compact, L2, f30, omit0 | 0 | 0 | 4,020 | 159,904 | 25,071 | 74 | 24,671 | 24,404 | no |
-| FFT compact, L2, f30, omit1 | 7,200 | 7,200 | 4,020 | 159,904 | 25,071 | 74 | 23,994 | 23,727 | no |
-| FFT compact, L2, f30, omit2 | 237,600 | 237,600 | 4,020 | 159,904 | 25,071 | 74 | 22,640 | 22,373 | no |
+| FFT compact, L2, f24, g0, omit0 | 0 | 0 | 4,020 | 144,544 | 23,397 | 74 | 24,671 | 24,404 | yes |
+| FFT compact, L2, f24, g0, omit1 | 7,200 | 7,200 | 4,020 | 144,544 | 23,397 | 74 | 23,994 | 23,727 | yes |
+| FFT compact, L2, f24, g0, omit2 | 237,600 | 237,600 | 4,020 | 144,544 | 23,397 | 74 | 22,640 | 22,373 | yes |
+| FFT compact, L2, f30, g0, omit0 | 0 | 0 | 4,020 | 159,904 | 25,071 | 74 | 24,671 | 24,404 | no |
+| FFT compact, L2, f30, g0, omit1 | 7,200 | 7,200 | 4,020 | 159,904 | 25,071 | 74 | 23,994 | 23,727 | no |
+| FFT compact, L2, f30, g0, omit2 | 237,600 | 237,600 | 4,020 | 159,904 | 25,071 | 74 | 22,640 | 22,373 | no |
 | NTT streamed, L2, R2, G1, shoup, PE1 | 0 | 0 | 18,270 | 129,232 | 25,251 | 111 | 439 | 176 | yes |
 | NTT streamed, L2, R2, G1, barrett, PE2 | 0 | 0 | 47,340 | 129,696 | 40,950 | 138 | 328 | 121 | no |
 | NTT streamed, L2, R2, G1, shoup, PE2 | 0 | 0 | 47,250 | 129,696 | 39,564 | 138 | 328 | 121 | yes |
-| FFT compact, L2, f24, omit0, round4 | 8 | 8 | 4,023 | 144,544 | 23,397 | 74 | 24,671 | 24,404 | no |
+| FFT compact, L2, f24, g0, omit0, round4 | 8 | 8 | 4,023 | 144,544 | 23,397 | 74 | 24,671 | 24,404 | no |
 
 Source result/manifest hashes, workload specifications, corpus hashes, coverage, and frontier IDs are pinned in [provenance.json](provenance.json). Detailed simulator and synthesis evidence remains in the local campaign directories; these CSVs are compact result snapshots.

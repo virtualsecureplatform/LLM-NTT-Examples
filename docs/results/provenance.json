@@ -1,5 +1,6 @@
 [
   {
+    "campaign": "polynomial-study-512-optimized",
     "corpus_sha256": {
       "full-byte": "d663f3e03df113dfd77b30b5aca10bc3378a0cf62845e86ca67e8083babff4b6",
       "full-full": "3b938b126683b5ccafc0fe0d5de79090082cd712f566fec78f944231d7b041e7",
@@ -390,6 +391,174 @@
     }
   },
   {
+    "campaign": "polynomial-study-512-full-fft",
+    "corpus_sha256": {
+      "full-byte": "d663f3e03df113dfd77b30b5aca10bc3378a0cf62845e86ca67e8083babff4b6",
+      "full-full": "3b938b126683b5ccafc0fe0d5de79090082cd712f566fec78f944231d7b041e7",
+      "full-ternary": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f"
+    },
+    "coverage": {
+      "screened": 39
+    },
+    "frontiers": {
+      "full-byte": {
+        "0": [
+          "full-byte-2671751079a0d694"
+        ],
+        "115200": [
+          "full-byte-2671751079a0d694"
+        ],
+        "3801600": [
+          "full-byte-2671751079a0d694"
+        ],
+        "4000000": [
+          "full-byte-2671751079a0d694"
+        ],
+        "8": [
+          "full-byte-2671751079a0d694"
+        ],
+        "None": [
+          "full-byte-2671751079a0d694"
+        ]
+      },
+      "full-full": {
+        "0": [
+          "full-full-c922c0cf5396b482"
+        ],
+        "115200": [
+          "full-full-c922c0cf5396b482"
+        ],
+        "3801600": [
+          "full-full-c922c0cf5396b482"
+        ],
+        "4000000": [
+          "full-full-c922c0cf5396b482"
+        ],
+        "8": [
+          "full-full-c922c0cf5396b482"
+        ],
+        "None": [
+          "full-full-c922c0cf5396b482"
+        ]
+      },
+      "full-ternary": {
+        "0": [
+          "full-ternary-36879e185250befb"
+        ],
+        "115200": [
+          "full-ternary-36879e185250befb"
+        ],
+        "3801600": [
+          "full-ternary-36879e185250befb"
+        ],
+        "4000000": [
+          "full-ternary-36879e185250befb"
+        ],
+        "8": [
+          "full-ternary-36879e185250befb"
+        ],
+        "None": [
+          "full-ternary-36879e185250befb"
+        ]
+      }
+    },
+    "manifest_sha256": "a741190b66e185a9b0f60c0f36d23a080b7cfdb4332eb1a4f9551d12ea3c2179",
+    "n": 512,
+    "results_sha256": "f7f9ec7da7bddcda695407812cd1a25ce15c7c941f38007315f209b17e10fbe6",
+    "spec": {
+      "error_limits": [
+        8,
+        115200,
+        3801600,
+        4000000
+      ],
+      "fractional_bits": [
+        30,
+        32
+      ],
+      "n": 512,
+      "ngen_axes": {
+        "lanes": [
+          2
+        ],
+        "ngen_backends": [
+          "streamed"
+        ],
+        "pe": [
+          1
+        ],
+        "radix": [
+          2
+        ],
+        "reductions": [
+          "barrett"
+        ],
+        "stage_groups": [
+          1
+        ]
+      },
+      "omit_low_diagonals": [
+        0,
+        1,
+        2
+      ],
+      "quant_bits": [
+        0
+      ],
+      "schema": "polynomial-study-v1",
+      "sgen_axes": {
+        "guard_bits": [
+          0
+        ],
+        "lanes": [
+          2,
+          4
+        ],
+        "sgen_backends": [
+          "full-throughput"
+        ]
+      },
+      "simulator": "verilator",
+      "timeout": 3600,
+      "workloads": [
+        {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -2147483648,
+            2147483647
+          ],
+          "name": "full-full"
+        },
+        {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -128,
+            127
+          ],
+          "name": "full-byte"
+        },
+        {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -1,
+            1
+          ],
+          "name": "full-ternary"
+        }
+      ]
+    }
+  },
+  {
+    "campaign": "polynomial-study-demo",
     "corpus_sha256": {
       "full-full": "d877d9f392cd6fb4228e2f1aa45719a40654bd36136e2783733c64028ad5eb7f"
     },
