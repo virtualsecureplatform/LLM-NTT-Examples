@@ -1,0 +1,683 @@
+{
+  "campaign": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512",
+  "feasible": [
+    "full-ternary-2be26723e0be400f",
+    "full-ternary-460258af9afa6a1b",
+    "full-ternary-9dc15b43d2f6268c",
+    "full-ternary-35d3fad46ca22405",
+    "full-ternary-c935c41fc882a79e"
+  ],
+  "frontiers": {
+    "full-ternary": [
+      "full-ternary-2be26723e0be400f",
+      "full-ternary-460258af9afa6a1b",
+      "full-ternary-9dc15b43d2f6268c",
+      "full-ternary-35d3fad46ca22405",
+      "full-ternary-c935c41fc882a79e"
+    ]
+  },
+  "history": [
+    {
+      "best_feasible_rates": {
+        "full-ternary": null
+      },
+      "elapsed_seconds": 0.02432652935385704,
+      "evaluation_count": 0,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/timing-closure-512-onchip/pipelined/mapped-Default/evidence.json",
+      "name": "full-ternary-2be26723e0be400f",
+      "passed": true,
+      "phase": "imported",
+      "stage": "mapped"
+    },
+    {
+      "best_feasible_rates": {
+        "full-ternary": 72886.2973760933
+      },
+      "elapsed_seconds": 51.53054893715307,
+      "evaluation_count": 0,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/timing-closure-512-onchip/pipelined/routed-Default/evidence.json",
+      "name": "full-ternary-2be26723e0be400f",
+      "passed": true,
+      "phase": "imported",
+      "stage": "routed"
+    },
+    {
+      "best_feasible_rates": {
+        "full-ternary": 72886.2973760933
+      },
+      "elapsed_seconds": 192.69206449436024,
+      "evaluation_count": 1,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/full-ternary-460258af9afa6a1b/mapped-Default/evidence.json",
+      "name": "full-ternary-460258af9afa6a1b",
+      "passed": true,
+      "phase": "extension",
+      "stage": "mapped"
+    },
+    {
+      "best_feasible_rates": {
+        "full-ternary": 72886.2973760933
+      },
+      "elapsed_seconds": 520.6685742782429,
+      "evaluation_count": 2,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/full-ternary-460258af9afa6a1b/routed-Default/evidence.json",
+      "name": "full-ternary-460258af9afa6a1b",
+      "passed": true,
+      "phase": "extension",
+      "stage": "routed"
+    },
+    {
+      "best_feasible_rates": {
+        "full-ternary": 72886.2973760933
+      },
+      "elapsed_seconds": 676.0958290160634,
+      "evaluation_count": 3,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/full-ternary-9dc15b43d2f6268c/mapped-Default/evidence.json",
+      "name": "full-ternary-9dc15b43d2f6268c",
+      "passed": true,
+      "phase": "extension",
+      "stage": "mapped"
+    },
+    {
+      "best_feasible_rates": {
+        "full-ternary": 123578.8433020267
+      },
+      "elapsed_seconds": 1091.114886353258,
+      "evaluation_count": 4,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/full-ternary-9dc15b43d2f6268c/routed-Default/evidence.json",
+      "name": "full-ternary-9dc15b43d2f6268c",
+      "passed": true,
+      "phase": "extension",
+      "stage": "routed"
+    },
+    {
+      "best_feasible_rates": {
+        "full-ternary": 123578.8433020267
+      },
+      "elapsed_seconds": 1233.9404156063683,
+      "evaluation_count": 5,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/full-ternary-35d3fad46ca22405/mapped-Default/evidence.json",
+      "name": "full-ternary-35d3fad46ca22405",
+      "passed": true,
+      "phase": "extension",
+      "stage": "mapped"
+    },
+    {
+      "best_feasible_rates": {
+        "full-ternary": 123578.8433020267
+      },
+      "elapsed_seconds": 1633.0360237290151,
+      "evaluation_count": 6,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/full-ternary-35d3fad46ca22405/routed-Default/evidence.json",
+      "name": "full-ternary-35d3fad46ca22405",
+      "passed": true,
+      "phase": "extension",
+      "stage": "routed"
+    },
+    {
+      "best_feasible_rates": {
+        "full-ternary": 123578.8433020267
+      },
+      "elapsed_seconds": 1772.6609837440774,
+      "evaluation_count": 7,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/full-ternary-c935c41fc882a79e/mapped-Default/evidence.json",
+      "name": "full-ternary-c935c41fc882a79e",
+      "passed": true,
+      "phase": "extension",
+      "stage": "mapped"
+    },
+    {
+      "best_feasible_rates": {
+        "full-ternary": 141482.7391058291
+      },
+      "elapsed_seconds": 2212.2140659140423,
+      "evaluation_count": 8,
+      "evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/full-ternary-c935c41fc882a79e/routed-Default/evidence.json",
+      "name": "full-ternary-c935c41fc882a79e",
+      "passed": true,
+      "phase": "extension",
+      "stage": "routed"
+    }
+  ],
+  "manifest": {
+    "code": {
+      "architecture_search/device.py": "d9fbac8a64b1e90be4372fee03e521e27025fe9b7b7354c2dd2067f0b2eb4e60",
+      "architecture_search/device_evaluate.py": "5ae25419565dab135c6044f200bc242fac209b858ffc803d95039bcfb099026c",
+      "architecture_search/model.py": "685553808391d8d6bbd80812eaa2d770a59b6be4bf604bba1472729c26e1ae74",
+      "architecture_search/timing_harness.py": "2aafd9374512b9418cd117f4475afa4f382f503bb2404a4f0be7aefbf8f7dc14",
+      "scripts/device_polynomial_study.py": "d421615237aea3716b2a3d93ab70e10b04804041187bfc8c320ec69bd939d36d",
+      "scripts/extend_timing_frontier.py": "e8415862cdbb05eefbcdeeaf1e757f80abc9161497f430bd0cb6fa1a2273ab95",
+      "scripts/find_timing_met.py": "41715184abaa559a7f2674be0c2e5e0a3080174457e985ceedfa9fe837196d29",
+      "scripts/polynomial_study.py": "62670c2b1f7422451c11ba7f04c1fa2a3d5df5f0903d85cc7a7b95d2dd7492ef"
+    },
+    "error_limit": 0,
+    "plan": {
+      "candidates": 5,
+      "new_mapped_budget": 4,
+      "new_routed_budget": 6
+    },
+    "schema": "routed-frontier-v1",
+    "seed_sha256": "3ded975bd4cacbe09619b9983cfd422fb6f492dcdbb58105c62e2d354e93d8f7",
+    "sources": [
+      {
+        "manifest_sha256": "48863f6c9700684134c070f977ba53e28e1565f3b92fce1e8624e65637d88ef2",
+        "results": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/polynomial-study-512-pipelined-reductions/results.json",
+        "results_sha256": "3ae7f5a8adcc4b091315687b85facbaa15f722f7865097cc40e39ef722f14016"
+      },
+      {
+        "manifest_sha256": "4c27838a2ee2a2a978d6b2896b48c4a55ab4e77d2d38cc837b788293098ef092",
+        "results": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/polynomial-study-512-registered/results.json",
+        "results_sha256": "d421a91971beeb802047fcc4700ba23d3dd1b942f1e0ba5ce484a08280136de7"
+      },
+      {
+        "manifest_sha256": "784b86b3ffff57991c95564c1d73df19b6eb16f3f0942fb1bbe1de900f2aab23",
+        "results": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/polynomial-study-512-pareto250/results.json",
+        "results_sha256": "5adbb00c4c8e0993d2331a2c99b2b03069d3e0c217248022d1385a1bea704ed3"
+      }
+    ],
+    "target": {
+      "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+      "bandwidth_bytes_per_second": 32000000000,
+      "capacity": {
+        "bram36": 2016,
+        "dsp": 9024,
+        "ff": 2607360,
+        "lut": 1303680,
+        "uram": 960
+      },
+      "clock_mhz": 250,
+      "implementation_context": "registered-harness-v2",
+      "implementation_directive": "Default",
+      "implementation_seed": "tool-default",
+      "io_delay_fraction": 0.25,
+      "part": "xcu280-fsvh2892-2L-e",
+      "resource_fraction": 0.8,
+      "resource_limits": {},
+      "schema": "polynomial-device-v1",
+      "vivado_version": "2023.2"
+    },
+    "tool": {
+      "binaries": {
+        "/home/opt/xilinx/Vivado/2023.2/bin/unwrapped/lnx64.o/vivado": "207605c630c1b1bc0f8274c5cbd16bf65df5d121fd1a8185e7443bcd8754c932",
+        "/home/opt/xilinx/Vivado/2023.2/bin/vivado": "06008d6f7a24bbc5044ea7d29f94fcd01953cac7667d3461f6a246493d8ea417"
+      },
+      "version": "2023.2",
+      "version_text": "vivado v2023.2 (64-bit)\nTool Version Limit: 2023.10\nSW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023\nIP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023\nSharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n"
+    }
+  },
+  "new_mapped": 4,
+  "new_routed": 4,
+  "points": [
+    {
+      "clock_evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/clock-checks/full-ternary-2be26723e0be400f-Default/evidence.json",
+      "clock_evidence_sha256": "def64033e6d89a549a5b6ded8c13747889ea31a99a0f7d05889c4c8fe666eb02",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "feasible": true,
+      "harness_sha256": "afd6304df691141e2ee3d47165af6878077f0330fd72e73ab76f397e0663f5dd",
+      "initiation_interval_cycles": 3430,
+      "latency_cycles": 8220,
+      "mapped_metrics": {
+        "bram36": 51.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 60.0,
+        "ff": 12605.0,
+        "fully_constrained": true,
+        "hold_slack_ns": -0.082,
+        "lut": 25072.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.459,
+        "uram": 0.0
+      },
+      "name": "full-ternary-2be26723e0be400f",
+      "pareto": true,
+      "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+      "recipe": "Default",
+      "routed_evidence_sha256": "142f6661c23483ee04e19e164d352637790d5dedc9ac534e76d37fd8e793419c",
+      "routed_metrics": {
+        "bram36": 51.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 60.0,
+        "ff": 12767.0,
+        "fully_constrained": true,
+        "hold_slack_ns": 0.011,
+        "lut": 24612.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.063,
+        "uram": 0.0
+      },
+      "rtl_sha256": "65ba9111a75ea5715fc2c884172c11c4c8d74f679ea26e7149d5d44d7e2ff320",
+      "workload": {
+        "a_range": [
+          -2147483648,
+          2147483647
+        ],
+        "b_range": [
+          -1,
+          1
+        ],
+        "correctness": "certified-exact",
+        "kind": "polynomial_product",
+        "lanes": 2,
+        "modulus": 4294967296,
+        "n": 512,
+        "operands": "fresh",
+        "ring": "negacyclic",
+        "version": 2
+      }
+    },
+    {
+      "clock_evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/clock-checks/full-ternary-35d3fad46ca22405-Default/evidence.json",
+      "clock_evidence_sha256": "dc4a7f6ca749f0a3bfb332e70cb0e1b51df9a7dcd7e089c3d97bcacc0db672f2",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 1,
+        "product_profile": "registered",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "feasible": true,
+      "harness_sha256": "afd6304df691141e2ee3d47165af6878077f0330fd72e73ab76f397e0663f5dd",
+      "initiation_interval_cycles": 3174,
+      "latency_cycles": 7454,
+      "mapped_metrics": {
+        "bram36": 63.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 60.0,
+        "ff": 13101.0,
+        "fully_constrained": true,
+        "hold_slack_ns": -0.082,
+        "lut": 29858.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.459,
+        "uram": 0.0
+      },
+      "name": "full-ternary-35d3fad46ca22405",
+      "pareto": true,
+      "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+      "recipe": "Default",
+      "routed_evidence_sha256": "59b2213fb0f30c22c59f2698e5380bc789c851d682fb7de3e61d27aa54ecb147",
+      "routed_metrics": {
+        "bram36": 63.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 60.0,
+        "ff": 13308.0,
+        "fully_constrained": true,
+        "hold_slack_ns": 0.012,
+        "lut": 29487.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.113,
+        "uram": 0.0
+      },
+      "rtl_sha256": "42853dec89eaa6e806a8d4b41d740d15d0f5359a6f18d2029adc3a0953e6193e",
+      "workload": {
+        "a_range": [
+          -2147483648,
+          2147483647
+        ],
+        "b_range": [
+          -1,
+          1
+        ],
+        "correctness": "certified-exact",
+        "kind": "polynomial_product",
+        "lanes": 2,
+        "modulus": 4294967296,
+        "n": 512,
+        "operands": "fresh",
+        "ring": "negacyclic",
+        "version": 2
+      }
+    },
+    {
+      "clock_evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/clock-checks/full-ternary-460258af9afa6a1b-Default/evidence.json",
+      "clock_evidence_sha256": "9f738ec00467d90b219694f549d1a5c2e7bf1bff2d22a4e95d18d144e56bb031",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "product_profile": "registered",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "feasible": true,
+      "harness_sha256": "afd6304df691141e2ee3d47165af6878077f0330fd72e73ab76f397e0663f5dd",
+      "initiation_interval_cycles": 3430,
+      "latency_cycles": 8222,
+      "mapped_metrics": {
+        "bram36": 60.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 60.0,
+        "ff": 12431.0,
+        "fully_constrained": true,
+        "hold_slack_ns": -0.082,
+        "lut": 19835.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.459,
+        "uram": 0.0
+      },
+      "name": "full-ternary-460258af9afa6a1b",
+      "pareto": true,
+      "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+      "recipe": "Default",
+      "routed_evidence_sha256": "4d23fee67c7c6efb5a546a7c5acdfd852f7f782f512e26ad9f1964129117e885",
+      "routed_metrics": {
+        "bram36": 60.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 60.0,
+        "ff": 12492.0,
+        "fully_constrained": true,
+        "hold_slack_ns": 0.01,
+        "lut": 19427.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.219,
+        "uram": 0.0
+      },
+      "rtl_sha256": "9a1bcc3a4a7813a26291da2ce9b9502f47ef0116eb156ba6e4c2d978b3afb06a",
+      "workload": {
+        "a_range": [
+          -2147483648,
+          2147483647
+        ],
+        "b_range": [
+          -1,
+          1
+        ],
+        "correctness": "certified-exact",
+        "kind": "polynomial_product",
+        "lanes": 2,
+        "modulus": 4294967296,
+        "n": 512,
+        "operands": "fresh",
+        "ring": "negacyclic",
+        "version": 2
+      }
+    },
+    {
+      "clock_evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/clock-checks/full-ternary-9dc15b43d2f6268c-Default/evidence.json",
+      "clock_evidence_sha256": "6854bf3ba553195ff214cefa5af4fd4dfbe215b861e452ff1cc74dcecde4bde9",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 2,
+        "product_profile": "registered",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "feasible": true,
+      "harness_sha256": "afd6304df691141e2ee3d47165af6878077f0330fd72e73ab76f397e0663f5dd",
+      "initiation_interval_cycles": 2023,
+      "latency_cycles": 5407,
+      "mapped_metrics": {
+        "bram36": 75.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 96.0,
+        "ff": 15400.0,
+        "fully_constrained": true,
+        "hold_slack_ns": -0.082,
+        "lut": 30885.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.459,
+        "uram": 0.0
+      },
+      "name": "full-ternary-9dc15b43d2f6268c",
+      "pareto": true,
+      "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+      "recipe": "Default",
+      "routed_evidence_sha256": "e61aae72015ac19f5f273b5fdec87b7835cdbb54e62851e93083bcc084a577cf",
+      "routed_metrics": {
+        "bram36": 75.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 96.0,
+        "ff": 15608.0,
+        "fully_constrained": true,
+        "hold_slack_ns": 0.01,
+        "lut": 30457.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.181,
+        "uram": 0.0
+      },
+      "rtl_sha256": "69f89c06724efa034aabd8573801833332dd0122314032506d3cb58b969ca244",
+      "workload": {
+        "a_range": [
+          -2147483648,
+          2147483647
+        ],
+        "b_range": [
+          -1,
+          1
+        ],
+        "correctness": "certified-exact",
+        "kind": "polynomial_product",
+        "lanes": 2,
+        "modulus": 4294967296,
+        "n": 512,
+        "operands": "fresh",
+        "ring": "negacyclic",
+        "version": 2
+      }
+    },
+    {
+      "clock_evidence": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/device-pareto250-512/clock-checks/full-ternary-c935c41fc882a79e-Default/evidence.json",
+      "clock_evidence_sha256": "a91f32ac737357fef4897530f2bd9badb9e005e2d060379acd5b15f5cd8dc69b",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "product_profile": "registered",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "feasible": true,
+      "harness_sha256": "afd6304df691141e2ee3d47165af6878077f0330fd72e73ab76f397e0663f5dd",
+      "initiation_interval_cycles": 1767,
+      "latency_cycles": 4639,
+      "mapped_metrics": {
+        "bram36": 66.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 96.0,
+        "ff": 15887.0,
+        "fully_constrained": true,
+        "hold_slack_ns": -0.082,
+        "lut": 37564.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.459,
+        "uram": 0.0
+      },
+      "name": "full-ternary-c935c41fc882a79e",
+      "pareto": true,
+      "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+      "recipe": "Default",
+      "routed_evidence_sha256": "fdf283404a813d89d199028a4ebfffb20a019f2cbe2f91fa70ed9bf2d959407b",
+      "routed_metrics": {
+        "bram36": 66.0,
+        "constraint_checks": {
+          "constant_clock": 0,
+          "generated_clocks": 0,
+          "latch_loops": 0,
+          "loops": 0,
+          "multiple_clock": 0,
+          "no_clock": 0,
+          "no_input_delay": 0,
+          "no_output_delay": 0,
+          "partial_input_delay": 0,
+          "partial_output_delay": 0,
+          "pulse_width_clock": 0,
+          "unconstrained_internal_endpoints": 0
+        },
+        "dsp": 96.0,
+        "ff": 16187.0,
+        "fully_constrained": true,
+        "hold_slack_ns": 0.01,
+        "lut": 37246.0,
+        "pulse_slack_ns": 1.458,
+        "setup_slack_ns": 0.26,
+        "uram": 0.0
+      },
+      "rtl_sha256": "5b3fe27378d7db4c9ce931a72986f595d0fce8805cf5f04082965f9ada410337",
+      "workload": {
+        "a_range": [
+          -2147483648,
+          2147483647
+        ],
+        "b_range": [
+          -1,
+          1
+        ],
+        "correctness": "certified-exact",
+        "kind": "polynomial_product",
+        "lanes": 2,
+        "modulus": 4294967296,
+        "n": 512,
+        "operands": "fresh",
+        "ring": "negacyclic",
+        "version": 2
+      }
+    }
+  ],
+  "results_sha256": "ac06b41ea3ae3798f19ee00d4994d3348e1c6a6aef759130e595dbb02518ed3c",
+  "schema": "routed-frontier-snapshot-v1"
+}

@@ -53,6 +53,9 @@ A focused timing-closure runner targets an exact N=512 Montgomery product at
 see [the timing-closure instructions](docs/device-polynomial-search.md#find-one-option-meeting-250-mhz).
 The first [250 MHz timing-qualified result](docs/results/timing-closure-512.md)
 includes measured resources, timing, a plot, and provenance for the full×ternary product.
+The [250 MHz Pareto extension](docs/results/pareto250-512.md) expands this to five
+routed full×ternary designs, reaching 1.94× the original modeled throughput and
+providing a design with 21% fewer LUTs at the original product interval.
 
 ## Run a new grid
 

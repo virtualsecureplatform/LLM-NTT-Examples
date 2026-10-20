@@ -244,3 +244,74 @@ remain outside the on-chip qualification scope.
 
 The completed [N512 250 MHz result](results/timing-closure-512.md) includes the
 measured timing/resource table, plot, provenance snapshot and diagnostic costs.
+
+## Extend the timing-qualified Pareto frontier
+
+The first extension holds the workload and implementation context fixed: exact
+N=512 full32 × ternary negacyclic products modulo 2^32, the v2 on-chip harness,
+U280, 250 MHz and the same resource budgets. It imports the passing pipelined
+Montgomery point, and evaluates registered Montgomery products with two/four
+internal lanes and one/two PEs. The external stream remains two coefficients
+per beat. Other coefficient workloads need separate frontiers.
+
+After completing the first timing-closure milestone, qualify the three new
+architectures; the registered two-lane/one-PE product is already qualified:
+
+```bash
+scripts/run_polynomial_study.sh --spec studies/torus512-pareto250.json \
+  --configuration-names full-ternary-9dc15b43d2f6268c \
+    full-ternary-35d3fad46ca22405 full-ternary-c935c41fc882a79e \
+  --output-dir build/polynomial-study-512-pareto250
+
+python3 scripts/extend_timing_frontier.py \
+  --campaign build/polynomial-study-512-pipelined-reductions \
+  --campaign build/polynomial-study-512-registered \
+  --campaign build/polynomial-study-512-pareto250 \
+  --output-dir build/device-pareto250-512
+
+build/polynomial-report-venv/bin/python scripts/plot_routed_frontier.py \
+  --campaign build/device-pareto250-512
+```
+
+The extension imports the original measured point without another P&R run.
+Each of the four new products gets one mapping and default routing attempt;
+up to two timing-failing products can receive hold repair or Explore routing.
+These are four new mapped attempts and at most six new routed attempts. Each
+invocation uses four threads and a one-hour timeout. Failed and interrupted
+attempts stay charged. Repeating an unchanged command reuses sealed stages
+and preserves the original progress timestamps. Changed targets, source pools,
+tools or runner code require a new output directory.
+
+Every admitted point must pass full arithmetic qualification, resource budgets,
+complete routed timing and DRC, and the clock-net probe. Explicit zero failing
+setup/hold/pulse-width endpoint counts are required, including when reported
+slack rounds to zero. Repair recipes can differ, but all remaining device,
+clock, workload and harness constraints must match. No timing-failing point is
+promoted based on its cycle count or predicted frequency.
+
+The full Pareto set minimizes error, five measured resource categories and
+kernel latency, and maximizes bandwidth-limited modeled throughput. Only
+feasible products participate. CSV tables retain pending, failed and dominated
+products with their status. The plot marks the complete frontier on LUT and DSP
+projections; membership in the full set does not imply a two-objective frontier
+in either projection. Throughput is modeled from the independently qualified
+kernel interval at the fixed clock; harness traffic is not a throughput test.
+
+Outputs include points.csv, results.json, summary.md, per-stage evidence and
+clock probes, plus hash-manifested exports of every feasible product. The
+original passing point and original result snapshots remain unchanged.
+
+After the extension finishes, publish verified compact table/plot snapshots:
+
+```bash
+python3 scripts/report_routed_frontier.py --campaign build/device-pareto250-512
+```
+
+This rechecks routed evidence, endpoint failures, clock-probe hashes and Pareto
+membership before saving `docs/results/pareto250-512.*`. Pareto membership is
+computed within the five-design measured pool. The snapshot preserves rejected
+points and the implementation budget as well as the achieved frontier.
+
+The completed [five-point 250 MHz frontier](results/pareto250-512.md) reports
+all four new designs passing default P&R, the measured resource tradeoffs,
+clock/endpoint verification, and the full provenance snapshot.
