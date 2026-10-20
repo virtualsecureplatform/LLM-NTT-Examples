@@ -56,8 +56,9 @@ endmodule''')
 
 def fft_leaf(w,c,forward,inverse):
     scalar=c['integer_bits']+c['fractional_bits'];width=2*scalar;frac=c['fractional_bits']
-    pieces=[product_rtl.frame_engine('ForwardFrame','ProductForward',forward,width,w['n']),
-            product_rtl.frame_engine('InverseFrame','ProductInverse',inverse,width),
+    profile=c.get('product_profile','baseline')
+    pieces=[product_rtl.frame_engine('ForwardFrame','ProductForward',forward,width,w['n'],product_profile=profile),
+            product_rtl.frame_engine('InverseFrame','ProductInverse',inverse,width,product_profile=profile),
             product_rtl.multiply_module(width,True,frac),fft_fold(w,scalar,frac),ports(w)]
     pieces.append(f'''wire ar,br,av,bv,am,bm,mv,mr,iv,ir;
 wire [{2*width-1}:0] a_data,b_data,fa,fb,product,iv_data;
@@ -77,7 +78,10 @@ endmodule''')
     return '\n'.join(pieces)
 
 
-def split_fft(w,leaf,omit_low_diagonals=0):
+def split_fft(w,leaf,omit_low_diagonals=0,product_profile='baseline'):
+    if product_profile=='pipelined':
+        from .pipelined_products import split_fft as emit
+        return emit(w,leaf,omit_low_diagonals)
     n=w['n'];count=wide.output_count(w);ow=wide.output_width(w)
     aw=wide.input_width(w,'a');bw=wide.input_width(w,'b');lw=wide.output_width(leaf)
     accum=wide.bound(w).bit_length()+2;da=(aw+3)//4;db=(bw+3)//4
@@ -152,7 +156,10 @@ endmodule''')
     return '\n'.join(pieces)
 
 
-def field_product(w,field,forward,inverse,index):
+def field_product(w,field,forward,inverse,index,product_profile='baseline'):
+    if product_profile in ('pipelined','registered'):
+        from .pipelined_products import field_product as emit
+        return emit(w,field,forward,inverse,index,product_profile)
     q=field['q'];d=q.bit_length();prefix=f'Prime{index}';aw=wide.input_width(w,'a');bw=wide.input_width(w,'b')
     pieces=[product_rtl.frame_engine(prefix+'ForwardFrame',prefix+'Forward',forward,d,w['n']),
             product_rtl.frame_engine(prefix+'InverseFrame',prefix+'Inverse',inverse,d),
@@ -185,7 +192,10 @@ endmodule''')
     return '\n'.join(pieces)
 
 
-def rns_product(w,fields):
+def rns_product(w,fields,product_profile='baseline'):
+    if product_profile in ('pipelined','registered'):
+        from .pipelined_products import rns_product as emit
+        return emit(w,fields)
     q=math.prod(f['q'] for f in fields);qw=q.bit_length();sw=qw+max(f['q'].bit_length() for f in fields)+len(fields).bit_length()+1
     ow=wide.output_width(w);count=wide.output_count(w);pieces=[ports(w)]
     readies=[];valids=[];products=[[],[]]

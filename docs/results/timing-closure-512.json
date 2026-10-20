@@ -1,0 +1,114 @@
+{
+  "checkpoint_sha256": "30005d8b1607dbf27fb570494755f5574f08e2a08deec38a3ba6a6942f3b3186",
+  "clock_probe_evidence_sha256": "1e2dc68d387da741645392b09b98ada756a64effa2bcdb14f9a70448fb6d2ca9",
+  "clock_routes": [
+    "clock_net kernel_clock route_status ROUTED",
+    "clock_net kernel/p1/inverse/core/pe_pipeline_0/E[0] route_status ROUTED"
+  ],
+  "configuration": {
+    "arithmetic": "rns",
+    "backend": "streamed",
+    "generator": "ngen",
+    "lanes": 2,
+    "pe": 1,
+    "product_profile": "pipelined",
+    "profile": "baseline",
+    "radix": 2,
+    "reduction": "montgomery",
+    "stage_groups": 1
+  },
+  "earlier_v1_diagnostics": {
+    "cancelled_routed": 1,
+    "mapped": 3,
+    "routed": 2
+  },
+  "evidence_path": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/timing-closure-512-onchip/pipelined/routed-Default/evidence.json",
+  "export_path": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/timing-closure-512-onchip/exports/full-ternary-2be26723e0be400f",
+  "final_context_evaluations": {
+    "clock_probes": 1,
+    "mapped": 1,
+    "routed": 1
+  },
+  "harness_sha256": "afd6304df691141e2ee3d47165af6878077f0330fd72e73ab76f397e0663f5dd",
+  "initiation_interval_cycles": 3430,
+  "latency_cycles": 8220,
+  "metrics": {
+    "bram36": 51.0,
+    "constraint_checks": {
+      "constant_clock": 0,
+      "generated_clocks": 0,
+      "latch_loops": 0,
+      "loops": 0,
+      "multiple_clock": 0,
+      "no_clock": 0,
+      "no_input_delay": 0,
+      "no_output_delay": 0,
+      "partial_input_delay": 0,
+      "partial_output_delay": 0,
+      "pulse_width_clock": 0,
+      "unconstrained_internal_endpoints": 0
+    },
+    "dsp": 60.0,
+    "ff": 12767.0,
+    "fully_constrained": true,
+    "hold_slack_ns": 0.011,
+    "lut": 24612.0,
+    "pulse_slack_ns": 1.458,
+    "setup_slack_ns": 0.063,
+    "uram": 0.0
+  },
+  "point": "full-ternary-2be26723e0be400f",
+  "qualification_artifacts_digest": "fb9c38d8c138642d30e86a99469486f66b395c5ec32fa3c4981fa39d3a082b43",
+  "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+  "routed_evidence_sha256": "142f6661c23483ee04e19e164d352637790d5dedc9ac534e76d37fd8e793419c",
+  "rtl_sha256": "65ba9111a75ea5715fc2c884172c11c4c8d74f679ea26e7149d5d44d7e2ff320",
+  "schema": "polynomial-timing-result-v1",
+  "scope": "routed registered kernel harness; no board shell",
+  "target": {
+    "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+    "bandwidth_bytes_per_second": 32000000000,
+    "capacity": {
+      "bram36": 2016,
+      "dsp": 9024,
+      "ff": 2607360,
+      "lut": 1303680,
+      "uram": 960
+    },
+    "clock_mhz": 250,
+    "implementation_context": "registered-harness-v2",
+    "implementation_directive": "Default",
+    "implementation_seed": "tool-default",
+    "io_delay_fraction": 0.25,
+    "part": "xcu280-fsvh2892-2L-e",
+    "resource_fraction": 0.8,
+    "resource_limits": {},
+    "schema": "polynomial-device-v1",
+    "vivado_version": "2023.2"
+  },
+  "tool": {
+    "binaries": {
+      "/home/opt/xilinx/Vivado/2023.2/bin/unwrapped/lnx64.o/vivado": "207605c630c1b1bc0f8274c5cbd16bf65df5d121fd1a8185e7443bcd8754c932",
+      "/home/opt/xilinx/Vivado/2023.2/bin/vivado": "06008d6f7a24bbc5044ea7d29f94fcd01953cac7667d3461f6a246493d8ea417"
+    },
+    "version": "2023.2",
+    "version_text": "vivado v2023.2 (64-bit)\nTool Version Limit: 2023.10\nSW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023\nIP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023\nSharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n"
+  },
+  "workload": {
+    "a_range": [
+      -2147483648,
+      2147483647
+    ],
+    "b_range": [
+      -1,
+      1
+    ],
+    "correctness": "certified-exact",
+    "kind": "polynomial_product",
+    "lanes": 2,
+    "modulus": 4294967296,
+    "n": 512,
+    "operands": "fresh",
+    "ring": "negacyclic",
+    "version": 2
+  }
+}

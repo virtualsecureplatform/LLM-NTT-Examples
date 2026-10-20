@@ -13,13 +13,16 @@ def leaf_workload(w,c):
 
 
 def compose(w,c,metas,fields):
+    profile=c.get('product_profile','baseline')
+    if profile not in ('baseline','pipelined','registered'):raise ValueError('unknown product profile')
+    if profile=='registered' and c['generator']!='ngen':raise ValueError('registered profile requires NGen')
     if c['generator']=='ngen':
-        return '\n'.join([wide_rtl.field_product(w,f,*metas[2*i:2*i+2],i)
-                          for i,f in enumerate(fields)]+[wide_rtl.rns_product(w,fields)])
+        return '\n'.join([wide_rtl.field_product(w,f,*metas[2*i:2*i+2],i,profile)
+                          for i,f in enumerate(fields)]+[wide_rtl.rns_product(w,fields,profile)])
     leaf=leaf_workload(w,c);text=wide_rtl.fft_leaf(leaf,c,*metas)
     if c['arithmetic']=='split-radix16':
         text=text.replace('module SearchTop(','module DigitProduct(')+'\n'+wide_rtl.split_fft(
-            w,leaf,c.get('omit_low_diagonals',0))
+            w,leaf,c.get('omit_low_diagonals',0),profile)
     return text
 
 

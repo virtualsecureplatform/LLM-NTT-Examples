@@ -220,6 +220,21 @@ class PolynomialStudyTests(unittest.TestCase):
         spec['ngen_axes']['radix'] = [3]
         with self.assertRaises(ValueError): study.enumerate_points(spec)
 
+    def test_compatible_grid_reuse_requires_unchanged_contract_and_profile(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);rtl=root/'rtl.sv';rtl.write_text('original')
+            old=dict(schema='test',spec=dict(n=512,product_profile='pipelined',ngen_axes={'reductions':['barrett']}),
+                     selected=None,tools={},generators={},corpora={},image_sha256=None,sources={})
+            new=copy.deepcopy(old);new['spec']['ngen_axes']['reductions']+=['montgomery']
+            study.write_json(root/'manifest.json',old)
+            study.write_json(root/'results.json',dict(points=[dict(name='pass',passed=True,
+                artifacts={'rtl.sv':study.file_hash(rtl)})]))
+            with self.assertRaisesRegex(ValueError,'spec'):study.import_results(root/'results.json',new)
+            imported,identity=study.import_results(root/'results.json',new,True)
+            self.assertIn('pass',imported);self.assertTrue(identity['compatible_grid'])
+            new['spec']['product_profile']='baseline'
+            with self.assertRaisesRegex(ValueError,'spec'):study.import_results(root/'results.json',new,True)
+
     def test_invalid_spec(self):
         spec = copy.deepcopy(self.spec); spec['quant_bits'] = [4]
         with self.assertRaises(ValueError): study.enumerate_points(spec)

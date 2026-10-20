@@ -142,12 +142,12 @@ def candidates(w,space=None):
     axes={'generators':['ngen','sgen'],'ngen_backends':['streamed'],'sgen_backends':['compact'],
           'lanes':[2],'pe':[1],'radix':[2],'stage_groups':[1],'reductions':['barrett'],
           'profiles':['baseline'],'fractional_bits':[32,48],'guard_bits':[0],
-          'omit_low_diagonals':[0]}
+          'omit_low_diagonals':[0],'product_profiles':['baseline']}
     legal={'generators':['ngen','sgen'],'ngen_backends':['streamed','stage-parallel','fully-parallel'],
            'sgen_backends':['compact','full-throughput'],'lanes':[2,4],'pe':[1,2],
            'radix':[2,4,8],'stage_groups':[1,2],'reductions':['barrett','montgomery','shoup','auto'],
            'profiles':['baseline','f300','split-barrett'],'fractional_bits':[24,28,29,30,32,40,48],
-           'guard_bits':[0,2],'omit_low_diagonals':[0,1,2]}
+           'guard_bits':[0,2],'omit_low_diagonals':[0,1,2],'product_profiles':['baseline','pipelined','registered']}
     if set(space)-set(axes)-{'configurations'}:raise ValueError('unknown version-2 search axis')
     for key in axes:
         if key in space:
@@ -181,6 +181,9 @@ def candidates(w,space=None):
                            arithmetic='split-radix16' if split else 'direct')
             if omit:candidate['omit_low_diagonals']=omit
             result.append(candidate)
+    result=[c if profile=='baseline' else {**c,'product_profile':profile}
+            for c in result for profile in axes['product_profiles']
+            if profile!='registered' or c['generator']=='ngen']
     if 'configurations' in space:
         selected=space['configurations']
         if not isinstance(selected,list) or not selected or any(c not in result for c in selected):

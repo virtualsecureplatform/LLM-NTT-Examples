@@ -5,7 +5,9 @@ multiplication with near-full-range signed 32-bit coefficients and outputs modul
 `2^32`. NGen generates NTT products; SGen generates FFT products. The current
 centerpiece is a **pre-route grid search** that checks complete-product RTL,
 measures coarse Yosys resources, and compares arithmetic error, latency, and
-sustained frame interval. It does not claim U280 utilization or timing.
+sustained frame interval. Those generic grid results do not establish U280
+utilization or timing; the separate [device-aware flow](docs/device-polynomial-search.md)
+measures mapped resources and routed timing for FPGA-constrained search.
 
 Start with the [combined NGen/SGen frontier](docs/fhe512-common-frontier.md) and
 its [per-configuration table](docs/measured-evidence/fhe512-common-frontier.md).
@@ -38,9 +40,19 @@ NTT architectures, and separate output-rounding controls. Start with
 For a bounded 12-configuration demonstration with the same validation pipeline,
 run `scripts/run_polynomial_study.sh --spec studies/torus-demo.json --output-dir build/polynomial-study-demo`.
 The completed [results tables and tradeoff plots](docs/results/polynomial-results.md)
-include all 171 qualified N=512 designs and all 12 demo designs, with CSV snapshots.
+include all 207 qualified N=512 designs and all 12 demo designs, with CSV snapshots.
 The [full-throughput FFT extension](studies/torus512-full-fft.json) adds two/four-lane
 FFT designs at N=512; its separate campaign and merged reporting are described in the study guide.
+
+The [device-aware search](docs/device-polynomial-search.md) adds Vivado U280
+mapping/routing, calibrated resource selection, bandwidth/error/resource budgets,
+held-out model checks, and hash-verified physical feasibility. Its measurements
+remain separate from the generic Yosys study.
+A focused timing-closure runner targets an exact N=512 Montgomery product at
+250 MHz in a registered on-chip harness, with a registered frame-output fallback;
+see [the timing-closure instructions](docs/device-polynomial-search.md#find-one-option-meeting-250-mhz).
+The first [250 MHz timing-qualified result](docs/results/timing-closure-512.md)
+includes measured resources, timing, a plot, and provenance for the full×ternary product.
 
 ## Run a new grid
 

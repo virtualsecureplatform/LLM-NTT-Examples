@@ -15,7 +15,12 @@ from matplotlib.ticker import FuncFormatter
 STYLES = {'NTT streamed': ('#0072B2', 'o'),
           'NTT stage-parallel': ('#D55E00', 's'),
           'FFT compact': ('#009E73', '^'),
-          'FFT full-throughput': ('#CC79A7', 'D')}
+          'FFT full-throughput': ('#CC79A7', 'D'),
+          'NTT streamed / pipelined': ('#56B4E9', 'P'),
+          'NTT streamed / registered': ('#882255', '*'),
+          'NTT stage-parallel / pipelined': ('#E69F00', 'X'),
+          'FFT compact / pipelined': ('#009E73', 'v'),
+          'FFT full-throughput / pipelined': ('#CC79A7', 'p')}
 WORKLOADS = ('full-full', 'full-byte', 'full-ternary')
 
 
@@ -32,7 +37,7 @@ def load(path):
 
 def family(row):
     c = row['configuration']
-    return ('NTT ' if c['generator'] == 'ngen' else 'FFT ') + c['backend']
+    return ('NTT ' if c['generator'] == 'ngen' else 'FFT ') + c['backend'] + (' / '+c['product_profile'] if c.get('product_profile','baseline')!='baseline' else '')
 
 
 def save(fig, folder, name):
@@ -45,7 +50,7 @@ def save(fig, folder, name):
 
 def resource_plot(rows, n, output):
     workloads = [w for w in WORKLOADS if any(r['workload_name'] == w for r in rows)]
-    fig, axes = plt.subplots(1, len(workloads), figsize=(5 * len(workloads), 4.6), squeeze=False, sharey=True)
+    fig, axes = plt.subplots(1, len(workloads), figsize=(5 * len(workloads), 5.4), squeeze=False, sharey=True)
     for ax, workload in zip(axes[0], workloads):
         subset = [r for r in rows if r['workload_name'] == workload]
         for name, (color, marker) in STYLES.items():
@@ -66,13 +71,13 @@ def resource_plot(rows, n, output):
                           linestyle='none', label='Seven-objective Pareto point'))
     title = f'N={n}: resource / throughput tradeoff'
     fig.suptitle(title + ('\nLower and left are better' if n == 32 else ' — lower and left are better'), fontsize=13)
-    fig.legend(handles=handles, loc='lower center', ncol=2 if n == 32 else len(handles), frameon=False, fontsize=9)
-    fig.tight_layout(rect=(0, .14 if n == 32 else .10, 1, .92))
+    fig.legend(handles=handles, loc='lower center', ncol=2 if n == 32 else min(4,len(handles)), frameon=False, fontsize=9)
+    fig.tight_layout(rect=(0, .18, 1, .92))
     save(fig, output, f'torus{n}-resource-throughput')
 
 
 def omission_plot(rows, output):
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.6))
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5.4))
     legend = {}
     for ax, workload in zip(axes, WORKLOADS):
         points = [r for r in rows if r['workload_name'] == workload
@@ -81,11 +86,11 @@ def omission_plot(rows, output):
         groups = {}
         for r in points:
             c = r['configuration']
-            groups.setdefault((c['backend'],c['lanes'],c['guard_bits']),[]).append(r)
-        for (backend, lanes, guard), group in groups.items():
+            groups.setdefault((c['backend'],c['lanes'],c['guard_bits'],c.get('product_profile','baseline')),[]).append(r)
+        for (backend, lanes, guard, profile), group in groups.items():
             group.sort(key=lambda r:r['configuration'].get('omit_low_diagonals',0))
-            color, marker = STYLES['FFT ' + backend]
-            label = f'{backend}, L{lanes}, g{guard}'
+            color, marker = STYLES['FFT ' + backend + (' / '+profile if profile!='baseline' else '')]
+            label = f'{backend}, L{lanes}, g{guard}, {profile}'
             line, = ax.plot([r['max_abs_error'] for r in group],
                             [r['initiation_interval_cycles'] for r in group],
                             color=color, marker=marker, linestyle='--' if lanes==4 else '-', linewidth=1.5)
@@ -101,8 +106,8 @@ def omission_plot(rows, output):
         ax.set_xlim(-1, max(r['max_abs_error'] for r in points) * 25)
         ax.grid(True, which='both', linewidth=.5, alpha=.25)
     fig.suptitle('N=512 FFT, f30: accepting bounded error reduces product interval', fontsize=13)
-    fig.legend(list(legend.values()),list(legend),loc='lower center',ncol=len(legend),frameon=False,fontsize=9)
-    fig.tight_layout(rect=(0, .10, 1, .92))
+    fig.legend(list(legend.values()),list(legend),loc='lower center',ncol=min(3,len(legend)),frameon=False,fontsize=9)
+    fig.tight_layout(rect=(0, .18, 1, .92))
     save(fig, output, 'torus512-error-throughput')
 
 

@@ -7,7 +7,11 @@ import math
 from .products import output_width
 
 
-def frame_engine(name, core, meta, width, input_n=None, external_lanes=2):
+def frame_engine(name, core, meta, width, input_n=None, external_lanes=2, product_profile='baseline'):
+    if product_profile in ('pipelined','registered'):
+        from .frame_banks import emit
+        return emit(name,core,meta,width,input_n,external_lanes,registered_output=product_profile=='registered')
+    if product_profile != 'baseline':raise ValueError('unknown product profile')
     n=meta['transform_size']; k=meta['streaming_width']; t=n//k
     input_n=input_n or n
     rv=meta.get('protocol')=='ready-valid'

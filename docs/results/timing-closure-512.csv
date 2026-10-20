@@ -1,0 +1,3 @@
+profile,recipe,stage,passed,feasible,setup_slack_ns,hold_slack_ns,pulse_slack_ns,lut,ff,dsp,bram36,uram,evidence
+pipelined,Default,mapped,True,False,0.459,-0.082,1.458,25072.0,12605.0,60.0,51.0,0.0,/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/timing-closure-512-onchip/pipelined/mapped-Default/evidence.json
+pipelined,Default,routed,True,True,0.063,0.011,1.458,24612.0,12767.0,60.0,51.0,0.0,/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/timing-closure-512-onchip/pipelined/routed-Default/evidence.json

@@ -1,0 +1,21 @@
+{
+  "schema": "polynomial-device-v1",
+  "part": "xcu280-fsvh2892-2L-e",
+  "vivado_version": "2023.2",
+  "clock_mhz": 250,
+  "io_delay_fraction": 0.25,
+  "resource_fraction": 0.8,
+  "capacity": {
+    "lut": 1303680,
+    "ff": 2607360,
+    "dsp": 9024,
+    "bram36": 2016,
+    "uram": 960
+  },
+  "resource_limits": {},
+  "bandwidth_bytes_per_second": 32000000000,
+  "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+  "implementation_seed": "tool-default",
+  "implementation_directive": "Default",
+  "implementation_context": "registered-harness-v2"
+}

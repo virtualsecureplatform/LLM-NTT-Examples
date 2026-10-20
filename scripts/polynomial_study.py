@@ -31,8 +31,10 @@ def workloads(spec):
     if spec.get('schema') != 'polynomial-study-v1':
         raise ValueError('expected polynomial-study-v1')
     if set(spec) - {'schema', 'n', 'workloads', 'fractional_bits', 'omit_low_diagonals',
-                    'quant_bits', 'error_limits', 'timeout', 'simulator', 'ngen_axes', 'sgen_axes'}:
+                    'quant_bits', 'error_limits', 'timeout', 'simulator', 'ngen_axes', 'sgen_axes','product_profile'}:
         raise ValueError('unknown study field')
+    if spec.get('product_profile','baseline') not in ('baseline','pipelined','registered'):
+        raise ValueError('unknown product profile')
     if set(spec.get('ngen_axes', {})) - set(AXES):
         raise ValueError('unknown NTT architecture axis')
     if set(spec.get('sgen_axes', {})) - {'sgen_backends', 'lanes', 'guard_bits'}:
@@ -61,7 +63,8 @@ def workloads(spec):
     return result
 
 
-def point(name, w, c, phase, bits=0, **extra):
+def point(name, w, c, phase, bits=0, product_profile='baseline', **extra):
+    if product_profile!='baseline':c={**c,'product_profile':product_profile}
     identity = dict(workload=w, configuration=c, quant_bits=bits)
     return dict(name=name + '-' + digest(identity)[:16], workload_name=name,
                 workload=w, configuration=c, phase=phase, quant_bits=bits,
@@ -70,18 +73,20 @@ def point(name, w, c, phase, bits=0, **extra):
 
 def enumerate_points(spec):
     points = []
+    profile=spec.get('product_profile','baseline')
+    def make_point(*args,**kwargs):return point(*args,product_profile=profile,**kwargs)
     axes = {**AXES, **spec.get('ngen_axes', {})}
     fft_axes = dict(sgen_backends=['compact'], lanes=[2], guard_bits=[0])
     fft_axes.update(spec.get('sgen_axes', {}))
     for name, w in workloads(spec).items():
-        points.append(point(name, w, BASE.copy(), 'arithmetic'))
+        points.append(make_point(name, w, BASE.copy(), 'arithmetic'))
         for bits in spec['quant_bits']:
             if bits:
-                points.append(point(name, w, BASE.copy(), 'rounding', bits))
+                points.append(make_point(name, w, BASE.copy(), 'rounding', bits))
         for c in wide.candidates(w, dict(generators=['sgen'], **fft_axes,
                  fractional_bits=spec['fractional_bits'],
                  omit_low_diagonals=spec['omit_low_diagonals'])):
-            points.append(point(name, w, c, 'arithmetic'))
+            points.append(make_point(name, w, c, 'arithmetic'))
         # Record the requested Cartesian grid, including combinations rejected by backend rules.
         legal = wide.candidates(w, dict(generators=['ngen'], profiles=['baseline'], **axes))
         for values in itertools.product(*axes.values()):
@@ -92,7 +97,7 @@ def enumerate_points(spec):
             if c['backend'] == 'streamed':
                 c['pe'] = a['pe']
             supported = c in legal and (c['backend'] == 'streamed' or a['pe'] == 1)
-            r = point(name, w, c, 'architecture', requested_axes=a)
+            r = make_point(name, w, c, 'architecture', requested_axes=a)
             if not supported:
                 r.update(name=r['name'] + '-unsupported-' + digest(a)[:8], status='unsupported',
                          reason='existing backend legality rules reject this combination')
@@ -103,6 +108,9 @@ def enumerate_points(spec):
         for backend, lanes, guard in itertools.product(fft_axes['sgen_backends'], fft_axes['lanes'], fft_axes['guard_bits']):
             selector = dict(backend=backend, lanes=lanes, guard_bits=guard)
             suffix = '' if selector == dict(backend='compact', lanes=2, guard_bits=0) else f'-{backend}-l{lanes}-g{guard}'
+            if profile!='baseline':
+                selector['product_profile']=profile
+                suffix+='-'+profile
             for bits in spec['quant_bits']:
                 if bits:
                     points.append(dict(name=name + '-fft' + suffix + '-round-q' + str(bits), workload_name=name,
@@ -337,14 +345,21 @@ EVALUATION_SOURCES = {'scripts/polynomial_study.py', 'architecture_search/produc
                       'architecture_search/product_simulation.py'}
 
 
-def import_results(results_file, manifest):
+def import_results(results_file, manifest, compatible_grid=False):
     results_file = results_file.resolve()
     source_root = results_file.parent
     source_manifest_file = source_root / 'manifest.json'
     source_manifest = json.loads(source_manifest_file.read_text())
     # Selection may grow from qualification to the complete identical study.
     # Point identity and artifact hashes are checked before any imported reuse.
-    for key in ('schema', 'spec', 'tools', 'generators', 'corpora', 'image_sha256'):
+    keys=('schema','tools','generators','corpora','image_sha256')
+    old_spec,new_spec=source_manifest.get('spec',{}),manifest.get('spec',{})
+    grid_keys={'ngen_axes','sgen_axes','fractional_bits','omit_low_diagonals','quant_bits','error_limits','timeout'}
+    if compatible_grid:
+        old_spec={k:v for k,v in old_spec.items() if k not in grid_keys}
+        new_spec={k:v for k,v in new_spec.items() if k not in grid_keys}
+    if old_spec!=new_spec:raise ValueError('reuse manifest differs: spec')
+    for key in keys:
         if source_manifest.get(key) != manifest.get(key):
             raise ValueError('reuse manifest differs: ' + key)
     old_sources, new_sources = source_manifest['sources'], manifest['sources']
@@ -352,7 +367,8 @@ def import_results(results_file, manifest):
         if key not in EVALUATION_SOURCES and old_sources.get(key) != new_sources.get(key):
             raise ValueError('reuse arithmetic/generator source differs: ' + key)
     identity = dict(results_file=str(results_file), results_sha256=file_hash(results_file),
-                    manifest_file=str(source_manifest_file), manifest_sha256=file_hash(source_manifest_file))
+                    manifest_file=str(source_manifest_file), manifest_sha256=file_hash(source_manifest_file),
+                    compatible_grid=compatible_grid)
     imported = {}
     for row in json.loads(results_file.read_text())['points']:
         if reusable(row, source_root):
@@ -371,6 +387,8 @@ def main(argv=None):
     parser.add_argument('--fft-workers', type=int, default=16)
     parser.add_argument('--fft-shard-size', type=int, default=4)
     parser.add_argument('--reuse-from', type=Path, help='verified results.json from an earlier evaluation campaign')
+    parser.add_argument('--reuse-compatible-grid',action='store_true',
+                        help='allow changed search axes with identical contracts, corpora, sources, and tools')
     args = parser.parse_args(argv)
     try:
         spec = json.loads(args.spec.read_text()); rows = enumerate_points(spec)
@@ -380,6 +398,8 @@ def main(argv=None):
             raise ValueError('FFT workers must be 1..32 and shard size 1..12')
         if args.resume and args.reuse_from:
             raise ValueError('use either --resume or --reuse-from')
+        if args.reuse_compatible_grid and not args.reuse_from:
+            raise ValueError('--reuse-compatible-grid requires --reuse-from')
         if type(timeout) is not int or timeout <= 0 or simulator not in ('verilator', 'iverilog'):
             raise ValueError('invalid timeout or simulator')
         if args.configuration_names:
@@ -426,7 +446,7 @@ def main(argv=None):
             raise ValueError('campaign exists; use --resume')
         imported = {}
         if args.reuse_from:
-            imported, reuse_identity = import_results(args.reuse_from, manifest)
+            imported, reuse_identity = import_results(args.reuse_from, manifest,args.reuse_compatible_grid)
             manifest['reuse_from'] = reuse_identity
         write_json(path, manifest)
         previous = {r['name']: r for r in json.loads((out / 'results.json').read_text())['points']} if args.resume and (out / 'results.json').exists() else {}

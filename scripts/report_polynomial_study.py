@@ -25,6 +25,7 @@ def design(row):
             name += f", PE{c['pe']}"
     if row['quant_bits']:
         name += f", round{row['quant_bits']}"
+    if c.get('product_profile','baseline')!='baseline':name+=' / '+c['product_profile']
     return name
 
 
@@ -137,13 +138,13 @@ def export(campaigns, output):
                 fft_groups = {}
                 for r in fft:
                     c = r['configuration']
-                    fft_groups.setdefault((c['backend'], c['lanes'], c['guard_bits']), []).append(r)
+                    fft_groups.setdefault((c['backend'], c['lanes'], c['guard_bits'], c.get('product_profile','baseline')), []).append(r)
                 for group in fft_groups.values():
                     precision = min(r['configuration']['fractional_bits'] for r in group)
                     selected += [r for r in group if r['configuration']['fractional_bits'] == precision]
                 selected = list({r['name']: r for r in selected}.values())
                 lines += ['Representative designs: minimum-cell exact, minimum-interval exact '
-                          '(ties use cells, memory, then point ID), and the lowest qualified FFT precision for each backend/lane/guard combination with its omission variants. '
+                          '(ties use cells, memory, then point ID), and the lowest qualified FFT precision for each backend/lane/guard/product-profile combination with its omission variants. '
                           'These single-objective selections are not unique overall winners.', '']
             lines += table(selected, views['None'])
             if n > 32:
@@ -159,7 +160,7 @@ def export(campaigns, output):
             lines += ['', '### FFT error / throughput tradeoff', '',
                       '![N=512 FFT error bound versus cycles per product](torus512-error-throughput.svg)', '',
                       'The horizontal scale is symmetric logarithmic so exact (zero-error) products remain visible. '
-                      'Each curve fixes FFT backend, lanes, guard bits, and fractional precision at 30, then varies omission depth. '
+                      'Each curve fixes FFT backend, lanes, guard bits, product profile, and fractional precision at 30, then varies omission depth. '
                       'Bounds apply to the polynomial product contract; observed maxima are listed in the tables. '
                       '[PNG](torus512-error-throughput.png) · [SVG](torus512-error-throughput.svg)']
         lines += ['']
