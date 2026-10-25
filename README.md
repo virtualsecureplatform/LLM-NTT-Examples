@@ -57,6 +57,14 @@ The [250 MHz Pareto extension](docs/results/pareto250-512.md) expands this to fi
 routed full×ternary designs, reaching 1.94× the original modeled throughput and
 providing a design with 21% fewer LUTs at the original product interval.
 
+The [LLM-guided DSE prototype](docs/llm-polynomial-search.md) adds adaptive
+configuration selection over a bounded 24-design NTT grid, a five-point replay
+fixture, and budget-matched live comparisons with random and analytical search.
+It retains correctness and routed 250 MHz qualification as measured requirements.
+The completed [live comparison table and plots](docs/results/llm-dse-live-512.md)
+show LLM and random search both reaching 141,483 modeled products/s under the
+same four-candidate/two-route budget, with full trial and timing provenance.
+
 ## Run a new grid
 
 From the repository root, with Apptainer, `sbt`, and native build dependencies:

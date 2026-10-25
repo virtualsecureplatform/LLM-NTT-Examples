@@ -1,0 +1,1857 @@
+{
+  "coverage": {
+    "new_physical_mappings": 7,
+    "new_physical_qualifications": 5,
+    "new_physical_routings": 5,
+    "unique_acquired_candidates": 9,
+    "unique_routed_candidates": 6
+  },
+  "limitation": "Exploratory single-seed comparison; replay uses only five existing measured points. No full-grid recall or demonstrated search-reduction claim.",
+  "mode": "live",
+  "points": [
+    {
+      "bandwidth_products_per_second": 6944444.444444444,
+      "bram36": 51.0,
+      "bytes_per_product": 4608,
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "constraint_checks": {
+        "constant_clock": 0,
+        "generated_clocks": 0,
+        "latch_loops": 0,
+        "loops": 0,
+        "multiple_clock": 0,
+        "no_clock": 0,
+        "no_input_delay": 0,
+        "no_output_delay": 0,
+        "partial_input_delay": 0,
+        "partial_output_delay": 0,
+        "pulse_width_clock": 0,
+        "unconstrained_internal_endpoints": 0
+      },
+      "dsp": 60.0,
+      "error_bound": 0,
+      "ff": 12767.0,
+      "full_objective_pareto": true,
+      "fully_constrained": true,
+      "hold_slack_ns": 0.011,
+      "kernel_latency_seconds": 3.288e-05,
+      "kernel_products_per_second": 72886.2973760933,
+      "latency_cycles": 8220,
+      "lut": 24612.0,
+      "modeled_cold_latency_seconds": 3.3023999999999994e-05,
+      "modeled_products_per_second": 72886.2973760933,
+      "name": "full-ternary-2be26723e0be400f",
+      "pareto": true,
+      "policy": "llm",
+      "pulse_slack_ns": 1.458,
+      "rtl_sha256": "65ba9111a75ea5715fc2c884172c11c4c8d74f679ea26e7149d5d44d7e2ff320",
+      "setup_slack_ns": 0.063,
+      "transfer_model": "aggregate byte-aligned traffic; resident twiddles/intermediates; steady-state ceiling, not board measurement",
+      "uram": 0.0
+    },
+    {
+      "bandwidth_products_per_second": 6944444.444444444,
+      "bram36": 66.0,
+      "bytes_per_product": 4608,
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "constraint_checks": {
+        "constant_clock": 0,
+        "generated_clocks": 0,
+        "latch_loops": 0,
+        "loops": 0,
+        "multiple_clock": 0,
+        "no_clock": 0,
+        "no_input_delay": 0,
+        "no_output_delay": 0,
+        "partial_input_delay": 0,
+        "partial_output_delay": 0,
+        "pulse_width_clock": 0,
+        "unconstrained_internal_endpoints": 0
+      },
+      "dsp": 96.0,
+      "error_bound": 0,
+      "ff": 16001.0,
+      "full_objective_pareto": true,
+      "fully_constrained": true,
+      "hold_slack_ns": 0.01,
+      "kernel_latency_seconds": 1.8548e-05,
+      "kernel_products_per_second": 141482.7391058291,
+      "latency_cycles": 4637,
+      "lut": 37359.0,
+      "modeled_cold_latency_seconds": 1.8692e-05,
+      "modeled_products_per_second": 141482.7391058291,
+      "name": "full-ternary-3c3f04b96d09ff68",
+      "pareto": true,
+      "policy": "llm",
+      "pulse_slack_ns": 1.458,
+      "rtl_sha256": "a11d00b9a5fb4501209bf408f7b834c3769e435ab0b53dda7e0c4e7e378553fe",
+      "setup_slack_ns": 0.012,
+      "transfer_model": "aggregate byte-aligned traffic; resident twiddles/intermediates; steady-state ceiling, not board measurement",
+      "uram": 0.0
+    },
+    {
+      "bandwidth_products_per_second": 6944444.444444444,
+      "bram36": 51.0,
+      "bytes_per_product": 4608,
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "constraint_checks": {
+        "constant_clock": 0,
+        "generated_clocks": 0,
+        "latch_loops": 0,
+        "loops": 0,
+        "multiple_clock": 0,
+        "no_clock": 0,
+        "no_input_delay": 0,
+        "no_output_delay": 0,
+        "partial_input_delay": 0,
+        "partial_output_delay": 0,
+        "pulse_width_clock": 0,
+        "unconstrained_internal_endpoints": 0
+      },
+      "dsp": 60.0,
+      "error_bound": 0,
+      "ff": 12767.0,
+      "full_objective_pareto": true,
+      "fully_constrained": true,
+      "hold_slack_ns": 0.011,
+      "kernel_latency_seconds": 3.288e-05,
+      "kernel_products_per_second": 72886.2973760933,
+      "latency_cycles": 8220,
+      "lut": 24612.0,
+      "modeled_cold_latency_seconds": 3.3023999999999994e-05,
+      "modeled_products_per_second": 72886.2973760933,
+      "name": "full-ternary-2be26723e0be400f",
+      "pareto": true,
+      "policy": "random",
+      "pulse_slack_ns": 1.458,
+      "rtl_sha256": "65ba9111a75ea5715fc2c884172c11c4c8d74f679ea26e7149d5d44d7e2ff320",
+      "setup_slack_ns": 0.063,
+      "transfer_model": "aggregate byte-aligned traffic; resident twiddles/intermediates; steady-state ceiling, not board measurement",
+      "uram": 0.0
+    },
+    {
+      "bandwidth_products_per_second": 6944444.444444444,
+      "bram36": 66.0,
+      "bytes_per_product": 4608,
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "constraint_checks": {
+        "constant_clock": 0,
+        "generated_clocks": 0,
+        "latch_loops": 0,
+        "loops": 0,
+        "multiple_clock": 0,
+        "no_clock": 0,
+        "no_input_delay": 0,
+        "no_output_delay": 0,
+        "partial_input_delay": 0,
+        "partial_output_delay": 0,
+        "pulse_width_clock": 0,
+        "unconstrained_internal_endpoints": 0
+      },
+      "dsp": 96.0,
+      "error_bound": 0,
+      "ff": 16001.0,
+      "full_objective_pareto": true,
+      "fully_constrained": true,
+      "hold_slack_ns": 0.01,
+      "kernel_latency_seconds": 1.8548e-05,
+      "kernel_products_per_second": 141482.7391058291,
+      "latency_cycles": 4637,
+      "lut": 37359.0,
+      "modeled_cold_latency_seconds": 1.8692e-05,
+      "modeled_products_per_second": 141482.7391058291,
+      "name": "full-ternary-3c3f04b96d09ff68",
+      "pareto": true,
+      "policy": "random",
+      "pulse_slack_ns": 1.458,
+      "rtl_sha256": "a11d00b9a5fb4501209bf408f7b834c3769e435ab0b53dda7e0c4e7e378553fe",
+      "setup_slack_ns": 0.012,
+      "transfer_model": "aggregate byte-aligned traffic; resident twiddles/intermediates; steady-state ceiling, not board measurement",
+      "uram": 0.0
+    },
+    {
+      "bandwidth_products_per_second": 6944444.444444444,
+      "bram36": 51.0,
+      "bytes_per_product": 4608,
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "constraint_checks": {
+        "constant_clock": 0,
+        "generated_clocks": 0,
+        "latch_loops": 0,
+        "loops": 0,
+        "multiple_clock": 0,
+        "no_clock": 0,
+        "no_input_delay": 0,
+        "no_output_delay": 0,
+        "partial_input_delay": 0,
+        "partial_output_delay": 0,
+        "pulse_width_clock": 0,
+        "unconstrained_internal_endpoints": 0
+      },
+      "dsp": 60.0,
+      "error_bound": 0,
+      "ff": 12767.0,
+      "full_objective_pareto": true,
+      "fully_constrained": true,
+      "hold_slack_ns": 0.011,
+      "kernel_latency_seconds": 3.288e-05,
+      "kernel_products_per_second": 72886.2973760933,
+      "latency_cycles": 8220,
+      "lut": 24612.0,
+      "modeled_cold_latency_seconds": 3.3023999999999994e-05,
+      "modeled_products_per_second": 72886.2973760933,
+      "name": "full-ternary-2be26723e0be400f",
+      "pareto": true,
+      "policy": "analytical",
+      "pulse_slack_ns": 1.458,
+      "rtl_sha256": "65ba9111a75ea5715fc2c884172c11c4c8d74f679ea26e7149d5d44d7e2ff320",
+      "setup_slack_ns": 0.063,
+      "transfer_model": "aggregate byte-aligned traffic; resident twiddles/intermediates; steady-state ceiling, not board measurement",
+      "uram": 0.0
+    }
+  ],
+  "policies": [
+    {
+      "best_products_per_second": 141482.7391058291,
+      "cache_hits": 3,
+      "candidates": 4,
+      "failures": 1,
+      "feasible": 2,
+      "frontier": [
+        "full-ternary-2be26723e0be400f",
+        "full-ternary-3c3f04b96d09ff68"
+      ],
+      "full_objective_frontier": [
+        "full-ternary-2be26723e0be400f",
+        "full-ternary-3c3f04b96d09ff68"
+      ],
+      "hardware_seconds": 1874.3953008251265,
+      "hypervolume": 1.8838321762196688,
+      "llm_requests": 5,
+      "llm_seconds": 132.4908823799342,
+      "llm_tokens": 26666,
+      "mapped": 4,
+      "physical_mapped": 3,
+      "physical_qualified": 2,
+      "physical_routed": 2,
+      "physical_seconds": 1736.7618098491803,
+      "policy": "llm",
+      "qualified": 4,
+      "routed": 2,
+      "status": "complete"
+    },
+    {
+      "best_products_per_second": 141482.7391058291,
+      "cache_hits": 5,
+      "candidates": 4,
+      "failures": 1,
+      "feasible": 2,
+      "frontier": [
+        "full-ternary-2be26723e0be400f",
+        "full-ternary-3c3f04b96d09ff68"
+      ],
+      "full_objective_frontier": [
+        "full-ternary-2be26723e0be400f",
+        "full-ternary-3c3f04b96d09ff68"
+      ],
+      "hardware_seconds": 2097.6586392358877,
+      "hypervolume": 1.8838321762196688,
+      "llm_requests": 0,
+      "llm_seconds": 0,
+      "llm_tokens": 0,
+      "mapped": 4,
+      "physical_mapped": 2,
+      "physical_qualified": 2,
+      "physical_routed": 1,
+      "physical_seconds": 963.6416158187203,
+      "policy": "random",
+      "qualified": 4,
+      "routed": 2,
+      "status": "complete"
+    },
+    {
+      "best_products_per_second": 72886.2973760933,
+      "cache_hits": 5,
+      "candidates": 4,
+      "failures": 2,
+      "feasible": 1,
+      "frontier": [
+        "full-ternary-2be26723e0be400f"
+      ],
+      "full_objective_frontier": [
+        "full-ternary-2be26723e0be400f"
+      ],
+      "hardware_seconds": 1674.0519060268998,
+      "hypervolume": 0.9764014175257733,
+      "llm_requests": 0,
+      "llm_seconds": 0,
+      "llm_tokens": 0,
+      "mapped": 4,
+      "physical_mapped": 2,
+      "physical_qualified": 1,
+      "physical_routed": 2,
+      "physical_seconds": 1238.8382312958129,
+      "policy": "analytical",
+      "qualified": 4,
+      "routed": 2,
+      "status": "complete"
+    }
+  ],
+  "runs": [
+    {
+      "manifest": {
+        "backend": {
+          "context": {
+            "evaluator_sha256": "ddfa2776868652a289f878835d549c2c2ac16ac7d8515337579ea8d646cd34cc",
+            "generator": {
+              "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/third_party/NGen/ngen.bat",
+              "binary_sha256": "3ceb5b6b7228f56b6202450ad7c9e000ca17a329bb0f0ec0a9dbd156354b487e",
+              "changed_inputs": [],
+              "manifest_sha256": "190e6ad2d170e9786b5b4a43daf9beba5056fef2c718e197473b4e7d69622024",
+              "source_files": 71,
+              "verified": true
+            },
+            "hardware_sources": {
+              "architecture_search/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "architecture_search/build_identity.py": "edb026826822f671aa5acf89beaae3060a856318644cb3ab4b7f362cf6885036",
+              "architecture_search/device.py": "d9fbac8a64b1e90be4372fee03e521e27025fe9b7b7354c2dd2067f0b2eb4e60",
+              "architecture_search/device_evaluate.py": "5ae25419565dab135c6044f200bc242fac209b858ffc803d95039bcfb099026c",
+              "architecture_search/device_search.py": "8e37d5214201396494a6d8ff65f89f24bc9fbe071f1a5fc5a5306461f0a0181c",
+              "architecture_search/evaluate.py": "a2727a510b0ea006b633b4e825769259f0002340178927acc79b24854b006798",
+              "architecture_search/fft_model.py": "add96c79160d227df5f45601cfd3ae995393998178ff0be8fb6f2064cf890609",
+              "architecture_search/frame_banks.py": "fe2689f5721a17a267fea35d3fef5c0bfaf06dda08170f5c3b2cabc2e33d6423",
+              "architecture_search/model.py": "685553808391d8d6bbd80812eaa2d770a59b6be4bf604bba1472729c26e1ae74",
+              "architecture_search/modular_pipeline.py": "9139d4fc14536b3adcb4176139118fc8758ac830053b2e2dea264504eff9b9ec",
+              "architecture_search/numerics.py": "9c39d4c7d33cf50f118b1e4f96dca2698db512ea6fed20c03c6cae853c5723f6",
+              "architecture_search/operation_contract.py": "6a2ef33d7da210276d064acb0791a4f307add8058e1ac6b2ee90ee0f0fe44669",
+              "architecture_search/oracle.py": "559342abf63e66ae4ffb2a1c95300706c4f15cecac2306b07b7679853250c5c6",
+              "architecture_search/paths.py": "3ed200e127bbf975c16c4689362aae8aba8c2176c27ac8862f87ab18b1515f7b",
+              "architecture_search/pipelined_products.py": "c7975111102c8b8ce1a492fc2e6d4bb969af89ac1634c9e739e6f689675b42d7",
+              "architecture_search/primitive_proofs.py": "b9944381677c6d3260008e20f16ea4e3b4ff84ab1af4f1fc5cda0ebf78e29c4a",
+              "architecture_search/product_evaluate.py": "f01f50db63d064c04646d57287f6ee6f9a3d15eb117bce292f60724ad79fd6f4",
+              "architecture_search/product_rtl.py": "9e752a2a30f741e8f095225dc76bcb6aa26db0b8d920e685d82cd795061fa3ff",
+              "architecture_search/product_search.py": "14a1226deea68c9464fb5866574c604389cc488febb94326adfd30db9c6fabd7",
+              "architecture_search/product_simulation.py": "5d18c31fd426c8aab0df2bfbdca5d384051ce7b51481c450355ee5310d5a4276",
+              "architecture_search/products.py": "94303464f5f49ac78053754465c167d6aa7221c6da64e81cee285d754588d6d2",
+              "architecture_search/rom.py": "3a6cbc6c5635b297ac60c77237a9c38a652a794cb60680b19e1bd0f6fca11cf4",
+              "architecture_search/timing_harness.py": "2aafd9374512b9418cd117f4475afa4f382f503bb2404a4f0be7aefbf8f7dc14",
+              "architecture_search/wide_backend.py": "f33ac2009250830359879549a87734d9a19da05f9dcc4769aaa03aa951a4ed45",
+              "architecture_search/wide_products.py": "edd03279a6f3c46ea112fcec358c191b88d90c848dca797e94028f249718daf6",
+              "architecture_search/wide_rtl.py": "356c83409295b8476843a73028da7e91c3b0f4189ad303571d99db3c1dba1716",
+              "scripts/fhe512_preroute.py": "ce54cd1183273e7723386b9330cc5b5904cead6e09d382703920628c8eb105cd",
+              "scripts/fhe512_sgen_precision.py": "9deb78c46a2d2c55de500c456eebea0693ce25654dfdf2845f06b025a7f233ab",
+              "scripts/llm_polynomial_study.py": "7c854e29d6fac46cf0e9609ba04692161c418064be9e1ee8f6af28bb6fb369e4",
+              "scripts/polynomial_study.py": "62670c2b1f7422451c11ba7f04c1fa2a3d5df5f0903d85cc7a7b95d2dd7492ef",
+              "scripts/run_llm_qualification.sh": "01431d23cd5d90d70e95470317e116b7f9e3c8d97e69ad0c725be181ee344043",
+              "scripts/verilator_pinned.sh": "ad94b7f17181ad903c56ce10e620728eda20b895a39f4ec735b27258d512c640"
+            },
+            "image_sha256": "8187cb19842daf3217cba03dc5a9ded2431d954f2bd51b215be2aec360a50e06",
+            "target": {
+              "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+              "bandwidth_bytes_per_second": 32000000000,
+              "capacity": {
+                "bram36": 2016,
+                "dsp": 9024,
+                "ff": 2607360,
+                "lut": 1303680,
+                "uram": 960
+              },
+              "clock_mhz": 250,
+              "implementation_context": "registered-harness-v2",
+              "implementation_directive": "Default",
+              "implementation_seed": "tool-default",
+              "io_delay_fraction": 0.25,
+              "part": "xcu280-fsvh2892-2L-e",
+              "resource_fraction": 0.8,
+              "resource_limits": {},
+              "schema": "polynomial-device-v1",
+              "vivado_version": "2023.2"
+            },
+            "threads": 4,
+            "timeout": 3600,
+            "tool": {
+              "binaries": {
+                "/home/opt/xilinx/Vivado/2023.2/bin/unwrapped/lnx64.o/vivado": "207605c630c1b1bc0f8274c5cbd16bf65df5d121fd1a8185e7443bcd8754c932",
+                "/home/opt/xilinx/Vivado/2023.2/bin/vivado": "06008d6f7a24bbc5044ea7d29f94fcd01953cac7667d3461f6a246493d8ea417"
+              },
+              "version": "2023.2",
+              "version_text": "vivado v2023.2 (64-bit)\nTool Version Limit: 2023.10\nSW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023\nIP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023\nSharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n"
+            }
+          },
+          "mode": "live",
+          "reference_manifest_sha256": "e97a010e8d9f748c4646b72a230fea579d7b6b60571a0c0673d88bfad72d7cb6",
+          "reference_sha256": "ac06b41ea3ae3798f19ee00d4994d3348e1c6a6aef759130e595dbb02518ed3c"
+        },
+        "catalog_sha256": "54cee9dc050f00594132aaf7781f2ad93b676abaa4bac9c62fb7cd028743bd91",
+        "controller_sha256": "2ddfa0328813744b2c4e294c977e7c56f07ce24e9d50e0ba541750b0023cc889",
+        "max_candidates": 4,
+        "policy": "llm",
+        "route_budget": 2,
+        "schema": "llm-dse-run-v1",
+        "seed": 1,
+        "settings": {
+          "base_url": "http://10.0.60.37:8080/v1",
+          "model": "qwen3.8-flash-next-unsloth-ud-q4_k_xl"
+        },
+        "target": {
+          "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+          "bandwidth_bytes_per_second": 32000000000,
+          "capacity": {
+            "bram36": 2016,
+            "dsp": 9024,
+            "ff": 2607360,
+            "lut": 1303680,
+            "uram": 960
+          },
+          "clock_mhz": 250,
+          "implementation_context": "registered-harness-v2",
+          "implementation_directive": "Default",
+          "implementation_seed": "tool-default",
+          "io_delay_fraction": 0.25,
+          "part": "xcu280-fsvh2892-2L-e",
+          "resource_fraction": 0.8,
+          "resource_limits": {},
+          "schema": "polynomial-device-v1",
+          "vivado_version": "2023.2"
+        }
+      },
+      "policy": "llm",
+      "results": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-dse-live-v1/llm/results.json",
+      "results_sha256": "9716eea4cbffe89f62f23533ff2286408cb59d0fbca6130f6df6c2b1790a42b4",
+      "transcripts": {
+        "llm/llm/selection-1/call-1.json": "cdb4f88613f85658dff4507ace98268d7ab754314922a0a15e13045e415b3334",
+        "llm/llm/selection-2/call-1.json": "f25a1dd2c7fd2c434e9fe11966185d39c9270bced5dc07e6f75ec1b4f88a8a1d",
+        "llm/llm/selection-2/call-2.json": "0553cbec427892833f7d604a48157efc0912abfea79e682e395238a2b2d8d2f7",
+        "llm/llm/selection-3/call-1.json": "e7b01b16a10e8aefcc5a266bd3f7119ad5f44172412ec0e621e85040b123fa33",
+        "llm/llm/selection-4/call-1.json": "b5ed4672f4954ce827d940c26f46aa5c7f742886dd941db35447e082d0c54e87"
+      }
+    },
+    {
+      "manifest": {
+        "backend": {
+          "context": {
+            "evaluator_sha256": "ddfa2776868652a289f878835d549c2c2ac16ac7d8515337579ea8d646cd34cc",
+            "generator": {
+              "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/third_party/NGen/ngen.bat",
+              "binary_sha256": "3ceb5b6b7228f56b6202450ad7c9e000ca17a329bb0f0ec0a9dbd156354b487e",
+              "changed_inputs": [],
+              "manifest_sha256": "190e6ad2d170e9786b5b4a43daf9beba5056fef2c718e197473b4e7d69622024",
+              "source_files": 71,
+              "verified": true
+            },
+            "hardware_sources": {
+              "architecture_search/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "architecture_search/build_identity.py": "edb026826822f671aa5acf89beaae3060a856318644cb3ab4b7f362cf6885036",
+              "architecture_search/device.py": "d9fbac8a64b1e90be4372fee03e521e27025fe9b7b7354c2dd2067f0b2eb4e60",
+              "architecture_search/device_evaluate.py": "5ae25419565dab135c6044f200bc242fac209b858ffc803d95039bcfb099026c",
+              "architecture_search/device_search.py": "8e37d5214201396494a6d8ff65f89f24bc9fbe071f1a5fc5a5306461f0a0181c",
+              "architecture_search/evaluate.py": "a2727a510b0ea006b633b4e825769259f0002340178927acc79b24854b006798",
+              "architecture_search/fft_model.py": "add96c79160d227df5f45601cfd3ae995393998178ff0be8fb6f2064cf890609",
+              "architecture_search/frame_banks.py": "fe2689f5721a17a267fea35d3fef5c0bfaf06dda08170f5c3b2cabc2e33d6423",
+              "architecture_search/model.py": "685553808391d8d6bbd80812eaa2d770a59b6be4bf604bba1472729c26e1ae74",
+              "architecture_search/modular_pipeline.py": "9139d4fc14536b3adcb4176139118fc8758ac830053b2e2dea264504eff9b9ec",
+              "architecture_search/numerics.py": "9c39d4c7d33cf50f118b1e4f96dca2698db512ea6fed20c03c6cae853c5723f6",
+              "architecture_search/operation_contract.py": "6a2ef33d7da210276d064acb0791a4f307add8058e1ac6b2ee90ee0f0fe44669",
+              "architecture_search/oracle.py": "559342abf63e66ae4ffb2a1c95300706c4f15cecac2306b07b7679853250c5c6",
+              "architecture_search/paths.py": "3ed200e127bbf975c16c4689362aae8aba8c2176c27ac8862f87ab18b1515f7b",
+              "architecture_search/pipelined_products.py": "c7975111102c8b8ce1a492fc2e6d4bb969af89ac1634c9e739e6f689675b42d7",
+              "architecture_search/primitive_proofs.py": "b9944381677c6d3260008e20f16ea4e3b4ff84ab1af4f1fc5cda0ebf78e29c4a",
+              "architecture_search/product_evaluate.py": "f01f50db63d064c04646d57287f6ee6f9a3d15eb117bce292f60724ad79fd6f4",
+              "architecture_search/product_rtl.py": "9e752a2a30f741e8f095225dc76bcb6aa26db0b8d920e685d82cd795061fa3ff",
+              "architecture_search/product_search.py": "14a1226deea68c9464fb5866574c604389cc488febb94326adfd30db9c6fabd7",
+              "architecture_search/product_simulation.py": "5d18c31fd426c8aab0df2bfbdca5d384051ce7b51481c450355ee5310d5a4276",
+              "architecture_search/products.py": "94303464f5f49ac78053754465c167d6aa7221c6da64e81cee285d754588d6d2",
+              "architecture_search/rom.py": "3a6cbc6c5635b297ac60c77237a9c38a652a794cb60680b19e1bd0f6fca11cf4",
+              "architecture_search/timing_harness.py": "2aafd9374512b9418cd117f4475afa4f382f503bb2404a4f0be7aefbf8f7dc14",
+              "architecture_search/wide_backend.py": "f33ac2009250830359879549a87734d9a19da05f9dcc4769aaa03aa951a4ed45",
+              "architecture_search/wide_products.py": "edd03279a6f3c46ea112fcec358c191b88d90c848dca797e94028f249718daf6",
+              "architecture_search/wide_rtl.py": "356c83409295b8476843a73028da7e91c3b0f4189ad303571d99db3c1dba1716",
+              "scripts/fhe512_preroute.py": "ce54cd1183273e7723386b9330cc5b5904cead6e09d382703920628c8eb105cd",
+              "scripts/fhe512_sgen_precision.py": "9deb78c46a2d2c55de500c456eebea0693ce25654dfdf2845f06b025a7f233ab",
+              "scripts/llm_polynomial_study.py": "7c854e29d6fac46cf0e9609ba04692161c418064be9e1ee8f6af28bb6fb369e4",
+              "scripts/polynomial_study.py": "62670c2b1f7422451c11ba7f04c1fa2a3d5df5f0903d85cc7a7b95d2dd7492ef",
+              "scripts/run_llm_qualification.sh": "01431d23cd5d90d70e95470317e116b7f9e3c8d97e69ad0c725be181ee344043",
+              "scripts/verilator_pinned.sh": "ad94b7f17181ad903c56ce10e620728eda20b895a39f4ec735b27258d512c640"
+            },
+            "image_sha256": "8187cb19842daf3217cba03dc5a9ded2431d954f2bd51b215be2aec360a50e06",
+            "target": {
+              "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+              "bandwidth_bytes_per_second": 32000000000,
+              "capacity": {
+                "bram36": 2016,
+                "dsp": 9024,
+                "ff": 2607360,
+                "lut": 1303680,
+                "uram": 960
+              },
+              "clock_mhz": 250,
+              "implementation_context": "registered-harness-v2",
+              "implementation_directive": "Default",
+              "implementation_seed": "tool-default",
+              "io_delay_fraction": 0.25,
+              "part": "xcu280-fsvh2892-2L-e",
+              "resource_fraction": 0.8,
+              "resource_limits": {},
+              "schema": "polynomial-device-v1",
+              "vivado_version": "2023.2"
+            },
+            "threads": 4,
+            "timeout": 3600,
+            "tool": {
+              "binaries": {
+                "/home/opt/xilinx/Vivado/2023.2/bin/unwrapped/lnx64.o/vivado": "207605c630c1b1bc0f8274c5cbd16bf65df5d121fd1a8185e7443bcd8754c932",
+                "/home/opt/xilinx/Vivado/2023.2/bin/vivado": "06008d6f7a24bbc5044ea7d29f94fcd01953cac7667d3461f6a246493d8ea417"
+              },
+              "version": "2023.2",
+              "version_text": "vivado v2023.2 (64-bit)\nTool Version Limit: 2023.10\nSW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023\nIP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023\nSharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n"
+            }
+          },
+          "mode": "live",
+          "reference_manifest_sha256": "e97a010e8d9f748c4646b72a230fea579d7b6b60571a0c0673d88bfad72d7cb6",
+          "reference_sha256": "ac06b41ea3ae3798f19ee00d4994d3348e1c6a6aef759130e595dbb02518ed3c"
+        },
+        "catalog_sha256": "54cee9dc050f00594132aaf7781f2ad93b676abaa4bac9c62fb7cd028743bd91",
+        "controller_sha256": "2ddfa0328813744b2c4e294c977e7c56f07ce24e9d50e0ba541750b0023cc889",
+        "max_candidates": 4,
+        "policy": "random",
+        "route_budget": 2,
+        "schema": "llm-dse-run-v1",
+        "seed": 1,
+        "settings": {
+          "base_url": "http://10.0.60.37:8080/v1",
+          "model": "qwen3.8-flash-next-unsloth-ud-q4_k_xl"
+        },
+        "target": {
+          "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+          "bandwidth_bytes_per_second": 32000000000,
+          "capacity": {
+            "bram36": 2016,
+            "dsp": 9024,
+            "ff": 2607360,
+            "lut": 1303680,
+            "uram": 960
+          },
+          "clock_mhz": 250,
+          "implementation_context": "registered-harness-v2",
+          "implementation_directive": "Default",
+          "implementation_seed": "tool-default",
+          "io_delay_fraction": 0.25,
+          "part": "xcu280-fsvh2892-2L-e",
+          "resource_fraction": 0.8,
+          "resource_limits": {},
+          "schema": "polynomial-device-v1",
+          "vivado_version": "2023.2"
+        }
+      },
+      "policy": "random",
+      "results": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-dse-live-v1/random/results.json",
+      "results_sha256": "1b79edbaa2c512aed95ea2b0a848f26130ac622ddca7092eb2fb814d9178f8e1",
+      "transcripts": {}
+    },
+    {
+      "manifest": {
+        "backend": {
+          "context": {
+            "evaluator_sha256": "ddfa2776868652a289f878835d549c2c2ac16ac7d8515337579ea8d646cd34cc",
+            "generator": {
+              "binary": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/third_party/NGen/ngen.bat",
+              "binary_sha256": "3ceb5b6b7228f56b6202450ad7c9e000ca17a329bb0f0ec0a9dbd156354b487e",
+              "changed_inputs": [],
+              "manifest_sha256": "190e6ad2d170e9786b5b4a43daf9beba5056fef2c718e197473b4e7d69622024",
+              "source_files": 71,
+              "verified": true
+            },
+            "hardware_sources": {
+              "architecture_search/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "architecture_search/build_identity.py": "edb026826822f671aa5acf89beaae3060a856318644cb3ab4b7f362cf6885036",
+              "architecture_search/device.py": "d9fbac8a64b1e90be4372fee03e521e27025fe9b7b7354c2dd2067f0b2eb4e60",
+              "architecture_search/device_evaluate.py": "5ae25419565dab135c6044f200bc242fac209b858ffc803d95039bcfb099026c",
+              "architecture_search/device_search.py": "8e37d5214201396494a6d8ff65f89f24bc9fbe071f1a5fc5a5306461f0a0181c",
+              "architecture_search/evaluate.py": "a2727a510b0ea006b633b4e825769259f0002340178927acc79b24854b006798",
+              "architecture_search/fft_model.py": "add96c79160d227df5f45601cfd3ae995393998178ff0be8fb6f2064cf890609",
+              "architecture_search/frame_banks.py": "fe2689f5721a17a267fea35d3fef5c0bfaf06dda08170f5c3b2cabc2e33d6423",
+              "architecture_search/model.py": "685553808391d8d6bbd80812eaa2d770a59b6be4bf604bba1472729c26e1ae74",
+              "architecture_search/modular_pipeline.py": "9139d4fc14536b3adcb4176139118fc8758ac830053b2e2dea264504eff9b9ec",
+              "architecture_search/numerics.py": "9c39d4c7d33cf50f118b1e4f96dca2698db512ea6fed20c03c6cae853c5723f6",
+              "architecture_search/operation_contract.py": "6a2ef33d7da210276d064acb0791a4f307add8058e1ac6b2ee90ee0f0fe44669",
+              "architecture_search/oracle.py": "559342abf63e66ae4ffb2a1c95300706c4f15cecac2306b07b7679853250c5c6",
+              "architecture_search/paths.py": "3ed200e127bbf975c16c4689362aae8aba8c2176c27ac8862f87ab18b1515f7b",
+              "architecture_search/pipelined_products.py": "c7975111102c8b8ce1a492fc2e6d4bb969af89ac1634c9e739e6f689675b42d7",
+              "architecture_search/primitive_proofs.py": "b9944381677c6d3260008e20f16ea4e3b4ff84ab1af4f1fc5cda0ebf78e29c4a",
+              "architecture_search/product_evaluate.py": "f01f50db63d064c04646d57287f6ee6f9a3d15eb117bce292f60724ad79fd6f4",
+              "architecture_search/product_rtl.py": "9e752a2a30f741e8f095225dc76bcb6aa26db0b8d920e685d82cd795061fa3ff",
+              "architecture_search/product_search.py": "14a1226deea68c9464fb5866574c604389cc488febb94326adfd30db9c6fabd7",
+              "architecture_search/product_simulation.py": "5d18c31fd426c8aab0df2bfbdca5d384051ce7b51481c450355ee5310d5a4276",
+              "architecture_search/products.py": "94303464f5f49ac78053754465c167d6aa7221c6da64e81cee285d754588d6d2",
+              "architecture_search/rom.py": "3a6cbc6c5635b297ac60c77237a9c38a652a794cb60680b19e1bd0f6fca11cf4",
+              "architecture_search/timing_harness.py": "2aafd9374512b9418cd117f4475afa4f382f503bb2404a4f0be7aefbf8f7dc14",
+              "architecture_search/wide_backend.py": "f33ac2009250830359879549a87734d9a19da05f9dcc4769aaa03aa951a4ed45",
+              "architecture_search/wide_products.py": "edd03279a6f3c46ea112fcec358c191b88d90c848dca797e94028f249718daf6",
+              "architecture_search/wide_rtl.py": "356c83409295b8476843a73028da7e91c3b0f4189ad303571d99db3c1dba1716",
+              "scripts/fhe512_preroute.py": "ce54cd1183273e7723386b9330cc5b5904cead6e09d382703920628c8eb105cd",
+              "scripts/fhe512_sgen_precision.py": "9deb78c46a2d2c55de500c456eebea0693ce25654dfdf2845f06b025a7f233ab",
+              "scripts/llm_polynomial_study.py": "7c854e29d6fac46cf0e9609ba04692161c418064be9e1ee8f6af28bb6fb369e4",
+              "scripts/polynomial_study.py": "62670c2b1f7422451c11ba7f04c1fa2a3d5df5f0903d85cc7a7b95d2dd7492ef",
+              "scripts/run_llm_qualification.sh": "01431d23cd5d90d70e95470317e116b7f9e3c8d97e69ad0c725be181ee344043",
+              "scripts/verilator_pinned.sh": "ad94b7f17181ad903c56ce10e620728eda20b895a39f4ec735b27258d512c640"
+            },
+            "image_sha256": "8187cb19842daf3217cba03dc5a9ded2431d954f2bd51b215be2aec360a50e06",
+            "target": {
+              "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+              "bandwidth_bytes_per_second": 32000000000,
+              "capacity": {
+                "bram36": 2016,
+                "dsp": 9024,
+                "ff": 2607360,
+                "lut": 1303680,
+                "uram": 960
+              },
+              "clock_mhz": 250,
+              "implementation_context": "registered-harness-v2",
+              "implementation_directive": "Default",
+              "implementation_seed": "tool-default",
+              "io_delay_fraction": 0.25,
+              "part": "xcu280-fsvh2892-2L-e",
+              "resource_fraction": 0.8,
+              "resource_limits": {},
+              "schema": "polynomial-device-v1",
+              "vivado_version": "2023.2"
+            },
+            "threads": 4,
+            "timeout": 3600,
+            "tool": {
+              "binaries": {
+                "/home/opt/xilinx/Vivado/2023.2/bin/unwrapped/lnx64.o/vivado": "207605c630c1b1bc0f8274c5cbd16bf65df5d121fd1a8185e7443bcd8754c932",
+                "/home/opt/xilinx/Vivado/2023.2/bin/vivado": "06008d6f7a24bbc5044ea7d29f94fcd01953cac7667d3461f6a246493d8ea417"
+              },
+              "version": "2023.2",
+              "version_text": "vivado v2023.2 (64-bit)\nTool Version Limit: 2023.10\nSW Build 4029153 on Fri Oct 13 20:13:54 MDT 2023\nIP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023\nSharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023\nCopyright 1986-2022 Xilinx, Inc. All Rights Reserved.\nCopyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.\n"
+            }
+          },
+          "mode": "live",
+          "reference_manifest_sha256": "e97a010e8d9f748c4646b72a230fea579d7b6b60571a0c0673d88bfad72d7cb6",
+          "reference_sha256": "ac06b41ea3ae3798f19ee00d4994d3348e1c6a6aef759130e595dbb02518ed3c"
+        },
+        "catalog_sha256": "54cee9dc050f00594132aaf7781f2ad93b676abaa4bac9c62fb7cd028743bd91",
+        "controller_sha256": "2ddfa0328813744b2c4e294c977e7c56f07ce24e9d50e0ba541750b0023cc889",
+        "max_candidates": 4,
+        "policy": "analytical",
+        "route_budget": 2,
+        "schema": "llm-dse-run-v1",
+        "seed": 1,
+        "settings": {
+          "base_url": "http://10.0.60.37:8080/v1",
+          "model": "qwen3.8-flash-next-unsloth-ud-q4_k_xl"
+        },
+        "target": {
+          "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+          "bandwidth_bytes_per_second": 32000000000,
+          "capacity": {
+            "bram36": 2016,
+            "dsp": 9024,
+            "ff": 2607360,
+            "lut": 1303680,
+            "uram": 960
+          },
+          "clock_mhz": 250,
+          "implementation_context": "registered-harness-v2",
+          "implementation_directive": "Default",
+          "implementation_seed": "tool-default",
+          "io_delay_fraction": 0.25,
+          "part": "xcu280-fsvh2892-2L-e",
+          "resource_fraction": 0.8,
+          "resource_limits": {},
+          "schema": "polynomial-device-v1",
+          "vivado_version": "2023.2"
+        }
+      },
+      "policy": "analytical",
+      "results": "/home/work-bleaker/kmatsuoka/sources/LLMNTT-workspace/LLM-NTT-Examples/build/llm-dse-live-v1/analytical/results.json",
+      "results_sha256": "697e817af2b3f7aeee2e17e31d115a0c97b27e5c5d579a2af59ad48fcfb12647",
+      "transcripts": {}
+    }
+  ],
+  "schema": "llm-dse-comparison-v1",
+  "target": {
+    "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+    "bandwidth_bytes_per_second": 32000000000,
+    "capacity": {
+      "bram36": 2016,
+      "dsp": 9024,
+      "ff": 2607360,
+      "lut": 1303680,
+      "uram": 960
+    },
+    "clock_mhz": 250,
+    "implementation_context": "registered-harness-v2",
+    "implementation_directive": "Default",
+    "implementation_seed": "tool-default",
+    "io_delay_fraction": 0.25,
+    "part": "xcu280-fsvh2892-2L-e",
+    "resource_fraction": 0.8,
+    "resource_limits": {},
+    "schema": "polynomial-device-v1",
+    "vivado_version": "2023.2"
+  },
+  "trials": [
+    {
+      "candidate_id": "full-ternary-76e432b18602b152",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 1,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "policy": "llm",
+      "proposal": {
+        "candidate_id": "full-ternary-76e432b18602b152",
+        "rationale": "Eligible candidate closest to the routed frontier design, changing only lanes from 2 to 4 while preserving RNS/streamed/ngen, radix 2, pipelined product profile, baseline profile, Montgomery reduction, and stage_groups 1. This is the most plausible disclosed configuration for improving modeled products/s relative to LUT while retaining the same reduction and pipeline structure that achieved exact correctness and routed 250 MHz timing."
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 3174,
+        "latency_cycles": 7452,
+        "max_abs_error": 0,
+        "rtl_sha256": "d992f8c46c4b553cc7e9eeb45c21527be3ecd6b52faf3a82c75dfe9785c0408b"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 180.90733530558646,
+          "metrics": {
+            "bram36": 63.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 60.0,
+            "ff": 13067.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 29869.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 180.90733530558646,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 150.92930645216256,
+          "passed": true,
+          "physical_seconds": 150.92930645216256,
+          "reason": ""
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-3c3f04b96d09ff68",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "policy": "llm",
+      "proposal": {
+        "candidate_id": "full-ternary-3c3f04b96d09ff68",
+        "rationale": "Eligible 4-lane, 2-PE, pipelined Montgomery variant is the closest disclosed configuration to the routed frontier while increasing parallelism, making it the best eligible candidate to test for better LUT versus modeled products/s under exact correctness and routed 250 MHz timing."
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 1767,
+        "latency_cycles": 4637,
+        "max_abs_error": 0,
+        "rtl_sha256": "a11d00b9a5fb4501209bf408f7b834c3769e435ab0b53dda7e0c4e7e378553fe"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 150.9342991518788,
+          "metrics": {
+            "bram36": 66.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 96.0,
+            "ff": 15856.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 37607.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 150.9342991518788,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 156.41663994267583,
+          "passed": true,
+          "physical_seconds": 156.41663994267583,
+          "reason": ""
+        },
+        "routed": {
+          "cache_hit": false,
+          "feasible": true,
+          "hardware_seconds": 494.8294425648637,
+          "metrics": {
+            "bram36": 66.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 96.0,
+            "ff": 16001.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.01,
+            "lut": 37359.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.012,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 494.8294425648637,
+          "reason": ""
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-35d3fad46ca22405",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 1,
+        "product_profile": "registered",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "policy": "llm",
+      "proposal": {
+        "candidate_id": "full-ternary-35d3fad46ca22405",
+        "rationale": "Eligible unmeasured candidate with 4 lanes, 1 PE, registered product profile, and montgomery reduction; it explores a lower-LUT registered variant while preserving the frontier's montgomery/streamed RNS direction and can be qualified against exact correctness and routed 250 MHz timing."
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 3174,
+        "latency_cycles": 7454,
+        "max_abs_error": 0,
+        "rtl_sha256": "42853dec89eaa6e806a8d4b41d740d15d0f5359a6f18d2029adc3a0953e6193e"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "hardware_seconds": 137.6334909759462,
+          "metrics": {
+            "bram36": 63.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 60.0,
+            "ff": 13101.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 29858.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": true,
+          "hardware_seconds": 0,
+          "passed": true,
+          "physical_seconds": 0
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-351b2874307f32aa",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "barrett",
+        "stage_groups": 1
+      },
+      "policy": "llm",
+      "proposal": {
+        "candidate_id": "full-ternary-351b2874307f32aa",
+        "rationale": "Eligible unmeasured baseline with low mapped footprint and barrett reduction, offering a plausible LUT-efficient route attempt while preserving exact correctness and 250 MHz qualification."
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 3390,
+        "latency_cycles": 8140,
+        "max_abs_error": 0,
+        "rtl_sha256": "541ec606e1800275173648de917399af31afc28923b66f9f5bd5365c9efff74f"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 139.19053930602968,
+          "metrics": {
+            "bram36": 49.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 78.0,
+            "ff": 12694.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 27102.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -4.81,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 139.19053930602968,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": true,
+          "hardware_seconds": 0,
+          "passed": true,
+          "physical_seconds": 0
+        },
+        "routed": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 463.55424712598324,
+          "metrics": {
+            "bram36": 49.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 78.0,
+            "ff": 13101.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.01,
+            "lut": 26965.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -5.374,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 463.55424712598324,
+          "reason": ""
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-d293980eab620c15",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "product_profile": "registered",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "shoup",
+        "stage_groups": 1
+      },
+      "policy": "random",
+      "proposal": {
+        "candidate_id": "full-ternary-d293980eab620c15",
+        "prediction": {
+          "method": "seeded-exploration"
+        },
+        "rationale": "random"
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 3390,
+        "latency_cycles": 8142,
+        "max_abs_error": 0,
+        "rtl_sha256": "5933a1e3d5270058791955fa15b8b88966b0d6576ecf77bfe610ed371bc09917"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 150.70724919298664,
+          "metrics": {
+            "bram36": 67.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 63.0,
+            "ff": 12585.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 20113.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -1.382,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 150.70724919298664,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 147.68294982099906,
+          "passed": true,
+          "physical_seconds": 147.68294982099906,
+          "reason": ""
+        },
+        "routed": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 369.22828137967736,
+          "metrics": {
+            "bram36": 67.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 63.0,
+            "ff": 12858.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.012,
+            "lut": 19961.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -1.315,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 369.22828137967736,
+          "reason": ""
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-3c3f04b96d09ff68",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 2,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "policy": "random",
+      "proposal": {
+        "candidate_id": "full-ternary-3c3f04b96d09ff68",
+        "prediction": {
+          "method": "seeded-exploration"
+        },
+        "rationale": "random"
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 1767,
+        "latency_cycles": 4637,
+        "max_abs_error": 0,
+        "rtl_sha256": "a11d00b9a5fb4501209bf408f7b834c3769e435ab0b53dda7e0c4e7e378553fe"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "feasible": false,
+          "hardware_seconds": 150.9342991518788,
+          "metrics": {
+            "bram36": 66.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 96.0,
+            "ff": 15856.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 37607.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": true,
+          "feasible": false,
+          "hardware_seconds": 156.41663994267583,
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": ""
+        },
+        "routed": {
+          "cache_hit": true,
+          "feasible": true,
+          "hardware_seconds": 494.8294425648637,
+          "metrics": {
+            "bram36": 66.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 96.0,
+            "ff": 16001.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.01,
+            "lut": 37359.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.012,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": ""
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-76e432b18602b152",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 1,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "montgomery",
+        "stage_groups": 1
+      },
+      "policy": "random",
+      "proposal": {
+        "candidate_id": "full-ternary-76e432b18602b152",
+        "prediction": {
+          "method": "seeded-exploration"
+        },
+        "rationale": "random"
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 3174,
+        "latency_cycles": 7452,
+        "max_abs_error": 0,
+        "rtl_sha256": "d992f8c46c4b553cc7e9eeb45c21527be3ecd6b52faf3a82c75dfe9785c0408b"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "feasible": false,
+          "hardware_seconds": 180.90733530558646,
+          "metrics": {
+            "bram36": 63.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 60.0,
+            "ff": 13067.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 29869.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": true,
+          "feasible": false,
+          "hardware_seconds": 150.92930645216256,
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": ""
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-d63a14372cc0c644",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 2,
+        "product_profile": "registered",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "shoup",
+        "stage_groups": 1
+      },
+      "policy": "random",
+      "proposal": {
+        "candidate_id": "full-ternary-d63a14372cc0c644",
+        "prediction": {
+          "method": "seeded-exploration"
+        },
+        "rationale": "random"
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 1983,
+        "latency_cycles": 5327,
+        "max_abs_error": 0,
+        "rtl_sha256": "43b59d7a2cea403936a19580e95f5f966a4a49d98c174f945509d7c49f258809"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 142.8628498520702,
+          "metrics": {
+            "bram36": 82.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 102.0,
+            "ff": 15802.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 31057.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -1.382,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 142.8628498520702,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 153.16028557298705,
+          "passed": true,
+          "physical_seconds": 153.16028557298705,
+          "reason": ""
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-25ce152765f8e1a5",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "shoup",
+        "stage_groups": 1
+      },
+      "policy": "analytical",
+      "proposal": {
+        "candidate_id": "full-ternary-25ce152765f8e1a5",
+        "prediction": {
+          "features": {
+            "digit_products": 1,
+            "interval": 2304,
+            "lanes": 2,
+            "length": 512,
+            "memory_bits": 356352,
+            "multiplies": 8,
+            "n": 512,
+            "pe": 1,
+            "prime_count": 2,
+            "register_bits": 0,
+            "stage_groups": 1,
+            "width": 29
+          },
+          "interval": 2304,
+          "lut": 12818.0,
+          "method": "analytical-proxy",
+          "samples": 0
+        },
+        "rationale": "analytical"
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 3390,
+        "latency_cycles": 8140,
+        "max_abs_error": 0,
+        "rtl_sha256": "633e7d465e338a40ce2447dd6e7898a1d83b9a7579a2243077363f6b53c95f45"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 137.75221323687583,
+          "metrics": {
+            "bram36": 58.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 63.0,
+            "ff": 12759.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 25317.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -1.382,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 137.75221323687583,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": true,
+          "hardware_seconds": 0,
+          "passed": true,
+          "physical_seconds": 0
+        },
+        "routed": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 405.9505967502482,
+          "metrics": {
+            "bram36": 58.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 63.0,
+            "ff": 13073.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.01,
+            "lut": 25097.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -1.297,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 405.9505967502482,
+          "reason": ""
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-e940b8c451a74a42",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 4,
+        "pe": 1,
+        "product_profile": "registered",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "shoup",
+        "stage_groups": 1
+      },
+      "policy": "analytical",
+      "proposal": {
+        "candidate_id": "full-ternary-e940b8c451a74a42",
+        "prediction": {
+          "features": {
+            "digit_products": 1,
+            "interval": 1152,
+            "lanes": 4,
+            "length": 512,
+            "memory_bits": 356352,
+            "multiplies": 14,
+            "n": 512,
+            "pe": 1,
+            "prime_count": 2,
+            "register_bits": 0,
+            "stage_groups": 1,
+            "width": 29
+          },
+          "interval": 1152,
+          "lut": 14079.5,
+          "method": "analytical-proxy",
+          "samples": 0
+        },
+        "rationale": "analytical"
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 3134,
+        "latency_cycles": 7374,
+        "max_abs_error": 0,
+        "rtl_sha256": "501130f3e74229b75d5984a5ee52a7f6416f25257bfc4dfb9e18eb7e8562aac5"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 140.8730252981186,
+          "metrics": {
+            "bram36": 70.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 63.0,
+            "ff": 13263.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 30189.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -1.382,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 140.8730252981186,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 138.5437334566377,
+          "passed": true,
+          "physical_seconds": 138.5437334566377,
+          "reason": ""
+        },
+        "routed": {
+          "cache_hit": false,
+          "feasible": false,
+          "hardware_seconds": 415.7186625539325,
+          "metrics": {
+            "bram36": 70.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 63.0,
+            "ff": 13510.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.01,
+            "lut": 29992.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -1.33,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 415.7186625539325,
+          "reason": ""
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-351b2874307f32aa",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 1,
+        "product_profile": "pipelined",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "barrett",
+        "stage_groups": 1
+      },
+      "policy": "analytical",
+      "proposal": {
+        "candidate_id": "full-ternary-351b2874307f32aa",
+        "prediction": {
+          "features": {
+            "digit_products": 1,
+            "interval": 2304,
+            "lanes": 2,
+            "length": 512,
+            "memory_bits": 356352,
+            "multiplies": 8,
+            "n": 512,
+            "pe": 1,
+            "prime_count": 2,
+            "register_bits": 0,
+            "stage_groups": 1,
+            "width": 29
+          },
+          "interval": 2304,
+          "lut": 12818.0,
+          "method": "analytical-proxy",
+          "samples": 0
+        },
+        "rationale": "analytical"
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 3390,
+        "latency_cycles": 8140,
+        "max_abs_error": 0,
+        "rtl_sha256": "541ec606e1800275173648de917399af31afc28923b66f9f5bd5365c9efff74f"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "feasible": false,
+          "hardware_seconds": 139.19053930602968,
+          "metrics": {
+            "bram36": 49.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 78.0,
+            "ff": 12694.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 27102.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -4.81,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": true,
+          "hardware_seconds": 0,
+          "passed": true,
+          "physical_seconds": 0
+        }
+      }
+    },
+    {
+      "candidate_id": "full-ternary-d63a14372cc0c644",
+      "configuration": {
+        "arithmetic": "rns",
+        "backend": "streamed",
+        "generator": "ngen",
+        "lanes": 2,
+        "pe": 2,
+        "product_profile": "registered",
+        "profile": "baseline",
+        "radix": 2,
+        "reduction": "shoup",
+        "stage_groups": 1
+      },
+      "policy": "analytical",
+      "proposal": {
+        "candidate_id": "full-ternary-d63a14372cc0c644",
+        "prediction": {
+          "method": "seeded-exploration"
+        },
+        "rationale": "analytical"
+      },
+      "qualification": {
+        "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "initiation_interval_cycles": 1983,
+        "latency_cycles": 5327,
+        "max_abs_error": 0,
+        "rtl_sha256": "43b59d7a2cea403936a19580e95f5f966a4a49d98c174f945509d7c49f258809"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "feasible": false,
+          "hardware_seconds": 142.8628498520702,
+          "metrics": {
+            "bram36": 82.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 102.0,
+            "ff": 15802.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 31057.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": -1.382,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": ""
+        },
+        "qualified": {
+          "cache_hit": true,
+          "feasible": false,
+          "hardware_seconds": 153.16028557298705,
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": ""
+        }
+      }
+    }
+  ]
+}

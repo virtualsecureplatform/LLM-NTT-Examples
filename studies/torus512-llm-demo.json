@@ -1,0 +1,17 @@
+{
+  "schema": "llm-polynomial-study-v1",
+  "n": 512,
+  "a_range": [-2147483648, 2147483647],
+  "b_range": [-1, 1],
+  "space": {
+    "generators": ["ngen"],
+    "ngen_backends": ["streamed"],
+    "lanes": [2, 4],
+    "pe": [1, 2],
+    "radix": [2],
+    "stage_groups": [1],
+    "reductions": ["barrett", "montgomery", "shoup"],
+    "profiles": ["baseline"],
+    "product_profiles": ["pipelined", "registered"]
+  }
+}

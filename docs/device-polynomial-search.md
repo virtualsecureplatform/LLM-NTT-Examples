@@ -315,3 +315,12 @@ points and the implementation budget as well as the achieved frontier.
 The completed [five-point 250 MHz frontier](results/pareto250-512.md) reports
 all four new designs passing default P&R, the measured resource tradeoffs,
 clock/endpoint verification, and the full provenance snapshot.
+
+## Adaptive LLM-guided exploration
+
+The [LLM prototype guide](llm-polynomial-search.md) describes a 24-configuration
+exact N512 NTT search using this same v2 harness. It acquires qualification,
+mapping, and routing evidence incrementally, feeds measured results back into
+candidate selection, and compares LLM, random, and analytical policies under
+identical logical budgets. Start with its five-design replay fixture before
+running the bounded live comparison.
