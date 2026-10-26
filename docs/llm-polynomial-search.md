@@ -1,5 +1,13 @@
 # LLM-guided polynomial multiplication search
 
+For a combined view of the measured results and recommended presentation figures,
+see the [DSE results summary](dse-results-summary.md).
+
+For new experiments, start with the [unified experiment CLI](dse-tool.md). It
+provides configuration, preflight, status, automatic reports, and a bundled
+portable replay that works without the local build/evidence directories required
+by the original commands below.
+
 This prototype searches exact N=512 full32 × ternary negacyclic polynomial products modulo 2^32. It selects configurations from existing NGen generators and evaluates their measured feedback. The primary objectives are lower routed LUT use and higher modeled products/s, with exact correctness, U280 resource limits, and routed 250 MHz timing as requirements.
 
 The 24 legal configurations vary product profile (`pipelined`, `registered`), lanes (2, 4), PEs (1, 2), and modular reduction (Barrett, Montgomery, Shoup). The backend is streamed radix 2 with stage grouping 1 and baseline arithmetic profile. Legality permits evaluation; functional qualification still decides whether each implementation passes. FFT and generated RTL edits are outside this first experiment.

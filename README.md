@@ -18,6 +18,10 @@ and source campaign identities remain in the machine-readable
 [CSV](docs/measured-evidence/fhe512-common-frontier.csv) and
 [JSON](docs/measured-evidence/fhe512-common-frontier.json).
 
+For a presentation, start with the [DSE results summary and figure guide](docs/dse-results-summary.md).
+It connects the grid search, routed 250 MHz frontier, live LLM comparison, and
+portable replay, with the key tables, graphs, and limits of each result.
+
 ## Layout
 
 - `architecture_search/`: workload contract, generators, RTL construction,
@@ -64,6 +68,19 @@ It retains correctness and routed 250 MHz qualification as measured requirements
 The completed [live comparison table and plots](docs/results/llm-dse-live-512.md)
 show LLM and random search both reaching 141,483 modeled products/s under the
 same four-candidate/two-route budget, with full trial and timing provenance.
+
+The [experiment CLI](docs/dse-tool.md) provides a fresh-checkout replay with
+automatic HTML/SVG reports and no FPGA tools, submodules, or API key required:
+
+```bash
+python3 -m architecture_search.dse init experiment.json
+python3 -m architecture_search.dse run experiment.json
+python3 -m architecture_search.dse status experiment.json
+```
+
+Use `init --with-llm` to include the configured LLM, `preflight` to check
+dependencies and endpoint access, and `init --mode live` for native evaluation.
+Repeating `run` resumes the saved experiment without repeating completed work.
 
 ## Run a new grid
 

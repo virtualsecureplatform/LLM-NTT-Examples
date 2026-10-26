@@ -1,5 +1,8 @@
 # Polynomial multiplication studies
 
+For a combined view of the measured results and recommended presentation figures,
+see the [DSE results summary](dse-results-summary.md).
+
 ## Bounded demonstration
 
 The checked-in [demo specification](../studies/torus-demo.json) searches 12

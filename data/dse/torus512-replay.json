@@ -1,0 +1,973 @@
+{
+  "provenance": {
+    "reference_results_sha256": "ac06b41ea3ae3798f19ee00d4994d3348e1c6a6aef759130e595dbb02518ed3c",
+    "source_snapshot": "docs/results/pareto250-512.json",
+    "source_snapshot_sha256": "81b67210fcaa8021e0972220b7fb83b3d31ec1a5c4e373dc6bb01ac0fe1aff4f",
+    "verification": "Exported after native qualification, routed evidence, endpoints, and clock checks; replay distributes measurements and hashes, not RTL/checkpoints."
+  },
+  "records": [
+    {
+      "candidate": {
+        "configuration": {
+          "arithmetic": "rns",
+          "backend": "streamed",
+          "generator": "ngen",
+          "lanes": 2,
+          "pe": 1,
+          "product_profile": "pipelined",
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1
+        },
+        "name": "full-ternary-2be26723e0be400f",
+        "phase": "architecture",
+        "quant_bits": 0,
+        "status": "pending",
+        "workload": {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -1,
+            1
+          ],
+          "correctness": "certified-exact",
+          "kind": "polynomial_product",
+          "lanes": 2,
+          "modulus": 4294967296,
+          "n": 512,
+          "operands": "fresh",
+          "ring": "negacyclic",
+          "version": 2
+        },
+        "workload_name": "full-ternary"
+      },
+      "provenance": {
+        "clock_evidence_sha256": "def64033e6d89a549a5b6ded8c13747889ea31a99a0f7d05889c4c8fe666eb02",
+        "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "routed_evidence_sha256": "142f6661c23483ee04e19e164d352637790d5dedc9ac534e76d37fd8e793419c",
+        "rtl_sha256": "65ba9111a75ea5715fc2c884172c11c4c8d74f679ea26e7149d5d44d7e2ff320"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 147.83731018006802,
+          "metrics": {
+            "bram36": 51.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 60.0,
+            "ff": 12605.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 25072.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "stage": "mapped"
+        },
+        "qualified": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 0,
+          "passed": true,
+          "physical_seconds": 0,
+          "row": {
+            "configuration": {
+              "arithmetic": "rns",
+              "backend": "streamed",
+              "generator": "ngen",
+              "lanes": 2,
+              "pe": 1,
+              "product_profile": "pipelined",
+              "profile": "baseline",
+              "radix": 2,
+              "reduction": "montgomery",
+              "stage_groups": 1
+            },
+            "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+            "initiation_interval_cycles": 3430,
+            "latency_cycles": 8220,
+            "max_abs_error": 0,
+            "memory_bits": 1981012,
+            "multipliers": 74,
+            "name": "full-ternary-2be26723e0be400f",
+            "passed": true,
+            "phase": "architecture",
+            "quant_bits": 0,
+            "register_bits": 30180,
+            "rtl_sha256": "65ba9111a75ea5715fc2c884172c11c4c8d74f679ea26e7149d5d44d7e2ff320",
+            "status": "pending",
+            "workload": {
+              "a_range": [
+                -2147483648,
+                2147483647
+              ],
+              "b_range": [
+                -1,
+                1
+              ],
+              "correctness": "certified-exact",
+              "kind": "polynomial_product",
+              "lanes": 2,
+              "modulus": 4294967296,
+              "n": 512,
+              "operands": "fresh",
+              "ring": "negacyclic",
+              "version": 2
+            },
+            "workload_name": "full-ternary",
+            "yosys_cells": 15655
+          },
+          "stage": "qualified"
+        },
+        "routed": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "feasible": true,
+          "hardware_seconds": 353.6572590577416,
+          "metrics": {
+            "bram36": 51.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 60.0,
+            "ff": 12767.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.011,
+            "lut": 24612.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.063,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "reported_signoff": {
+            "clock_verified": true,
+            "failing_endpoints": {
+              "Hold": 0,
+              "PW": 0,
+              "Setup": 0
+            }
+          },
+          "stage": "routed"
+        }
+      }
+    },
+    {
+      "candidate": {
+        "configuration": {
+          "arithmetic": "rns",
+          "backend": "streamed",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 1,
+          "product_profile": "registered",
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1
+        },
+        "name": "full-ternary-35d3fad46ca22405",
+        "phase": "architecture",
+        "quant_bits": 0,
+        "status": "pending",
+        "workload": {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -1,
+            1
+          ],
+          "correctness": "certified-exact",
+          "kind": "polynomial_product",
+          "lanes": 2,
+          "modulus": 4294967296,
+          "n": 512,
+          "operands": "fresh",
+          "ring": "negacyclic",
+          "version": 2
+        },
+        "workload_name": "full-ternary"
+      },
+      "provenance": {
+        "clock_evidence_sha256": "dc4a7f6ca749f0a3bfb332e70cb0e1b51df9a7dcd7e089c3d97bcacc0db672f2",
+        "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "routed_evidence_sha256": "59b2213fb0f30c22c59f2698e5380bc789c851d682fb7de3e61d27aa54ecb147",
+        "rtl_sha256": "42853dec89eaa6e806a8d4b41d740d15d0f5359a6f18d2029adc3a0953e6193e"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 137.6334909759462,
+          "metrics": {
+            "bram36": 63.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 60.0,
+            "ff": 13101.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 29858.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "stage": "mapped"
+        },
+        "qualified": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 0,
+          "passed": true,
+          "physical_seconds": 0,
+          "row": {
+            "configuration": {
+              "arithmetic": "rns",
+              "backend": "streamed",
+              "generator": "ngen",
+              "lanes": 4,
+              "pe": 1,
+              "product_profile": "registered",
+              "profile": "baseline",
+              "radix": 2,
+              "reduction": "montgomery",
+              "stage_groups": 1
+            },
+            "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+            "initiation_interval_cycles": 3174,
+            "latency_cycles": 7454,
+            "max_abs_error": 0,
+            "memory_bits": 1981012,
+            "multipliers": 122,
+            "name": "full-ternary-35d3fad46ca22405",
+            "passed": true,
+            "phase": "architecture",
+            "quant_bits": 0,
+            "register_bits": 34566,
+            "rtl_sha256": "42853dec89eaa6e806a8d4b41d740d15d0f5359a6f18d2029adc3a0953e6193e",
+            "status": "pending",
+            "workload": {
+              "a_range": [
+                -2147483648,
+                2147483647
+              ],
+              "b_range": [
+                -1,
+                1
+              ],
+              "correctness": "certified-exact",
+              "kind": "polynomial_product",
+              "lanes": 2,
+              "modulus": 4294967296,
+              "n": 512,
+              "operands": "fresh",
+              "ring": "negacyclic",
+              "version": 2
+            },
+            "workload_name": "full-ternary",
+            "yosys_cells": 39331
+          },
+          "stage": "qualified"
+        },
+        "routed": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "feasible": true,
+          "hardware_seconds": 348.8433767510578,
+          "metrics": {
+            "bram36": 63.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 60.0,
+            "ff": 13308.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.012,
+            "lut": 29487.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.113,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "reported_signoff": {
+            "clock_verified": true,
+            "failing_endpoints": {
+              "Hold": 0,
+              "PW": 0,
+              "Setup": 0
+            }
+          },
+          "stage": "routed"
+        }
+      }
+    },
+    {
+      "candidate": {
+        "configuration": {
+          "arithmetic": "rns",
+          "backend": "streamed",
+          "generator": "ngen",
+          "lanes": 2,
+          "pe": 1,
+          "product_profile": "registered",
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1
+        },
+        "name": "full-ternary-460258af9afa6a1b",
+        "phase": "architecture",
+        "quant_bits": 0,
+        "status": "pending",
+        "workload": {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -1,
+            1
+          ],
+          "correctness": "certified-exact",
+          "kind": "polynomial_product",
+          "lanes": 2,
+          "modulus": 4294967296,
+          "n": 512,
+          "operands": "fresh",
+          "ring": "negacyclic",
+          "version": 2
+        },
+        "workload_name": "full-ternary"
+      },
+      "provenance": {
+        "clock_evidence_sha256": "9f738ec00467d90b219694f549d1a5c2e7bf1bff2d22a4e95d18d144e56bb031",
+        "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "routed_evidence_sha256": "4d23fee67c7c6efb5a546a7c5acdfd852f7f782f512e26ad9f1964129117e885",
+        "rtl_sha256": "9a1bcc3a4a7813a26291da2ce9b9502f47ef0116eb156ba6e4c2d978b3afb06a"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 135.70926752500236,
+          "metrics": {
+            "bram36": 60.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 60.0,
+            "ff": 12431.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 19835.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "stage": "mapped"
+        },
+        "qualified": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 0,
+          "passed": true,
+          "physical_seconds": 0,
+          "row": {
+            "configuration": {
+              "arithmetic": "rns",
+              "backend": "streamed",
+              "generator": "ngen",
+              "lanes": 2,
+              "pe": 1,
+              "product_profile": "registered",
+              "profile": "baseline",
+              "radix": 2,
+              "reduction": "montgomery",
+              "stage_groups": 1
+            },
+            "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+            "initiation_interval_cycles": 3430,
+            "latency_cycles": 8222,
+            "max_abs_error": 0,
+            "memory_bits": 1981012,
+            "multipliers": 74,
+            "name": "full-ternary-460258af9afa6a1b",
+            "passed": true,
+            "phase": "architecture",
+            "quant_bits": 0,
+            "register_bits": 30462,
+            "rtl_sha256": "9a1bcc3a4a7813a26291da2ce9b9502f47ef0116eb156ba6e4c2d978b3afb06a",
+            "status": "pending",
+            "workload": {
+              "a_range": [
+                -2147483648,
+                2147483647
+              ],
+              "b_range": [
+                -1,
+                1
+              ],
+              "correctness": "certified-exact",
+              "kind": "polynomial_product",
+              "lanes": 2,
+              "modulus": 4294967296,
+              "n": 512,
+              "operands": "fresh",
+              "ring": "negacyclic",
+              "version": 2
+            },
+            "workload_name": "full-ternary",
+            "yosys_cells": 15721
+          },
+          "stage": "qualified"
+        },
+        "routed": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "feasible": true,
+          "hardware_seconds": 279.7782757068053,
+          "metrics": {
+            "bram36": 60.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 60.0,
+            "ff": 12492.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.01,
+            "lut": 19427.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.219,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "reported_signoff": {
+            "clock_verified": true,
+            "failing_endpoints": {
+              "Hold": 0,
+              "PW": 0,
+              "Setup": 0
+            }
+          },
+          "stage": "routed"
+        }
+      }
+    },
+    {
+      "candidate": {
+        "configuration": {
+          "arithmetic": "rns",
+          "backend": "streamed",
+          "generator": "ngen",
+          "lanes": 2,
+          "pe": 2,
+          "product_profile": "registered",
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1
+        },
+        "name": "full-ternary-9dc15b43d2f6268c",
+        "phase": "architecture",
+        "quant_bits": 0,
+        "status": "pending",
+        "workload": {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -1,
+            1
+          ],
+          "correctness": "certified-exact",
+          "kind": "polynomial_product",
+          "lanes": 2,
+          "modulus": 4294967296,
+          "n": 512,
+          "operands": "fresh",
+          "ring": "negacyclic",
+          "version": 2
+        },
+        "workload_name": "full-ternary"
+      },
+      "provenance": {
+        "clock_evidence_sha256": "6854bf3ba553195ff214cefa5af4fd4dfbe215b861e452ff1cc74dcecde4bde9",
+        "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "routed_evidence_sha256": "e61aae72015ac19f5f273b5fdec87b7835cdbb54e62851e93083bcc084a577cf",
+        "rtl_sha256": "69f89c06724efa034aabd8573801833332dd0122314032506d3cb58b969ca244"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 150.26420997083187,
+          "metrics": {
+            "bram36": 75.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 96.0,
+            "ff": 15400.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 30885.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "stage": "mapped"
+        },
+        "qualified": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 0,
+          "passed": true,
+          "physical_seconds": 0,
+          "row": {
+            "configuration": {
+              "arithmetic": "rns",
+              "backend": "streamed",
+              "generator": "ngen",
+              "lanes": 2,
+              "pe": 2,
+              "product_profile": "registered",
+              "profile": "baseline",
+              "radix": 2,
+              "reduction": "montgomery",
+              "stage_groups": 1
+            },
+            "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+            "initiation_interval_cycles": 2023,
+            "latency_cycles": 5407,
+            "max_abs_error": 0,
+            "memory_bits": 1981440,
+            "multipliers": 92,
+            "name": "full-ternary-9dc15b43d2f6268c",
+            "passed": true,
+            "phase": "architecture",
+            "quant_bits": 0,
+            "register_bits": 45102,
+            "rtl_sha256": "69f89c06724efa034aabd8573801833332dd0122314032506d3cb58b969ca244",
+            "status": "pending",
+            "workload": {
+              "a_range": [
+                -2147483648,
+                2147483647
+              ],
+              "b_range": [
+                -1,
+                1
+              ],
+              "correctness": "certified-exact",
+              "kind": "polynomial_product",
+              "lanes": 2,
+              "modulus": 4294967296,
+              "n": 512,
+              "operands": "fresh",
+              "ring": "negacyclic",
+              "version": 2
+            },
+            "workload_name": "full-ternary",
+            "yosys_cells": 33175
+          },
+          "stage": "qualified"
+        },
+        "routed": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "feasible": true,
+          "hardware_seconds": 362.7640008982271,
+          "metrics": {
+            "bram36": 75.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 96.0,
+            "ff": 15608.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.01,
+            "lut": 30457.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.181,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "reported_signoff": {
+            "clock_verified": true,
+            "failing_endpoints": {
+              "Hold": 0,
+              "PW": 0,
+              "Setup": 0
+            }
+          },
+          "stage": "routed"
+        }
+      }
+    },
+    {
+      "candidate": {
+        "configuration": {
+          "arithmetic": "rns",
+          "backend": "streamed",
+          "generator": "ngen",
+          "lanes": 4,
+          "pe": 2,
+          "product_profile": "registered",
+          "profile": "baseline",
+          "radix": 2,
+          "reduction": "montgomery",
+          "stage_groups": 1
+        },
+        "name": "full-ternary-c935c41fc882a79e",
+        "phase": "architecture",
+        "quant_bits": 0,
+        "status": "pending",
+        "workload": {
+          "a_range": [
+            -2147483648,
+            2147483647
+          ],
+          "b_range": [
+            -1,
+            1
+          ],
+          "correctness": "certified-exact",
+          "kind": "polynomial_product",
+          "lanes": 2,
+          "modulus": 4294967296,
+          "n": 512,
+          "operands": "fresh",
+          "ring": "negacyclic",
+          "version": 2
+        },
+        "workload_name": "full-ternary"
+      },
+      "provenance": {
+        "clock_evidence_sha256": "a91f32ac737357fef4897530f2bd9badb9e005e2d060379acd5b15f5cd8dc69b",
+        "qualification_corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+        "routed_evidence_sha256": "fdf283404a813d89d199028a4ebfffb20a019f2cbe2f91fa70ed9bf2d959407b",
+        "rtl_sha256": "5b3fe27378d7db4c9ce931a72986f595d0fce8805cf5f04082965f9ada410337"
+      },
+      "stages": {
+        "mapped": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 135.2276046560146,
+          "metrics": {
+            "bram36": 66.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 96.0,
+            "ff": 15887.0,
+            "fully_constrained": true,
+            "hold_slack_ns": -0.082,
+            "lut": 37564.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.459,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "stage": "mapped"
+        },
+        "qualified": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "hardware_seconds": 0,
+          "passed": true,
+          "physical_seconds": 0,
+          "row": {
+            "configuration": {
+              "arithmetic": "rns",
+              "backend": "streamed",
+              "generator": "ngen",
+              "lanes": 4,
+              "pe": 2,
+              "product_profile": "registered",
+              "profile": "baseline",
+              "radix": 2,
+              "reduction": "montgomery",
+              "stage_groups": 1
+            },
+            "corpus_sha256": "ca01083958c4d10db20f0bad30064b50f5977589aec835bee62dad026ae2208f",
+            "initiation_interval_cycles": 1767,
+            "latency_cycles": 4639,
+            "max_abs_error": 0,
+            "memory_bits": 1981440,
+            "multipliers": 140,
+            "name": "full-ternary-c935c41fc882a79e",
+            "passed": true,
+            "phase": "architecture",
+            "quant_bits": 0,
+            "register_bits": 47238,
+            "rtl_sha256": "5b3fe27378d7db4c9ce931a72986f595d0fce8805cf5f04082965f9ada410337",
+            "status": "pending",
+            "workload": {
+              "a_range": [
+                -2147483648,
+                2147483647
+              ],
+              "b_range": [
+                -1,
+                1
+              ],
+              "correctness": "certified-exact",
+              "kind": "polynomial_product",
+              "lanes": 2,
+              "modulus": 4294967296,
+              "n": 512,
+              "operands": "fresh",
+              "ring": "negacyclic",
+              "version": 2
+            },
+            "workload_name": "full-ternary",
+            "yosys_cells": 45811
+          },
+          "stage": "qualified"
+        },
+        "routed": {
+          "cache_hit": true,
+          "evidence_scope": "published-measurement-replay; no local RTL or checkpoint signoff",
+          "feasible": true,
+          "hardware_seconds": 386.6917104884051,
+          "metrics": {
+            "bram36": 66.0,
+            "constraint_checks": {
+              "constant_clock": 0,
+              "generated_clocks": 0,
+              "latch_loops": 0,
+              "loops": 0,
+              "multiple_clock": 0,
+              "no_clock": 0,
+              "no_input_delay": 0,
+              "no_output_delay": 0,
+              "partial_input_delay": 0,
+              "partial_output_delay": 0,
+              "pulse_width_clock": 0,
+              "unconstrained_internal_endpoints": 0
+            },
+            "dsp": 96.0,
+            "ff": 16187.0,
+            "fully_constrained": true,
+            "hold_slack_ns": 0.01,
+            "lut": 37246.0,
+            "pulse_slack_ns": 1.458,
+            "setup_slack_ns": 0.26,
+            "uram": 0.0
+          },
+          "passed": true,
+          "physical_seconds": 0,
+          "reason": "",
+          "reported_signoff": {
+            "clock_verified": true,
+            "failing_endpoints": {
+              "Hold": 0,
+              "PW": 0,
+              "Setup": 0
+            }
+          },
+          "stage": "routed"
+        }
+      }
+    }
+  ],
+  "schema": "polynomial-dse-replay-v1",
+  "study": {
+    "a_range": [
+      -2147483648,
+      2147483647
+    ],
+    "b_range": [
+      -1,
+      1
+    ],
+    "n": 512,
+    "schema": "llm-polynomial-study-v1",
+    "space": {
+      "generators": [
+        "ngen"
+      ],
+      "lanes": [
+        2,
+        4
+      ],
+      "ngen_backends": [
+        "streamed"
+      ],
+      "pe": [
+        1,
+        2
+      ],
+      "product_profiles": [
+        "pipelined",
+        "registered"
+      ],
+      "profiles": [
+        "baseline"
+      ],
+      "radix": [
+        2
+      ],
+      "reductions": [
+        "barrett",
+        "montgomery",
+        "shoup"
+      ],
+      "stage_groups": [
+        1
+      ]
+    }
+  },
+  "target": {
+    "bandwidth_assumption": "32 GB/s aggregate exploration assumption; not a measured HBM rate",
+    "bandwidth_bytes_per_second": 32000000000,
+    "capacity": {
+      "bram36": 2016,
+      "dsp": 9024,
+      "ff": 2607360,
+      "lut": 1303680,
+      "uram": 960
+    },
+    "clock_mhz": 250,
+    "implementation_context": "registered-harness-v2",
+    "implementation_directive": "Default",
+    "implementation_seed": "tool-default",
+    "io_delay_fraction": 0.25,
+    "part": "xcu280-fsvh2892-2L-e",
+    "resource_fraction": 0.8,
+    "resource_limits": {},
+    "schema": "polynomial-device-v1",
+    "vivado_version": "2023.2"
+  }
+}
