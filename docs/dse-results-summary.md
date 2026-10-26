@@ -136,6 +136,10 @@ seven-objective frontier points, including 11 exact-frontier points. That
 snapshot has its own candidate set and synthesis evidence; do not merge its
 counts or resource numbers with the later broad study.
 
+The [wider-NTT extension](wide-ntt-search.md) defines a separate sixteen-point
+L2/L4/L8/L16 × PE1/PE2/PE4/PE8 campaign. Its measurements are separate from the
+published grid above; consult its local results for current progress.
+
 Reproduction: [study setup and commands](polynomial-study.md).
 Audit data: [N=512 CSV](results/torus512-points.csv) and
 [grid provenance](results/provenance.json).

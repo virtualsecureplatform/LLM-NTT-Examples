@@ -14,6 +14,24 @@ class WideProductContracts(unittest.TestCase):
         self.assertEqual(wide.candidates({**w,'n':1024},dict(generators=['sgen'],
                          sgen_backends=['full-throughput'])),[])
 
+    def test_wide_ntt_axes_and_backend_limits(self):
+        w = {**wide.workload(512, modulus=1<<32),
+             'a_range':[-2147483648,2147483647], 'b_range':[-1,1]}
+        space = dict(generators=['ngen'], ngen_backends=['streamed'],
+                     lanes=[2,4,8,16], pe=[1,2,4,8], radix=[2],
+                     stage_groups=[1], reductions=['montgomery'],
+                     product_profiles=['registered'])
+        rows = wide.candidates(w, space)
+        self.assertEqual(len(rows),16)
+        self.assertEqual({(r['lanes'],r['pe']) for r in rows},
+                         {(l,p) for l in (2,4,8,16) for p in (1,2,4,8)})
+        small = wide.candidates({**w,'n':8},space)
+        self.assertTrue(all(r['lanes']<=8 and r['pe']<=4 for r in small))
+        self.assertEqual(wide.candidates(w,dict(generators=['sgen'],lanes=[8,16])),[])
+        staged = wide.candidates(w,{**space,'ngen_backends':['stage-parallel']})
+        self.assertEqual(len(staged),4)
+        self.assertTrue(all('pe' not in r for r in staged))
+
     def test_rings_moduli_and_bounds(self):
         for ring in ('linear','cyclic','negacyclic'):
             w=wide.workload(8,127,ring);a=[0]*8;b=[0]*8;a[-1]=127;b[1]=-127

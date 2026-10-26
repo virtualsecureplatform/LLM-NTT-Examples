@@ -68,7 +68,7 @@ def candidates(w, space=None):
     axes={
         'generators':(['ngen','sgen'],['ngen','sgen']),
         'ngen_backends':(['streamed','stage-parallel','fully-parallel'],['streamed','stage-parallel','fully-parallel']),
-        'lanes':([2,4],[2,4]),'pe':([1,2],[1,2]),'radix':([2,4,8],[2,4,8]),
+        'lanes':([2,4],[2,4,8,16]),'pe':([1,2],[1,2,4,8]),'radix':([2,4,8],[2,4,8]),
         'stage_groups':([1,2],[1,2]),'reductions':(['barrett'],['barrett','montgomery','shoup','auto']),
         'profiles':(['baseline'],['baseline','f300','split-barrett']),
         'sgen_backends':(['full-throughput','compact'],['full-throughput','compact']),
@@ -85,13 +85,16 @@ def candidates(w, space=None):
                 result.append(dict(generator='ngen',backend=backend,profile=profile,lanes=n,radix=2,reduction='barrett',stage_groups=1))
             elif backend=='stage-parallel':
                 for lanes,reduction in itertools.product(values['lanes'],values['reductions']):
+                    if lanes>n:continue
                     result.append(dict(generator='ngen',backend=backend,profile=profile,lanes=lanes,radix=2,reduction=reduction,stage_groups=1))
             else:
                 for lanes,pe,radix,groups,reduction in itertools.product(values['lanes'],values['pe'],values['radix'],values['stage_groups'],values['reductions']):
+                    if lanes>n:continue
                     if (n.bit_length()-1)%(radix.bit_length()-1) or (groups>1 and radix!=2) or pe>n//radix:continue
                     result.append(dict(generator='ngen',backend=backend,profile=profile,lanes=lanes,pe=pe,radix=radix,reduction=reduction,stage_groups=groups))
     if 'sgen' in values['generators']:
         for backend,lanes,frac,guard in itertools.product(values['sgen_backends'],values['lanes'],values['fractional_bits'],values['guard_bits']):
+            if lanes not in (2,4):continue
             result.append(dict(generator='sgen',backend=backend,lanes=lanes,radix=2,fractional_bits=frac,integer_bits=integer_bits(w,guard),guard_bits=guard))
     if 'configurations' in space:
         selected=space['configurations']

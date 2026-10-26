@@ -144,7 +144,7 @@ def candidates(w,space=None):
           'profiles':['baseline'],'fractional_bits':[32,48],'guard_bits':[0],
           'omit_low_diagonals':[0],'product_profiles':['baseline']}
     legal={'generators':['ngen','sgen'],'ngen_backends':['streamed','stage-parallel','fully-parallel'],
-           'sgen_backends':['compact','full-throughput'],'lanes':[2,4],'pe':[1,2],
+           'sgen_backends':['compact','full-throughput'],'lanes':[2,4,8,16],'pe':[1,2,4,8],
            'radix':[2,4,8],'stage_groups':[1,2],'reductions':['barrett','montgomery','shoup','auto'],
            'profiles':['baseline','f300','split-barrett'],'fractional_bits':[24,28,29,30,32,40,48],
            'guard_bits':[0,2],'omit_low_diagonals':[0,1,2],'product_profiles':['baseline','pipelined','registered']}
@@ -160,6 +160,7 @@ def candidates(w,space=None):
         basis(w)
         for backend,lanes,pe,radix,groups,reduction,profile in itertools.product(
                 axes['ngen_backends'],axes['lanes'],axes['pe'],axes['radix'],axes['stage_groups'],axes['reductions'],axes['profiles']):
+            if lanes>length or pe>length//radix:continue
             if (length.bit_length()-1)%(radix.bit_length()-1) or (groups>1 and radix!=2):continue
             if profile=='split-barrett' and backend!='fully-parallel':continue
             if backend!='streamed' and (pe!=1 or radix!=2 or groups!=1):continue
@@ -173,6 +174,7 @@ def candidates(w,space=None):
         magnitude_bound=15 if split else max(magnitude(w,'a'),magnitude(w,'b'))
         for backend,lanes,frac,guard,omit in itertools.product(
                 axes['sgen_backends'],axes['lanes'],axes['fractional_bits'],axes['guard_bits'],axes['omit_low_diagonals']):
+            if lanes not in (2,4):continue
             if w['n']>512 and backend!='compact':continue
             if omit and (not split or w['ring']!='negacyclic' or w['modulus']!=1<<32):continue
             candidate=dict(generator='sgen',backend=backend,lanes=lanes,radix=2,
