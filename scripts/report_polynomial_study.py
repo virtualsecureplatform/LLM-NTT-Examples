@@ -18,13 +18,13 @@ def design(row):
     if not c:
         return row.get('dependency', 'unresolved')
     if c['generator'] == 'sgen':
-        name = f"FFT {c['backend']}, L{c['lanes']}, f{c['fractional_bits']}, g{c.get('guard_bits', 0)}, omit{c.get('omit_low_diagonals', 0)}"
+        name = f"FFT {c['backend']}, L{c['lanes']}, F{c['fractional_bits']}, G{c.get('guard_bits', 0)}, OMIT{c.get('omit_low_diagonals', 0)}"
     else:
         name = f"NTT {c['backend']}, L{c['lanes']}, R{c['radix']}, G{c['stage_groups']}, {c['reduction']}"
         if 'pe' in c:
             name += f", PE{c['pe']}"
     if row['quant_bits']:
-        name += f", round{row['quant_bits']}"
+        name += f", ROUND{row['quant_bits']}"
     if c.get('product_profile','baseline')!='baseline':name+=' / '+c['product_profile']
     return name
 
@@ -95,7 +95,7 @@ def export(campaigns, output):
              'No clock frequency or physical implementation is assumed. Error bounds are analytical; observed errors cover the 101-frame corpus and do not establish FHE decryption reliability.', '',
              'Pareto membership uses all seven objectives: error bound, cells, memory bits, register bits, multiplier operators, latency, and interval. '
              'It is computed separately for each workload over qualified points. Certification rejections and timeouts are excluded. '
-             'L = internal lanes, R = radix, G = stage groups, PE = processing elements, f = fractional bits, g = guard bits, omit = omitted low digit diagonals, and round = output rounding bits.', '']
+             'L = internal lanes, R = radix, PE = processing elements, F = fractional bits, G = guard bits (FFT) or stage groups (NTT), OMIT = omitted low digit diagonals, and ROUND = output rounding bits.', '']
     combined, provenance = combined_campaigns(campaigns)
     for n, data in combined:
         rows = data['points']

@@ -90,7 +90,7 @@ def omission_plot(rows, output):
         for (backend, lanes, guard, profile), group in groups.items():
             group.sort(key=lambda r:r['configuration'].get('omit_low_diagonals',0))
             color, marker = STYLES['FFT ' + backend + (' / '+profile if profile!='baseline' else '')]
-            label = f'{backend}, L{lanes}, g{guard}, {profile}'
+            label = f'{backend}, L{lanes}, G{guard}, {profile}'
             line, = ax.plot([r['max_abs_error'] for r in group],
                             [r['initiation_interval_cycles'] for r in group],
                             color=color, marker=marker, linestyle='--' if lanes==4 else '-', linewidth=1.5)
@@ -105,7 +105,7 @@ def omission_plot(rows, output):
                     max(r['initiation_interval_cycles'] for r in points) * 1.12)
         ax.set_xlim(-1, max(r['max_abs_error'] for r in points) * 25)
         ax.grid(True, which='both', linewidth=.5, alpha=.25)
-    fig.suptitle('N=512 FFT, f30: accepting bounded error reduces product interval', fontsize=13)
+    fig.suptitle('N=512 FFT, F30: accepting bounded error reduces product interval', fontsize=13)
     fig.legend(list(legend.values()),list(legend),loc='lower center',ncol=min(3,len(legend)),frameon=False,fontsize=9)
     fig.tight_layout(rect=(0, .18, 1, .92))
     save(fig, output, 'torus512-error-throughput')

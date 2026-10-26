@@ -30,6 +30,11 @@ controls used in the published tables; a short label can omit fixed/default
 fields. Use the CSV `configuration_json` and workload columns for the complete
 configuration rather than inferring omitted settings from a graph label.
 
+Display parameter abbreviations in uppercase: **L, PE, R, G, F, OMIT, ROUND**.
+G means stage groups for NTT and guard bits for FFT. Machine-readable field names,
+CLI options, paths, and historical candidate identifiers keep their original case;
+they are case-sensitive interfaces, not display labels.
+
 ### Architecture and profile names
 
 | Name in tables/graphs | Generator/configuration field | Meaning | Design tradeoff or scope |
@@ -56,16 +61,16 @@ substitute an architecture alias from another generator for the recorded backend
 | --- | --- | --- |
 | `N=512` | Workload `n` | Polynomial coefficient count; it is not necessarily the internal FFT length. |
 | `full-full`, `full-byte`, `full-ternary` | Workload name and operand ranges | Signed full32 × full32, full32 × signed-byte, or full32 × ternary operands, respectively. |
-| `L2`, `L4`, or `l4` | `lanes` | Transform streaming width: coefficients handled per interface beat. It does not directly specify completed products per cycle. |
-| `PE1`, `PE2`, or `pe2` | NGen `pe` | Reusable butterfly processing elements per streamed stage-group engine. A PE1 field in an older table for another backend is not a swept PE control. |
-| `R2`, `R8`, or `r2` | NGen `radix` | Butterfly radix as an actual value, not its base-2 logarithm. |
-| `G1`, `G2`, or `s1` in older NGen names | `stage_groups` | Number of contiguous stage partitions with independently buffered PE engines; G2 means two groups, not two stages per group. |
+| `L2`, `L4` | `lanes` | Transform streaming width: coefficients handled per interface beat. It does not directly specify completed products per cycle. |
+| `PE1`, `PE2` | NGen `pe` | Reusable butterfly processing elements per streamed stage-group engine. A PE1 field in an older table for another backend is not a swept PE control. |
+| `R2`, `R8` | NGen `radix` | Butterfly radix as an actual value, not its base-2 logarithm. |
+| `G1`, `G2` | `stage_groups` | Number of contiguous stage partitions with independently buffered PE engines; G2 means two groups, not two stages per group. |
 | `barrett`, `montgomery`, `shoup` | NGen `reduction` | Modular reduction/multiplication implementation choice. It does not change the requested polynomial arithmetic. |
 | `indexed`, `switch` | NGen `transpose` / boundary column | Transpose/boundary implementation choice; the study's main architecture grid fixes indexed boundaries. |
-| `f30` | SGen `fractional_bits: 30` | Fixed-point fractional precision; not the coefficient/output bit width. |
-| `g0` | SGen `guard_bits: 0` | Additional guard-bit control used when choosing the FFT arithmetic format. |
-| `omit0`, `omit1`, `omit2` | SGen `omit_low_diagonals` | Count of omitted low-weight digit-product diagonals; zero omits none. Larger values can trade an error bound for fewer digit products. |
-| `round4` | Row `quant_bits: 4` / output-rounding control | Rounds the final coefficient to a multiple of 16; the analytical rounding error bound is eight torus units. Separate from FFT omissions and fractional precision. |
+| `F30` | SGen `fractional_bits: 30` | Fixed-point fractional precision; not the coefficient/output bit width. |
+| `G0` | SGen `guard_bits: 0` | Additional guard-bit control used when choosing the FFT arithmetic format. |
+| `OMIT0`, `OMIT1`, `OMIT2` | SGen `omit_low_diagonals` | Count of omitted low-weight digit-product diagonals; zero omits none. Larger values can trade an error bound for fewer digit products. |
+| `ROUND4` | Row `quant_bits: 4` / output-rounding control | Rounds the final coefficient to a multiple of 16; the analytical rounding error bound is eight torus units. Separate from FFT omissions and fractional precision. |
 | `N03`, `S01` | Common-pass report short ID | Row identifier within that particular snapshot, not an architecture parameter. |
 | `full-ternary-2be26723e0be400f` | Candidate `name` | Workload prefix plus opaque configuration identity. Resolve it using the report CSV/JSON; the suffix is not a readable parameter encoding. |
 
@@ -75,9 +80,9 @@ substitute an architecture alias from another generator for the recorded backend
 | --- | --- |
 | `NTT streamed, L2, R2, G1, shoup, PE1` | NGen exact RNS product using a streamed radix-2 NTT, two lanes, one stage group, one reusable PE per group, and Shoup modular arithmetic. |
 | `NTT stage-parallel, L4, R2, G1, montgomery` | NGen radix-2 stage-parallel product with four lanes and Montgomery arithmetic. G1 is a fixed/default field here; it does not turn this backend into a one-engine streamed implementation. |
-| `FFT full-throughput, L4, f30, g0, omit2` | SGen full-throughput transform backend with four lanes, 30 fractional bits, zero guard bits, and two omitted low digit-product diagonals. The product error bound must be read from its workload-specific result. |
+| `FFT full-throughput, L4, F30, G0, OMIT2` | SGen full-throughput transform backend with four lanes, 30 fractional bits, zero guard bits, and two omitted low digit-product diagonals. The product error bound must be read from its workload-specific result. |
 | `registered montgomery L4 PE2` | The physical-frontier table's shortened label: NGen streamed radix-2/G1 product, registered product profile, Montgomery arithmetic, four lanes, and two PEs per group. |
-| `ngen-stage-parallel-l4-pe1-r2-s1-barrett-baseline` | Older common-pass name: NGen stage-parallel, four lanes, fixed PE1/R2/stage-groups1 fields, Barrett reduction, baseline generator profile. `s1` denotes stage groups in this naming format. |
+| `NTT stage-parallel, L4, PE1, R2, G1, barrett, baseline` | Display form of the older common-pass configuration: NGen stage-parallel, four lanes, fixed PE1/R2/stage-group fields, Barrett reduction, baseline generator profile. |
 
 ## 1. Grid search: architecture and arithmetic
 

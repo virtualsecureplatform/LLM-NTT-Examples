@@ -61,9 +61,9 @@ python3 scripts/device_polynomial_study.py \
 The N=512 inventory contains 207 unique qualified products. The warmup comprises
 12 calibration points (four backend families across three workloads) and six
 held-out points. Calibration prefers exact, baseline radix-2 Barrett NTTs and
-exact f30/g0 FFTs: two lanes for streamed/compact, four for stage-parallel and
+exact F30/G0 FFTs: two lanes for streamed/compact, four for stage-parallel and
 full-throughput. Held-out cases prefer a four-lane/two-PE radix-8 streamed NTT
-and a two-lane f32 full-throughput FFT with omission depth one. Fallbacks are
+and a two-lane F32 full-throughput FFT with omission depth one. Fallbacks are
 deterministic for smaller inventories. Warmup includes cases outside the selected
 error limit to test the model; finalist selection always enforces the limit.
 
