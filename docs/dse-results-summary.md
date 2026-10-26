@@ -55,6 +55,12 @@ The NGen [backend description](../third_party/NGen/README.md) and SGen
 semantics. These names are scoped to the generator and experiment: do not
 substitute an architecture alias from another generator for the recorded backend.
 
+NGen also exposes native [configurable NTT pipeline controls](../third_party/NGen/docs/pipeline-controls.md):
+main-product multiplier stages, Montgomery reduction stages, and an elastic core
+output register. These are independent of the product profiles above. The
+published grid/live results and the running width sweep use their original core
+pipeline settings; the new options do not retroactively change those measurements.
+
 ### Parameter abbreviations and identifiers
 
 | Label/example | Configuration field | How to read it |
