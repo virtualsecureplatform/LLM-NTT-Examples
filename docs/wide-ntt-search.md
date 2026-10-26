@@ -102,9 +102,10 @@ resource_plot(load(folder / 'torus512-points.csv'), 512, folder)
 PY
 ```
 
-Read the lane/PE columns alongside the generic resource/interval plot. An interval
-improvement at constant L identifies a PE benefit; improvement at constant PE
-identifies a width benefit. More lanes alone can offer little improvement if
+Read the lane/PE columns alongside the generic resource/throughput plot. The
+vertical axis is products per 1,000 cycles (`1,000 / measured interval`), so
+higher means faster. A throughput improvement at constant L identifies a PE
+benefit; improvement at constant PE identifies a width benefit. More lanes alone can offer little improvement if
 compute remains the bottleneck. The fixed external interface, frame banking,
 pointwise operations, and CRT reconstruction can limit end-to-end gains. Routing
 congestion and timing can reverse a coarse resource/cycle ranking.

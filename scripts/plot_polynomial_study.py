@@ -56,21 +56,21 @@ def resource_plot(rows, n, output):
         for name, (color, marker) in STYLES.items():
             points = [r for r in subset if family(r) == name]
             ax.scatter([r['yosys_cells'] for r in points],
-                       [r['initiation_interval_cycles'] for r in points],
+                       [1000 / r['initiation_interval_cycles'] for r in points],
                        c=color, marker=marker, s=46, alpha=.7, edgecolors='white', linewidths=.4)
         pareto = [r for r in subset if r['pareto']]
         ax.scatter([r['yosys_cells'] for r in pareto],
-                   [r['initiation_interval_cycles'] for r in pareto],
+                   [1000 / r['initiation_interval_cycles'] for r in pareto],
                    facecolors='none', edgecolors='#222222', marker='o', s=115, linewidths=1)
         ax.set(xscale='log', yscale='log', title=f'{workload} ({len(subset)} qualified)',
-               xlabel='Generic Yosys cells (log scale)', ylabel='Cycles per product (log scale)')
+               xlabel='Generic Yosys cells (log scale)', ylabel='Throughput (products / 1,000 cycles; log scale)')
         ax.grid(True, which='both', linewidth=.5, alpha=.25)
     handles = [Line2D([], [], color=color, marker=marker, linestyle='none', label=name)
                for name, (color, marker) in STYLES.items() if any(family(r) == name for r in rows)]
     handles.append(Line2D([], [], marker='o', markerfacecolor='none', markeredgecolor='#222222',
                           linestyle='none', label='Seven-objective Pareto point'))
     title = f'N={n}: resource / throughput tradeoff'
-    fig.suptitle(title + ('\nLower and left are better' if n == 32 else ' — lower and left are better'), fontsize=13)
+    fig.suptitle(title + ('\nUpper and left are better' if n == 32 else ' — upper and left are better'), fontsize=13)
     fig.legend(handles=handles, loc='lower center', ncol=2 if n == 32 else min(4,len(handles)), frameon=False, fontsize=9)
     fig.tight_layout(rect=(0, .18, 1, .92))
     save(fig, output, f'torus{n}-resource-throughput')
@@ -92,20 +92,20 @@ def omission_plot(rows, output):
             color, marker = STYLES['FFT ' + backend + (' / '+profile if profile!='baseline' else '')]
             label = f'{backend}, L{lanes}, G{guard}, {profile}'
             line, = ax.plot([r['max_abs_error'] for r in group],
-                            [r['initiation_interval_cycles'] for r in group],
+                            [1000 / r['initiation_interval_cycles'] for r in group],
                             color=color, marker=marker, linestyle='--' if lanes==4 else '-', linewidth=1.5)
             legend[label] = line
         ax.set_yscale('log')
         ax.set_xscale('symlog', linthresh=8)
         ax.set_xticks([0, 1e2, 1e4, 1e6], ['0', r'$10^2$', r'$10^4$', r'$10^6$'])
         ax.set(title=workload, xlabel='Analytical error bound (torus units; symlog)',
-               ylabel='Cycles per product (log scale)')
-        ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f'{x:,.0f}'))
-        ax.set_ylim(min(r['initiation_interval_cycles'] for r in points) * .92,
-                    max(r['initiation_interval_cycles'] for r in points) * 1.12)
+               ylabel='Throughput (products / 1,000 cycles; log scale)')
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f'{x:.3g}'))
+        ax.set_ylim(min(1000 / r['initiation_interval_cycles'] for r in points) * .92,
+                    max(1000 / r['initiation_interval_cycles'] for r in points) * 1.12)
         ax.set_xlim(-1, max(r['max_abs_error'] for r in points) * 25)
         ax.grid(True, which='both', linewidth=.5, alpha=.25)
-    fig.suptitle('N=512 FFT, F30: accepting bounded error reduces product interval', fontsize=13)
+    fig.suptitle('N=512 FFT, F30: accepting bounded error increases throughput', fontsize=13)
     fig.legend(list(legend.values()),list(legend),loc='lower center',ncol=min(3,len(legend)),frameon=False,fontsize=9)
     fig.tight_layout(rect=(0, .18, 1, .92))
     save(fig, output, 'torus512-error-throughput')

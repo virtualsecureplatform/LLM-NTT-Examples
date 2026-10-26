@@ -92,7 +92,7 @@ def export(campaigns, output):
              'Full operands are signed 32-bit, byte operands are in [-128, 127], and ternary operands are in [-1, 1].', '',
              'Cells and multiplier operators are coarse Yosys counts with inferred memories retained; they are not FPGA LUTs or DSP counts. '
              'Latency and interval are measured in cycles; interval is the spacing between products in an uninterrupted 12-frame run. '
-             'No clock frequency or physical implementation is assumed. Error bounds are analytical; observed errors cover the 101-frame corpus and do not establish FHE decryption reliability.', '',
+             'Plot throughput is 1,000 divided by the measured product interval, in products per 1,000 cycles; higher is better. No clock frequency or physical implementation is assumed. Error bounds are analytical; observed errors cover the 101-frame corpus and do not establish FHE decryption reliability.', '',
              'Pareto membership uses all seven objectives: error bound, cells, memory bits, register bits, multiplier operators, latency, and interval. '
              'It is computed separately for each workload over qualified points. Certification rejections and timeouts are excluded. '
              'L = internal lanes, R = radix, PE = processing elements, F = fractional bits, G = guard bits (FFT) or stage groups (NTT), OMIT = omitted low digit diagonals, and ROUND = output rounding bits.', '']
@@ -111,8 +111,8 @@ def export(campaigns, output):
                 writer.writerow({**r, 'design': design(r), 'pareto': r['name'] in frontier,
                                  'configuration_json': json.dumps(r.get('configuration', {}), sort_keys=True)})
         lines += [f'## N={n}', '', f'All requested points, readable designs, status, point IDs, and metrics: [{csv_name}]({csv_name}).', '',
-                  f'![N={n} cell count versus cycles per product]({label}-resource-throughput.svg)', '',
-                  'Both axes use logarithmic scales. Overlapping points are retained without jitter. '
+                  f'![N={n} cell count versus throughput]({label}-resource-throughput.svg)', '',
+                  'Both axes use logarithmic scales; upper and left are better. Overlapping points are retained without jitter. '
                   'Black rings mark the seven-objective Pareto points; this is a projection, so they need not form a two-dimensional frontier. '
                   f'[PNG]({label}-resource-throughput.png) · [SVG]({label}-resource-throughput.svg)', '',
                   '| Workload | Qualified | Certificate rejected | Timeout | Unsupported | Pending | Other |',
@@ -158,7 +158,7 @@ def export(campaigns, output):
             lines += [f"| {r['workload_name']} | {design(r)} | {r.get('reason', 'unknown')} |" for r in timeouts]
         if n == 512:
             lines += ['', '### FFT error / throughput tradeoff', '',
-                      '![N=512 FFT error bound versus cycles per product](torus512-error-throughput.svg)', '',
+                      '![N=512 FFT error bound versus throughput](torus512-error-throughput.svg)', '',
                       'The horizontal scale is symmetric logarithmic so exact (zero-error) products remain visible. '
                       'Each curve fixes FFT backend, lanes, guard bits, product profile, and fractional precision at 30, then varies omission depth. '
                       'Bounds apply to the polynomial product contract; observed maxima are listed in the tables. '

@@ -2,7 +2,7 @@
 
 Measured negacyclic products modulo `2^32`, with fresh operands and a two-coefficient ready/valid interface. Full operands are signed 32-bit, byte operands are in [-128, 127], and ternary operands are in [-1, 1].
 
-Cells and multiplier operators are coarse Yosys counts with inferred memories retained; they are not FPGA LUTs or DSP counts. Latency and interval are measured in cycles; interval is the spacing between products in an uninterrupted 12-frame run. No clock frequency or physical implementation is assumed. Error bounds are analytical; observed errors cover the 101-frame corpus and do not establish FHE decryption reliability.
+Cells and multiplier operators are coarse Yosys counts with inferred memories retained; they are not FPGA LUTs or DSP counts. Latency and interval are measured in cycles; interval is the spacing between products in an uninterrupted 12-frame run. Plot throughput is 1,000 divided by the measured product interval, in products per 1,000 cycles; higher is better. No clock frequency or physical implementation is assumed. Error bounds are analytical; observed errors cover the 101-frame corpus and do not establish FHE decryption reliability.
 
 Pareto membership uses all seven objectives: error bound, cells, memory bits, register bits, multiplier operators, latency, and interval. It is computed separately for each workload over qualified points. Certification rejections and timeouts are excluded. L = internal lanes, R = radix, PE = processing elements, F = fractional bits, G = guard bits (FFT) or stage groups (NTT), OMIT = omitted low digit diagonals, and ROUND = output rounding bits.
 
@@ -10,9 +10,9 @@ Pareto membership uses all seven objectives: error bound, cells, memory bits, re
 
 All requested points, readable designs, status, point IDs, and metrics: [torus512-points.csv](torus512-points.csv).
 
-![N=512 cell count versus cycles per product](torus512-resource-throughput.svg)
+![N=512 cell count versus throughput](torus512-resource-throughput.svg)
 
-Both axes use logarithmic scales. Overlapping points are retained without jitter. Black rings mark the seven-objective Pareto points; this is a projection, so they need not form a two-dimensional frontier. [PNG](torus512-resource-throughput.png) · [SVG](torus512-resource-throughput.svg)
+Both axes use logarithmic scales; upper and left are better. Overlapping points are retained without jitter. Black rings mark the seven-objective Pareto points; this is a projection, so they need not form a two-dimensional frontier. [PNG](torus512-resource-throughput.png) · [SVG](torus512-resource-throughput.svg)
 
 | Workload | Qualified | Certificate rejected | Timeout | Unsupported | Pending | Other |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -149,7 +149,7 @@ Timeouts (measurement incomplete; not an arithmetic failure):
 
 ### FFT error / throughput tradeoff
 
-![N=512 FFT error bound versus cycles per product](torus512-error-throughput.svg)
+![N=512 FFT error bound versus throughput](torus512-error-throughput.svg)
 
 The horizontal scale is symmetric logarithmic so exact (zero-error) products remain visible. Each curve fixes FFT backend, lanes, guard bits, and fractional precision at 30, then varies omission depth. Bounds apply to the polynomial product contract; observed maxima are listed in the tables. [PNG](torus512-error-throughput.png) · [SVG](torus512-error-throughput.svg)
 
@@ -157,9 +157,9 @@ The horizontal scale is symmetric logarithmic so exact (zero-error) products rem
 
 All requested points, readable designs, status, point IDs, and metrics: [torus32-points.csv](torus32-points.csv).
 
-![N=32 cell count versus cycles per product](torus32-resource-throughput.svg)
+![N=32 cell count versus throughput](torus32-resource-throughput.svg)
 
-Both axes use logarithmic scales. Overlapping points are retained without jitter. Black rings mark the seven-objective Pareto points; this is a projection, so they need not form a two-dimensional frontier. [PNG](torus32-resource-throughput.png) · [SVG](torus32-resource-throughput.svg)
+Both axes use logarithmic scales; upper and left are better. Overlapping points are retained without jitter. Black rings mark the seven-objective Pareto points; this is a projection, so they need not form a two-dimensional frontier. [PNG](torus32-resource-throughput.png) · [SVG](torus32-resource-throughput.svg)
 
 | Workload | Qualified | Certificate rejected | Timeout | Unsupported | Pending | Other |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |

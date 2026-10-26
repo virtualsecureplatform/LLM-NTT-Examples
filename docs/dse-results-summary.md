@@ -10,8 +10,8 @@ it does not yet establish that LLM selection reduces evaluation effort.
 
 | Order | Question | Main document/table | Figure to present |
 | --- | --- | --- | --- |
-| 1 | What architecture and arithmetic tradeoffs does the grid reveal? | [Polynomial study results](results/polynomial-results.md), N=512 tables | [N=512 resources versus product interval](results/torus512-resource-throughput.svg) |
-| 2 | How does approximation change the tradeoff? | Same report, FFT error/throughput section | [FFT error bound versus product interval](results/torus512-error-throughput.svg) |
+| 1 | What architecture and arithmetic tradeoffs does the grid reveal? | [Polynomial study results](results/polynomial-results.md), N=512 tables | [N=512 resources versus throughput](results/torus512-resource-throughput.svg) |
+| 2 | How does approximation change the tradeoff? | Same report, FFT error/throughput section | [FFT error bound versus throughput](results/torus512-error-throughput.svg) |
 | 3 | Which designs actually meet routed 250 MHz timing? | [Routed frontier and five-design table](results/pareto250-512.md) | [Routed resources versus modeled throughput](results/pareto250-512.svg) |
 | 4 | Can a bounded LLM search acquire useful feasible designs? | [Live policy comparison](results/llm-dse-live-512.md) | [Live area/throughput and search-progress panels](results/llm-dse-live-512.svg) |
 | 5 | How can someone use the tool? | [Experiment CLI guide](dse-tool.md) | A locally generated `report.html`; use [published replay panels](results/llm-dse-replay-512.svg) when presenting the recorded fixture |
@@ -42,7 +42,7 @@ they are case-sensitive interfaces, not display labels.
 | NTT | `generator: ngen`, `arithmetic: rns` | Modular number-theoretic transforms over an RNS prime basis, followed by CRT reconstruction of the polynomial product. | Exact arithmetic for the qualified product contract; prime count depends on operand bounds. |
 | FFT | `generator: sgen`, `arithmetic: split-radix16` | Fixed-point complex FFT products of split base-16 coefficient digits, accumulated into the polynomial result. | Precision and omitted digit products determine the analytical error bound; FFT does not automatically mean approximate output. |
 | streamed | NGen `backend: streamed` | Reuses scheduled butterfly processing elements with banked coefficient storage. | PE count controls arithmetic replication; stage groups can add independently buffered engines. |
-| stage-parallel | NGen `backend: stage-parallel` | Unrolls the radix-2 stage datapaths, with a registered boundary per NTT stage. | More spatial arithmetic and shorter product intervals in the published grid; PE count is not a tunable replication axis for this backend. |
+| stage-parallel | NGen `backend: stage-parallel` | Spatial radix-2 stage arithmetic. Historical measurements use a serialized frame controller; optional native frame overlap gives each stage independent frame registers. | PE count is not a tunable replication axis. Generic NGen full-throughput with ready-valid selects the maximum-overlap mode. |
 | compact | SGen `backend: compact` | Reuses FFT hardware across transform work, requiring gaps between datasets. | Lower hardware replication, with a longer transform/product interval. |
 | full-throughput | SGen `backend: full-throughput` | Pipelines transform work so transform datasets can follow without inter-dataset gaps. | More hardware replication. The complete split-digit polynomial product still has its own measured interval; the name does not mean one product per cycle. |
 | baseline | `profile: baseline`; historical/default product implementation | The generator arithmetic profile is fixed to baseline in these studies. Older product configurations can omit `product_profile`. | Generator `profile` and product `product_profile` are separate fields; read the serialized configuration to distinguish them. |
@@ -60,6 +60,8 @@ main-product multiplier stages, Montgomery reduction stages, and an elastic core
 output register. These are independent of the product profiles above. The
 published grid/live results and the running width sweep use their original core
 pipeline settings; the new options do not retroactively change those measurements.
+Native [frame overlap](../third_party/NGen/docs/frame-overlap.md) is also available
+as the maximum-overlap case of stage-parallel; it is not part of the archived grid.
 
 ### Parameter abbreviations and identifiers
 
@@ -111,11 +113,11 @@ Unsupported combinations are recorded backend exclusions, not completed
 hardware evaluations. All three timeouts concern full32 × full32 compact FFT
 measurements; they are incomplete measurements, not arithmetic failures.
 
-![N=512 generic resources versus product interval](results/torus512-resource-throughput.svg)
+![N=512 generic resources versus throughput](results/torus512-resource-throughput.svg)
 
-Explain the figure as a resource/cycle tradeoff: lower interval means more
-products per cycle; lower generic cell count means a smaller coarse logic
-estimate. Both axes are logarithmic. Rings mark the seven-objective frontier
+Explain the figure as a resource/throughput tradeoff: higher means faster and
+left means fewer generic cells. Throughput is `1,000 / product interval`, in
+products per 1,000 cycles, without assuming a clock frequency. Both axes are logarithmic. Rings mark the seven-objective frontier
 (error bound, cells, retained memory bits, register bits, multiplier operators,
 latency, and interval), so they need not form a two-dimensional envelope.
 
@@ -126,9 +128,9 @@ FFT has 48,381 cells and a 505,844-cycle interval. These are useful contrasting
 points, not a universal ranking: memory, multipliers, and other objectives also
 matter. Generic cells and multiplier operators are not FPGA LUTs and DSPs.
 
-![FFT error bound versus product interval](results/torus512-error-throughput.svg)
+![FFT error bound versus throughput](results/torus512-error-throughput.svg)
 
-Use the second figure to explain how omitted digit diagonals reduce cycle cost
+Use the second figure to explain how omitted digit diagonals increase throughput
 while increasing the analytical coefficient-error bound. Its symmetric-log
 horizontal scale retains the exact zero-error points. Observed corpus maxima
 and analytical bounds are different quantities; neither establishes an FHE
