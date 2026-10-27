@@ -6,6 +6,14 @@ search experiment. The existing measurements demonstrate the search workflow
 and useful hardware tradeoffs. The live LLM experiment ties random search;
 it does not yet establish that LLM selection reduces evaluation effort.
 
+The later [L16/PE8 closure experiment](l16-timing-closure.md) extends NGen with
+input buffering, onehot bank writes, and registered memory issue. The same exact
+N512 full32 × ternary workload now meets routed 250 MHz with +0.038 ns setup
+and +0.010 ns hold slack, at 172138 LUTs and 519 cycles/product. Its
+[comparison graph](results/torus512-l16-timing.svg) and
+[measurement table](results/torus512-l16-timing.csv) are separate from the
+historical five-design frontier below.
+
 ## Recommended presentation sequence
 
 | Order | Question | Main document/table | Figure to present |
@@ -20,7 +28,8 @@ For a short presentation, use figures 1, 3, and 4, plus the policy comparison
 table below. Add figure 2 when approximate arithmetic is part of the discussion.
 SVG is preferred for slides and zooming; each linked result report also provides
 PNG versions. These figures already exist in the repository; no new hardware
-campaign was run to prepare this summary.
+campaign was run to prepare those original figures; the L16 timing experiment
+is a separate follow-up.
 
 ## Configuration naming convention
 
@@ -69,8 +78,8 @@ as the maximum-overlap case of stage-parallel; it is not part of the archived gr
 | --- | --- | --- |
 | `N=512` | Workload `n` | Polynomial coefficient count; it is not necessarily the internal FFT length. |
 | `full-full`, `full-byte`, `full-ternary` | Workload name and operand ranges | Signed full32 × full32, full32 × signed-byte, or full32 × ternary operands, respectively. |
-| `L2`, `L4` | `lanes` | Transform streaming width: coefficients handled per interface beat. It does not directly specify completed products per cycle. |
-| `PE1`, `PE2` | NGen `pe` | Reusable butterfly processing elements per streamed stage-group engine. A PE1 field in an older table for another backend is not a swept PE control. |
+| `L2`, `L4`, `L8`, `L16` | `lanes` | Transform streaming width: coefficients handled per interface beat. It does not directly specify completed products per cycle. |
+| `PE1`, `PE2`, `PE4`, `PE8` | NGen `pe` | Reusable butterfly processing elements per streamed stage-group engine. A PE1 field in an older table for another backend is not a swept PE control. |
 | `R2`, `R8` | NGen `radix` | Butterfly radix as an actual value, not its base-2 logarithm. |
 | `G1`, `G2` | `stage_groups` | Number of contiguous stage partitions with independently buffered PE engines; G2 means two groups, not two stages per group. |
 | `barrett`, `montgomery`, `shoup` | NGen `reduction` | Modular reduction/multiplication implementation choice. It does not change the requested polynomial arithmetic. |
@@ -79,6 +88,9 @@ as the maximum-overlap case of stage-parallel; it is not part of the archived gr
 | `G0` | SGen `guard_bits: 0` | Additional guard-bit control used when choosing the FFT arithmetic format. |
 | `OMIT0`, `OMIT1`, `OMIT2` | SGen `omit_low_diagonals` | Count of omitted low-weight digit-product diagonals; zero omits none. Larger values can trade an error bound for fewer digit products. |
 | `ROUND4` | Row `quant_bits: 4` / output-rounding control | Rounds the final coefficient to a multiple of 16; the analytical rounding error bound is eight torus units. Separate from FFT omissions and fractional precision. |
+| `INREG1` | NGen `input_register: true` | Elastic input beat register before core capture. |
+| `BANKWR-ONEHOT` | NGen `bank_write_arbitration: "onehot"` | Parallel bank-write address/data selection for disjoint scheduled writers. |
+| `ISSUEREG1` | NGen `issue_register: true` | Register decoded bank-read addresses/enables and aligned controls. |
 | `N03`, `S01` | Common-pass report short ID | Row identifier within that particular snapshot, not an architecture parameter. |
 | `full-ternary-2be26723e0be400f` | Candidate `name` | Workload prefix plus opaque configuration identity. Resolve it using the report CSV/JSON; the suffix is not a readable parameter encoding. |
 

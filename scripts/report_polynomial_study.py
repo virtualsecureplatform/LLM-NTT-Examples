@@ -25,6 +25,9 @@ def design(row):
             name += f", PE{c['pe']}"
     if row['quant_bits']:
         name += f", ROUND{row['quant_bits']}"
+    if c.get('input_register',False):name+=', INREG1'
+    if c.get('issue_register',False):name+=', ISSUEREG1'
+    if c.get('bank_write_arbitration','priority')!='priority':name+=', BANKWR-'+c['bank_write_arbitration'].upper()
     if c.get('product_profile','baseline')!='baseline':name+=' / '+c['product_profile']
     return name
 

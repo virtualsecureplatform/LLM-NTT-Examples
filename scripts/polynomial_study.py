@@ -35,7 +35,7 @@ def workloads(spec):
         raise ValueError('unknown study field')
     if spec.get('product_profile','baseline') not in ('baseline','pipelined','registered'):
         raise ValueError('unknown product profile')
-    if set(spec.get('ngen_axes', {})) - set(AXES):
+    if set(spec.get('ngen_axes', {})) - set(AXES) - {'input_registers','bank_write_arbitrations','issue_registers'}:
         raise ValueError('unknown NTT architecture axis')
     if set(spec.get('sgen_axes', {})) - {'sgen_backends', 'lanes', 'guard_bits'}:
         raise ValueError('unknown FFT architecture axis')
@@ -96,6 +96,9 @@ def enumerate_points(spec):
                      profile='baseline', arithmetic='rns')
             if c['backend'] == 'streamed':
                 c['pe'] = a['pe']
+            if a.get('input_registers',False):c['input_register']=True
+            if a.get('issue_registers',False):c['issue_register']=True
+            if a.get('bank_write_arbitrations','priority')!='priority':c['bank_write_arbitration']=a['bank_write_arbitrations']
             supported = c in legal and (c['backend'] == 'streamed' or a['pe'] == 1)
             r = make_point(name, w, c, 'architecture', requested_axes=a)
             if not supported:

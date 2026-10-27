@@ -142,12 +142,12 @@ def candidates(w,space=None):
     axes={'generators':['ngen','sgen'],'ngen_backends':['streamed'],'sgen_backends':['compact'],
           'lanes':[2],'pe':[1],'radix':[2],'stage_groups':[1],'reductions':['barrett'],
           'profiles':['baseline'],'fractional_bits':[32,48],'guard_bits':[0],
-          'omit_low_diagonals':[0],'product_profiles':['baseline']}
+          'omit_low_diagonals':[0],'product_profiles':['baseline'],'issue_registers':[False],'input_registers':[False],'bank_write_arbitrations':['priority']}
     legal={'generators':['ngen','sgen'],'ngen_backends':['streamed','stage-parallel','fully-parallel'],
            'sgen_backends':['compact','full-throughput'],'lanes':[2,4,8,16],'pe':[1,2,4,8],
            'radix':[2,4,8],'stage_groups':[1,2],'reductions':['barrett','montgomery','shoup','auto'],
            'profiles':['baseline','f300','split-barrett'],'fractional_bits':[24,28,29,30,32,40,48],
-           'guard_bits':[0,2],'omit_low_diagonals':[0,1,2],'product_profiles':['baseline','pipelined','registered']}
+           'guard_bits':[0,2],'omit_low_diagonals':[0,1,2],'product_profiles':['baseline','pipelined','registered'],'issue_registers':[False,True],'input_registers':[False,True],'bank_write_arbitrations':['priority','onehot']}
     if set(space)-set(axes)-{'configurations'}:raise ValueError('unknown version-2 search axis')
     for key in axes:
         if key in space:
@@ -186,6 +186,12 @@ def candidates(w,space=None):
     result=[c if profile=='baseline' else {**c,'product_profile':profile}
             for c in result for profile in axes['product_profiles']
             if profile!='registered' or c['generator']=='ngen']
+    result=[{**c,'input_register':True} if enabled else c for c in result for enabled in axes['input_registers']
+            if not enabled or (c['generator']=='ngen' and c['backend']=='streamed' and c['radix']==2 and c['reduction']=='montgomery')]
+    result=[{**c,'bank_write_arbitration':mode} if mode!='priority' else c for c in result for mode in axes['bank_write_arbitrations']
+            if mode=='priority' or (c['generator']=='ngen' and c['backend']=='streamed' and c['radix']==2 and c['reduction']=='montgomery')]
+    result=[{**c,'issue_register':True} if enabled else c for c in result for enabled in axes['issue_registers']
+            if not enabled or (c['generator']=='ngen' and c['backend']=='streamed' and c['radix']==2 and c['reduction']=='montgomery')]
     if 'configurations' in space:
         selected=space['configurations']
         if not isinstance(selected,list) or not selected or any(c not in result for c in selected):

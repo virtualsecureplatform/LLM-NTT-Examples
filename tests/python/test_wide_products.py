@@ -32,6 +32,24 @@ class WideProductContracts(unittest.TestCase):
         self.assertEqual(len(staged),4)
         self.assertTrue(all('pe' not in r for r in staged))
 
+    def test_native_input_register_candidates_preserve_default_identity(self):
+        w=wide.workload(512,modulus=1<<32)
+        space=dict(generators=['ngen'],reductions=['montgomery'],lanes=[16],pe=[8])
+        base=wide.candidates(w,space)
+        explicit=wide.candidates(w,{**space,'input_registers':[False]})
+        self.assertEqual(base,explicit)
+        both=wide.candidates(w,{**space,'input_registers':[False,True]})
+        self.assertEqual(len(both),2)
+        self.assertNotIn('input_register',both[0])
+        self.assertTrue(both[1]['input_register'])
+        onehot=wide.candidates(w,{**space,'bank_write_arbitrations':['onehot'],'input_registers':[True]})
+        self.assertEqual(len(onehot),1)
+        self.assertEqual(onehot[0]['bank_write_arbitration'],'onehot')
+        issued=wide.candidates(w,{**space,'issue_registers':[False,True]})
+        self.assertEqual(issued[0],base[0])
+        self.assertTrue(issued[1]['issue_register'])
+        self.assertEqual(wide.candidates(w,{**space,'reductions':['barrett'],'input_registers':[True]}),[])
+
     def test_rings_moduli_and_bounds(self):
         for ring in ('linear','cyclic','negacyclic'):
             w=wide.workload(8,127,ring);a=[0]*8;b=[0]*8;a[-1]=127;b[1]=-127

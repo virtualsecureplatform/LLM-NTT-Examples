@@ -22,6 +22,11 @@ For a presentation, start with the [DSE results summary and figure guide](docs/d
 It connects the grid search, routed 250 MHz frontier, live LLM comparison, and
 portable replay, with the key tables, graphs, and limits of each result.
 
+The [L16/PE8 timing-closure result](docs/l16-timing-closure.md) demonstrates
+native NGen timing controls: the exact N512 product meets routed 250 MHz with
++0.038 ns setup slack and +0.010 ns hold slack. It includes a result table,
+graph, native control definitions, and reproduction commands.
+
 ## Layout
 
 - `architecture_search/`: workload contract, generators, RTL construction,

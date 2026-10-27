@@ -25,6 +25,7 @@ output_bank{i}[capture_bank*{nr}+capture_index/{core_ratio}] <= co{i%k};''' for 
     output_pack=','.join(select('output_bank',j,e,in_ratio,f'output_bank*{nr}+output_beat/{in_ratio}') for j in reversed(range(e)))
     ports=','.join(f'.i{j}(ci{j}),.o{j}(co{j})' for j in range(k))
     control=".in_valid(feed_data),.in_ready(core_ready),.out_valid(core_out),.out_ready(1'b1)" if rv else '.next(feed_token),.next_out(core_out)'+(',.ready(core_ready)' if ready else '')
+    feeding_condition='feeding && (!feed_data || core_ready)' if rv and meta.get('architecture_parameters',{}).get('input_register',0) else 'feeding'
     condition='core_out' if rv else 'core_out || capturing';index='capture_beat' if rv else '(core_out ? 0 : capture_beat)'
     clock='clk' if meta.get('schema')=='sgen-search-v1' else 'clock'
     def bits(value):return max(1,(value-1).bit_length())
@@ -76,7 +77,7 @@ if(input_beat==IN_N/{e}-1)padding<=1;
 end
 end
 if(launch)begin feeding<=1;feed_age<=0;cooldown<={ii-1};end
-else if(feeding)begin
+else if({feeding_condition})begin
 if(feed_age>=DATA_AT+T-1 && feed_age>=TOKEN_AT)begin feeding<=0;input_full[read_bank]<=0;read_bank<=1-read_bank;end
 else feed_age<=feed_age+1;
 end

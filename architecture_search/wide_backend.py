@@ -64,6 +64,9 @@ def generate(w,c,ngen,sgen,directory,timeout,executables=None):
                       '-transpose',c.get('transpose','indexed'),'-top',top]
                 if field['psi'] is not None:args+=['-psi',str(field['psi'])]
                 if c['backend']=='streamed':args+=['-pe',str(c['pe']),'-stage-groups',str(c['stage_groups'])]
+                if c.get('input_register',False):args+=['-input-register']
+                if c.get('issue_register',False):args+=['-issue-register']
+                if c.get('bank_write_arbitration','priority')!='priority':args+=['-bank-write-arbitration',c['bank_write_arbitration']]
                 terminal='intt' if inverse else 'ntt'
             else:
                 args=['-nologo','-metadata','-strict-fixedpoint','-n',str((2*w['n']).bit_length()-1),

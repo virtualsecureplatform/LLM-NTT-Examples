@@ -114,3 +114,11 @@ See the [results presentation guide](dse-results-summary.md) for the prior grid,
 measured 250 MHz frontier, and LLM experiment. This extension does not enlarge
 the frozen 24-candidate LLM demonstration or its five-point replay dataset;
 those require their own newly defined experiments and evidence.
+
+## L16/PE8 timing closure
+
+The original L16/PE8 implementation failed 250 MHz. Native NGen input
+registration, onehot bank writes, and registered memory issue now close timing
+for the same exact workload at L16/PE8: setup +0.038 ns, hold +0.010 ns,
+172138 LUTs, and interval 519 cycles/product. See the
+[result table, graph, controls, and reproduction instructions](l16-timing-closure.md).

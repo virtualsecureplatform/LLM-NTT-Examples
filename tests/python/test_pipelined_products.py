@@ -99,6 +99,24 @@ endmodule'''
                     expected += [sum(x<<(16*j) for j,x in enumerate(values[i:i+e])) for i in range(0,n,e)]
                 rtl_check(core+'\n'+frame_banks.emit('UUT','Core',meta,16,input_n,e,registered_output=registered),inputs,expected,e*16,e*16)
 
+    def test_native_input_register_frame_feed_honors_midframe_stalls(self):
+        for k in (4,16):
+            meta=dict(transform_size=16,streaming_width=k,protocol='ready-valid',latency=2,
+                      initiation_interval=16//k,architecture_parameters=dict(input_register=1))
+            core=f"""module Core(input clock,reset,in_valid,output in_ready,output reg out_valid,input out_ready,
+{','.join(f'input [15:0] i{i},output reg [15:0] o{i}' for i in range(k))});
+reg [3:0] phase;wire advance=!out_valid || out_ready;wire permit=phase<3;
+assign in_ready=advance && permit;
+always @(posedge clock)begin
+if(reset)begin out_valid<=0;phase<=0;end else begin
+phase<=phase==6?0:phase+1;
+if(advance)begin out_valid<=in_valid && permit;if(in_valid && permit)begin
+{''.join(f'o{i}<=i{i};' for i in range(k))}end end end end
+endmodule"""
+            values=list(range(16*20))
+            words=[values[i] | (values[i+1]<<16) for i in range(0,len(values),2)]
+            rtl_check(core+'\n'+frame_banks.emit('UUT','Core',meta,16,external_lanes=2),words,words,32,32)
+
     def test_field_products_with_identity_transform_stubs(self):
         rng=random.Random(17)
         w=wide.workload(8,2147483647,'negacyclic',1<<32)
